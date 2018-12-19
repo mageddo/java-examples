@@ -23,11 +23,11 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
-
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:balance_test.sql")
+@Sql(executionPhase = BEFORE_TEST_METHOD, scripts = {"classpath:schema.sql", "classpath:balance_test.sql"})
 public class BalanceTest {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
