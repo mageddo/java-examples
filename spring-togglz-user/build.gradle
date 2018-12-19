@@ -1,0 +1,27 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+apply plugin: 'java'
+sourceCompatibility = 1.8
+
+dependencies {
+	compile group: 'org.togglz', name: 'togglz-spring-boot-starter', version: '2.6.1.Final'
+	compile group: 'org.togglz', name: 'togglz-console', version: '2.6.1.Final'
+	// compile("com.github.heneke.thymeleaf:thymeleaf-extras-togglz:1.0.1.RELEASE")
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.0.4.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.0.4.RELEASE'
+
+	compile group: 'org.hsqldb', name: 'hsqldb', version: '2.2.8'
+	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.1'
+
+}

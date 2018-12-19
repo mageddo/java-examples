@@ -1,0 +1,71 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE")
+		classpath "gradle.plugin.com.mageddo:gradle-embed-maven-repo:1.0.7" // from gradle repository
+	}
+}
+
+repositories {
+	maven {
+		url "file://${rootDir}/maven"
+	}
+	mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'spring-boot'
+apply plugin: 'com.mageddo.gradle-embed-maven-repo'
+sourceCompatibility = 1.8
+
+
+configurations {
+	provided
+}
+
+sourceSets {
+	main {
+		compileClasspath += configurations.provided
+		test.compileClasspath += configurations.provided
+		test.runtimeClasspath += configurations.provided
+	}
+}
+
+ext {
+	springBootVersion = '1.5.1.RELEASE'
+}
+
+allprojects {
+	tasks.withType(JavaCompile) {
+		options.encoding = 'UTF-8'
+	}
+}
+
+dependencies {
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: springBootVersion
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: springBootVersion
+
+	compile group: 'com.h2database', name: 'h2', version: '1.4.193'
+	compile group: 'org.postgresql', name: 'postgresql', version: '9.3-1102-jdbc3'
+
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+	testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+
+
+}
+
+
+task createMirror(type: RepoBuilder) {
+	mavenRepoFolder = file("${rootDir}/maven")
+}

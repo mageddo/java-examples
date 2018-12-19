@@ -1,0 +1,15 @@
+repositories {
+	mavenCentral()
+}
+
+apply plugin: 'java'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+	compile group: 'io.opentracing', name: 'opentracing-api', version: '0.31.0'
+//	compile group: 'org.elasticsearch', name: 'elasticsearch-spark-20_2.11', version: '6.4.3'
+	compile group: 'org.elasticsearch', name: 'elasticsearch-spark_2.11', version: '2.4.5'
+	compile group: 'org.apache.spark', name: 'spark-core_2.12', version: '2.4.0'
+
+}

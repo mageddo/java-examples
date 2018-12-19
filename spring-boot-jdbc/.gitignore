@@ -1,0 +1,6 @@
+.idea
+spring-boot-primefaces-template.iml
+target/
+build/
+.gradle/
+*.log

@@ -1,0 +1,11 @@
+repositories {
+	mavenCentral()
+}
+
+apply plugin: 'java'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+	compile group: 'io.jaegertracing', name: 'jaeger-client', version: '0.32.0'
+}

@@ -1,0 +1,19 @@
+
+include ':asm-examples'
+include ':jdbc-pool'
+include ':jdbc-template-without-spring'
+include ':spring-profile-without-spring'
+include ':spring-boot-jdbc'
+include ':spring-boot-jpa'
+include ':java-web-embedded-tomcat'
+include ':spring-transactional'
+include ':databases-benchmark'
+include ':spring-security:basic-and-form-auth-together'
+include ':jvm-garbage-collection'
+include ':spring-togglz'
+include ':spring-togglz-user'
+
+include ':distributed-tracing:jaeger'
+include ':distributed-tracing:jaeger-spark'
+
+include ':jaxb'
