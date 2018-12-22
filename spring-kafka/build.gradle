@@ -1,0 +1,17 @@
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+dependencies {
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.1.1.RELEASE'
+	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.2.2.RELEASE'
+	compile group: 'com.mageddo', name: 'spring-kafka', version: '2.0.0'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
+
+}

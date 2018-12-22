@@ -32,12 +32,12 @@ public class FeatureJmx {
 
 	@ManagedOperation
 	public void update(String feature, String user, String value){
-		getFeature(feature).setValue(user, value);
+		getFeature(feature).setValue(user);
 	}
 
 	@ManagedOperation
 	public String getValue(String name, String user){
-		return getFeature(name).getValue(user);
+		return getFeature(name).getValue();
 	}
 
 	private FeatureSwitch getFeature(String name) {

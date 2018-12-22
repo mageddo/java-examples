@@ -16,4 +16,6 @@ include ':spring-togglz-user'
 include ':distributed-tracing:jaeger'
 include ':distributed-tracing:jaeger-spark'
 
+include ':spring-kafka'
+
 include ':jaxb'
