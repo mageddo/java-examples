@@ -31,6 +31,7 @@ public class CoffeeMakerConsumer implements TopicConsumer {
 	@KafkaListener(topics = "#{__listener.topic().getName()}", containerFactory = COFFEE_REQUEST_FACTORY)
 	public void consume(ConsumerRecord<?, byte[]> record) throws InterruptedException {
 		messageSender.send(new ProducerRecord<>(topic().getName(), String.valueOf(LocalDateTime.now()).getBytes()));
+		messageSender.send(new ProducerRecord<>(topic().getName(), String.valueOf(LocalDateTime.now()).getBytes()));
 		Thread.sleep(random.nextInt(300));
 		logger.info("consumed={}", new String(record.value()));
 	}
