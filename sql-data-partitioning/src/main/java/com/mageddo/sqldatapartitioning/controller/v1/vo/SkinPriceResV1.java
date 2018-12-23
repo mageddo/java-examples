@@ -13,6 +13,9 @@ public class SkinPriceResV1 {
 	private Long id;
 
 	public static SkinPriceResV1 valueOf(SkinPriceEntity entity) {
+		if(entity == null){
+			return null;
+		}
 		return new SkinPriceResV1()
 			.setHashName(entity.getHashName())
 			.setOccurrence(entity.getOccurrence())

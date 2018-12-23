@@ -11,6 +11,15 @@ public enum SkinPriceType {
 		this.code = code;
 	}
 
+	public static SkinPriceType fromCode(int code) {
+		for (SkinPriceType value : values()) {
+			if(value.getCode() == code) {
+				return value;
+			}
+		}
+		return null;
+	}
+
 	public int getCode() {
 		return code;
 	}
