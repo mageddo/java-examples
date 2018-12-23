@@ -1,9 +1,17 @@
+plugins {
+	id "org.flywaydb.flyway" version "5.0.7"
+}
+
 apply plugin: 'application'
 
 sourceCompatibility = JavaVersion.VERSION_12
 
 mainClassName = 'com.mageddo.sqldatapartitioning.Main'
 applicationDefaultJvmArgs = getVmFlags()
+
+compileJava {
+	options.compilerArgs += getVmFlags()
+}
 
 dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.1.1.RELEASE'
