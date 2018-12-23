@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement
 @SpringBootApplication
-public class Main {
+public class DataPartitioningStarter {
 	public static void main(String[] args) {
-		SpringApplication.run(Main.class, args);
+		SpringApplication.run(DataPartitioningStarter.class, args);
 	}
 }

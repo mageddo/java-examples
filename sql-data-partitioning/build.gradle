@@ -16,6 +16,7 @@ compileJava {
 dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.1.1.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.1.RELEASE'
+	compile group: 'org.springframework', name: 'spring-aspects', version: '5.0.3.RELEASE'
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
 	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
 }
