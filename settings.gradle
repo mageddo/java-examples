@@ -21,3 +21,4 @@ include ':spring-kafka'
 include ':jaxb'
 
 include ':general-samples'
+include ':sql-data-partitioning'
