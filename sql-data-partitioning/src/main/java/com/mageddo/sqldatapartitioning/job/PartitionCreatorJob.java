@@ -16,6 +16,10 @@ public class PartitionCreatorJob extends AbstractJob {
 
 	@Override
 	public void configure(ScheduledTaskRegistrar registrar) {
-		registrar.addTriggerTask(skinPriceService::createPartitions, new CronTrigger("0 0 */12 * * *"));
+		registrar.addTriggerTask(
+			skinPriceService::createPartitions,
+			new CronTrigger("0 */5 * * * *")
+//			new CronTrigger("0 0 */12 * * *")
+		);
 	}
 }
