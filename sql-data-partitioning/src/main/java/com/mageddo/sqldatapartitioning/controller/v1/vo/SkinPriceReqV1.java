@@ -1,5 +1,6 @@
 package com.mageddo.sqldatapartitioning.controller.v1.vo;
 
+import com.mageddo.sqldatapartitioning.controller.converter.LocalDateTimeConverter;
 import com.mageddo.sqldatapartitioning.entity.SkinPriceEntity;
 
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ public class SkinPriceReqV1 {
 		return occurrence;
 	}
 
+	@LocalDateTimeConverter
 	public SkinPriceReqV1 setOccurrence(LocalDateTime occurrence) {
 		this.occurrence = occurrence;
 		return this;

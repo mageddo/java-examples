@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Map;
@@ -26,7 +27,19 @@ public class SkinPriceDAOPg implements SkinPriceDAO {
 
 	@Override
 	public void create(SkinPriceEntity skinPriceEntity){
-		throw new UnsupportedOperationException();
+		parameterJdbcTemplate.update(
+			`INSERT INTO BSK_SKIN_SALE_HISTORY (
+				DAT_OCCURRENCE, IND_TYPE, NUM_PRICE, COD_SKIN
+			) VALUES (
+				:occurrence, :type, :price, :hash
+			)`,
+			Map.of(
+				"occurrence", Timestamp.valueOf(skinPriceEntity.getOccurrence()),
+				"type", skinPriceEntity.getType().getCode(),
+				"price", skinPriceEntity.getPrice(),
+				"hash", skinPriceEntity.getHashName()
+			)
+		);
 	}
 
 	@Override
@@ -41,8 +54,8 @@ public class SkinPriceDAOPg implements SkinPriceDAO {
 			AND BSSH.IDT_BSK_SKIN_SALE_HISTORY = :id
 			`,
 				Map.of(
-					"from", Date.valueOf(date.with(firstDayOfMonth())),
-					"to", Date.valueOf(date.with(lastDayOfMonth()).plusDays(1)),
+					"from", Timestamp.valueOf(date.with(firstDayOfMonth()).atStartOfDay()),
+					"to", Timestamp.valueOf(date.with(lastDayOfMonth()).plusDays(1).atStartOfDay()),
 					"type", SkinPriceType.RAW.getCode(),
 					"id", id
 				),
@@ -58,8 +71,8 @@ public class SkinPriceDAOPg implements SkinPriceDAO {
 		return parameterJdbcTemplate.queryForObject(
 			`SELECT createskinsalepartition(:from, :to, :type)`,
 			new MapSqlParameterSource()
-					.addValue("from", Date.valueOf(date.withDayOfMonth(1)))
-					.addValue("to", Date.valueOf(date.with(TemporalAdjusters.lastDayOfMonth())))
+					.addValue("from", String.valueOf(date.withDayOfMonth(1)))
+					.addValue("to", String.valueOf(date.with(TemporalAdjusters.lastDayOfMonth())))
 					.addValue("type", type.getCode()),
 			String.class
 		);
