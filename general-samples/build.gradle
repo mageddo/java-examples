@@ -1,0 +1,43 @@
+plugins {
+	id "me.champeau.gradle.jmh" version "0.4.7"
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'me.champeau.gradle.jmh'
+
+sourceCompatibility = JavaVersion.VERSION_11
+dependencies {
+	compile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.21'
+	compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.21'
+//	compile group: 'org.openjdk.jmh', name: 'jmh-core-benchmarks', version: '1.21'
+
+//	jmh 'org.openjdk.jmh:jmh-core:1.21'
+//	jmh 'org.openjdk.jmh:jmh-generator-annprocess:1.21'
+
+}
+//
+jmh {
+	include = ['\\*JMHSample_02_BenchmarkModes\\*']
+	iterations = 1 // Number of measurement iterations to do.
+	batchSize = 1 // Batch size: number of benchmark method calls per operation. (some benchmark modes can ignore this setting)
+	fork = 1 // How many times to forks a single benchmark. Use 0 to disable forking altogether
+}
+//
+mainClassName = 'org.openjdk.jmh.Main'
+distTar {
+	enabled = false
+}
+
+distZip {
+	enabled = false
+}
+
+installDist {
+	enabled = true
+}

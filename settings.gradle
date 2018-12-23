@@ -19,3 +19,5 @@ include ':distributed-tracing:jaeger-spark'
 include ':spring-kafka'
 
 include ':jaxb'
+
+include ':general-samples'
