@@ -1,6 +1,7 @@
 package com.mageddo.sqldatapartitioning;
 
 import com.mageddo.sqldatapartitioning.controller.converter.LocalDateAnnotationFormatterFactory;
+import com.mageddo.sqldatapartitioning.controller.converter.LocalDateTimeAnnotationFormatterFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -18,6 +19,7 @@ public class DataPartitioningStarter implements WebMvcConfigurer {
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
 		registry.addFormatterForFieldAnnotation(new LocalDateAnnotationFormatterFactory());
+		registry.addFormatterForFieldAnnotation(new LocalDateTimeAnnotationFormatterFactory());
 	}
 
 	public static void main(String[] args) {

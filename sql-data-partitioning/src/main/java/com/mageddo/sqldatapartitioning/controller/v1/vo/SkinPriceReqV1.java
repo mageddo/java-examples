@@ -2,6 +2,7 @@ package com.mageddo.sqldatapartitioning.controller.v1.vo;
 
 import com.mageddo.sqldatapartitioning.controller.converter.LocalDateTimeConverter;
 import com.mageddo.sqldatapartitioning.entity.SkinPriceEntity;
+import com.mageddo.sqldatapartitioning.enums.SkinPriceType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -42,6 +43,7 @@ public class SkinPriceReqV1 {
 
 	public SkinPriceEntity toEntity() {
 		return new SkinPriceEntity()
+			.setType(SkinPriceType.RAW)
 			.setHashName(getHashName())
 			.setOccurrence(getOccurrence())
 			.setPrice(getPrice())

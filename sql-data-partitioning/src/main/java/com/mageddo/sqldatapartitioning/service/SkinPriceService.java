@@ -36,7 +36,12 @@ public class SkinPriceService {
 			try {
 				self().createPartition(currentDate, SkinPriceType.RAW);
 			} catch (Exception e){
-				logger.warn("status=creation-failed", e);
+				if(e.getMessage().contains("already exists")){
+					logger.warn("status=partition-already-exists, msg={}", e.getMessage());
+					continue;
+				}
+				logger.error("status=creation-failed", e);
+				throw e;
 			}
 			currentDate = currentDate.plusMonths(1);
 		}
