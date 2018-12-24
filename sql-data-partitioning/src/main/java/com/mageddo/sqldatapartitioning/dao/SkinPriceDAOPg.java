@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Map;
 
@@ -72,7 +73,14 @@ public class SkinPriceDAOPg implements SkinPriceDAO {
 			`SELECT createskinsalepartition(:from, :to, :type)`,
 			new MapSqlParameterSource()
 					.addValue("from", String.valueOf(date.withDayOfMonth(1)))
-					.addValue("to", String.valueOf(date.with(TemporalAdjusters.lastDayOfMonth())))
+					.addValue(
+						"to", String.valueOf(
+							date.with(TemporalAdjusters.lastDayOfMonth())
+								.plusDays(1)
+								.atStartOfDay()
+								.minusNanos(1)
+						)
+					)
 					.addValue("type", type.getCode()),
 			String.class
 		);
