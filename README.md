@@ -1,4 +1,4 @@
-### Introduction
-Here are some samples of how to work with JDBC at java using Spring and Tomcat JDBC for connection pool
+At this repository you will find lot of experiments made by myself with the intention of explore and learn how 
+these technologies works. 
 
-
+Hope my experiments can help you somehow.
