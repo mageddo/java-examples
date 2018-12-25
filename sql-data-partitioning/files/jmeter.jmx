@@ -17,7 +17,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">10000000</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">4</stringProp>
         <longProp name="ThreadGroup.start_time">1487961333000</longProp>
         <longProp name="ThreadGroup.end_time">1487961333000</longProp>
@@ -26,16 +26,6 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="xyz" elementType="Argument">
-              <stringProp name="Argument.name">xyz</stringProp>
-              <stringProp name="Argument.value">joao</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-          </collectionProp>
-        </Arguments>
-        <hashTree/>
         <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="occurrence counter" enabled="true">
           <stringProp name="CounterConfig.start">0</stringProp>
           <stringProp name="CounterConfig.end">30</stringProp>
@@ -46,6 +36,39 @@
           <stringProp name="TestPlan.comments">dia a partir de hoje em que o registro de preco deve ser criado</stringProp>
         </CounterConfig>
         <hashTree/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Database Mode" enabled="true"/>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="No Partition" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="SKIN_PRICE_PATH" elementType="Argument">
+                <stringProp name="Argument.name">SKIN_PRICE_PATH</stringProp>
+                <stringProp name="Argument.value">/v1/skin-prices-no-pt</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Partition by Day" enabled="false">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="SKIN_PRICE_PATH" elementType="Argument">
+                <stringProp name="Argument.name">SKIN_PRICE_PATH</stringProp>
+                <stringProp name="Argument.value">/v1/skin-prices-by-day</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Partition by Month" enabled="false">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="SKIN_PRICE_PATH" elementType="Argument">
+                <stringProp name="Argument.name">SKIN_PRICE_PATH</stringProp>
+                <stringProp name="Argument.value">/v1/skin-prices</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="SkinPrice Creation" enabled="true"/>
         <hashTree>
           <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="Occurence Date Processor" enabled="true">
@@ -91,7 +114,7 @@ try {
             <stringProp name="HTTPSampler.port">8080</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-            <stringProp name="HTTPSampler.path">/v1/skin-prices</stringProp>
+            <stringProp name="HTTPSampler.path">${SKIN_PRICE_PATH}</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -157,7 +180,7 @@ try {
             <stringProp name="HTTPSampler.port">8080</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-            <stringProp name="HTTPSampler.path">/v1/skin-prices/${occurrence}_${id}</stringProp>
+            <stringProp name="HTTPSampler.path">${SKIN_PRICE_PATH}/${occurrence}_${id}</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
