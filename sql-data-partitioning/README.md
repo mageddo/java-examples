@@ -19,15 +19,18 @@ HTTP/1.1 200
 ### Interesting links
 * [table partitioning & max_locks_per_transaction](https://www.postgresql.org/message-id/26276.1255229812%40sss.pgh.pa.us)
 * https://dba.stackexchange.com/questions/193402/why-declarative-partitioning-on-postgresql-10-is-slower-than-the-non-partitioned
+* https://blog.2ndquadrant.com/partition-elimination-postgresql-11/#comment-262750
 
 ### Reports
-* [Partitioning by Month (18 partitions) - empty table](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-01/report)
+* [PG 10 - Partitioning by Month (18 partitions) - empty table](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-01/report)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-01/)
-* [Partitioning by Month - table with a preload of 50M](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-02/report)
+* [PG 10 - Partitioning by Month - table with a preload of 50M](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-02/report)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-02/)
-* [Non partitioning](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-03/report)
+* [PG 11 - Partitioning by Month - table with a preload of 50M](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-06/report)
+	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-06/)
+* [PG 10 - Non partitioning](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-03/report)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-03/)
-* [Partitioning by Day (400 partitions) - empty table](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-04/report)
+* [PG 10 - Partitioning by Day (400 partitions) - empty table](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-04/report)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-04/)
 
 ### Conclusion
@@ -49,3 +52,8 @@ __Table with a high number (400) of partitions__
 * Postgres do locks every subtable on every insert/select then your statement will be more slower as the number of partitions you have
 * [Don't create too much partitions](https://stackoverflow.com/a/26417922/2979435)
 * As a workaround you can select/insert directly from partition
+
+__Postgres 10 vs Postgres 11__
+
+* Selects are faster on Postgres 11 because of [partition pruning](https://www.postgresql.org/docs/11/ddl-partitioning.html#DDL-PARTITION-PRUNING)
+* Pruning only works for selects BTW 

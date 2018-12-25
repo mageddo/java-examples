@@ -27,8 +27,8 @@
       </ThreadGroup>
       <hashTree>
         <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="occurrence counter" enabled="true">
-          <stringProp name="CounterConfig.start">0</stringProp>
-          <stringProp name="CounterConfig.end">0</stringProp>
+          <stringProp name="CounterConfig.start">60</stringProp>
+          <stringProp name="CounterConfig.end">150</stringProp>
           <stringProp name="CounterConfig.incr">1</stringProp>
           <stringProp name="CounterConfig.name">occurrenceDay</stringProp>
           <stringProp name="CounterConfig.format"></stringProp>
@@ -48,7 +48,7 @@
             </collectionProp>
           </Arguments>
           <hashTree/>
-          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Partition by Day" enabled="true">
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Partition by Day" enabled="false">
             <collectionProp name="Arguments.arguments">
               <elementProp name="SKIN_PRICE_PATH" elementType="Argument">
                 <stringProp name="Argument.name">SKIN_PRICE_PATH</stringProp>
@@ -58,7 +58,7 @@
             </collectionProp>
           </Arguments>
           <hashTree/>
-          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Partition by Month" enabled="false">
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Partition by Month" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="SKIN_PRICE_PATH" elementType="Argument">
                 <stringProp name="Argument.name">SKIN_PRICE_PATH</stringProp>
@@ -141,7 +141,7 @@ try {
         <hashTree>
           <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter ID" enabled="true">
             <stringProp name="CounterConfig.start">1</stringProp>
-            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.end">10000000</stringProp>
             <stringProp name="CounterConfig.incr">2</stringProp>
             <stringProp name="CounterConfig.name">id</stringProp>
             <stringProp name="CounterConfig.format"></stringProp>

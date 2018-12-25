@@ -24,8 +24,8 @@ public class PartitionCreatorJob extends AbstractJob {
 				skinPriceService.createPartitions();
 				skinPriceByDayService.createPartitions();
 			},
-			new CronTrigger("0 */10 * * * *")
-//			new CronTrigger("0 0 */12 * * *")
+//			new CronTrigger("0 */10 * * * *")
+			new CronTrigger("0 0 */12 * * *")
 		);
 	}
 }
