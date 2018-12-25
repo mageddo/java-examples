@@ -39,7 +39,7 @@ __Non partitioned table__
 
 __Partitioned table__
 * Selects by UNIQUE key are a bit slower than on non partitioned tables (0 vs 1ms)
-* Selects by range tends to be faster than no non partitioned tables even mainly if updates are intensive
+* Selects by range tends to be faster than on non partitioned tables even if updates are intensive
 * Inserts performance tends to be constant because a new partition will be used when the current start to get "too big"
 
 __Table with a high number (400) of partitions__ 
@@ -47,3 +47,4 @@ __Table with a high number (400) of partitions__
 	Postgres to do too much overhead for every insert / select
 * Postgres do locks every subtable on every insert/select then your statement will be more slower as the number of partitions you have
 * [Don't create too much partitions](https://stackoverflow.com/a/26417922/2979435)
+* As a workaround you can select/insert directly from partition
