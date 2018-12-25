@@ -20,13 +20,14 @@ HTTP/1.1 200
 * [table partitioning & max_locks_per_transaction](https://www.postgresql.org/message-id/26276.1255229812%40sss.pgh.pa.us)
 
 ### Reports
-* [Partitioning by Month - empty table](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-01/report)
+* [Partitioning by Month (18 partitions) - empty table](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-01/report)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-01/)
 * [Partitioning by Month - table with a preload of 50M](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-02/report)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-02/)
 * [Non partitioning](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-03/)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-03/)
-
+* [Partitioning by Day (400 partitions) - empty table](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-04/report)
+	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-04/)
 
 ### Conclusion
 
