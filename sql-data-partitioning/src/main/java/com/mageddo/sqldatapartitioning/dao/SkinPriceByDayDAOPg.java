@@ -11,9 +11,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Map;
 
-import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
-import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
-
 @Repository
 public class SkinPriceByDayDAOPg implements SkinPriceByDayDAO {
 
@@ -52,8 +49,8 @@ public class SkinPriceByDayDAOPg implements SkinPriceByDayDAO {
 			AND BSSH.IDT_BSK_SKIN_SALE_HISTORY = :id
 			`,
 				Map.of(
-					"from", Timestamp.valueOf(date.with(firstDayOfMonth()).atStartOfDay()),
-					"to", Timestamp.valueOf(date.with(lastDayOfMonth()).plusDays(1).atStartOfDay()),
+					"from", Timestamp.valueOf(date.atStartOfDay()),
+					"to", Timestamp.valueOf(date.plusDays(1).atStartOfDay()),
 					"type", SkinPriceType.RAW.getCode(),
 					"id", id
 				),
