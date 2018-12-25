@@ -1,7 +1,7 @@
 package com.mageddo.sqldatapartitioning.service;
 
 import com.mageddo.sqldatapartitioning.ApplicationContextProvider;
-import com.mageddo.sqldatapartitioning.dao.SkinPriceDAO;
+import com.mageddo.sqldatapartitioning.dao.SkinPriceByDayDAO;
 import com.mageddo.sqldatapartitioning.entity.SkinPriceEntity;
 import com.mageddo.sqldatapartitioning.enums.SkinPriceType;
 import org.slf4j.Logger;
@@ -13,26 +13,26 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 @Service
-public class SkinPriceService {
+public class SkinPriceByDayService {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	private final SkinPriceDAO skinPriceDAO;
+	private final SkinPriceByDayDAO skinPriceByDayDAO;
 
-	public SkinPriceService(SkinPriceDAO skinPriceDAO) {
-		this.skinPriceDAO = skinPriceDAO;
+	public SkinPriceByDayService(SkinPriceByDayDAO skinPriceByDayDAO) {
+		this.skinPriceByDayDAO = skinPriceByDayDAO;
 	}
 
 	public SkinPriceEntity find(LocalDate date, Long id) {
-		return skinPriceDAO.find(date, id);
+		return skinPriceByDayDAO.find(date, id);
 	}
 
 	public void create(SkinPriceEntity skinPrice) {
-		skinPriceDAO.create(skinPrice);
+		skinPriceByDayDAO.create(skinPrice);
 	}
 
 	public void createPartitions() {
-		LocalDate currentDate = LocalDate.now().withDayOfMonth(1);
-		for (int i = 0; i < 18; i++) {
+		LocalDate currentDate = LocalDate.now();
+		for (int i = 0; i < 400; i++) {
 			try {
 				self().createPartition(currentDate, SkinPriceType.RAW);
 			} catch (Exception e){
@@ -43,16 +43,16 @@ public class SkinPriceService {
 				logger.error("status=creation-failed", e);
 				throw e;
 			}
-			currentDate = currentDate.plusMonths(1);
+			currentDate = currentDate.plusDays(1);
 		}
 	}
 
-	protected SkinPriceService self(){
+	protected SkinPriceByDayService self(){
 		return ApplicationContextProvider.context().getBean(getClass());
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void createPartition(LocalDate date, SkinPriceType type){
-		skinPriceDAO.createPartition(date, type);
+		skinPriceByDayDAO.createPartition(date, type);
 	}
 }
