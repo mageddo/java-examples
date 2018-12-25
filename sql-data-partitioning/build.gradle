@@ -1,5 +1,5 @@
 plugins {
-	id "org.flywaydb.flyway" version "5.0.7"
+	id "org.flywaydb.flyway" version "5.2.4"
 }
 
 apply plugin: 'application'
@@ -30,6 +30,7 @@ def path = 'src/main/resources/application.properties'
 def p = new Properties()
 p.load(new FileInputStream(new File(project.projectDir, path)))
 flyway {
+	locations = ["filesystem:${projectDir}/src/main/resources/db/postgres-11"]
 	url = p.getProperty('spring.datasource.url')
 	user = 'root'
 	password = 'root'
