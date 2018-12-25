@@ -1,3 +1,8 @@
+#### Reports
+* https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-01/
+* https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-02/
+* https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-03/
+
 #### Finding skin price by id
 
 ```bash
