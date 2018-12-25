@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Map;
 
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
@@ -73,10 +72,7 @@ public class SkinPriceByDayDAOPg implements SkinPriceByDayDAO {
 					.addValue("from", String.valueOf(date))
 					.addValue(
 						"to", String.valueOf(
-							date.with(TemporalAdjusters.lastDayOfMonth())
-								.plusDays(1)
-								.atStartOfDay()
-								.minusNanos(1)
+							date.plusDays(1).atStartOfDay().minusNanos(1)
 						)
 					)
 					.addValue("type", type.getCode()),
