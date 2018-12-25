@@ -24,7 +24,7 @@ HTTP/1.1 200
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-01/)
 * [Partitioning by Month - table with a preload of 50M](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-02/report)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-02/)
-* [Non partitioning](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-03/)
+* [Non partitioning](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-03/report)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-03/)
 * [Partitioning by Day (400 partitions) - empty table](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-04/report)
 	* [Considerations](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-04/)
