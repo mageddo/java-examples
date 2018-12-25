@@ -18,6 +18,7 @@ HTTP/1.1 200
 
 ### Interesting links
 * [table partitioning & max_locks_per_transaction](https://www.postgresql.org/message-id/26276.1255229812%40sss.pgh.pa.us)
+* https://dba.stackexchange.com/questions/193402/why-declarative-partitioning-on-postgresql-10-is-slower-than-the-non-partitioned
 
 ### Reports
 * [Partitioning by Month (18 partitions) - empty table](https://mageddo.github.io/java-examples/sql-data-partitioning/docs/report-01/report)
