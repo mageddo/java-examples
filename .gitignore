@@ -7,3 +7,4 @@ build
 old
 maven
 out
+transient
