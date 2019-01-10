@@ -17,7 +17,6 @@ repositories {
 
 apply plugin: 'java'
 apply plugin: 'application'
-apply plugin: 'org.hibernate.orm'
 
 mainClassName = 'com.mageddo.jpa.Main'
 sourceCompatibility = JavaVersion.VERSION_1_8

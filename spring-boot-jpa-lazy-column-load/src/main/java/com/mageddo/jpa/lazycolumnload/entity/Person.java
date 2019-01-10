@@ -1,4 +1,4 @@
-package com.mageddo.jpa.entity;
+package com.mageddo.jpa.lazycolumnload.entity;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
