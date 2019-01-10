@@ -1,10 +1,12 @@
 package com.mageddo.jpa.lazycolumnload;
 
-import com.mageddo.jpa.entity.Person;
 import com.mageddo.jpa.lazycolumnload.dao.PersonDAO;
+import com.mageddo.jpa.lazycolumnload.entity.Person;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+@SpringBootApplication
 public class AppStarter {
 	public static void main(String[] args) {
 		final ConfigurableApplicationContext ctx = SpringApplication.run(AppStarter.class, args);

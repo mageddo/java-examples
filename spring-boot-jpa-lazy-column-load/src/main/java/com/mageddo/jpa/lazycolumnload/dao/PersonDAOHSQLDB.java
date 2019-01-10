@@ -1,6 +1,6 @@
 package com.mageddo.jpa.lazycolumnload.dao;
 
-import com.mageddo.jpa.entity.Person;
+import com.mageddo.jpa.lazycolumnload.entity.Person;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
