@@ -2,21 +2,31 @@ package com.mageddo.jpa.lazycolumnload.service;
 
 import com.mageddo.jpa.lazycolumnload.dao.PersonDAO;
 import com.mageddo.jpa.lazycolumnload.entity.Person;
+import org.hibernate.cache.internal.NoCachingRegionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PersonService {
 
-	private final PersonDAO personDAO;
+	@Autowired
+	private PersonDAO personDAO;
 
-	public PersonService(PersonDAO personDAO) {
-		this.personDAO = personDAO;
-	}
+	@Autowired
+	private PersonService personService;
+
 
 	@Transactional
 	public void createAndFind() {
-		final Person person = personDAO.save(new Person("Elvis"));
-		personDAO.find(person.getId()).getName();
+		int id = personService.create();
+		Person foundPerson = personDAO.find(id);
+		System.out.println(foundPerson.getName());
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public int create() {
+		return personDAO.save(new Person("Elvis")).getId();
 	}
 }

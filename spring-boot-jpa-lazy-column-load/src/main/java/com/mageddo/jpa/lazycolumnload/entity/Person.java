@@ -13,7 +13,7 @@ public class Person {
 
 	@Id
 	@GeneratedValue
-	private int id;
+	private Integer id;
 
 	@Column(length = 255, nullable = false)
 	@Lob
