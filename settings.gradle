@@ -22,3 +22,4 @@ include ':jaxb'
 
 include ':general-samples'
 include ':sql-data-partitioning'
+include ':spring-boot-jpa-lazy-column-load'
