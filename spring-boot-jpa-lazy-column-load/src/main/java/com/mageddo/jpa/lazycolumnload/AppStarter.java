@@ -1,17 +1,16 @@
 package com.mageddo.jpa.lazycolumnload;
 
-import com.mageddo.jpa.lazycolumnload.dao.PersonDAO;
-import com.mageddo.jpa.lazycolumnload.entity.Person;
+import com.mageddo.jpa.lazycolumnload.service.PersonService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 @SpringBootApplication
 public class AppStarter {
 	public static void main(String[] args) {
-		final ConfigurableApplicationContext ctx = SpringApplication.run(AppStarter.class, args);
-		final PersonDAO personDAO = ctx.getBean(PersonDAO.class);
-		final Person person = personDAO.save(new Person("Elvis"));
-		personDAO.find(person.getId()).getName();
+		SpringApplication.run(AppStarter.class, args)
+			.getBean(PersonService.class)
+			.createAndFind();
 	}
 }
