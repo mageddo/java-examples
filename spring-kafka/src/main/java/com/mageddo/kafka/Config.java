@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.support.CronTrigger;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,7 +35,7 @@ public class Config implements InitializingBean {
 		KafkaProperties kafkaProperties,
 		@Value("${spring.kafka.consumer.autostartup:true}") boolean autostartup /* startup consumer automatically */
 	) {
-		return new ConsumerDeclarer(beanFactory, kafkaProperties, autostartup);
+		return new ConsumerDeclarer(beanFactory, kafkaProperties, autostartup, new CronTrigger("0/15 * * * * *"));
 	}
 
 	@Bean
