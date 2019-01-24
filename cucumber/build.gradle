@@ -1,3 +1,9 @@
+buildscript {
+	dependencies {
+		classpath group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
+	}
+}
+
 plugins {
 	id "com.commercehub.cucumber-jvm" version "0.14"
 }
@@ -9,4 +15,16 @@ cucumber {
 	// stepDefinitionRoots = ['ps.cip.componenttests', 'src/test/java/ps/cip/componenttests']
 	// featureRoots = ['src/test/resources/feature', 'feature']
 	suite('cucumber')
+}
+
+sourceSets {
+	main {
+		compileClasspath += configurations.cucumberCompile
+		test.compileClasspath += configurations.cucumberCompile
+		test.runtimeClasspath += configurations.cucumberCompile
+	}
+}
+
+dependencies {
+	cucumberCompile group: "info.cukes", name: "cucumber-java", version: '1.2.5'
 }
