@@ -7,6 +7,6 @@ allprojects {
 	}
 	apply plugin: 'java'
 	tasks.withType(JavaCompile) {
-		options.encoding = StandardCharsets.UTF_8.name()
+		options.encoding = StandardCharsets.UTF_8.displayName()
 	}
 }

@@ -1,0 +1,12 @@
+plugins {
+	id "com.commercehub.cucumber-jvm" version "0.14"
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+cucumber {
+	// stepDefinitionRoots = ['ps.cip.componenttests', 'src/test/java/ps/cip/componenttests']
+	// featureRoots = ['src/test/resources/feature', 'feature']
+	suite('cucumber')
+}
