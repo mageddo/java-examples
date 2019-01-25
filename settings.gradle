@@ -13,7 +13,6 @@ include ':jdbc-pool'
 include ':jdbc-template-without-spring'
 include ':jvm-garbage-collection'
 
-include ':spring-boot-graalvm'
 include ':spring-boot-jdbc'
 include ':spring-boot-jpa'
 include ':spring-boot-jpa-lazy-column-load'
