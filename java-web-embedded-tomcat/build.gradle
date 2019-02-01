@@ -17,8 +17,8 @@ repositories {
 }
 
 apply plugin: 'java'
-apply plugin: 'org.springframework.boot'
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 ext {
 	springVersion = '4.3.6.RELEASE'

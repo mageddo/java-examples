@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableAspectJAutoProxy
-@EnableAutoConfiguration
-@EnableTransactionManagement
-@ComponentScan
+@EnableTransactionManagement(proxyTargetClass = true)
 @Configuration
 public class Application {
 
