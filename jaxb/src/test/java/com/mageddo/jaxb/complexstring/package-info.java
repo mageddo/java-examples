@@ -8,7 +8,7 @@
 /*
  * Classe para definir o namespace geral do pacote. Namespace padrão não funciona nessa implementação da JAXB
  */
-package com.mageddo.jaxb;
+package com.mageddo.jaxb.complexstring;
 
 import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlNsForm;

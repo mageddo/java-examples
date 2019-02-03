@@ -1,4 +1,4 @@
-package com.mageddo.jaxb;
+package com.mageddo.jaxb.complexstring;
 
 import org.junit.Test;
 
