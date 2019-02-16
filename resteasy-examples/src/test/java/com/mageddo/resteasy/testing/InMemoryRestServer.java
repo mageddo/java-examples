@@ -1,4 +1,4 @@
-package com.mageddo.jaxrs.resteasy.perrequesttimeout.testing;
+package com.mageddo.resteasy.testing;
 
 import io.undertow.Undertow;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;

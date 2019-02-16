@@ -1,6 +1,6 @@
-package com.mageddo.jaxrs.resteasy.perrequesttimeout;
+package com.mageddo.resteasy;
 
-import com.mageddo.jaxrs.resteasy.perrequesttimeout.testing.InMemoryRestServer;
+import com.mageddo.resteasy.testing.InMemoryRestServer;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class RestEasyClientTest {
+public class RequestSpecificTimeoutTest {
 
 	@ClassRule
 	public static final InMemoryRestServer server = new InMemoryRestServer(Proxy.class);

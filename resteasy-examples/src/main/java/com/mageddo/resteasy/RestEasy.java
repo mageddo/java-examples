@@ -1,4 +1,4 @@
-package com.mageddo.jaxrs.resteasy.perrequesttimeout;
+package com.mageddo.resteasy;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
