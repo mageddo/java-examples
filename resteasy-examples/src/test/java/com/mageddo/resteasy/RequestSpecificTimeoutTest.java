@@ -11,6 +11,9 @@ import javax.ws.rs.core.Response;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+/**
+ * @see <a href="https://stackoverflow.com/questions/31954353/how-can-i-upload-image-and-data-in-the-same-request-with-angular-and-resteasy">How can I upload image and data in the same request with angular and resteasy?</a>
+ */
 public class RequestSpecificTimeoutTest {
 
 	@ClassRule
