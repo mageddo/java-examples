@@ -21,7 +21,7 @@ import java.io.InputStream;
 import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
 import static org.junit.Assert.assertEquals;
 
-public class ImgurServiceTest {
+public class FileUploadExampleTest {
 
 	@ClassRule
 	public static final InMemoryRestServer server = new InMemoryRestServer(Proxy.class);
