@@ -4,4 +4,7 @@
 	<rule ref="category/java/errorprone.xml">
 		<exclude name="DataflowAnomalyAnalysis"/>
 	</rule>
+	<rule ref="category/java/multithreading.xml" />
+	<rule ref="category/java/performance.xml" />
+	<rule ref="category/java/security.xml" />
 </ruleset>
