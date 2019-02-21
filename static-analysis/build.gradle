@@ -1,0 +1,8 @@
+plugins {
+	id 'pmd'
+}
+
+pmd {
+	ruleSetFiles("$projectDir/rules.xml")
+	ruleSets = []
+}

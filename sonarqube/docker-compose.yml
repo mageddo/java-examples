@@ -1,0 +1,8 @@
+version: '3'
+services:
+  sonarqube:
+    image: sonarqube:7.6-community
+    hostname: sonarqube.docker
+    volumes:
+      - /opt/databases/sonarqube/data:/opt/sonarqube/data
+      - /opt/databases/sonarqube/logs:/opt/sonarqube/logs
