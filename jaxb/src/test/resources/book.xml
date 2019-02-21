@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<book xmlns="http://www.acme.com/xsd.xsd">
+	<publisher>
+		<name>Acme Inc.</name>
+	</publisher>
+	<messageId>407d4015-10ef-4bf7-bf7d-e4c68a1c658b</messageId>
+	<author>Victor Hugo</author>
+	<title>Los Miserables</title>
+</book>
