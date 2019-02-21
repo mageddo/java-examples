@@ -1,0 +1,16 @@
+import java.nio.charset.StandardCharsets
+
+plugins {
+	id "org.sonarqube" version "2.7"
+	id "java"
+}
+
+// https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle#AnalyzingwithSonarQubeScannerforGradle-Example
+sonarqube {
+	properties {
+		property "sonar.profile", "elvis-profile"
+		property "sonar.host.url", "http://sonarqube.docker:9000"
+		property "sonar.sourceEncoding", StandardCharsets.UTF_8.displayName()
+		property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
+	}
+}
