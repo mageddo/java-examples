@@ -1,3 +1,5 @@
+package com.mageddo;
+
 public class UnusedVariableClass {
 
 	public String name = "Elvis";
