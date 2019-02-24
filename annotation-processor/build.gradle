@@ -1,0 +1,17 @@
+import java.nio.charset.StandardCharsets
+
+allprojects {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
+	apply plugin: 'java'
+	tasks.withType(JavaCompile) {
+		options.encoding = StandardCharsets.UTF_8.displayName()
+	}
+
+	sourceCompatibility = JavaVersion.VERSION_1_7
+	targetCompatibility = JavaVersion.VERSION_1_7
+
+}
+

@@ -1,0 +1,4 @@
+dependencies {
+//    compile (project(':processor'))
+    compile files("$rootProject.rootDir/processor/build/libs/processor.jar")
+}
