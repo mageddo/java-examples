@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--More rules in https://pmd.github.io/pmd-6.11.0/pmd_rules_java.html-->
+<ruleset name="myruleset">
+	<description>My ruleset</description>
+	<rule ref="category/java/bestpractices.xml" />
+	<rule ref="category/java/codestyle.xml" />
+	<rule ref="category/java/design.xml" />
+	<rule ref="category/java/documentation.xml" />
+	<rule ref="category/java/errorprone.xml"/>
+	<rule ref="category/java/multithreading.xml" />
+	<rule ref="category/java/performance.xml" />
+	<rule ref="category/java/security.xml" />
+</ruleset>

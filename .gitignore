@@ -8,3 +8,4 @@ old
 maven
 out
 transient
+*.orig
