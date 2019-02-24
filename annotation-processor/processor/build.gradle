@@ -1,7 +1,3 @@
 dependencies {
-
-//	println("${System.properties['java.home']}/lib/tools.jar")
-    compile files("/opt/jdk-7/lib/tools.jar")
-//    compile files("/home/typer/dev/projects/java-examples/annotation-processor/build/libs/annotation-processor-final.jar")
-
+    compile files("${System.properties['org.gradle.java.home']}/lib/tools.jar")
 }

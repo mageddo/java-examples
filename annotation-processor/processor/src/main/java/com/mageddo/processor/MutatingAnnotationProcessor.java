@@ -18,13 +18,6 @@ import javax.tools.JavaFileObject;
 import java.util.Set;
 
 
-/*
-javac -cp annotation-processor.jar \
--processor com.mageddo.processor.MutatingAnnotationProcessor \
--d build/
-examples/src/main/java/com/javacodegeeks/advanced/processor/examples/MutableClass.java
-*/
-
 @SupportedAnnotationTypes("com.mageddo.processor.Immutable")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class MutatingAnnotationProcessor extends AbstractProcessor {
