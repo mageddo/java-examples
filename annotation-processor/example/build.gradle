@@ -1,4 +1,6 @@
 dependencies {
-//    compile (project(':processor'))
-    compile files("$rootProject.rootDir/processor/build/libs/processor.jar")
+//	compile(project(':processor'))
+	compile files("$rootProject.rootDir/processor/build/libs/processor.jar")
+	annotationProcessor files("$rootProject.rootDir/processor/build/libs/processor.jar")
+	testCompile 'junit:junit:4.12'
 }
