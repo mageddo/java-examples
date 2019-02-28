@@ -1,13 +1,129 @@
 <?xml version="1.0"?>
-<!--More rules in https://pmd.github.io/pmd-6.11.0/pmd_rules_java.html-->
 <ruleset name="myruleset">
-	<description>My ruleset</description>
-	<rule ref="category/java/bestpractices.xml" />
-	<rule ref="category/java/codestyle.xml" />
-	<rule ref="category/java/design.xml" />
-	<rule ref="category/java/documentation.xml" />
-	<rule ref="category/java/errorprone.xml"/>
-	<rule ref="category/java/multithreading.xml" />
-	<rule ref="category/java/performance.xml" />
+	<description>CIP RULESET</description>
+
+	<exclude-pattern>.*/core/email/.*</exclude-pattern>
+	<exclude-pattern>.*PlatformUtils.*</exclude-pattern>
+
+	<rule ref="category/java/bestpractices.xml" >
+		<exclude name="GuardLogStatement" />
+		<exclude name="ForLoopCanBeForeach" />
+		<exclude name="OneDeclarationPerLine" />
+		<exclude name="UseVarargs" />
+		<exclude name="SwitchStmtsShouldHaveDefault" />
+		<exclude name="UseCollectionIsEmpty" />
+	</rule>
+
+	<rule ref="category/java/codestyle.xml" >
+		<exclude name="BooleanGetMethodName" />
+		<exclude name="AtLeastOneConstructor" />
+		<exclude name="MethodArgumentCouldBeFinal" />
+		<exclude name="LocalVariableCouldBeFinal" />
+		<exclude name="DefaultPackage" />
+		<exclude name="CommentDefaultAccessModifier" />
+		<exclude name="LongVariable"/>
+		<exclude name="OnlyOneReturn"/>
+		<exclude name="ConfusingTernary"/>
+		<exclude name="CallSuperInConstructor"/>
+		<exclude name="ShortVariable"/>
+		<exclude name="TooManyStaticImports"/>
+		<exclude name="AvoidFinalLocalVariable"/>
+		<exclude name="UnnecessaryAnnotationValueElement"/>
+	</rule>
+	<rule ref="category/java/codestyle.xml/LinguisticNaming" >
+		<properties>
+			<property name="checkBooleanMethod" value="false"  />
+			<property name="checkSetters" value="false"  />
+		</properties>
+	</rule>
+	<rule ref="category/java/codestyle.xml/LongVariable" >
+		<properties>
+			<property name="minimum" type="Integer" value="40"  />
+		</properties>
+	</rule>
+	<rule ref="category/java/codestyle.xml/ClassNamingConventions" >
+		<properties>
+			<property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(r|s|S|Utils|Helper)"/>
+		</properties>
+	</rule>
+	<!-- metodos equals e hashcode nao precisam validar o if sem chaves-->
+	<rule ref="category/java/codestyle.xml/ControlStatementBraces" >
+		<properties>
+			<property name="violationSuppressXPath" value="//MethodDeclarator[@Image='hashCode' or @Image='equals']"/>
+		</properties>
+	</rule>
+	<rule ref="category/java/design.xml" >
+		<exclude name="AvoidCatchingGenericException" />
+		<exclude name="AvoidThrowingRawExceptionTypes" />
+		<exclude name="LawOfDemeter" />
+		<exclude name="ExcessiveImports" />
+		<exclude name="TooManyMethods" />
+		<exclude name="DataClass" />
+		<exclude name="TooManyFields" />
+		<exclude name="GodClass" />
+	</rule>
+
+	<rule ref="category/java/design.xml/CyclomaticComplexity" >
+		<properties>
+			<property name="violationSuppressXPath" value="//MethodDeclarator[@Image='hashCode' or @Image='equals']"/>
+		</properties>
+	</rule>
+	<rule ref="category/java/design.xml/ExcessivePublicCount" >
+		<properties>
+			<property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration['.*Entity']"/>
+			<property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration['.*VO']"/>
+			<property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration['.*Vo']"/>
+		</properties>
+	</rule>
+	<rule ref="category/java/design.xml/UseUtilityClass" >
+		<properties>
+			<property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration['.*Starter']"/>
+		</properties>
+	</rule>
+
+	<rule ref="category/java/documentation.xml" >
+		<exclude name="CommentRequired" />
+		<exclude name="UncommentedEmptyConstructor" />
+		<exclude name="UncommentedEmptyMethodBody" />
+	</rule>
+	<rule ref="category/java/documentation.xml/CommentSize" >
+		<properties>
+			<property name="maxLines" value="30"  />
+			<property name="maxLineLength" value="121"  />
+		</properties>
+	</rule>
+
+
+	<rule ref="category/java/errorprone.xml">
+		<exclude name="DataflowAnomalyAnalysis"/>
+		<exclude name="BeanMembersShouldSerialize"/>
+		<exclude name="AvoidFieldNameMatchingMethodName"/>
+		<exclude name="NullAssignment"/>
+		<exclude name="UseLocaleWithCaseConversions"/>
+		<exclude name="SimpleDateFormatNeedsLocale"/>
+		<exclude name="AvoidFieldNameMatchingTypeName"/>
+		<exclude name="LoggerIsNotStaticFinal"/>
+		<exclude name="MissingSerialVersionUID"/>
+		<exclude name="ConstructorCallsOverridableMethod"/>
+		<exclude name="CloneThrowsCloneNotSupportedException"/>
+		<exclude name="AssignmentInOperand"/>
+	</rule>
+	<rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals" >
+		<properties>
+			<property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration['.*DAO.*']"/>
+			<property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration['.*Dao']"/>
+		</properties>
+	</rule>
+
+	<rule ref="category/java/multithreading.xml" >
+		<exclude name="UseConcurrentHashMap" />
+	</rule>
+	<rule ref="category/java/performance.xml" >
+		<exclude name="InsufficientStringBufferDeclaration" />
+		<exclude name="AvoidInstantiatingObjectsInLoops" />
+		<exclude name="ConsecutiveLiteralAppends" />
+		<exclude name="ConsecutiveAppendsShouldReuse" />
+		<exclude name="AppendCharacterWithChar" />
+	</rule>
 	<rule ref="category/java/security.xml" />
 </ruleset>
