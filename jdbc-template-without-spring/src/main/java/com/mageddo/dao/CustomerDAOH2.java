@@ -18,7 +18,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDAOH2.class);
 
-	private JdbcTemplate jdbcTemplate = DBUtils.getTemplate();
+	private JdbcTemplate jdbcTemplate = DBUtils.template();
 
 	@Override
 	public List<CustomerEntity> findByName(String name) {

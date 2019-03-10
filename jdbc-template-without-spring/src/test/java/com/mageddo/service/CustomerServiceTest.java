@@ -1,14 +1,10 @@
 package com.mageddo.service;
 
-import static com.mageddo.utils.DBUtils.getTx;
-import static org.springframework.transaction.TransactionDefinition.PROPAGATION_REQUIRES_NEW;
-
 import com.mageddo.dao.CustomerDAO;
 import com.mageddo.dao.CustomerDAOH2;
 import com.mageddo.dao.DatabaseBuilderDAO;
 import com.mageddo.dao.DatabaseBuilderDAOH2;
 import com.mageddo.utils.DBUtils;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -17,6 +13,10 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import static com.mageddo.utils.DBUtils.tx;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.transaction.TransactionDefinition.PROPAGATION_REQUIRES_NEW;
 
 /**
  * @author elvis
@@ -38,25 +38,24 @@ public class CustomerServiceTest {
 	@Test
 	public void noTransactional() throws Exception {
 
-		Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+		assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
 
-		DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
+		DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
 
-		Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+		assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
 
 	}
 
 	@Test
 	public void transactionalUpdate() throws Exception {
 
+		new TransactionTemplate(tx()).execute(st -> {
 
-		new TransactionTemplate(getTx()).execute(st -> {
+			assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
 
-			Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+			DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
 
-			DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
-
-			Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+			assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
 
 			st.setRollbackOnly();
 
@@ -64,30 +63,46 @@ public class CustomerServiceTest {
 
 		});
 
-		Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+		assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+
+	}
+
+
+	@Test
+	public void transactionalUpdateWithManualRollback() throws Exception {
+
+		final TransactionStatus transactionStatus = tx().getTransaction(new DefaultTransactionDefinition());
+
+		assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+		DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
+		assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+
+		tx().rollback(transactionStatus);
+
+		assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
 
 	}
 
 	@Test
 	public void transactionalUpdateWithRollbackSuccess() throws Exception {
 
-		final TransactionStatus status = getTx().getTransaction(new DefaultTransactionDefinition());
+		final TransactionStatus status = tx().getTransaction(new DefaultTransactionDefinition());
 		try {
-			Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+			assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
 
-			DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
+			DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
 
 			status.setRollbackOnly();
 
-			Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+			assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
 
-			getTx().commit(status);
+			tx().commit(status);
 		} catch (Exception ex) {
-			getTx().rollback(status);
+			tx().rollback(status);
 			throw ex;
 		}
 
-		Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+		assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
 
 	}
 
@@ -95,20 +110,20 @@ public class CustomerServiceTest {
 	@Test
 	public void progragationTest() throws Exception {
 
-		new TransactionTemplate(DBUtils.getTx(), new DefaultTransactionDefinition(PROPAGATION_REQUIRES_NEW)).execute(status -> {
+		new TransactionTemplate(DBUtils.tx(), new DefaultTransactionDefinition(PROPAGATION_REQUIRES_NEW)).execute(status -> {
 
-			Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
-			DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
-			Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+			assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+			DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
+			assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
 
-			return new TransactionTemplate(DBUtils.getTx(), new DefaultTransactionDefinition(PROPAGATION_REQUIRES_NEW)).execute(status2 -> {
-				Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+			return new TransactionTemplate(DBUtils.tx(), new DefaultTransactionDefinition(PROPAGATION_REQUIRES_NEW)).execute(status2 -> {
+				assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
 				return null;
 			});
 
 		});
 
-		Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+		assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
 
 	}
 
@@ -116,20 +131,20 @@ public class CustomerServiceTest {
 	@Test
 	public void transactionalUpdateWithRollbackAndTransactionTemplateSuccess() throws Exception {
 
-		new TransactionTemplate(getTx()).execute(status -> {
+		new TransactionTemplate(tx()).execute(status -> {
 
-			Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+			assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
 
-			DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
+			DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
 
 			status.setRollbackOnly();
 
-			Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+			assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
 			return null;
 
 		});
 
-		Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+		assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
 
 	}
 
@@ -143,15 +158,15 @@ public class CustomerServiceTest {
 		final DefaultTransactionDefinition def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
 		try {
 
-			new TransactionTemplate(getTx(), def).execute(status -> {
+			new TransactionTemplate(tx(), def).execute(status -> {
 
-				Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
-				DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
-				Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+				assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+				DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
+				assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
 
-				return new TransactionTemplate(getTx(), def).execute(status2 -> {
-					DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X2' WHERE FIRST_NAME='Jeff'");
-					Assert.assertEquals("X2", customerDAO.findFirstByName("Jeff").getLastName());
+				return new TransactionTemplate(tx(), def).execute(status2 -> {
+					DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X2' WHERE FIRST_NAME='Jeff'");
+					assertEquals("X2", customerDAO.findFirstByName("Jeff").getLastName());
 					status2.setRollbackOnly();
 					return null;
 				});
@@ -162,8 +177,8 @@ public class CustomerServiceTest {
 			logger.error("msg={}", e.getMessage(), e);
 		}
 
-		Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
-		Assert.assertEquals("Dean", customerDAO.findFirstByName("Jeff").getLastName());
+		assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+		assertEquals("Dean", customerDAO.findFirstByName("Jeff").getLastName());
 
 	}
 
@@ -176,15 +191,15 @@ public class CustomerServiceTest {
 		final DefaultTransactionDefinition def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
 		try {
 
-			new TransactionTemplate(getTx(), def).execute(status -> {
+			new TransactionTemplate(tx(), def).execute(status -> {
 
-				Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
-				DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
-				Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+				assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+				DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
+				assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
 
-				return new TransactionTemplate(getTx(), new DefaultTransactionDefinition(PROPAGATION_REQUIRES_NEW)).execute(status2 -> {
-					DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X2' WHERE FIRST_NAME='Jeff'");
-					Assert.assertEquals("X2", customerDAO.findFirstByName("Jeff").getLastName());
+				return new TransactionTemplate(tx(), new DefaultTransactionDefinition(PROPAGATION_REQUIRES_NEW)).execute(status2 -> {
+					DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X2' WHERE FIRST_NAME='Jeff'");
+					assertEquals("X2", customerDAO.findFirstByName("Jeff").getLastName());
 					status2.setRollbackOnly();
 					return null;
 				});
@@ -195,8 +210,8 @@ public class CustomerServiceTest {
 			logger.error("msg={}", e.getMessage(), e);
 		}
 
-		Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
-		Assert.assertEquals("Dean", customerDAO.findFirstByName("Jeff").getLastName());
+		assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+		assertEquals("Dean", customerDAO.findFirstByName("Jeff").getLastName());
 
 	}
 
@@ -211,19 +226,19 @@ public class CustomerServiceTest {
 		final DefaultTransactionDefinition def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
 		try {
 
-			new TransactionTemplate(getTx(), def).execute(status -> {
+			new TransactionTemplate(tx(), def).execute(status -> {
 
-					Assert.assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
-					DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
-					Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+					assertEquals("Long", customerDAO.findFirstByName("Mark").getLastName());
+					DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X' WHERE FIRST_NAME='Mark'");
+					assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
 
 					return null;
 
 				});
 
-				new TransactionTemplate(getTx(), def).execute(status2 -> {
-					DBUtils.getTemplate().execute("UPDATE CUSTOMERS SET LAST_NAME='X2' WHERE FIRST_NAME='Jeff'");
-					Assert.assertEquals("X2", customerDAO.findFirstByName("Jeff").getLastName());
+				new TransactionTemplate(tx(), def).execute(status2 -> {
+					DBUtils.template().execute("UPDATE CUSTOMERS SET LAST_NAME='X2' WHERE FIRST_NAME='Jeff'");
+					assertEquals("X2", customerDAO.findFirstByName("Jeff").getLastName());
 					status2.setRollbackOnly();
 					return null;
 				});
@@ -232,8 +247,8 @@ public class CustomerServiceTest {
 			logger.error("msg={}", e.getMessage(), e);
 		}
 
-		Assert.assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
-		Assert.assertEquals("Dean", customerDAO.findFirstByName("Jeff").getLastName());
+		assertEquals("X", customerDAO.findFirstByName("Mark").getLastName());
+		assertEquals("Dean", customerDAO.findFirstByName("Jeff").getLastName());
 
 	}
 

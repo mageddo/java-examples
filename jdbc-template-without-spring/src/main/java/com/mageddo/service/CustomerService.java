@@ -20,7 +20,7 @@ public class CustomerService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
 
 	private CustomerDAO customerDAO = new CustomerDAOH2();
-	private PlatformTransactionManager txManger = DBUtils.getTx();
+	private PlatformTransactionManager txManger = DBUtils.tx();
 
 	public List<CustomerEntity> findByName(final String name){
 		return new TransactionTemplate(txManger, new DefaultTransactionDefinition())
