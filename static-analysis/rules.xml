@@ -3,7 +3,7 @@
 	<description>CIP RULESET</description>
 
 	<exclude-pattern>.*/core/email/.*</exclude-pattern>
-	<exclude-pattern>.*PlatformUtils.*</exclude-pattern>
+	<exclude-pattern>.*ClassWithUnusedVariables.*</exclude-pattern>
 
 	<rule ref="category/java/bestpractices.xml" >
 		<exclude name="GuardLogStatement" />
