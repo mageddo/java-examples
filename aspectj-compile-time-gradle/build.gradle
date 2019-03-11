@@ -1,0 +1,24 @@
+plugins {
+	id "java"
+	id "application"
+	id "io.freefair.aspectj.post-compile-weaving" version "3.1.4"
+	id "com.palantir.graal" version "0.3.0-2-g6c49b4d"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+mainClassName = "com.huongdanjava.aspectj.Application"
+
+graal {
+	mainClass 'com.huongdanjava.aspectj.Application'
+	graalVersion("1.0.0-rc13")
+	outputName(project.name)
+	option("-Dfile.encoding=UTF-8")
+	option("--no-server")
+}
+
+
+dependencies {
+	compile "org.aspectj:aspectjrt:1.9.1"
+}

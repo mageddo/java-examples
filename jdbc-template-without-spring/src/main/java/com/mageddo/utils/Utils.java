@@ -1,23 +1,21 @@
 package com.mageddo.utils;
 
-import org.springframework.core.env.Environment;
-import org.springframework.profile.SpringEnvSingleton;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Properties;
 
-/**
- * Created by elvis on 29/04/17.
- */
-public class Utils {
+public final class Utils {
 
-	public static void sleep(long millis){
-		try {
-			Thread.sleep(millis);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
+	private Utils() {
 	}
 
-	public static Environment getEnv(){
-		SpringEnvSingleton.prepareEnv(new String[]{});
-		return SpringEnvSingleton.getEnv();
+	public static Properties loadProps(){
+		try {
+			Properties properties = new Properties();
+			properties.load(Utils.class.getResourceAsStream("/application.properties"));
+			return properties;
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
 	}
 }

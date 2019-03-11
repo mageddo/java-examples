@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class DatabaseBuilderDAOH2 implements DatabaseBuilderDAO {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseBuilderDAOH2.class);
-	private final JdbcTemplate template = DBUtils.getTemplate();
+	private final JdbcTemplate template = DBUtils.template();
 	private boolean builded = false;
 
 	@Override
