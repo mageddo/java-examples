@@ -23,14 +23,37 @@ graal {
 	option("--no-server")
 }
 
+compileJava {
+	
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		showStandardStreams = true
+		events "passed", "skipped", "failed"
+	}
+}
+
+configurations {
+	provided
+}
+
+sourceSets {
+	main {
+		compileClasspath += configurations.provided
+		test.compileClasspath += configurations.provided
+		test.runtimeClasspath += configurations.provided
+	}
+}
 
 dependencies {
 
 	compile ("org.aspectj:aspectjrt:1.9.2")
+	
 	// only necessary when using load time
-	compile ("org.aspectj:aspectjweaver:1.9.2")
-	compile ("com.ea.agentloader:ea-agent-loader:1.0.3")
+	provided ("org.aspectj:aspectjweaver:1.9.2")
+	provided ("com.ea.agentloader:ea-agent-loader:1.0.3")
 
-
-	testCompile ("org.junit.jupiter:junit-jupiter-api:5.4.0")
+	testCompile('org.junit.jupiter:junit-jupiter:5.4.0')
 }

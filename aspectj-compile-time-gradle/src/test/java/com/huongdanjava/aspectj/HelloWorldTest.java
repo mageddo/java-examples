@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class HelloWorldTest {
 
 	@Test
-	public void aspectJShouldProxyHelloMethod(){
+	public void aspectJShouldProxyHelloMethodTest() throws Throwable {
 
 		final String msg = new HelloWorld().hello("Maria");
 
