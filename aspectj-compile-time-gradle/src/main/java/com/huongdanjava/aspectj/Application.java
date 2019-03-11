@@ -1,8 +1,11 @@
 package com.huongdanjava.aspectj;
 
+import com.ea.agentloader.AgentLoader;
+
 public class Application {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Throwable {
+		AgentLoader.loadAgentClass("org.aspectj.weaver.loadtime.Agent", "");
 		new Application().run();
 	}
 

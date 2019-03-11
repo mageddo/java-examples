@@ -29,6 +29,8 @@ dependencies {
 	compile ("org.aspectj:aspectjrt:1.9.2")
 	// only necessary when using load time
 	compile ("org.aspectj:aspectjweaver:1.9.2")
-	
+	compile ("com.ea.agentloader:ea-agent-loader:1.0.3")
+
+
 	testCompile ("org.junit.jupiter:junit-jupiter-api:5.4.0")
 }
