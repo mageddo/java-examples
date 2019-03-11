@@ -1,0 +1,5 @@
+<aspectj>
+	<aspects>
+		<aspect name="com.huongdanjava.aspectj.ApplicationAspect"/>
+	</aspects>
+</aspectj>

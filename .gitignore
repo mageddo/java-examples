@@ -9,3 +9,4 @@ maven
 out
 transient
 *.orig
+ajcore*

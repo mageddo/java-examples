@@ -5,6 +5,11 @@ plugins {
 	id "com.palantir.graal" version "0.3.0-2-g6c49b4d"
 }
 
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -20,5 +25,10 @@ graal {
 
 
 dependencies {
-	compile "org.aspectj:aspectjrt:1.9.1"
+
+	compile ("org.aspectj:aspectjrt:1.9.2")
+	// only necessary when using load time
+	compile ("org.aspectj:aspectjweaver:1.9.2")
+	
+	testCompile ("org.junit.jupiter:junit-jupiter-api:5.4.0")
 }
