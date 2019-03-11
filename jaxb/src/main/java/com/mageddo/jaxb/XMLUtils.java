@@ -11,6 +11,7 @@ import javax.xml.validation.Validator;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 public class XMLUtils {
 
