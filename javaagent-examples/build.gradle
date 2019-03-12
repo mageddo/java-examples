@@ -1,0 +1,8 @@
+repositories {
+	maven {
+		url = "http://invesdwin.de/artifactory/invesdwin-oss-remote"
+	}
+}
+dependencies {
+	compile ("de.invesdwin:invesdwin-instrument:1.0.2")
+}
