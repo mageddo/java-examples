@@ -1,32 +1,31 @@
 package com.mageddo.kafka;
 
 import com.mageddo.kafka.producer.MessageSender;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import com.mageddo.kafka.producer.MessageSenderImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
-import java.time.LocalDateTime;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Import(Config.class)
 @EnableKafka
 @EnableAsync
 @EnableScheduling
 @SpringBootApplication
+@EnableTransactionManagement(proxyTargetClass = true)
 public class KafkaStarter {
 
 	public static void main(String[] args) {
-
-		final ConfigurableApplicationContext ctx = SpringApplication.run(KafkaStarter.class, args);
-
-		final MessageSender messageSender = ctx.getBean(MessageSender.class);
-		messageSender.send(new ProducerRecord<>(
-			TopicEnum.COFFEE_REQUEST.getTopic().getName(),
-			String.valueOf(LocalDateTime.now()).getBytes()
-		));
+		SpringApplication.run(KafkaStarter.class, args);
 	}
+	@Bean
+	public MessageSender messageSender(KafkaTemplate<String, byte[]> template) {
+		return new MessageSenderImpl(template);
+	}
+
 }
