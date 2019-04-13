@@ -10,3 +10,4 @@ out
 transient
 *.orig
 ajcore*
+**/resources/lib/

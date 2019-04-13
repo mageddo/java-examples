@@ -14,9 +14,11 @@ include ':resteasy-examples'
 include ':jdbc-pool'
 include ':jdbc-template-without-spring'
 include ':jvm-garbage-collection'
+include ':jni-java8-examples'
 
 include ':lombok-examples'
 
+include ':servlet-tomcat-embedded'
 include ':spring-boot-jdbc'
 include ':spring-boot-jpa'
 include ':spring-boot-jpa-lazy-column-load'

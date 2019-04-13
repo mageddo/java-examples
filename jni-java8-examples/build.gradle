@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+def mainClassName = 'Sample1'
+
+task run(type: JavaExec){
+	classpath = sourceSets.main.runtimeClasspath
+	main = mainClassName
+}
+
+compileJava.doFirst {
+	def proc = ["${projectDir}/builder.bash"].execute()
+	def stdout = new StringBuilder()
+	proc.consumeProcessOutput(stdout, stdout)
+	if (proc.waitFor() != 0){
+		throw new Error("could not build c libs: " + stdout)
+	}
+}
