@@ -25,7 +25,7 @@ public class Application {
 		new DatabaseBuilderDao().buildDatabase();
 
 		final Tomcat tomcat = new Tomcat();
-		final String ctxPath = env.getProperty("server.context-path");
+		final String ctxPath = "/";
 		final String docBase = ClassUtils.getDefaultClassLoader().getResource("webapp").getFile();
 // v2
 //		final StandardContext context = new StandardContext();
@@ -55,12 +55,12 @@ public class Application {
 		WebResourceRoot resources = new StandardRoot(ctx);
 		resources.addPreResources(new DirResourceSet(
 			resources, "/WEB-INF/classes",
-			"/home/system/Dropbox/dev/projects/spring-boot-mvc-jdbc-template/build/classes",
+			"/home/elfreitas/dev/projects/java-examples/java-web-embedded-tomcat/build/classes/",
 			"/"
 		));
 		ctx.setResources(resources);
 
-		tomcat.setPort(Integer.parseInt(env.getProperty("server.port")));
+		tomcat.setPort(9095);
 		tomcat.start();
 
 		System.out.println(ManagementFactory.getRuntimeMXBean().getName());
