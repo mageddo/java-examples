@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'application'
 }
 
 repositories {
@@ -15,6 +16,8 @@ allprojects {
 		options.encoding = 'UTF-8'
 	}
 }
+
+mainClassName = 'com.mageddo.Application'
 
 dependencies {
 

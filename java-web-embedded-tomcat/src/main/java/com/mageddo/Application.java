@@ -1,6 +1,10 @@
 package com.mageddo;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.servlet.ServletException;
 
@@ -10,14 +14,17 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
+import org.apache.catalina.webresources.JarResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 import org.springframework.core.env.Environment;
 import org.springframework.profile.SpringEnvSingleton;
 import org.springframework.util.ClassUtils;
 
+import static com.mageddo.utils.Utils.getDeployPath;
+
 public class Application {
 
-	public static void main(String[] args) throws LifecycleException, ServletException {
+	public static void main(String[] args) throws LifecycleException, ServletException, IOException, URISyntaxException {
 
 		SpringEnvSingleton.prepareEnv(args);
 		final Environment env = SpringEnvSingleton.getEnv();
@@ -40,7 +47,7 @@ public class Application {
 //		tomcat.getHost().addChild(context);
 
 // v3
-		final Context ctx = tomcat.addWebapp(ctxPath, docBase);
+		final Context ctx = tomcat.addWebapp(ctxPath, "/tmp");
 		ctx.setParentClassLoader(ClassUtils.getDefaultClassLoader());
 //		final CustomerController customerServlet = new CustomerController();
 //		tomcat.addServlet(ctxPath, customerServlet.getClass().getSimpleName(), customerServlet);
@@ -53,11 +60,23 @@ public class Application {
 //		tomcat.addServlet(ctxPath, customerServlet.getClass().getSimpleName(), customerServlet);
 //
 		WebResourceRoot resources = new StandardRoot(ctx);
-		resources.addPreResources(new DirResourceSet(
-			resources, "/WEB-INF/classes",
-			"/home/elfreitas/dev/projects/java-examples/java-web-embedded-tomcat/build/classes/",
-			"/"
-		));
+
+		final String deployPath = getDeployPath();
+		if(deployPath.endsWith(".jar")){
+			resources.addPreResources(new JarResourceSet(
+				resources, "/WEB-INF/classes",
+				deployPath,
+				"/"
+			));
+		} else {
+			resources.addPreResources(new DirResourceSet(
+				resources, "/WEB-INF/classes",
+				deployPath,
+				"/"
+			));
+		}
+
+//		resources.addJarResources(new JarResourceSet());
 		ctx.setResources(resources);
 
 		tomcat.setPort(9095);
@@ -67,4 +86,6 @@ public class Application {
 		tomcat.getServer().await();
 
 	}
+
+
 }
