@@ -23,9 +23,19 @@ public final class Utils {
 			throw new RuntimeException(e);
 		}
 	}
-	public static String getDeployPath() throws URISyntaxException {
-		final String deployPath = Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-		LOG.debug("deploy-path={}", deployPath);
-		return deployPath;
+	public static String getDeployPath() {
+		try {
+			final String deployPath = Application.class
+				.getProtectionDomain()
+				.getCodeSource()
+				.getLocation()
+				.toURI()
+				.getPath()
+			;
+			LOG.debug("deploy-path={}", deployPath);
+			return deployPath;
+		} catch (URISyntaxException e){
+			throw new RuntimeException(e);
+		}
 	}
 }
