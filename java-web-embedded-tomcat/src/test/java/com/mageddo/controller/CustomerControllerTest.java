@@ -3,16 +3,14 @@ package com.mageddo.controller;
 import com.mageddo.dao.DatabaseBuilderDao;
 import com.mageddo.tomcat.TomcatEmbeddedServer;
 import org.apache.catalina.startup.Tomcat;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CustomerControllerTest {
 
@@ -38,6 +36,8 @@ public class CustomerControllerTest {
 		// assert
 		assertEquals(200, res.getStatus());
 		assertTrue(res.readEntity(String.class).contains("John"));
+
+		tomcat.stop();
 
 	}
 
