@@ -1,5 +1,5 @@
 plugins {
-	id "me.champeau.gradle.jmh" version "0.4.7"
+	id "me.champeau.gradle.jmh" version "0.4.8"
 }
 
 repositories {
@@ -15,15 +15,11 @@ sourceCompatibility = JavaVersion.VERSION_11
 dependencies {
 	compile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.21'
 	compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.21'
-//	compile group: 'org.openjdk.jmh', name: 'jmh-core-benchmarks', version: '1.21'
-
-//	jmh 'org.openjdk.jmh:jmh-core:1.21'
-//	jmh 'org.openjdk.jmh:jmh-generator-annprocess:1.21'
 
 }
 //
 jmh {
-	include = ['\\*JMHSample_02_BenchmarkModes\\*']
+	include = ['com\\.mageddo\\.benchmark.*']
 	iterations = 1 // Number of measurement iterations to do.
 	batchSize = 1 // Batch size: number of benchmark method calls per operation. (some benchmark modes can ignore this setting)
 	fork = 1 // How many times to forks a single benchmark. Use 0 to disable forking altogether
