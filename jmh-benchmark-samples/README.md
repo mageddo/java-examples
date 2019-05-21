@@ -3,7 +3,7 @@ Official framework to generate java benchmark tests
 ### Running it  
 
 ```
-$ ./gradlew general-samples:jmh
+$ ./gradlew jmh
 73.406 ±(99.9%) 11.773 ms/op
 # Warmup Iteration   2: 80.884 ±(99.9%) 12.842 ms/op
 # Warmup Iteration   3: 69.235 ±(99.9%) 10.787 ms/op
