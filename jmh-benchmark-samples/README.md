@@ -21,5 +21,14 @@ Iteration   1: 74.549 ±(99.9%) 11.947 ms/op
 
 ```
 
+### Run benchmarks individually at IDE
+
+You can run the benchmarks individually by running the main method 
+inside every benchmark class, make sure enable annotation processing before
+
+Example benchmark to run 
+
+	com.mageddo.benchmark.JMHSample_02_BenchmarkModes.main
+
 ### Links
 * [Examples](https://github.com/melix/jmh-gradle-example/tree/master/src/jmh/java/org/openjdk/jmh/samples)

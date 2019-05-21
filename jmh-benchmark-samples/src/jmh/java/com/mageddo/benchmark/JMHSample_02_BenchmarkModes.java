@@ -53,7 +53,7 @@ public class JMHSample_02_BenchmarkModes {
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(JMHSample_02_BenchmarkModes.class.getSimpleName())
+                .include(JMHSample_02_BenchmarkModes.class.getName())
                 .forks(1)
                 .build();
         new Runner(opt).run();
