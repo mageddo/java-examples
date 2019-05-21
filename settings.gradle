@@ -6,7 +6,7 @@ include ':databases-benchmark'
 include ':distributed-tracing:jaeger'
 include ':distributed-tracing:jaeger-spark'
 
-include ':general-samples'
+include ':jmh-benchmark-samples'
 include ':java-web-embedded-tomcat'
 include ':jaxb'
 include ':jaxrs-per-request-timeout'
