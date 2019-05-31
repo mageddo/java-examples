@@ -15,13 +15,13 @@ public class FruitJMX {
 		this.fruitService = fruitService;
 	}
 
-	@ManagedOperation(description = "dasdasdas")
+	@ManagedOperation
 	public String postOnKafkaPreCommitAndRollback(){
 		fruitService.postOnKafkaPreCommitAndRollback();
 		return "success";
 	}
 
-	@ManagedOperation(description = "asdasdasd")
+	@ManagedOperation
 	public String postOnKafkaAfterCommitAndRollback(){
 		fruitService.postOnKafkaAfterCommitAndRollback();
 		return "success";

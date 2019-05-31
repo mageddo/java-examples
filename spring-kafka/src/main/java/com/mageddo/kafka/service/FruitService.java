@@ -21,13 +21,18 @@ public class FruitService {
 
 	@Transactional
 	public void postOnKafkaPreCommitAndRollback(){
-		messageSender.send(new ProducerRecord("fruit", LocalDateTime.now().toString()));
+		messageSender.send(createRecord());
 		currentTransactionStatus().setRollbackOnly();
 	}
 
 	@Transactional
 	public void postOnKafkaAfterCommitAndRollback(){
-		messageSender.send(new ProducerRecord("fruit", LocalDateTime.now().toString()), CommitPhase.AFTER_COMMIT);
+		messageSender.send(createRecord(), CommitPhase.AFTER_COMMIT);
 		currentTransactionStatus().setRollbackOnly();
 	}
+
+	private ProducerRecord createRecord() {
+		return new ProducerRecord("fruit", LocalDateTime.now().toString().getBytes());
+	}
+
 }
