@@ -9,11 +9,18 @@ sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
 
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.1.1.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.1.5.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.1.5.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.5.RELEASE'
+	
 	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.2.2.RELEASE'
-	compile group: 'com.mageddo', name: 'spring-kafka', version: '2.0.2'
+	compile group: 'com.mageddo', name: 'spring-kafka', version: '2.2.1'
+	compile ('io.hawt:hawtio-springboot:2.5.0'){
+		exclude group: 'org.springframework.boot'
+	}
+	compile group: 'org.jolokia', name: 'jolokia-core', version: '1.6.1'
+	
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
 	compile group: 'com.h2database', name: 'h2', version: '1.4.199'
-
 
 }
