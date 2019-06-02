@@ -1,0 +1,20 @@
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+dependencies {
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.5.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.1.5.RELEASE'
+
+	compile ('io.hawt:hawtio-springboot:2.6.0'){
+		exclude group: 'org.springframework.boot'
+	}
+	compile group: 'org.jolokia', name: 'jolokia-core', version: '1.6.1'
+
+}

@@ -1,0 +1,18 @@
+plugins {
+    id "java"
+    id "org.springframework.boot" version "2.1.5.RELEASE"
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.1.5.RELEASE'
+    compile group: 'com.ibm.mq', name: 'mq-jms-spring-boot-starter', version: '2.1.1'
+    compile 'org.slf4j:slf4j-api:1.7.13'
+    testCompile 'junit:junit:3.8.2'
+}
