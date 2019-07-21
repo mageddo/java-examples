@@ -1,0 +1,15 @@
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+dependencies {
+
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+	compile group: 'com.squareup.moshi', name: 'moshi', version: '1.8.0'
+	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.0.1'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9'
+
+	testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.23.4'
+	testImplementation group: 'org.jboss.resteasy', name: 'resteasy-undertow', version: '3.6.1.Final'
+	testImplementation group: 'junit', name: 'junit', version: '4.12'
+
+}

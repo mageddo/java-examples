@@ -18,6 +18,7 @@ include ':jvm-garbage-collection'
 include ':jni-java8-examples'
 
 include ':lombok-examples'
+include ':okhttp-examples'
 
 include ':servlet-tomcat-embedded'
 
