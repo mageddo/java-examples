@@ -41,6 +41,7 @@ public class AvroUtilsTest {
 		assertEquals("Elvis", user.getName());
 		assertEquals(Integer.valueOf(7), user.getFavoriteNumber());
 		assertEquals("Green", user.getFavoriteColor());
+		assertEquals("{\"name\": \"Elvis\", \"favoriteNumber\": 7, \"favoriteColor\": \"Green\"}", user.toString());
 
 	}
 
