@@ -15,9 +15,10 @@ public class AvroUtils {
 
 	public static byte[] serialize(GenericContainer o){
 
-		final var writer = new GenericDatumWriter<>(o.getSchema());
-		final var bout = new ByteArrayOutputStream();
 		try {
+			final var writer = new GenericDatumWriter<>(o.getSchema());
+			final var bout = new ByteArrayOutputStream();
+			bout.write(new byte[]{0, 0, 0, 0, 3});
 			final var encoder = EncoderFactory
 				.get()
 				.binaryEncoder(bout, null);

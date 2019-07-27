@@ -42,6 +42,7 @@ public class KafkaJMX {
 			.setName("Joao")
 			.setFavoriteColor("Orange")
 			.setFavoriteNumber(4)
+			.setAge(23)
 			.build();
 	}
 
