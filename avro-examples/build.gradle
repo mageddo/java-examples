@@ -1,0 +1,32 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+		mavenCentral()
+	}
+	dependencies {
+
+	}
+}
+
+plugins {
+	id "java"
+	id "com.commercehub.gradle.plugin.avro" version "0.9.1"
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+
+dependencies {
+	compile group: 'org.apache.avro', name: 'avro', version: '1.9.0'
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+
+}

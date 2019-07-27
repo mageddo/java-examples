@@ -1,5 +1,6 @@
 
 include ':asm-examples'
+include ':avro-examples'
 include ':command-line-parser:jcommander'
 include ':cucumber'
 
