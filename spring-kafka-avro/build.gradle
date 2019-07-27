@@ -1,0 +1,37 @@
+plugins {
+	id "java"
+	id "com.commercehub.gradle.plugin.avro" version "0.9.1"
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven {
+		url("http://packages.confluent.io/maven/")
+	}
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+configurations {
+	compile.exclude module: 'slf4j-log4j12'
+}
+
+dependencies {
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.1.5.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.5.RELEASE'
+
+	compile ('io.hawt:hawtio-springboot:2.6.0'){
+		exclude group: 'org.springframework.boot'
+	}
+	compile group: 'org.jolokia', name: 'jolokia-core', version: '1.6.1'
+
+	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.2.2.RELEASE'
+	compile group: 'com.mageddo', name: 'spring-kafka', version: '2.1.1'
+	compile group: 'org.apache.avro', name: 'avro', version: '1.9.0'
+	compile group: 'io.confluent', name: 'kafka-avro-serializer', version: '3.3.1'
+
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+
+}

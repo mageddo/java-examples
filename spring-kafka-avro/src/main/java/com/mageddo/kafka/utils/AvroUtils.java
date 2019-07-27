@@ -1,4 +1,4 @@
-package com.mageddo.avro;
+package com.mageddo.kafka.utils;
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericContainer;

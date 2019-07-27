@@ -14,7 +14,7 @@ dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.5.RELEASE'
 	
 	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.2.2.RELEASE'
-	compile group: 'com.mageddo', name: 'spring-kafka', version: '2.2.1'
+	compile group: 'com.mageddo', name: 'spring-kafka', version: '2.1.1'
 	compile ('io.hawt:hawtio-springboot:2.6.0'){
 		exclude group: 'org.springframework.boot'
 	}
