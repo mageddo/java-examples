@@ -1,0 +1,15 @@
+plugins {
+	id "java"
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+dependencies {
+
+	compile "org.springframework.boot:spring-boot-starter:2.1.5.RELEASE"
+	compile "org.springframework.boot:spring-boot-starter-jdbc:2.1.5.RELEASE"
+
+	testCompile "org.springframework.boot:spring-boot-starter-test:2.1.5.RELEASE"
+	testCompile "io.zonky.test:embedded-database-spring-test:1.4.1"
+	testCompile "org.flywaydb:flyway-core:5.2.4"
+}
