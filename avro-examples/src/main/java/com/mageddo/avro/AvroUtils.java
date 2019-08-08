@@ -10,6 +10,8 @@ import org.apache.avro.specific.SpecificDatumReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class AvroUtils {
 
@@ -41,6 +43,21 @@ public class AvroUtils {
 			);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
+		}
+	}
+
+	public static <T>T deserialize(byte[] data, Class clazz){
+		return deserialize(data, getSchemaFromClass(clazz));
+	}
+
+	private static Schema getSchemaFromClass(Class clazz) {
+		try {
+			return (Schema) clazz
+				.getDeclaredMethod("getClassSchema")
+				.invoke(null)
+			;
+		} catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 }
