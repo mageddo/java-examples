@@ -62,6 +62,23 @@ public class AvroUtilsTest {
 
 	}
 
+	@Test
+	public void confluentAvroDeserialization() throws Exception {
+
+		// arrange
+		byte[] avroBytes = getResourceAsBytes("/avro-utils-test/002.avro");
+
+		// act
+		final User user = AvroUtils.deserialize(avroBytes, User.class);
+
+		// assert
+		assertEquals("Joao", user.getName());
+		assertEquals(Integer.valueOf(4), user.getFavoriteNumber());
+		assertEquals("Orange", user.getFavoriteColor());
+		assertEquals("{\"name\": \"Joao\", \"favoriteNumber\": 4, \"favoriteColor\": \"Orange\"}", user.toString());
+
+	}
+
 	private byte[] getResourceAsBytes(String path) throws IOException {
 		return IOUtils.toByteArray(getClass().getResourceAsStream(path));
 	}

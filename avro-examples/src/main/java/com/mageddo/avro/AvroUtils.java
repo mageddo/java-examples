@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class AvroUtils {
 
@@ -33,6 +37,9 @@ public class AvroUtils {
 	}
 
 	public static <T>T deserialize(byte[] data, Schema schema){
+		if(data.length > 0 && data[0] == 0){
+			data = Arrays.copyOfRange(data, 5, data.length);
+		}
 		final var reader = new SpecificDatumReader<>(schema);
 		try {
 			return (T) reader.read(
