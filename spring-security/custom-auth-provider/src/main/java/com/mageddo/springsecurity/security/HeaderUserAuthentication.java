@@ -9,12 +9,11 @@ import java.util.Collections;
 
 public class HeaderUserAuthentication implements Authentication {
 
-	private final  String userName;
 	private final String token;
+	private String userName;
 	private boolean authenticated;
 
-	public HeaderUserAuthentication(String userName, String token) {
-		this.userName = userName;
+	public HeaderUserAuthentication(String token) {
 		this.token = token;
 	}
 
@@ -56,5 +55,10 @@ public class HeaderUserAuthentication implements Authentication {
 	@Override
 	public boolean implies(Subject subject) {
 		return false;
+	}
+
+	public HeaderUserAuthentication setUserName(String userName) {
+		this.userName = userName;
+		return this;
 	}
 }

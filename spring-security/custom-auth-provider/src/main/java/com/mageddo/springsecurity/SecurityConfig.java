@@ -5,6 +5,7 @@ import com.mageddo.springsecurity.security.AuthorizationHeaderAuthenticationProv
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -21,9 +22,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.authenticationProvider(authorizationHeaderAuthenticationProvider)
 			.antMatcher("/api/**")
-			.addFilterBefore(authorizationHeaderAuthenticationFilter, authorizationHeaderAuthenticationFilter.getClass())
+				.addFilterBefore(authorizationHeaderAuthenticationFilter, BasicAuthenticationFilter.class)
 			.authorizeRequests()
-			.anyRequest().hasRole("API_USER")
+			.anyRequest()
+			.hasRole("API_USER")
 			.and()
 			.httpBasic()
 		;
