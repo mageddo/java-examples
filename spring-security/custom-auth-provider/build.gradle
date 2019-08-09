@@ -1,0 +1,18 @@
+plugins {
+	id 'java'
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility =  JavaVersion.VERSION_11
+
+dependencies {
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.7.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.1.7.RELEASE'
+
+	testImplementation 'junit:junit:4.12'
+}
+
+repositories {
+	jcenter()
+}
