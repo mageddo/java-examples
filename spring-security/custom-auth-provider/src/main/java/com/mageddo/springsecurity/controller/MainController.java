@@ -10,6 +10,6 @@ public class MainController {
 	@RequestMapping("/api/users")
 	@ResponseBody
 	public String body(){
-		return "[Joao, Maria]";
+		return "[\"Joao\", \"Maria\"]";
 	}
 }

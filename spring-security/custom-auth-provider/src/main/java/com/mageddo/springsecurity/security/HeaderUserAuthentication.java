@@ -2,15 +2,15 @@ package com.mageddo.springsecurity.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
 import javax.security.auth.Subject;
 import java.util.Collection;
-import java.util.Collections;
 
 public class HeaderUserAuthentication implements Authentication {
 
 	private final String token;
-	private String userName;
+	private User user;
 	private boolean authenticated;
 
 	public HeaderUserAuthentication(String token) {
@@ -19,7 +19,7 @@ public class HeaderUserAuthentication implements Authentication {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.emptyList();
+		return this.user.getAuthorities();
 	}
 
 	@Override
@@ -29,12 +29,12 @@ public class HeaderUserAuthentication implements Authentication {
 
 	@Override
 	public Object getDetails() {
-		return userName;
+		return this.user.getUsername();
 	}
 
 	@Override
 	public Object getPrincipal() {
-		return userName;
+		return this.user;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class HeaderUserAuthentication implements Authentication {
 
 	@Override
 	public String getName() {
-		return userName;
+		return user.getUsername();
 	}
 
 	@Override
@@ -57,8 +57,7 @@ public class HeaderUserAuthentication implements Authentication {
 		return false;
 	}
 
-	public HeaderUserAuthentication setUserName(String userName) {
-		this.userName = userName;
-		return this;
+	public void setUser(User user) {
+		this.user = user;
 	}
 }
