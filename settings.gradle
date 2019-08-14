@@ -19,6 +19,7 @@ include ':jvm-garbage-collection'
 include ':jni-java8-examples'
 
 include ':lombok-examples'
+include ':kafka-slow-consumer-rebalance-evidence'
 include ':okhttp-examples'
 
 include ':servlet-tomcat-embedded'

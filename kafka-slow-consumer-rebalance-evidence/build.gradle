@@ -1,0 +1,22 @@
+plugins {
+	id 'java'
+}
+
+repositories {
+	jcenter()
+	mavenLocal()
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility =  JavaVersion.VERSION_11
+
+dependencies {
+
+	compile group: 'com.mageddo', name: 'commons', version: '1.6.0'
+	compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.4.RELEASE'
+	compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.3.0'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+	testImplementation 'junit:junit:4.12'
+}
+
