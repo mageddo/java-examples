@@ -1,8 +1,9 @@
 plugins {
 	id "java"
 	id "application"
-	id "io.freefair.aspectj.post-compile-weaving" version "3.1.4"
-	id "com.palantir.graal" version "0.3.0-2-g6c49b4d"
+	id "io.freefair.aspectj.post-compile-weaving" version "4.1.0"
+	id "com.palantir.graal" version "0.6.0"
+	id "org.jetbrains.gradle.plugin.idea-ext" version "0.5"
 }
 
 repositories {
@@ -16,8 +17,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 mainClassName = "com.huongdanjava.aspectj.Application"
 
 graal {
-	mainClass 'com.huongdanjava.aspectj.Application'
-	graalVersion("1.0.0-rc13")
+	mainClass "com.huongdanjava.aspectj.Application"
+	graalVersion("19.2.0.1")
 	outputName(project.name)
 	option("-Dfile.encoding=UTF-8")
 	option("--no-server")
@@ -35,25 +36,13 @@ test {
 	}
 }
 
-configurations {
-	provided
-}
-
-sourceSets {
-	main {
-		compileClasspath += configurations.provided
-		test.compileClasspath += configurations.provided
-		test.runtimeClasspath += configurations.provided
-	}
-}
-
 dependencies {
-
 	compile ("org.aspectj:aspectjrt:1.9.2")
-	
-	// only necessary when using load time
-	provided ("org.aspectj:aspectjweaver:1.9.2")
-	provided ("com.ea.agentloader:ea-agent-loader:1.0.3")
-
 	testCompile('org.junit.jupiter:junit-jupiter:5.4.0')
 }
+
+//idea.project.settings {
+//	taskTriggers {
+//		beforeBuild fixIdeaPluginClasspath, pluginUnderTestMetadata
+//	}
+//}
