@@ -24,10 +24,6 @@ graal {
 	option("--no-server")
 }
 
-compileJava {
-	
-}
-
 test {
 	useJUnitPlatform()
 	testLogging {
@@ -36,14 +32,8 @@ test {
 	}
 }
 
-configurations {
-	provided
-}
-
 dependencies {
 	compile ("org.aspectj:aspectjrt:1.9.2")
-	provided ("org.aspectj:aspectjweaver:1.9.2")
-	provided ("com.ea.agentloader:ea-agent-loader:1.0.3")
 	testCompile('org.junit.jupiter:junit-jupiter:5.4.0')
 }
 
