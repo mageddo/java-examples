@@ -1,7 +1,7 @@
 plugins {
 	id "java"
 	id "application"
-	id "io.freefair.aspectj.post-compile-weaving" version "4.1.0"
+	id "io.freefair.aspectj.post-compile-weaving" version "3.1.4"
 	id "com.palantir.graal" version "0.6.0"
 	id "org.jetbrains.gradle.plugin.idea-ext" version "0.5"
 }
@@ -36,13 +36,14 @@ test {
 	}
 }
 
+configurations {
+	provided
+}
+
 dependencies {
 	compile ("org.aspectj:aspectjrt:1.9.2")
+	provided ("org.aspectj:aspectjweaver:1.9.2")
+	provided ("com.ea.agentloader:ea-agent-loader:1.0.3")
 	testCompile('org.junit.jupiter:junit-jupiter:5.4.0')
 }
 
-//idea.project.settings {
-//	taskTriggers {
-//		beforeBuild fixIdeaPluginClasspath, pluginUnderTestMetadata
-//	}
-//}
