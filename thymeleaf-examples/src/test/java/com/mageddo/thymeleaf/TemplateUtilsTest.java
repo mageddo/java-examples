@@ -1,5 +1,6 @@
 package com.mageddo.thymeleaf;
 
+import com.mageddo.utils.TemplateUtils;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
 
@@ -13,7 +14,7 @@ public class TemplateUtilsTest {
 		Context context = new Context();
 		context.setVariable("name", "World");
 
-		String out = TemplateUtils.process("/templates/index.html", context);
+		String out = TemplateUtils.processFromPath("/templates/index.html", context);
 
 		assertTrue(out.contains("<p>World</p>"));
 	}
