@@ -2,6 +2,7 @@
 include ':asm-examples'
 include ':avro-examples'
 include ':command-line-parser:jcommander'
+include ':cryptography'
 include ':cucumber'
 
 include ':databases-benchmark'
