@@ -9,15 +9,18 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public final class Aes256 {
 
-	private static final BouncyCastleProvider BOUNCY_CASTLE_PROVIDER = new BouncyCastleProvider();
 	public static final String ALGORITHM = "AES/CBC/PKCS7Padding";
+	public static final String DIGEST_ALGORITHM = "SHA-256";
+	private static final BouncyCastleProvider BOUNCY_CASTLE_PROVIDER = new BouncyCastleProvider();
 
 	private Aes256() {
 	}
@@ -44,6 +47,16 @@ public final class Aes256 {
 	}
 
 	private static Key buildKey(String password) {
-		return new SecretKeySpec(DigestUtils.sha256(password), ALGORITHM);
+		return new SecretKeySpec(digest256(password), ALGORITHM);
+	}
+
+	public static byte[] digest256(String password) {
+		try {
+			final MessageDigest digester = MessageDigest.getInstance(DIGEST_ALGORITHM);
+			digester.update(password.getBytes(StandardCharsets.UTF_8));
+			return digester.digest();
+		} catch (NoSuchAlgorithmException e){
+			throw new CipherException(e);
+		}
 	}
 }

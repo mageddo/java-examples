@@ -5,7 +5,6 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
-	compile group: 'commons-codec', name: 'commons-codec', version: '1.13'
 	compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.63'
 	testCompile "org.junit.jupiter:junit-jupiter:5.4.2"
 }
