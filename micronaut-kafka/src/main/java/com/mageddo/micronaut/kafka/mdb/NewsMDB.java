@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 
 @Singleton
-@KafkaListener(groupId = "pongGroupId", clientId = "vanilla", offsetStrategy = OffsetStrategy.SYNC)
-public class PongMDB implements KafkaListenerExceptionHandler  {
+@KafkaListener(groupId = "newsGroupId", clientId = "vanilla", offsetStrategy = OffsetStrategy.SYNC)
+public class NewsMDB implements KafkaListenerExceptionHandler  {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Topic("ping")
+	@Topic("news")
 	public void receive(ConsumerRecord<String, byte[]> record) {
 		logger.info(
 			"status=ping, key={}, partition={}, offset={}, record={}",
@@ -30,4 +30,6 @@ public class PongMDB implements KafkaListenerExceptionHandler  {
 	public void handle(KafkaListenerException exception) {
 		logger.info("status=custom-exception-handler, msg={}", exception.getMessage());
 	}
+
+
 }
