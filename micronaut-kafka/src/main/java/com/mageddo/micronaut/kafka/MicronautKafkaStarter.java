@@ -23,15 +23,21 @@ public class MicronautKafkaStarter {
 		Micronaut.run(MicronautKafkaStarter.class);
 	}
 
-	@Scheduled(cron = "0/5 * * * * *")
+//	@Scheduled(cron = "0/5 * * * * *")
 	public void ping(){
 		kafkaProducer.send(new ProducerRecord<>("ping", LocalDateTime.now().toString().getBytes()));
 		logger.info("status=ping");
 	}
 
-	@Scheduled(cron = "0/7 * * * * *")
+//	@Scheduled(cron = "0/7 * * * * *")
 	public void news(){
 		kafkaProducer.send(new ProducerRecord<>("news", LocalDateTime.now().toString().getBytes()));
 		logger.info("status=news-sent");
+	}
+
+	@Scheduled(cron = "0/4 * * * * *")
+	public void coffeeRequester(){
+		kafkaProducer.send(new ProducerRecord<>("coffee_request", LocalDateTime.now().toString().getBytes()));
+		logger.info("status=coffee-requested");
 	}
 }
