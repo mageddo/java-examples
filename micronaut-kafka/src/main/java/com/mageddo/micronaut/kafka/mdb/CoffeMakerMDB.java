@@ -19,8 +19,8 @@ public class CoffeMakerMDB implements KafkaListenerExceptionHandler  {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Topic("coffee_request")
 	@Retryable
+	@Topic("coffee_request")
 	public void receive(ConsumerRecord<String, byte[]> record) {
 		final var randomNumber = new Random().nextInt(5);
 		logger.info(
