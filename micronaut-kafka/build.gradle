@@ -11,6 +11,7 @@ dependencies {
 
 	compile "io.micronaut.configuration:micronaut-kafka"
 
+	compile group: 'com.mageddo', name: 'commons', version: '1.6.0'
 	compile ("com.zaxxer:HikariCP:3.3.1")
 	compile ("org.postgresql:postgresql:42.2.5")
 

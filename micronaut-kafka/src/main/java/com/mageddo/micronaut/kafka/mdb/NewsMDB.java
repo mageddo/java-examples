@@ -23,7 +23,6 @@ public class NewsMDB implements KafkaListenerExceptionHandler  {
 			"status=ping, key={}, partition={}, offset={}, record={}",
 			record.key(), record.partition(), record.offset(), new String(record.value())
 		);
-		throw new RuntimeException("erro");
 	}
 
 	@Override
