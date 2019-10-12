@@ -9,32 +9,15 @@ repositories {
 
 dependencies {
 
-	compile "io.micronaut.configuration:micronaut-kafka"
-
-	compile ("com.zaxxer:HikariCP:3.3.1")
-	compile ("org.postgresql:postgresql:42.2.5")
-
-	compile ("org.springframework:spring-jdbc:5.1.5.RELEASE")
-	compile ("org.springframework.retry:spring-retry:1.2.4.RELEASE")
-	compile ("io.micronaut:micronaut-spring:${micronautVersion}")
-
 	annotationProcessor "io.micronaut:micronaut-validation:${micronautVersion}"
+	annotationProcessor "io.micronaut:micronaut-inject-java:${micronautVersion}"
 
 	compile "io.micronaut.configuration:micronaut-kafka:1.2.0"
-	compile "io.micronaut:micronaut-validation:${micronautVersion}"
-	compile "io.micronaut:micronaut-http-client:${micronautVersion}"
-	compile "io.micronaut:micronaut-http-server-netty:${micronautVersion}"
 	compile "io.micronaut:micronaut-runtime:${micronautVersion}"
-
 	compile "io.micronaut:micronaut-inject:${micronautVersion}"
-	annotationProcessor "io.micronaut:micronaut-inject-java:${micronautVersion}"
 	compileOnly "io.micronaut:micronaut-inject-java:${micronautVersion}"
-	compile ("io.micronaut:micronaut-views-thymeleaf:1.2.0")
 	compile ("ch.qos.logback:logback-classic:1.2.3")
 
-
-	annotationProcessor('com.mageddo:rsl-compiler:1.0.1')
-	testAnnotationProcessor('com.mageddo:rsl-compiler:1.0.1')
 	testCompile "junit:junit:4.12"
 	testCompileOnly("io.micronaut:micronaut-inject-java:${micronautVersion}")
 }
