@@ -21,6 +21,7 @@ include ':jvm-garbage-collection'
 include ':jni-java8-examples'
 
 include ':lombok-examples'
+include ':micronaut-kafka'
 include ':kafka-slow-consumer-rebalance-evidence'
 include ':okhttp-examples'
 
