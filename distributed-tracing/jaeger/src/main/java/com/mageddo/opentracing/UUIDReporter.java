@@ -2,12 +2,13 @@ package com.mageddo.opentracing;
 
 import io.jaegertracing.internal.JaegerSpan;
 import io.jaegertracing.spi.Reporter;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@Builder
+@AllArgsConstructor
 public class UUIDReporter implements Reporter {
 
 	private final Reporter delegate;

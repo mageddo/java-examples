@@ -4,10 +4,12 @@ import com.mageddo.opentracing.context.RequestHeaderTokenReader;
 import com.mageddo.opentracing.context.RequestHeaderTokenWriter;
 import io.opentracing.SpanContext;
 import io.opentracing.propagation.Format;
+import lombok.val;
 import okhttp3.Headers;
 
 import java.util.*;
 
+import static com.mageddo.opentracing.Tracing.buildSpan;
 import static com.mageddo.opentracing.Tracing.tracer;
 
 public class Main {
@@ -43,10 +45,8 @@ public class Main {
 	}
 
 	private static void blockLiquidationValue(String transactionId) throws InterruptedException {
-		tracer(transactionId)
-			.buildSpan("block-withdraw-value")
-			.withTag("monitor", "atm-withdraw")
-			.startActive(true)
+		buildSpan(transactionId, "block-withdraw-value")
+		.setTag("monitor", "atm-withdraw")
 		;
 
 //		tracer().scopeManager().active().span().setBaggageItem("general-id", "321");
@@ -58,9 +58,8 @@ public class Main {
 
 
 	private static void createTransactionOnMonolith() throws InterruptedException {
-		tracer().buildSpan("monolith-transaction-creation")
-			.withTag("monitor", "atm-withdraw")
-			.start()
+		buildSpan("monolith-transaction-creation")
+		.setTag("monitor", "atm-withdraw")
 		;
 
 		tracer().activeSpan().log("locking transaction");
@@ -72,11 +71,10 @@ public class Main {
 
 
 	private static void generateLiquidationFile() throws InterruptedException {
-		tracer().buildSpan("liquidation-file-generation")
-			.withTag("monitor", "atm-withdraw")
-			.
-			.startActive(true)
-		;
+		val span = tracer().buildSpan("liquidation-file-generation").start();
+		tracer().activateSpan(span);
+		span.setTag("monitor", "atm-withdraw");
+
 		Thread.sleep(50L);
 		tracer().activeSpan().finish();
 	}

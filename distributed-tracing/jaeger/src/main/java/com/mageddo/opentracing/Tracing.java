@@ -6,10 +6,10 @@ import io.jaegertracing.internal.propagation.TextMapCodec;
 import io.jaegertracing.internal.reporters.RemoteReporter;
 import io.jaegertracing.internal.samplers.ConstSampler;
 import io.jaegertracing.thrift.internal.senders.HttpSender;
+import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import lombok.experimental.UtilityClass;
-import lombok.val;
 
 @UtilityClass
 public class Tracing {
@@ -18,6 +18,17 @@ public class Tracing {
 
 	public static Tracer tracer(){
 		return transactionTracing().getTracer();
+	}
+
+	public static Span buildSpan(String transactionId, String name){
+		tracer(transactionId);
+		return buildSpan(name);
+	}
+
+	public static Span buildSpan(String name){
+		final Span span = tracer().buildSpan(name).start();
+		tracer().activateSpan(span);
+		return span;
 	}
 
 	public static Tracer tracer(String uuid){
@@ -30,13 +41,14 @@ public class Tracing {
 	}
 
 	private static TransactionTracing createTracer() {
-		val codec = TextMapCodec.builder()
+		final TextMapCodec codec = TextMapCodec.builder()
 			.withUrlEncoding(false)
 			.withSpanContextKey("x-trace-id")
 			.withObjectFactory(new JaegerObjectFactory())
 			.build();
 
-		val reporter = new UUIDReporter(
+		final UUIDReporter reporter = UUIDReporter.builder()
+		.delegate(
 			new RemoteReporter.Builder()
 				.withFlushInterval(1000)
 				.withMaxQueueSize(10)
@@ -45,14 +57,16 @@ public class Tracing {
 						.build()
 				)
 				.build()
-		);
-		val tracer = new JaegerTracer.Builder("CIP")
+		)
+		.build()
+		;
+		final JaegerTracer tracer = new JaegerTracer.Builder("CIP")
 			.registerExtractor(Format.Builtin.HTTP_HEADERS, codec)
 			.registerInjector(Format.Builtin.HTTP_HEADERS, codec)
 			.withSampler(new ConstSampler(true))
 			.withReporter(reporter)
 			.build();
-		val transactionTracing = new TransactionTracing(tracer);
+		final TransactionTracing transactionTracing = new TransactionTracing(tracer);
 		reporter.setTransactionTracing(transactionTracing);
 		return transactionTracing;
 	}
