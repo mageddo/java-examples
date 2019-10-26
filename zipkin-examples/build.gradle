@@ -1,0 +1,5 @@
+dependencies {
+	compile group: 'io.zipkin.zipkin2', name: 'zipkin', version: '2.18.3'
+	compile group: 'io.zipkin.brave', name: 'brave', version: '5.8.0'
+	compile group: 'io.zipkin.reporter2', name: 'zipkin-sender-okhttp3', version: '2.10.3'
+}
