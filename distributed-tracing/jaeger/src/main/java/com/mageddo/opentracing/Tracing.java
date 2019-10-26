@@ -8,53 +8,52 @@ import io.jaegertracing.internal.samplers.ConstSampler;
 import io.jaegertracing.thrift.internal.senders.HttpSender;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
+import lombok.experimental.UtilityClass;
+import lombok.val;
 
-public final class Tracing {
+@UtilityClass
+public class Tracing {
 
-	private static ThreadLocal<UUIDTracer> tracers = ThreadLocal.withInitial(Tracing::createTracer);
-
-	private Tracing() {}
+	private static ThreadLocal<TransactionTracing> transactionTracing = ThreadLocal.withInitial(Tracing::createTracer);
 
 	public static Tracer tracer(){
-		return getTracer().getTracer();
+		return transactionTracing().getTracer();
 	}
 
 	public static Tracer tracer(String uuid){
-		getTracer().setUuid(uuid);
-		return getTracer().getTracer();
+		transactionTracing().setUuid(uuid);
+		return transactionTracing().getTracer();
 	}
 
-	private static UUIDTracer getTracer() {
-		return tracers.get();
+	private static TransactionTracing transactionTracing() {
+		return transactionTracing.get();
 	}
 
-	public static UUIDTracer createTracer() {
-
-		final TextMapCodec codec = TextMapCodec.builder()
+	private static TransactionTracing createTracer() {
+		val codec = TextMapCodec.builder()
 			.withUrlEncoding(false)
 			.withSpanContextKey("x-trace-id")
 			.withObjectFactory(new JaegerObjectFactory())
 			.build();
 
-		final UUIDTracer uuidTracer = new UUIDTracer();
-		final Tracer tracer = new JaegerTracer.Builder("CIP")
+		val reporter = new UUIDReporter(
+			new RemoteReporter.Builder()
+				.withFlushInterval(1000)
+				.withMaxQueueSize(10)
+				.withSender(
+					new HttpSender.Builder("http://localhost:14268/api/traces") // http://jaeger-collector.docker
+						.build()
+				)
+				.build()
+		);
+		val tracer = new JaegerTracer.Builder("CIP")
 			.registerExtractor(Format.Builtin.HTTP_HEADERS, codec)
 			.registerInjector(Format.Builtin.HTTP_HEADERS, codec)
 			.withSampler(new ConstSampler(true))
-			.withReporter(
-				new UUIDReporter(
-					uuidTracer,
-					new RemoteReporter.Builder()
-						.withFlushInterval(1000)
-						.withMaxQueueSize(10)
-						.withSender(
-							new HttpSender.Builder("http://localhost:14268/api/traces") // http://jaeger-collector.docker
-								.build()
-						)
-						.build()
-				)
-			)
+			.withReporter(reporter)
 			.build();
-		return uuidTracer.setTracer(tracer);
+		val transactionTracing = new TransactionTracing(tracer);
+		reporter.setTransactionTracing(transactionTracing);
+		return transactionTracing;
 	}
 }

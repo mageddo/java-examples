@@ -46,7 +46,7 @@ public class Main {
 		tracer(transactionId)
 			.buildSpan("block-withdraw-value")
 			.withTag("monitor", "atm-withdraw")
-			.startActive(true).span()
+			.startActive(true)
 		;
 
 //		tracer().scopeManager().active().span().setBaggageItem("general-id", "321");
@@ -60,7 +60,7 @@ public class Main {
 	private static void createTransactionOnMonolith() throws InterruptedException {
 		tracer().buildSpan("monolith-transaction-creation")
 			.withTag("monitor", "atm-withdraw")
-			.startActive(true)
+			.start()
 		;
 
 		tracer().activeSpan().log("locking transaction");
@@ -74,6 +74,7 @@ public class Main {
 	private static void generateLiquidationFile() throws InterruptedException {
 		tracer().buildSpan("liquidation-file-generation")
 			.withTag("monitor", "atm-withdraw")
+			.
 			.startActive(true)
 		;
 		Thread.sleep(50L);

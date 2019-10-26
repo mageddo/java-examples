@@ -2,27 +2,31 @@ package com.mageddo.opentracing;
 
 import io.jaegertracing.internal.JaegerSpan;
 import io.jaegertracing.spi.Reporter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
+@Data
+@RequiredArgsConstructor
 public class UUIDReporter implements Reporter {
 
-	private UUIDTracer tracer;
-	private Reporter reporter;
+	private final Reporter delegate;
 
-	public UUIDReporter(UUIDTracer tracer, Reporter reporter) {
-		this.tracer = tracer;
-		this.reporter = reporter;
-	}
+	@Builder.Default
+	private final String transactionName = "uuid";
+
+	private TransactionTracing transactionTracing;
 
 	@Override
 	public void report(JaegerSpan span) {
-		if(tracer.getUuid() != null){
-			span.setTag("uuid", tracer.getUuid());
+		if(this.transactionTracing.getUuid() != null){
+			span.setTag(this.transactionName, this.transactionTracing.getUuid());
 		}
-		reporter.report(span);
+		this.delegate.report(span);
 	}
 
 	@Override
 	public void close() {
-		reporter.close();
+		this.delegate.close();
 	}
 }

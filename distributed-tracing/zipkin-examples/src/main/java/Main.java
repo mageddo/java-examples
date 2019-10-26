@@ -88,7 +88,6 @@ public class Main {
 			.finish();
 
 		Thread.sleep(250);
-
 		tracer.startScopedSpan("item-negotiator")
 			.tag("status", "failed")
 			.tag("rule", "same-price-rule")
