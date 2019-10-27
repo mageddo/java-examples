@@ -7,8 +7,8 @@ dependencies {
 //	compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.2.0.RELEASE'
 	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.3.1.RELEASE'
 //	compile group: 'org.springframework.cloud', name: 'spring-cloud-sleuth', version: '2.1.4.RELEASE', ext: 'pom'
-	compile group: 'org.springframework.cloud', name: 'spring-cloud-sleuth-zipkin', version: '2.1.4.RELEASE'
-	compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.4'
+//	compile group: 'org.springframework.cloud', name: 'spring-cloud-sleuth-zipkin', version: '2.1.4.RELEASE'
+//	compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.4'
 
 
 	compile group: 'io.zipkin.zipkin2', name: 'zipkin', version: '2.18.3'

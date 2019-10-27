@@ -37,10 +37,15 @@ public class App {
 
 		// Create a tracing component with the service name you want to see in Zipkin.
 		Tracing.newBuilder()
+			.traceId128Bit(true)
 			.localServiceName("bitskins")
 			.spanReporter(spanReporter)
 			.build();
 
+//		KafkaTracing.newBuilder(Tracing.current())
+//			.writeB3SingleFormat(true) // for more efficient propagation
+//			.remoteServiceName("my-broker")
+//			.build();
 
 		SpringApplication.run(App.class, args);
 
@@ -50,7 +55,7 @@ public class App {
 	public KafkaTracing createKafkaTracing() {
 		return KafkaTracing.newBuilder(Tracing.current())
 			.writeB3SingleFormat(true) // for more efficient propagation
-			.remoteServiceName("my-broker")
+			.remoteServiceName("kafka")
 			.build();
 	}
 
