@@ -68,7 +68,6 @@ public class Main {
 		;
 		Thread.sleep(30);
 		tracer.currentSpan().finish();
-
 		final var traceContext = Tracing.current().currentTraceContext().get();
 		tracer.withSpanInScope(tracer.newChild(
 			TraceContext
