@@ -18,7 +18,7 @@ public class CustomerService {
 	public void orderAChair() {
 		Tracing
 		.currentTracer()
-		.startScopedSpan("customer chair ordering")
+		.startScopedSpan("customer: chair ordering")
 		;
 		final var msg = "\ncustomer: I want a chair";
 		log.info(msg);

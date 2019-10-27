@@ -17,7 +17,7 @@ public class StoreChairDeliveryRequestMDB {
 	public void consume(String msg){
 		Tracing
 			.currentTracer()
-			.startScopedSpan("store ordering chair to the factory")
+			.startScopedSpan("store: ordering chair to the factory")
 			.tag("msg", msg)
 		;
 		storeService.requestChairToTheFactory(msg);
