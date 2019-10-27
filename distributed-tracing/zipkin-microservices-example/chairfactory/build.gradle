@@ -1,0 +1,13 @@
+dependencies {
+
+	compileOnly 'org.projectlombok:lombok:1.18.10'
+	annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.2.0.RELEASE'
+	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.3.1.RELEASE'
+
+	compile group: 'io.zipkin.zipkin2', name: 'zipkin', version: '2.18.3'
+	compile group: 'io.zipkin.brave', name: 'brave', version: '5.8.0'
+	compile group: 'io.zipkin.brave', name: 'brave-instrumentation-kafka-clients', version: '5.8.0'
+	compile group: 'io.zipkin.reporter2', name: 'zipkin-sender-okhttp3', version: '2.10.3'
+}

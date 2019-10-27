@@ -48,3 +48,9 @@ include ':aspectj-compile-time-gradle'
 include ':javaagent-examples'
 include ':distributed-tracing:zipkin-examples'
 include ':distributed-tracing:zipkin-app-example'
+include ':distributed-tracing:zipkin-microservices-example'
+
+include ':distributed-tracing:zipkin-microservices-example:store'
+include ':distributed-tracing:zipkin-microservices-example:customer'
+include ':distributed-tracing:zipkin-microservices-example:chairfactory'
+
