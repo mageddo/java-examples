@@ -24,14 +24,13 @@ public class ChairProcess implements InitializingBean {
 		this.customerService = customerService;
 	}
 
-//	@Override
+	@Override
 	public void afterPropertiesSet() throws Exception {
 
 		if (this.createTopics) {
 			createTopics();
 			return;
 		}
-
 		customerService.orderAChair();
 	}
 

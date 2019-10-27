@@ -1,5 +1,6 @@
 package com.mageddo.zipkin.store.consumer;
 
+import brave.Tracing;
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,12 @@ public class StoreChairDeliveryRequestMDB {
 
 	@KafkaListener(topics = Topics.STORE_CHAIR_DELIVERY_REQUEST)
 	public void consume(String msg){
+		Tracing
+			.currentTracer()
+			.startScopedSpan("store ordering chair to the factory")
+			.tag("msg", msg)
+		;
 		storeService.requestChairToTheFactory(msg);
+		Tracing.currentTracer().currentSpan().finish();
 	}
 }

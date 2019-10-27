@@ -1,5 +1,6 @@
 package com.mageddo.zipkin.chairfactory.consumer;
 
+import brave.Tracing;
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.chairfactory.service.ChairFactoryService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,12 @@ public class FactoryLumberJackWoodDeliveredMDB {
 
 	@KafkaListener(topics = Topics.FACTORY_WOOD_DELIVERED)
 	public void consume(String msg){
+		Tracing
+			.currentTracer()
+			.startScopedSpan("factory: requesting chair mount")
+			.tag("msg", msg)
+		;
 		chairFactoryService.requestChairMount(msg);
+		Tracing.currentTracer().currentSpan().finish();
 	}
 }
