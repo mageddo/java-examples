@@ -1,11 +1,11 @@
 package com.mageddo.zipkin.customer.service;
 
+import com.mageddo.kafka.MessageSender;
 import com.mageddo.zipkin.Topics;
 import io.opentracing.util.GlobalTracer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomerService {
 
-	private final KafkaTemplate kafkaTemplate;
+	private final MessageSender kafkaTemplate;
 
 	public void orderAChair() {
 		final var span = GlobalTracer.get()

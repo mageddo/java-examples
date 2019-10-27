@@ -1,10 +1,10 @@
 package com.mageddo.zipkin.chairfactory.service;
 
+import com.mageddo.kafka.MessageSender;
 import com.mageddo.zipkin.Topics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChairFactoryService {
 
-	private final KafkaTemplate kafkaTemplate;
+	private final MessageSender kafkaTemplate;
 
 	public void startChairConstruction(String msg) {
 		final var phrase = "factory: We are starting the chair construction process";

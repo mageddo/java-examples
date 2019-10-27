@@ -1,10 +1,10 @@
 package com.mageddo.zipkin;
 
+import com.mageddo.kafka.MessageSender;
 import com.mageddo.zipkin.customer.service.CustomerService;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutionException;
@@ -13,11 +13,11 @@ import java.util.concurrent.ExecutionException;
 public class ChairProcess implements InitializingBean {
 
 	private final boolean createTopics;
-	private final KafkaTemplate kafkaTemplate;
+	private final MessageSender kafkaTemplate;
 	private final CustomerService customerService;
 
 	public ChairProcess(
-		@Value("${create.topics:false}") boolean createTopics, KafkaTemplate kafkaTemplate, CustomerService customerService
+		@Value("${create.topics:false}") boolean createTopics, MessageSender kafkaTemplate, CustomerService customerService
 	) {
 		this.createTopics = createTopics;
 		this.kafkaTemplate = kafkaTemplate;

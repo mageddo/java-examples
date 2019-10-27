@@ -1,4 +1,4 @@
-package com.mageddo.zipkin;
+package com.mageddo.tracing;
 
 import io.jaegertracing.internal.JaegerObjectFactory;
 import io.jaegertracing.internal.JaegerTracer;
@@ -7,10 +7,16 @@ import io.jaegertracing.internal.reporters.RemoteReporter;
 import io.jaegertracing.internal.samplers.ConstSampler;
 import io.jaegertracing.spi.Reporter;
 import io.jaegertracing.thrift.internal.senders.HttpSender;
+import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class Tracing {
+
+	private static final ThreadLocal<SpanContext> SPAN_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
+
 	public static Tracer createTracer(final String serviceName){
 		final TextMapCodec codec = TextMapCodec.builder()
 			.withUrlEncoding(false)
@@ -32,5 +38,13 @@ public class Tracing {
 			.withSampler(new ConstSampler(true))
 			.withReporter(reporter)
 			.build();
+	}
+
+	public static void context(SpanContext context) {
+		SPAN_CONTEXT_THREAD_LOCAL.set(context);
+	}
+
+	public static SpanContext context(){
+		return SPAN_CONTEXT_THREAD_LOCAL.get();
 	}
 }
