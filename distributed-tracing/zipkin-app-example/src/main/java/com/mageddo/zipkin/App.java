@@ -1,51 +1,79 @@
 package com.mageddo.zipkin;
 
-import com.mageddo.zipkin.customer.service.CustomerService;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
+import brave.Tracing;
+import brave.kafka.clients.KafkaTracing;
+import com.mageddo.zipkin.tracing.KafkaTracingConsumerFactory;
+import com.mageddo.zipkin.tracing.KafkaTracingProducerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.ProducerFactory;
+import zipkin2.reporter.AsyncReporter;
+import zipkin2.reporter.okhttp3.OkHttpSender;
 
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @EnableKafka
 @SpringBootApplication
-public class App implements InitializingBean {
-
-	private final boolean createTopics;
-	private final CustomerService customerService;
-	private final KafkaTemplate kafkaTemplate;
-
-	public App(@Value("${create.topics:false}") boolean createTopics, CustomerService customerService, KafkaTemplate kafkaTemplate) {
-		this.createTopics = createTopics;
-		this.customerService = customerService;
-		this.kafkaTemplate = kafkaTemplate;
-	}
+public class App {
 
 	public static void main(String[] args) {
+
+		var sender = OkHttpSender.create("http://127.0.0.1:9411/api/v2/spans")
+			.toBuilder()
+			.connectTimeout(10000)
+			.readTimeout(10000)
+			.writeTimeout(10000)
+			.build();
+		var spanReporter = AsyncReporter
+			.builder(sender)
+			.closeTimeout(5, TimeUnit.SECONDS)
+			.build();
+
+		// Create a tracing component with the service name you want to see in Zipkin.
+		Tracing.newBuilder()
+			.localServiceName("bitskins")
+			.spanReporter(spanReporter)
+			.build();
+
+
 		SpringApplication.run(App.class, args);
+
 	}
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-
-		if(this.createTopics){
-			createTopics();
-			return;
-		}
-
-		customerService.orderAChair();
+	@Bean
+	public KafkaTracing createKafkaTracing() {
+		return KafkaTracing.newBuilder(Tracing.current())
+			.writeB3SingleFormat(true) // for more efficient propagation
+			.remoteServiceName("my-broker")
+			.build();
 	}
 
-	private void createTopics() throws IllegalAccessException, ExecutionException, InterruptedException {
-		for (final var topic : Topics.class.getDeclaredFields()) {
-			kafkaTemplate.send(new ProducerRecord<>(
-				topic.get(null).toString(), "creating topic"
-			)).get();
+	@Bean
+	public ConsumerFactory<?, ?> defaultKafkaConsumerFactory(
+		KafkaTracing kafkaTracing, KafkaProperties kafkaProperties
+	) {
+		return new KafkaTracingConsumerFactory<>(
+			new DefaultKafkaConsumerFactory<>(kafkaProperties.buildConsumerProperties()),
+			kafkaTracing
+		);
+	}
+
+	@Bean
+	public ProducerFactory<?, ?> kafkaProducerFactory(
+		KafkaTracing kafkaTracing, KafkaProperties kafkaProperties
+	) {
+		DefaultKafkaProducerFactory<?, ?> factory = new DefaultKafkaProducerFactory<>(
+			kafkaProperties.buildProducerProperties());
+		String transactionIdPrefix = kafkaProperties.getProducer().getTransactionIdPrefix();
+		if (transactionIdPrefix != null) {
+			factory.setTransactionIdPrefix(transactionIdPrefix);
 		}
-		System.exit(0);
+		return new KafkaTracingProducerFactory<>(factory, kafkaTracing);
 	}
 }

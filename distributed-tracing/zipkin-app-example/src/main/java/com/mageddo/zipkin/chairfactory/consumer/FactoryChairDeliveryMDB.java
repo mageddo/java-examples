@@ -3,6 +3,7 @@ package com.mageddo.zipkin.chairfactory.consumer;
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.chairfactory.service.ChairFactoryService;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,7 @@ public class FactoryChairDeliveryMDB {
 	private final ChairFactoryService chairFactoryService;
 
 	@KafkaListener(topics = Topics.FACTORY_CHAIR_DELIVERY_REQUEST)
-	public void consume(String msg) {
-		chairFactoryService.startChairConstruction(msg);
+	public void consume(ConsumerRecord<String, String> record) {
+		chairFactoryService.startChairConstruction(record.value());
 	}
 }
