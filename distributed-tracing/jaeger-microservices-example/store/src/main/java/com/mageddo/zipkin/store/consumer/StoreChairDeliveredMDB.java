@@ -2,6 +2,7 @@ package com.mageddo.zipkin.store.consumer;
 
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.store.service.StoreService;
+import io.opentracing.contrib.kafka.TracingKafkaUtils;
 import io.opentracing.util.GlobalTracer;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,6 +19,7 @@ public class StoreChairDeliveredMDB {
 	public void consume(ConsumerRecord<String, String> record){
 		final var span = GlobalTracer.get()
 			.buildSpan("store: chair delivery to customer")
+			.asChildOf(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()))
 			.withTag("msg", record.value())
 			.start()
 		;

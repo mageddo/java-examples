@@ -1,7 +1,7 @@
 package com.mageddo.zipkin.customer.service;
 
-import brave.Tracing;
 import com.mageddo.zipkin.Topics;
+import io.opentracing.util.GlobalTracer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -16,17 +16,16 @@ public class CustomerService {
 	private final KafkaTemplate kafkaTemplate;
 
 	public void orderAChair() {
-		Tracing
-		.currentTracer()
-		.startScopedSpan("customer: chair ordering")
-		;
+		final var span = GlobalTracer.get()
+			.buildSpan("customer: chair ordering")
+			.start();
 		final var msg = "\ncustomer: I want a chair";
 		log.info(msg);
 		kafkaTemplate.send(new ProducerRecord<>(
 			Topics.STORE_CHAIR_DELIVERY_REQUEST,
 			msg
 		));
-		Tracing.currentTracer().currentSpan().finish();
+		span.finish();
 	}
 
 	public void receiveChair(String msg) {

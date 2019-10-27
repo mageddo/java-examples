@@ -2,6 +2,7 @@ package com.mageddo.zipkin.chairfactory.consumer;
 
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.chairfactory.service.ChairFactoryService;
+import io.opentracing.contrib.kafka.TracingKafkaUtils;
 import io.opentracing.util.GlobalTracer;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,6 +19,7 @@ public class FactoryChairPaintedMDB {
 	public void consume(ConsumerRecord<String, String> record){
 		final var span = GlobalTracer.get()
 			.buildSpan("factory: chair delivery to store")
+			.asChildOf(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()))
 			.withTag("msg", record.value())
 			.start()
 		;
