@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Topics {
-	public static final String STORE_CHAIR_DELIVERY_REQUEST = "store_chair_delivery";
+	public static final String STORE_CHAIR_DELIVERY_REQUEST = "store_chair_delivery_request";
 	public static final String FACTORY_CHAIR_DELIVERY_REQUEST = "factory_chair_delivery_request";
 	public static final String FACTORY_LUMBERJACK_WOOD_DELIVERY_REQUEST = "factory_lumberjack_wood_delivery_request";
 	public static final String FACTORY_WOOD_DELIVERED = "factory_wood_delivered";

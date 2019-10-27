@@ -15,12 +15,13 @@ public class LumberJackService {
 	private final KafkaTemplate kafkaTemplate;
 
 	public void provideWood(String msg) {
+		final var phrase = "lumberjack: The wood is ready, delivering to the factory";
 		final var lumberJackMsg = new StringBuilder(msg)
 		.append('\n')
-		.append("lumberjack: The wood is ready, delivering to the factory")
+		.append(phrase)
 		.toString()
 		;
-		log.info(lumberJackMsg);
+		log.info(phrase);
 		kafkaTemplate.send(new ProducerRecord<>(
 			Topics.FACTORY_WOOD_DELIVERED,
 			lumberJackMsg

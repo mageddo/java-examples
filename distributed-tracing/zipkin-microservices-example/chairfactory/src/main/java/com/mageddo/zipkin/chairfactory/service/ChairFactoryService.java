@@ -15,12 +15,13 @@ public class ChairFactoryService {
 	private final KafkaTemplate kafkaTemplate;
 
 	public void startChairConstruction(String msg) {
+		final var phrase = "factory: We are starting the chair construction process";
 		final var factoryMsg = new StringBuilder(msg)
 		.append('\n')
-		.append("factory: We are starting the chair construction process")
+		.append(phrase)
 		.toString()
 		;
-		log.info(factoryMsg);
+		log.info(phrase);
 		kafkaTemplate.send(new ProducerRecord<>(
 			Topics.FACTORY_LUMBERJACK_WOOD_DELIVERY_REQUEST,
 			factoryMsg
@@ -28,12 +29,13 @@ public class ChairFactoryService {
 	}
 
 	public void requestChairMount(String msg) {
+		final var phrase = "factory: We have the wood, requesting chair mount to locksmith";
 		final var factoryMsg = new StringBuilder(msg)
 			.append('\n')
-			.append("factory: We have the wood, requesting chair mount to locksmith")
+			.append(phrase)
 			.toString()
 			;
-		log.info(factoryMsg);
+		log.info(phrase);
 		kafkaTemplate.send(new ProducerRecord<>(
 			Topics.FACTORY_LOCKSMITH_CHAIR_MOUNT_REQUEST,
 			factoryMsg
@@ -41,12 +43,13 @@ public class ChairFactoryService {
 	}
 
 	public void requestChairPaint(String msg) {
+		final var phrase = "factory: We have the mounted chair, request the painting";
 		final var factoryMsg = new StringBuilder(msg)
 		.append('\n')
-		.append("factory: We have the mounted chair, request the painting")
+		.append(phrase)
 		.toString()
 		;
-		log.info(factoryMsg);
+		log.info(phrase);
 		kafkaTemplate.send(new ProducerRecord<>(
 			Topics.FACTORY_PAINTER_CHAIR_PAINT_REQUEST,
 			factoryMsg
@@ -54,12 +57,13 @@ public class ChairFactoryService {
 	}
 
 	public void deliveryChairToStore(String msg) {
+		final var phrase = "factory: Chair is ready, delivering to the store";
 		final var factoryMsg = new StringBuilder(msg)
 		.append('\n')
-		.append("factory: Chair is ready, delivering to the store")
+		.append(phrase)
 		.toString()
 		;
-		log.info(factoryMsg);
+		log.info(phrase);
 		kafkaTemplate.send(new ProducerRecord<>(
 			Topics.STORE_CHAIR_DELIVERED,
 			factoryMsg

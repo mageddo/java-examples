@@ -15,12 +15,13 @@ public class PainterService {
 	private final KafkaTemplate kafkaTemplate;
 
 	public void paintChair(String msg) {
+		final var phrase = "painter: The chair is painted, delivering to the factory";
 		final var painterMsg = new StringBuilder(msg)
 		.append('\n')
-		.append("painter: The chair is painted, delivering to the factory")
+		.append(phrase)
 		.toString()
 		;
-		log.info(painterMsg);
+		log.info(phrase);
 		kafkaTemplate.send(new ProducerRecord<>(
 			Topics.FACTORY_CHAIR_PAINTED,
 			painterMsg

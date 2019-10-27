@@ -31,7 +31,7 @@ public class ChairProcess implements InitializingBean {
 			createTopics();
 			return;
 		}
-		customerService.orderAChair();
+//		customerService.orderAChair();
 	}
 
 	private void createTopics() throws IllegalAccessException, ExecutionException, InterruptedException {

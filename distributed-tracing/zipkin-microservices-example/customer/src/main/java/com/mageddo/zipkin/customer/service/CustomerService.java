@@ -30,11 +30,12 @@ public class CustomerService {
 	}
 
 	public void receiveChair(String msg) {
+		final var phrase = "customer: I have the chair, thanks!";
 		final var customerMsg = new StringBuilder(msg)
 		.append('\n')
-		.append("customer: I have the chair, thanks!")
+		.append(phrase)
 		.toString()
 		;
-		log.info(customerMsg);
+		log.info(phrase);
 	}
 }
