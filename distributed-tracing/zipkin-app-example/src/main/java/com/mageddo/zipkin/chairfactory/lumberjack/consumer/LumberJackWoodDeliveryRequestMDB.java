@@ -1,5 +1,6 @@
 package com.mageddo.zipkin.chairfactory.lumberjack.consumer;
 
+import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.chairfactory.lumberjack.service.LumberJackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -11,7 +12,7 @@ public class LumberJackWoodDeliveryRequestMDB {
 
 	private final LumberJackService lumberJackService;
 
-	@KafkaListener
+	@KafkaListener(topics = Topics.FACTORY_LUMBERJACK_WOOD_DELIVERY_REQUEST)
 	public void consume(String msg){
 		lumberJackService.provideWood(msg);
 	}

@@ -15,7 +15,7 @@ public class CustomerService {
 	private final KafkaTemplate kafkaTemplate;
 
 	public void orderAChair() {
-		final var msg = "customer: I want a chair";
+		final var msg = "\ncustomer: I want a chair";
 		log.info(msg);
 		kafkaTemplate.send(new ProducerRecord<>(
 			Topics.STORE_CHAIR_DELIVERY_REQUEST,
