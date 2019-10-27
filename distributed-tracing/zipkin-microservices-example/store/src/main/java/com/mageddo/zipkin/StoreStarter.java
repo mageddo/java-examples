@@ -38,7 +38,7 @@ public class StoreStarter {
 		// Create a tracing component with the service name you want to see in Zipkin.
 		Tracing.newBuilder()
 //			.traceId128Bit(true)
-			.localServiceName("store")
+			.localServiceName("chair-land")
 			.alwaysReportSpans()
 			.spanReporter(spanReporter)
 			.build();

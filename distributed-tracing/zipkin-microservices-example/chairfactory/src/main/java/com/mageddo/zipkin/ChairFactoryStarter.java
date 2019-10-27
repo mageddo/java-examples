@@ -39,7 +39,7 @@ public class ChairFactoryStarter {
 		Tracing.newBuilder()
 //			.traceId128Bit(true)
 			.alwaysReportSpans()
-			.localServiceName("chair-factory")
+			.localServiceName("chair-land")
 			.spanReporter(spanReporter)
 			.build();
 

@@ -1,0 +1,17 @@
+plugins {
+	id 'application'
+}
+
+mainClassName = 'com.mageddo.zipkin.ChairFactoryStarter'
+
+dependencies {
+
+	compileOnly 'org.projectlombok:lombok:1.18.10'
+	annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.2.0.RELEASE'
+	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.3.1.RELEASE'
+
+	compile group: 'io.opentracing.contrib', name: 'opentracing-kafka-client', version: '0.1.6'
+	compile group: 'io.jaegertracing', name: 'jaeger-client', version: '1.0.0'
+}

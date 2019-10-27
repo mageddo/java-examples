@@ -54,3 +54,7 @@ include ':distributed-tracing:zipkin-microservices-example:store'
 include ':distributed-tracing:zipkin-microservices-example:customer'
 include ':distributed-tracing:zipkin-microservices-example:chairfactory'
 
+include ':distributed-tracing:jaeger-microservices-example:store'
+include ':distributed-tracing:jaeger-microservices-example:customer'
+include ':distributed-tracing:jaeger-microservices-example:chairfactory'
+
