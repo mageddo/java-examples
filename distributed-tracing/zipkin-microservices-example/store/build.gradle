@@ -1,3 +1,9 @@
+plugins {
+	id 'application'
+}
+
+mainClassName = 'com.mageddo.zipkin.StoreStarter'
+
 dependencies {
 
 	compileOnly 'org.projectlombok:lombok:1.18.10'
