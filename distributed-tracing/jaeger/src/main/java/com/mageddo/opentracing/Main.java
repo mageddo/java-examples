@@ -7,14 +7,13 @@ import io.opentracing.propagation.Format;
 import lombok.val;
 import okhttp3.Headers;
 
-import java.util.*;
+import java.util.UUID;
 
 import static com.mageddo.opentracing.Tracing.buildSpan;
 import static com.mageddo.opentracing.Tracing.tracer;
 
 public class Main {
 	public static void main(String[] args) throws InterruptedException {
-
 		final String transactionId = UUID.randomUUID().toString();
 		blockLiquidationValue(transactionId);
 		createTransactionOnMonolith();

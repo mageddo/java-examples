@@ -39,7 +39,7 @@ public class CustomerStarter {
 		Tracing.newBuilder()
 //			.traceId128Bit(true)
 			.localServiceName("customer")
-//			.alwaysReportSpans()
+			.alwaysReportSpans()
 			.spanReporter(spanReporter)
 			.build();
 

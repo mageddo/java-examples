@@ -1,6 +1,6 @@
 package com.mageddo.zipkin.chairfactory.consumer;
 
-import brave.Tracing;
+import brave.kafka.clients.KafkaTracing;
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.chairfactory.service.ChairFactoryService;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +13,16 @@ import org.springframework.stereotype.Component;
 public class FactoryChairDeliveryMDB {
 
 	private final ChairFactoryService chairFactoryService;
+	private final KafkaTracing kafkaTracing;
 
 	@KafkaListener(topics = Topics.FACTORY_CHAIR_DELIVERY_REQUEST)
 	public void consume(ConsumerRecord<String, String> record) {
-		Tracing
-			.currentTracer()
-			.startScopedSpan("factory: starting construction process")
+		final var span = kafkaTracing.nextSpan(record)
+			.name("factory: starting construction process")
 			.tag("msg", record.value())
+			.start()
 		;
 		chairFactoryService.startChairConstruction(record.value());
-		Tracing.currentTracer().currentSpan().finish();
+		span.finish();
 	}
 }

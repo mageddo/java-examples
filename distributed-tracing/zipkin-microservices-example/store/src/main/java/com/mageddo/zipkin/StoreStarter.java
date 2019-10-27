@@ -39,7 +39,7 @@ public class StoreStarter {
 		Tracing.newBuilder()
 //			.traceId128Bit(true)
 			.localServiceName("store")
-//			.alwaysReportSpans()
+			.alwaysReportSpans()
 			.spanReporter(spanReporter)
 			.build();
 

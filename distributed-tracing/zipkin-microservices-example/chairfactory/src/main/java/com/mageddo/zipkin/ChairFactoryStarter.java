@@ -38,7 +38,7 @@ public class ChairFactoryStarter {
 		// Create a tracing component with the service name you want to see in Zipkin.
 		Tracing.newBuilder()
 //			.traceId128Bit(true)
-//			.alwaysReportSpans()
+			.alwaysReportSpans()
 			.localServiceName("chair-factory")
 			.spanReporter(spanReporter)
 			.build();

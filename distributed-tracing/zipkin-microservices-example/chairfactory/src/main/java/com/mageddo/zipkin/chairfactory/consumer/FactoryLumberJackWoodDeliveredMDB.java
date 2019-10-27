@@ -1,9 +1,10 @@
 package com.mageddo.zipkin.chairfactory.consumer;
 
-import brave.Tracing;
+import brave.kafka.clients.KafkaTracing;
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.chairfactory.service.ChairFactoryService;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -12,15 +13,16 @@ import org.springframework.stereotype.Component;
 public class FactoryLumberJackWoodDeliveredMDB {
 
 	private final ChairFactoryService chairFactoryService;
+	private final KafkaTracing kafkaTracing;
 
 	@KafkaListener(topics = Topics.FACTORY_WOOD_DELIVERED)
-	public void consume(String msg){
-		Tracing
-			.currentTracer()
-			.startScopedSpan("factory: requesting chair mount")
-			.tag("msg", msg)
+	public void consume(ConsumerRecord<String, String> record){
+		final var span = kafkaTracing.nextSpan(record)
+			.name("factory: requesting chair mount")
+			.tag("msg", record.value())
+			.start()
 		;
-		chairFactoryService.requestChairMount(msg);
-		Tracing.currentTracer().currentSpan().finish();
+		chairFactoryService.requestChairMount(record.value());
+		span.finish();
 	}
 }
