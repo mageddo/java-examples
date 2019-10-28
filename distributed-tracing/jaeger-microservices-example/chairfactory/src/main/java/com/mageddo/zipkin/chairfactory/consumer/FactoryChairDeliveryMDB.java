@@ -23,8 +23,10 @@ public class FactoryChairDeliveryMDB {
 			.withTag("msg", record.value())
 			.start()
 		;
-		GlobalTracer.get().activateSpan(span);
-		chairFactoryService.startChairConstruction(record.value());
-		span.finish();
+		try(var scope = GlobalTracer.get().activateSpan(span)) {
+			chairFactoryService.startChairConstruction(record.value());
+		} finally {
+			span.finish();
+		}
 	}
 }

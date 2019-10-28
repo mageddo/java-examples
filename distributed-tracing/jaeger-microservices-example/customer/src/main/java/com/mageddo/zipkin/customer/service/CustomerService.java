@@ -19,14 +19,16 @@ public class CustomerService {
 		final var span = GlobalTracer.get()
 			.buildSpan("customer: chair ordering")
 			.start();
-		GlobalTracer.get().activateSpan(span);
-		final var msg = "\ncustomer: I want a chair";
-		log.info(msg);
-		kafkaTemplate.send(new ProducerRecord<>(
-			Topics.STORE_CHAIR_DELIVERY_REQUEST,
-			msg
-		));
-		span.finish();
+		try(var scope = GlobalTracer.get().activateSpan(span)){
+			final var msg = "\ncustomer: I want a chair";
+			log.info(msg);
+			kafkaTemplate.send(new ProducerRecord<>(
+				Topics.STORE_CHAIR_DELIVERY_REQUEST,
+				msg
+			));
+		} finally {
+			span.finish();
+		}
 	}
 
 	public void receiveChair(String msg) {

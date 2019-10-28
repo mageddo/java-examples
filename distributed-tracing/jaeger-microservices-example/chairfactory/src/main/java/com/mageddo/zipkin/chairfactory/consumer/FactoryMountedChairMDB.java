@@ -23,8 +23,10 @@ public class FactoryMountedChairMDB {
 			.withTag("msg", record.value())
 			.start()
 		;
-		GlobalTracer.get().activateSpan(span);
-		chairFactoryService.requestChairPaint(record.value());
-		span.finish();
+		try(var scope = GlobalTracer.get().activateSpan(span)) {
+			chairFactoryService.requestChairPaint(record.value());
+		} finally {
+			span.finish();
+		}
 	}
 }

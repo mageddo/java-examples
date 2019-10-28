@@ -23,8 +23,10 @@ public class LockSmithChairMountRequestMDB {
 		.withTag("msg", record.value())
 		.start()
 		;
-		GlobalTracer.get().activateSpan(span);
-		lockSmithService.mountChair(record.value());
-		span.finish();
+		try(var scope = GlobalTracer.get().activateSpan(span)) {
+			lockSmithService.mountChair(record.value());
+		} finally {
+			span.finish();
+		}
 	}
 }

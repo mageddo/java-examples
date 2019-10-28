@@ -23,8 +23,10 @@ public class PainterChairPaintRequestMDB {
 		.withTag("msg", record.value())
 		.start()
 		;
-		GlobalTracer.get().activateSpan(span);
-		painterService.paintChair(record.value());
-		span.finish();
+		try(var scope = GlobalTracer.get().activateSpan(span)) {
+			painterService.paintChair(record.value());
+		} finally {
+			span.finish();
+		}
 	}
 }

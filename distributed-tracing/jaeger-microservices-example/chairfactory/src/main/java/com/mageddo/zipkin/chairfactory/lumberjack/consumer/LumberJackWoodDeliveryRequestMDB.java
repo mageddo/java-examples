@@ -23,8 +23,10 @@ public class LumberJackWoodDeliveryRequestMDB {
 		.withTag("msg", record.value())
 		.start()
 		;
-		GlobalTracer.get().activateSpan(span);
-		lumberJackService.provideWood(record.value());
-		span.finish();
+		try(var scope = GlobalTracer.get().activateSpan(span)) {
+			lumberJackService.provideWood(record.value());
+		} finally {
+			span.finish();
+		}
 	}
 }

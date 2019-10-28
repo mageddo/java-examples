@@ -23,8 +23,9 @@ public class StoreChairDeliveredMDB {
 			.withTag("msg", record.value())
 			.start()
 		;
-		GlobalTracer.get().activateSpan(span);
-		storeService.deliverChairToCustomer(record.value());
-		span.finish();
+		try(var scope = GlobalTracer.get().activateSpan(span)) {
+			storeService.deliverChairToCustomer(record.value());
+			span.finish();
+		}
 	}
 }
