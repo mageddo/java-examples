@@ -19,6 +19,7 @@ public class CustomerService {
 		final var span = GlobalTracer.get()
 			.buildSpan("customer: chair ordering")
 			.start();
+		GlobalTracer.get().activateSpan(span);
 		final var msg = "\ncustomer: I want a chair";
 		log.info(msg);
 		kafkaTemplate.send(new ProducerRecord<>(

@@ -1,6 +1,5 @@
 package com.mageddo.zipkin.chairfactory.lumberjack.consumer;
 
-import com.mageddo.tracing.Tracing;
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.chairfactory.lumberjack.service.LumberJackService;
 import io.opentracing.contrib.kafka.TracingKafkaUtils;
@@ -18,13 +17,13 @@ public class LumberJackWoodDeliveryRequestMDB {
 
 	@KafkaListener(topics = Topics.FACTORY_LUMBERJACK_WOOD_DELIVERY_REQUEST)
 	public void consume(ConsumerRecord<String, String> record){
-		Tracing.context(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()));
 		final var span = GlobalTracer.get()
 		.buildSpan("lumberjack: deliverying wood to the factory")
-		.asChildOf(Tracing.context())
+		.asChildOf(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()))
 		.withTag("msg", record.value())
 		.start()
 		;
+		GlobalTracer.get().activateSpan(span);
 		lumberJackService.provideWood(record.value());
 		span.finish();
 	}

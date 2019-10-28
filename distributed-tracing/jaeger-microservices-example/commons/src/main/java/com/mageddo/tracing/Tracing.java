@@ -40,11 +40,11 @@ public class Tracing {
 			.build();
 	}
 
-	public static void context(SpanContext context) {
+	private static void context(SpanContext context) {
 		SPAN_CONTEXT_THREAD_LOCAL.set(context);
 	}
 
-	public static SpanContext context(){
+	private static SpanContext context(){
 		return SPAN_CONTEXT_THREAD_LOCAL.get();
 	}
 }

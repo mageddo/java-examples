@@ -1,6 +1,5 @@
 package com.mageddo.zipkin.store.consumer;
 
-import com.mageddo.tracing.Tracing;
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.store.service.StoreService;
 import io.opentracing.contrib.kafka.TracingKafkaUtils;
@@ -18,13 +17,13 @@ public class StoreChairDeliveredMDB {
 
 	@KafkaListener(topics = Topics.STORE_CHAIR_DELIVERED)
 	public void consume(ConsumerRecord<String, String> record){
-		Tracing.context(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()));
 		final var span = GlobalTracer.get()
 			.buildSpan("store: chair delivery to customer")
-			.asChildOf(Tracing.context())
+			.asChildOf(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()))
 			.withTag("msg", record.value())
 			.start()
 		;
+		GlobalTracer.get().activateSpan(span);
 		storeService.deliverChairToCustomer(record.value());
 		span.finish();
 	}

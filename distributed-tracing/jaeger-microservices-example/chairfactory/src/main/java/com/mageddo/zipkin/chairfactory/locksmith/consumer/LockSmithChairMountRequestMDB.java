@@ -1,6 +1,5 @@
 package com.mageddo.zipkin.chairfactory.locksmith.consumer;
 
-import com.mageddo.tracing.Tracing;
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.chairfactory.locksmith.service.LockSmithService;
 import io.opentracing.contrib.kafka.TracingKafkaUtils;
@@ -18,13 +17,13 @@ public class LockSmithChairMountRequestMDB {
 
 	@KafkaListener(topics = Topics.FACTORY_LOCKSMITH_CHAIR_MOUNT_REQUEST)
 	public void consume(ConsumerRecord<String, String> record){
-		Tracing.context(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()));
 		final var span = GlobalTracer.get()
 		.buildSpan("factory: chair mount")
-		.asChildOf(Tracing.context())
+		.asChildOf(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()))
 		.withTag("msg", record.value())
 		.start()
 		;
+		GlobalTracer.get().activateSpan(span);
 		lockSmithService.mountChair(record.value());
 		span.finish();
 	}

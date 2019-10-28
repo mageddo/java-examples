@@ -1,6 +1,5 @@
 package com.mageddo.zipkin.chairfactory.consumer;
 
-import com.mageddo.tracing.Tracing;
 import com.mageddo.zipkin.Topics;
 import com.mageddo.zipkin.chairfactory.service.ChairFactoryService;
 import io.opentracing.contrib.kafka.TracingKafkaUtils;
@@ -18,13 +17,13 @@ public class FactoryMountedChairMDB {
 
 	@KafkaListener(topics = Topics.FACTORY_MOUNTED_CHAIR_DELIVERY)
 	public void consume(ConsumerRecord<String, String> record){
-		Tracing.context(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()));
 		final var span = GlobalTracer.get()
 			.buildSpan("factory: painting request")
-			.asChildOf(Tracing.context())
+			.asChildOf(TracingKafkaUtils.extractSpanContext(record.headers(), GlobalTracer.get()))
 			.withTag("msg", record.value())
 			.start()
 		;
+		GlobalTracer.get().activateSpan(span);
 		chairFactoryService.requestChairPaint(record.value());
 		span.finish();
 	}

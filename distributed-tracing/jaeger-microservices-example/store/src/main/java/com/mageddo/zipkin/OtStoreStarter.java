@@ -14,7 +14,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 public class OtStoreStarter {
 
 	public static void main(String[] args) {
-		GlobalTracer.registerIfAbsent(Tracing.createTracer("chairland"));
+		GlobalTracer.registerIfAbsent(Tracing.createTracer("store"));
 		SpringApplication.run(OtStoreStarter.class, args);
 
 	}
