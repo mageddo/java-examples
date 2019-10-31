@@ -1,3 +1,9 @@
+plugins {
+	id 'application'
+}
+
+mainClassName = 'com.mageddo.bank.moneytransference.Application'
+
 dependencies {
 	compile(project(":application:core"))
 	compile(project(":application:dataproviders"))
