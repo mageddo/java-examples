@@ -1,3 +1,4 @@
 dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+	provided group: 'org.springframework', name: 'spring-tx', version: '5.2.0.RELEASE'
 }

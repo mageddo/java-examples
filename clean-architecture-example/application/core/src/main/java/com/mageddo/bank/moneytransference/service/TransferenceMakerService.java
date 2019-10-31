@@ -3,6 +3,7 @@ package com.mageddo.bank.moneytransference.service;
 import com.mageddo.bank.moneytransference.entity.Transference;
 import com.mageddo.bank.moneytransference.entity.TransferenceStatement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class TransferenceMakerService {
@@ -10,6 +11,7 @@ public class TransferenceMakerService {
 	private final AccountBalanceUpdater accountBalanceUpdater;
 	private final AccountStatementCreator accountStatementCreator;
 
+	@Transactional
 	public void doTransfer(Transference transference){
 
 		TransferenceValidator.validate(transference);

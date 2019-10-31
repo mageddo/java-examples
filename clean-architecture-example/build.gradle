@@ -1,4 +1,3 @@
-
 configure(allprojects - project(":application")) {
 	repositories {
 		mavenLocal()
@@ -6,6 +5,19 @@ configure(allprojects - project(":application")) {
 	}
 	apply plugin: "java"
 	sourceCompatibility = JavaVersion.VERSION_11
+
+	configurations {
+		provided
+	}
+
+	sourceSets {
+		main {
+			compileClasspath += configurations.provided
+			test.compileClasspath += configurations.provided
+			test.runtimeClasspath += configurations.provided
+		}
+	}
+
 	dependencies {
 		compileOnly 'org.projectlombok:lombok:1.18.10'
 		annotationProcessor 'org.projectlombok:lombok:1.18.10'

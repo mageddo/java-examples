@@ -1,0 +1,7 @@
+dependencies {
+	compile(project(":application:core"))
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.2.0.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jdbc', version: '2.2.0.RELEASE'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+
+}

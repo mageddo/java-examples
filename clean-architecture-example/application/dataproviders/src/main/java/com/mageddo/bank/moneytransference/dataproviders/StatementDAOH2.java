@@ -4,11 +4,9 @@ import com.mageddo.bank.moneytransference.dataproviders.entity.StatementEntity;
 import com.mageddo.bank.moneytransference.entity.TransferenceStatement;
 import com.mageddo.bank.moneytransference.service.AccountStatementCreator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 
-@Repository
 @RequiredArgsConstructor
 public class StatementDAOH2 implements AccountStatementCreator {
 
