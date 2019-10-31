@@ -1,1 +1,6 @@
 rootProject.name = 'clean-architecture-example'
+
+include 'application:config'
+include 'application:core'
+include 'application:dataproviders'
+include 'application:io'
