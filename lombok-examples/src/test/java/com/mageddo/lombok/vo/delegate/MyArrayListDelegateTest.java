@@ -13,7 +13,7 @@ public class MyArrayListDelegateTest {
 
 		// arrange
 
-		final var fruits = new MyArrayListDelegate();
+		final List<String> fruits = new MyArrayListDelegate<>();
 
 		// act
 		fruits.add("orange");
@@ -21,7 +21,7 @@ public class MyArrayListDelegateTest {
 		fruits.addAll(List.of("grape", "tomato"));
 
 		// assert
-		assertEquals(4, fruits.getAddItems());
+		assertEquals(4, ((MyArrayListDelegate) fruits).getAddItems());
 		assertEquals(4, fruits.size());
 
 	}
