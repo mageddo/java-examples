@@ -2,14 +2,9 @@ buildscript {
 	repositories {
 		mavenCentral()
 	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE")
-	}
 }
 
 apply plugin: "java"
-apply plugin: "idea"
-apply plugin: "org.springframework.boot"
 
 jar {
 	baseName = "gs-messaging-jms"
@@ -25,8 +20,8 @@ ext {
 	activeMQVersion = "5.14.5"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
 

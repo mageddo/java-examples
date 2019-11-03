@@ -1,6 +1,5 @@
 package com.mageddo.cryptography;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.BadPaddingException;
