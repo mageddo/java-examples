@@ -1,6 +1,9 @@
 package com.mageddo.lombok;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mageddo.lombok.vo.FruitPrivateConstructor;
+import com.mageddo.lombok.vo.FruitPrivateSetters;
+import com.mageddo.lombok.vo.FruitSpecifyingBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Assert;

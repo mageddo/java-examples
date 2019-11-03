@@ -1,4 +1,4 @@
-package com.mageddo.lombok;
+package com.mageddo.lombok.vo;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

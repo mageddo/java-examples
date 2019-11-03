@@ -1,4 +1,4 @@
-package com.mageddo.lombok;
+package com.mageddo.lombok.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
