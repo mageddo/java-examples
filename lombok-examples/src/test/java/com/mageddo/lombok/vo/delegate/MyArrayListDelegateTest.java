@@ -1,4 +1,4 @@
-package com.mageddo.lombok.vo;
+package com.mageddo.lombok.vo.delegate;
 
 import org.junit.Test;
 
