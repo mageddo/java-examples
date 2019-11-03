@@ -7,28 +7,28 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MyArrayListDelegate<T> implements List<T> {
+public class MyArrayListDelegate implements List<String> {
 
 	@Getter
 	private int addItems = 0;
 
-	@Delegate(excludes = ListAdd.class, types = List.class)
-	private List<T> delegate = new ArrayList<>();
+	@Delegate(excludes = ListAdd.class)
+	private List<String> delegate = new ArrayList<>();
 
 	@Override
-	public boolean add(T e){
+	public boolean add(String e){
 		this.addItems++;
 		return this.delegate.add(e);
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends T> c) {
+	public boolean addAll(Collection<? extends String> c) {
 		this.addItems += c.size();
 		return this.delegate.addAll(c);
 	}
 
-	private interface ListAdd<T> {
-		boolean add(T e);
-		boolean addAll(Collection<? extends T> c);
+	private interface ListAdd {
+		boolean add(String e);
+		boolean addAll(Collection<? extends String> c);
 	}
 }

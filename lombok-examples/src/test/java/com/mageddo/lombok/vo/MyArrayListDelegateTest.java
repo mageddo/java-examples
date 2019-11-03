@@ -13,7 +13,7 @@ public class MyArrayListDelegateTest {
 
 		// arrange
 
-		final var fruits = new MyArrayListDelegate<String>();
+		final var fruits = new MyArrayListDelegate();
 
 		// act
 		fruits.add("orange");
