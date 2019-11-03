@@ -1,5 +1,6 @@
 package com.mageddo.lombok.vo.delegate;
 
+import lombok.var;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
