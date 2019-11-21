@@ -19,20 +19,25 @@ import java.util.Set;
 
 
 @SupportedAnnotationTypes("com.mageddo.processor.Immutable")
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class MutatingAnnotationProcessor extends AbstractProcessor {
 	private Trees trees;
 
 	@Override
 	public void init(ProcessingEnvironment processingEnv) {
-		super.init(processingEnv);
-		trees = Trees.instance(processingEnv);
+		try {
+			super.init(processingEnv);
+			trees = Trees.instance(processingEnv);
+		} catch (Exception e){
+			System.out.println(">>>>>" + e.getMessage());
+			throw e;
+		}
 	}
 
 	@Override
 	public boolean process(final Set<? extends TypeElement> annotations,
 												 final RoundEnvironment roundEnv) {
-
+		System.out.println("MutatingAnnotationProcessor: init");
 		final TreePathScanner<Object, CompilationUnitTree> scanner =
 			new TreePathScanner<Object, CompilationUnitTree>() {
 				@Override

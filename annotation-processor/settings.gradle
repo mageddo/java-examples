@@ -1,2 +1,3 @@
 include ':processor'
 include ':example'
+include ':acceptance-tests'

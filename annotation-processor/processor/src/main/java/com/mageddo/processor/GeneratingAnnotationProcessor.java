@@ -1,9 +1,6 @@
 package com.mageddo.processor;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
@@ -15,11 +12,18 @@ import java.io.Writer;
 import java.util.Set;
 
 @SupportedAnnotationTypes("com.mageddo.processor.Immutable")
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class GeneratingAnnotationProcessor extends AbstractProcessor {
+
+	@Override
+	public synchronized void init(ProcessingEnvironment processingEnv) {
+		super.init(processingEnv);
+	}
+
 	@Override
 	public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
 
+		System.out.println("generating immutable class");
 		for (final Element element : roundEnv.getElementsAnnotatedWith(Immutable.class)) {
 			if (element instanceof TypeElement) {
 				final TypeElement typeElement = (TypeElement) element;

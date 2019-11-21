@@ -14,7 +14,7 @@ public class MutableClass {
     }
 
     public static void main(String[] args) {
-        new MutableClass("x").name = "x";
-        System.out.println("hi");
+//        new MutableClass("x").name = "x";
+//        System.out.println("hi");
     }
 }
