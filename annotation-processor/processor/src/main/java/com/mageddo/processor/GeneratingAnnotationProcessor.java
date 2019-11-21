@@ -11,12 +11,13 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Set;
 
-@SupportedAnnotationTypes("com.mageddo.processor.Immutable")
+@SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class GeneratingAnnotationProcessor extends AbstractProcessor {
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
+		System.out.println("GeneratingAnnotationProcessor: init");
 		super.init(processingEnv);
 	}
 

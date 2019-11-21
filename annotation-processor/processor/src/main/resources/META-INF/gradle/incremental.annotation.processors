@@ -1,0 +1,2 @@
+com.mageddo.processor.MutatingAnnotationProcessor
+com.mageddo.processor.GeneratingAnnotationProcessor,dynamic
