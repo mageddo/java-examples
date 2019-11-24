@@ -12,7 +12,7 @@ import java.io.Writer;
 import java.util.Set;
 
 @SupportedAnnotationTypes("*")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class GeneratingAnnotationProcessor extends AbstractProcessor {
 
 	@Override
