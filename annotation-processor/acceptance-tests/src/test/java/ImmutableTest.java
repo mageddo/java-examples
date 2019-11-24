@@ -3,6 +3,7 @@ import pojo.Fruit;
 
 import java.lang.reflect.Modifier;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImmutableTest {
@@ -22,7 +23,12 @@ class ImmutableTest {
 
 	@Test
 	void mustCreateImmutableClass() throws Exception {
-//		final Class<?> clazz = Class.forName("pojo.FruitImmutable");
+
+		// act
+		final Class<?> clazz = Class.forName("pojo.FruitImmutable");
+
+		// assert
+		assertNotNull(clazz.newInstance());
 	}
 
 }

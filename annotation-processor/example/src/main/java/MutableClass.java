@@ -13,8 +13,4 @@ public class MutableClass {
         return name;
     }
 
-    public static void main(String[] args) {
-//        new MutableClass("x").name = "x";
-//        System.out.println("hi");
-    }
 }

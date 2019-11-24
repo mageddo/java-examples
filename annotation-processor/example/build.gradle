@@ -1,6 +1,14 @@
+plugins {
+	id "java"
+	id "application"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+mainClassName = "Main"
+
 dependencies {
-//	compile(project(':processor'))
-	compile files("$rootProject.rootDir/processor/build/libs/processor.jar")
-	annotationProcessor files("$rootProject.rootDir/processor/build/libs/processor.jar")
-	testCompile 'junit:junit:4.12'
+	compileOnly(project(":application"))
+	annotationProcessor(project(":application"))
 }

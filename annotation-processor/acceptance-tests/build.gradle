@@ -1,0 +1,16 @@
+dependencies {
+
+	testCompileOnly(project(":application"))
+	testAnnotationProcessor(project(":application"))
+
+	testCompile "org.junit.jupiter:junit-jupiter:5.4.2"
+	testCompile files(org.gradle.internal.jvm.Jvm.current().toolsJar)
+}
+
+test {
+	useJUnitPlatform()
+}
+
+processResources {
+	from('src/test/java')
+}
