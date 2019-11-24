@@ -14,7 +14,7 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 
 @SupportedAnnotationTypes( "com.mageddo.processor.Immutable" )
-@SupportedSourceVersion( SourceVersion.RELEASE_8)
+@SupportedSourceVersion( SourceVersion.RELEASE_7)
 public class SimpleAnnotationProcessor extends AbstractProcessor {
 	@Override
 	public boolean process(final Set< ? extends TypeElement > annotations, 

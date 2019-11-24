@@ -19,7 +19,7 @@ import java.util.Set;
 
 
 @SupportedAnnotationTypes("com.mageddo.processor.Immutable")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class MutatingAnnotationProcessor extends AbstractProcessor {
 	private Trees trees;
 
