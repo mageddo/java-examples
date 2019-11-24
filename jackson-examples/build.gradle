@@ -1,0 +1,11 @@
+dependencies {
+
+	compile ("com.fasterxml.jackson.core:jackson-databind:2.9.5")
+
+	testCompile "org.junit.jupiter:junit-jupiter:5.4.2"
+	testCompile "org.mockito:mockito-junit-jupiter:3.1.0"
+}
+
+test {
+	useJUnitPlatform()
+}
