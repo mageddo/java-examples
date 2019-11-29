@@ -49,5 +49,5 @@ ij_java_names_count_to_use_import_on_demand = 1000
 ij_java_packages_to_use_import_on_demand = 1000
 ij_java_layout_static_imports_separately = true
 ij_java_use_single_class_imports = true
-#ij_java_imports_layout = java.**,|,javax.**,|,scala.**,|,com.**,|,net.**,|,org.**,|,*
+ij_java_imports_layout = java.**,|,javax.**,|,scala.**,|,com.**,|,net.**,|,org.**,|,*
 # end::intellij-java-specific[]
