@@ -5,7 +5,11 @@ allprojects {
 		mavenLocal()
 		mavenCentral()
 	}
+
 	apply plugin: 'java'
+
+	sourceCompatibility = JavaVersion.VERSION_11
+
 	tasks.withType(JavaCompile) {
 		options.encoding = StandardCharsets.UTF_8.displayName()
 	}
