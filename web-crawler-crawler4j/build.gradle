@@ -1,4 +1,6 @@
 dependencies {
+  compile group: 'com.sleepycat', name: 'je', version: '18.3.12'
+  compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.4.0'
   compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.11.RELEASE'
   testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
   testCompile('org.junit.jupiter:junit-jupiter:5.5.2')
