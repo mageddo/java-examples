@@ -1,4 +1,5 @@
 dependencies {
+  compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
   compile group: 'com.sleepycat', name: 'je', version: '18.3.12'
   compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.4.0'
   compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.11.RELEASE'

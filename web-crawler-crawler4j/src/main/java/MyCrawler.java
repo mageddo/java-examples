@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,11 +49,29 @@ public class MyCrawler extends WebCrawler {
 //      Files.write(Paths.get("/tmp/log.txt"), page.getWebURL().toString().concat("\n").getBytes(),
 //          StandardOpenOption.APPEND, StandardOpenOption.CREATE);
 //      Runtime.getRuntime().exec("echo '" +  + "' >> /tmp/links.txt").waitFor();
-      LOG.info("crawling={}", page.getWebURL().toString());
+      LOG.info("contentType={}, crawling={}", page.getContentType(), page.getWebURL().toString());
       final var pageStoragePath = Paths.get(storageDir, resolveFilename(page));
       Files.createDirectories(pageStoragePath.getParent());
 //      Files.createDirectories(Paths.get(storageDir, page.getWebURL().getPath()).getParent());
-      Files.write(pageStoragePath, page.getContentData());
+      if(page.getContentType().contains("text/html")){
+        final var pattern = "(\\w+://[^/]*)(/?.*)";
+        final var document = Jsoup.parse(new String(page.getContentData()));
+        document
+            .select("img,script")
+            .forEach(it -> it
+                .attr("src", it.attr("src")
+                .replaceAll(pattern, "$2"))
+            );
+        document
+            .select("a,link")
+            .forEach(it -> it
+                .attr("href", it.attr("href")
+                .replaceAll(pattern, "$2"))
+            );
+        Files.write(pageStoragePath, document.outerHtml().getBytes());
+      } else {
+        Files.write(pageStoragePath, page.getContentData());
+      }
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
