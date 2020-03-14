@@ -61,4 +61,5 @@ include ':distributed-tracing:jaeger-microservices-example:customer'
 include ':distributed-tracing:jaeger-microservices-example:chairfactory'
 
 include ':web-crawler-crawler4j'
+include ':tiny-web-servers:tjws'
 

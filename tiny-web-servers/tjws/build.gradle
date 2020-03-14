@@ -1,0 +1,6 @@
+plugins {
+  id 'java'
+}
+dependencies {
+  compile fileTree("${projectDir}/lib")
+}
