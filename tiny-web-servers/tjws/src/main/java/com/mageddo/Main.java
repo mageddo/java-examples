@@ -1,3 +1,5 @@
+package com.mageddo;
+
 public class Main {
   public static void main(String... args) {
     class MyServ extends Acme.Serve.Serve {
