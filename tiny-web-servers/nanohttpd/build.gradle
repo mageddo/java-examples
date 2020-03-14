@@ -1,0 +1,11 @@
+plugins {
+  id 'java'
+  id 'application'
+}
+
+mainClassName = 'com.mageddo.nanohttpd.Main'
+
+dependencies {
+  compile group: 'org.nanohttpd', name: 'nanohttpd-nanolets', version: '2.3.1'
+}
+
