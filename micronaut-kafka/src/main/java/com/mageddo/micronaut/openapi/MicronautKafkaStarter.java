@@ -1,4 +1,4 @@
-package com.mageddo.micronaut.kafka;
+package com.mageddo.micronaut.openapi;
 
 import io.micronaut.runtime.Micronaut;
 import io.micronaut.scheduling.annotation.Scheduled;

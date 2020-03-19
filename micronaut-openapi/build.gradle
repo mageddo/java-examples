@@ -1,0 +1,33 @@
+plugins {
+  id "java"
+  id "application"
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+
+  annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+  annotationProcessor "io.micronaut:micronaut-inject-java"
+  annotationProcessor "io.micronaut:micronaut-validation"
+  annotationProcessor "io.micronaut.configuration:micronaut-openapi"
+  implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+  implementation "io.micronaut:micronaut-inject"
+  implementation "io.micronaut:micronaut-validation"
+  implementation "io.micronaut:micronaut-runtime"
+  implementation "io.swagger.core.v3:swagger-annotations"
+  implementation "io.micronaut:micronaut-http-server-netty"
+  implementation "javax.annotation:javax.annotation-api"
+  runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
+
+}
+
+mainClassName = "com.mageddo.micronaut.openapi.MicronautOpenApiStarter"
+
+tasks.withType(JavaCompile) {
+  options.fork = true
+  options.forkOptions.jvmArgs << '-Dmicronaut.openapi.views.spec=rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop'
+}

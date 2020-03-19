@@ -1,6 +1,6 @@
-package com.mageddo.micronaut.kafka.mdb;
+package com.mageddo.micronaut.openapi.mdb;
 
-import com.mageddo.micronaut.kafka.KafkaProducer;
+import com.mageddo.micronaut.openapi.KafkaProducer;
 import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.OffsetStrategy;
 import io.micronaut.configuration.kafka.annotation.Topic;

@@ -23,6 +23,7 @@ include ':jni-java8-examples'
 
 include ':lombok-examples'
 include ':micronaut-kafka'
+include ':micronaut-openapi'
 include ':kafka-slow-consumer-rebalance-evidence'
 include ':okhttp-examples'
 

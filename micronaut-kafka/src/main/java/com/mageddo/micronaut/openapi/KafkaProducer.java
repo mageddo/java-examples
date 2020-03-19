@@ -1,4 +1,4 @@
-package com.mageddo.micronaut.kafka;
+package com.mageddo.micronaut.openapi;
 
 import io.micronaut.configuration.kafka.annotation.KafkaClient;
 import org.apache.kafka.clients.producer.Producer;
