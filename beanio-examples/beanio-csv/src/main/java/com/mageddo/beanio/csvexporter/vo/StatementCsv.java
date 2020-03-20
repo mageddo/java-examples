@@ -47,4 +47,13 @@ public class StatementCsv {
     this.details = details;
     return this;
   }
+
+  @Override
+  public String toString() {
+    return "StatementCsv{" +
+        "amount=" + amount +
+        ", description='" + description + '\'' +
+        ", details=" + details +
+        '}';
+  }
 }

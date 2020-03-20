@@ -29,4 +29,12 @@ public class StatementDetailsCsv {
     this.description = description;
     return this;
   }
+
+  @Override
+  public String toString() {
+    return "StatementDetailsCsv{" +
+        "productId=" + productId +
+        ", description='" + description + '\'' +
+        '}';
+  }
 }
