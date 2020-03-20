@@ -1,6 +1,9 @@
 
 include ':asm-examples'
 include ':avro-examples'
+
+include ':beanio-examples:beanio-csv'
+
 include ':command-line-parser:jcommander'
 include ':cryptography'
 include ':cucumber'
