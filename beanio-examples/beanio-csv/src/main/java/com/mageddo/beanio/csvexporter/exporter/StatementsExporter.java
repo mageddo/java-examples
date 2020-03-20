@@ -1,18 +1,15 @@
 package com.mageddo.beanio.csvexporter.exporter;
 
-import com.mageddo.beanio.csvexporter.handler.ListHandler;
-import com.mageddo.beanio.csvexporter.vo.StatementCsv;
+import java.io.Writer;
 
-import com.mageddo.beanio.csvexporter.vo.StatementDetailsCsv;
+import com.mageddo.beanio.csvexporter.handler.SubListHandler;
+import com.mageddo.beanio.csvexporter.vo.StatementCsv;
 
 import org.beanio.BeanWriter;
 import org.beanio.StreamFactory;
 import org.beanio.builder.CsvParserBuilder;
 import org.beanio.builder.StreamBuilder;
 import org.beanio.stream.RecordParserFactory;
-
-import java.io.Writer;
-import java.util.List;
 
 public final class StatementsExporter {
 
@@ -28,9 +25,8 @@ public final class StatementsExporter {
     final StreamBuilder builder = new StreamBuilder(getClass().getName())
         .format("csv")
         .parser(parserFactory)
-        .addTypeHandler(ListHandler.class.getName(), new ListHandler())
+        .addTypeHandler(SubListHandler.class.getName(), new SubListHandler())
         .addRecord(StatementCsv.class)
-        .addRecord(StatementDetailsCsv.class)
         ;
 
     factory = StreamFactory.newInstance();

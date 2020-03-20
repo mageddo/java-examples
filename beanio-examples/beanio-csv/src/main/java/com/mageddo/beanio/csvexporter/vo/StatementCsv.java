@@ -1,6 +1,6 @@
 package com.mageddo.beanio.csvexporter.vo;
 
-import com.mageddo.beanio.csvexporter.handler.ListHandler;
+import com.mageddo.beanio.csvexporter.handler.SubListHandler;
 
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Record;
@@ -18,8 +18,8 @@ public class StatementCsv {
 	@Field(align = Align.LEFT, padding = ' ', length = 50, required = true)
 	private String description;
 
-	@Field(handlerClass = ListHandler.class)
-	private List<StatementDetailsCsv> details;
+	@Field(handlerClass = SubListHandler.class, type = SubList.class)
+	private SubList details;
 
 	public String getDescription() {
 		return description;
@@ -39,11 +39,11 @@ public class StatementCsv {
     return this;
   }
 
-  public List<StatementDetailsCsv> getDetails() {
+  public SubList getDetails() {
     return details;
   }
 
-  public StatementCsv setDetails(List<StatementDetailsCsv> details) {
+  public StatementCsv setDetails(SubList details) {
     this.details = details;
     return this;
   }
