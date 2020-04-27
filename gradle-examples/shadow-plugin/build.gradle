@@ -1,0 +1,17 @@
+plugins {
+  id "com.github.johnrengelman.shadow" version "5.2.0"
+  id "java"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'com.mageddo.GradleShadowApp'
+  }
+}
+
+dependencies {
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+}
+
