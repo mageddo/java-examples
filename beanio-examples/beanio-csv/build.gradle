@@ -3,6 +3,8 @@ plugins {
   id "application"
 }
 
+mainClassName = "com.mageddo.beanio.csvexporter.CsvExporterMain"
+
 dependencies {
   compile group: 'org.beanio', name: 'beanio', version: '2.1.0'
 }
