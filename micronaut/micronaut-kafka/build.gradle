@@ -1,23 +1,25 @@
 plugins {
-	id "java"
+  id "java"
+  id "application"
 }
 
 repositories {
-	mavenLocal()
-	mavenCentral()
+  mavenLocal()
+  jcenter()
 }
 
+mainClassName = "com.mageddo.micronaut.openapi.MicronautKafkaStarter"
+
 dependencies {
+  annotationProcessor platform("io.micronaut:micronaut-bom:${micronautVersion}")
+  implementation platform("io.micronaut:micronaut-bom:${micronautVersion}")
 
-	annotationProcessor "io.micronaut:micronaut-validation:${micronautVersion}"
-	annotationProcessor "io.micronaut:micronaut-inject-java:${micronautVersion}"
+  annotationProcessor("io.micronaut:micronaut-validation")
+  annotationProcessor("io.micronaut:micronaut-inject-java")
 
-	compile "io.micronaut.configuration:micronaut-kafka:1.2.0"
-	compile "io.micronaut:micronaut-runtime:${micronautVersion}"
-	compile "io.micronaut:micronaut-inject:${micronautVersion}"
-	compileOnly "io.micronaut:micronaut-inject-java:${micronautVersion}"
-	compile ("ch.qos.logback:logback-classic:1.2.3")
-
-	testCompile "junit:junit:4.12"
-	testCompileOnly("io.micronaut:micronaut-inject-java:${micronautVersion}")
+  compile("io.micronaut.configuration:micronaut-kafka")
+  compile("io.micronaut:micronaut-runtime")
+  compile("io.micronaut:micronaut-inject")
+  compileOnly("io.micronaut:micronaut-inject-java")
+  runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
 }
