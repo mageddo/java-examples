@@ -5,16 +5,16 @@ plugins {
 
 repositories {
   mavenLocal()
-  mavenCentral()
+  jcenter()
 }
 
 dependencies {
 
-  annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+  annotationProcessor platform("io.micronaut:micronaut-bom:${micronautVersion}")
   annotationProcessor "io.micronaut:micronaut-inject-java"
   annotationProcessor "io.micronaut:micronaut-validation"
   annotationProcessor "io.micronaut.configuration:micronaut-openapi:1.4.1"
-  implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+  implementation platform("io.micronaut:micronaut-bom:${micronautVersion}")
   implementation "io.micronaut:micronaut-inject"
   implementation "io.micronaut:micronaut-validation"
   implementation "io.micronaut:micronaut-runtime"
