@@ -1,0 +1,1 @@
+See complete example at: https://github.com/mageddo/graalvm-examples/tree/master/micronaut
