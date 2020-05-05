@@ -3,6 +3,11 @@ plugins {
   id "application"
 }
 
+repositories {
+  mavenLocal()
+  jcenter()
+}
+
 mainClassName = "com.mageddo.beanio.csvexporter.CsvExporterMain"
 
 dependencies {
