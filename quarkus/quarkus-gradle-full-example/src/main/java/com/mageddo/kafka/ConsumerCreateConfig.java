@@ -11,7 +11,5 @@ public interface ConsumerCreateConfig<K, V> {
 
   Collection<String> getTopics();
 
-  RecoverCallback<K, V> getRecoverCallback();
-
   ConsumerCreateConfig<K, V> withProp(String k, Object v);
 }

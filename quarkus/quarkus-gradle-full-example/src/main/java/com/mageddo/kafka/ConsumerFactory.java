@@ -43,7 +43,7 @@ public class ConsumerFactory {
         if (log.isTraceEnabled()) {
           log.trace("status=polled, records={}", records.count());
         }
-        this.doConsume(consumer, consumingConfig, records);
+        this.consume(consumer, consumingConfig, records);
       } catch (Exception e) {
         if (log.isTraceEnabled()) {
           log.trace("status=poll-error", e);
@@ -67,7 +67,7 @@ public class ConsumerFactory {
     }
   }
 
-  private <K, V> void doConsume(
+  private <K, V> void consume(
       Consumer<K, V> consumer,
       ConsumingConfig<K, V> consumingConfig,
       ConsumerRecords<K, V> records
@@ -77,9 +77,9 @@ public class ConsumerFactory {
         .withMaxAttempts(2)
         .withDelay(Duration.ofSeconds(60 * 4));
     if (consumingConfig.getCallback() != null) {
-      doConsume(consumer, consumingConfig, records, retryPolicy);
+      this.doConsume(consumer, consumingConfig, records, retryPolicy);
     } else {
-      doBatchConsume(consumer, consumingConfig, records, retryPolicy);
+      this.doBatchConsume(consumer, consumingConfig, records, retryPolicy);
     }
 
   }
@@ -95,6 +95,11 @@ public class ConsumerFactory {
         .with(
             Fallback.ofAsync(it -> {
               log.info("exhausted tries....: {}", it);
+              records.forEach(
+                  record -> consumingConfig
+                      .getRecoverCallback()
+                      .recover(record)
+              );
             }),
             retryPolicy
                 .onRetry(it -> {
@@ -102,7 +107,7 @@ public class ConsumerFactory {
                   final Set<TopicPartition> partitions = records.partitions();
                   for (final TopicPartition partition : partitions) {
                     final ConsumerRecord<K, V> firstRecord = getFirstRecord(records, partition);
-                    if(firstRecord != null){
+                    if (firstRecord != null) {
                       consumer.commitSync(Collections.singletonMap(
                           new TopicPartition(firstRecord.topic(), firstRecord.partition()),
                           new OffsetAndMetadata(firstRecord.offset())
@@ -121,11 +126,6 @@ public class ConsumerFactory {
     consumer.commitSync();
   }
 
-  private <K, V> ConsumerRecord<K, V> getFirstRecord(ConsumerRecords<K, V> records, TopicPartition partition) {
-    final List<ConsumerRecord<K, V>> partitionRecords = records.records(partition);
-    return partitionRecords.isEmpty() ? null : partitionRecords.get(0);
-  }
-
   private <K, V> void doConsume(
       Consumer<K, V> consumer,
       ConsumingConfig<K, V> consumingConfig,
@@ -137,6 +137,8 @@ public class ConsumerFactory {
           .with(
               Fallback.ofAsync(it -> {
                 log.info("exhausted tries....: {}", it);
+                consumingConfig.getRecoverCallback()
+                    .recover(record);
               }),
               retryPolicy
                   .onRetry(it -> {
@@ -157,4 +159,10 @@ public class ConsumerFactory {
     }
     consumer.commitSync();
   }
+
+  private <K, V> ConsumerRecord<K, V> getFirstRecord(ConsumerRecords<K, V> records, TopicPartition partition) {
+    final List<ConsumerRecord<K, V>> partitionRecords = records.records(partition);
+    return partitionRecords.isEmpty() ? null : partitionRecords.get(0);
+  }
+
 }

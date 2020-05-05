@@ -47,33 +47,10 @@ public class StockPriceMDB {
         .withProp(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
         .withProp(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName())
         .withProp(VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class.getName())
-        .setCallback((consumer, records, e) -> {
+        .setBatchCallback((consumer, records, e) -> {
           for (final var record : records) {
-            Failsafe
-                .with(
-                    Fallback.ofAsync(it -> {
-                      log.info("exhausted tries....: {}", it);
-                    }),
-                    new RetryPolicy<>()
-                        .withMaxAttempts(2)
-                        .withDelay(Duration.ofSeconds(60 * 4))
-                        .onRetry(it -> {
-                          log.info("failed to consume: {}", it);
-                          consumer.commitSync(Collections.singletonMap(
-                              new TopicPartition(record.topic(), record.partition()),
-                              new OffsetAndMetadata(record.offset())
-                          ));
-                        })
-                        .handle(Exception.class)
-                )
-                .run(ctx -> {
-                  log.info("trying to consume: {}", record);
-                  throw new RuntimeException("failed to consume");
-//              log.info("key={}, value={}", record.key(), new String(record.value()));
-                });
-            ;
+            log.info("key={}, value={}", record.key(), new String(record.value()));
           }
-          consumer.commitSync();
         });
 
     this.consumerFactory.consume(consumerConfig);

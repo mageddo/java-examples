@@ -30,16 +30,17 @@ public class ConsumerConfig<K, V> implements ConsumerCreateConfig<K, V>, Consumi
   @NonNull
   private Collection<String> topics;
 
-  private RecoverCallback<K, V> recoverCallback;
-
-  @NonNull
-  private ConsumeCallback<K, V> callback;
-
   @NonNull
   private Duration timeout = Duration.ofMillis(100);
 
   @NonNull
   private Duration interval = Duration.ofMillis(FPS_30);
+
+  private RecoverCallback<K, V> recoverCallback;
+
+  private ConsumeCallback<K, V> callback;
+
+  private BatchConsumeCallback<K, V> batchCallback;
 
   public ConsumerConfig<K, V> withProp(String k, Object v) {
     this.props.put(k, v);

@@ -4,6 +4,8 @@ import java.time.Duration;
 
 public interface ConsumingConfig<K, V> {
 
+  RecoverCallback<K, V> getRecoverCallback();
+
   /**
    * The callback which will be called after poll the message
    */
