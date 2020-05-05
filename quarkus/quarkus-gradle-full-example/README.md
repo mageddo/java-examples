@@ -40,4 +40,6 @@ You can then execute your native executable with: `./build/code-with-quarkus-1.0
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling#building-a-native-executable.
 
+    curl -v -X POST -H 'Content-Type: text/plain' http://localhost:8084/prices/ --data '13'
+
 [1]: https://quarkus.io/guides/kafka#starting-kafka
