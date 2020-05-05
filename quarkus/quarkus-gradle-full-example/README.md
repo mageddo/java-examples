@@ -1,5 +1,9 @@
 # code-with-quarkus project
 
+* [x] Static Resources
+* [x] Rest Server
+* [x] Kafka Streaming
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
