@@ -9,6 +9,8 @@ public interface ConsumingConfig<K, V> {
    */
   ConsumeCallback<K, V> getCallback();
 
+  BatchConsumeCallback<K, V> getBatchCallback();
+
   /**
    * How long to wait the poll call
    */

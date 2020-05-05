@@ -1,11 +1,23 @@
 package com.mageddo.kafka;
 
+import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import net.jodah.failsafe.Failsafe;
+import net.jodah.failsafe.Fallback;
+import net.jodah.failsafe.RetryPolicy;
+
 import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.common.TopicPartition;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,9 +43,7 @@ public class ConsumerFactory {
         if (log.isTraceEnabled()) {
           log.trace("status=polled, records={}", records.count());
         }
-        consumingConfig
-            .getCallback()
-            .accept(consumer, records, null);
+        this.doConsume(consumer, consumingConfig, records);
       } catch (Exception e) {
         if (log.isTraceEnabled()) {
           log.trace("status=poll-error", e);
@@ -55,5 +65,96 @@ public class ConsumerFactory {
         break;
       }
     }
+  }
+
+  private <K, V> void doConsume(
+      Consumer<K, V> consumer,
+      ConsumingConfig<K, V> consumingConfig,
+      ConsumerRecords<K, V> records
+  ) {
+
+    final RetryPolicy<?> retryPolicy = new RetryPolicy<>()
+        .withMaxAttempts(2)
+        .withDelay(Duration.ofSeconds(60 * 4));
+    if (consumingConfig.getCallback() != null) {
+      doConsume(consumer, consumingConfig, records, retryPolicy);
+    } else {
+      doBatchConsume(consumer, consumingConfig, records, retryPolicy);
+    }
+
+  }
+
+  private <K, V> void doBatchConsume(
+      Consumer<K, V> consumer,
+      ConsumingConfig<K, V> consumingConfig,
+      ConsumerRecords<K, V> records,
+      RetryPolicy<?> retryPolicy
+  ) {
+
+    Failsafe
+        .with(
+            Fallback.ofAsync(it -> {
+              log.info("exhausted tries....: {}", it);
+            }),
+            retryPolicy
+                .onRetry(it -> {
+                  log.info("failed to consume: {}", it);
+                  final Set<TopicPartition> partitions = records.partitions();
+                  for (final TopicPartition partition : partitions) {
+                    final ConsumerRecord<K, V> firstRecord = getFirstRecord(records, partition);
+                    if(firstRecord != null){
+                      consumer.commitSync(Collections.singletonMap(
+                          new TopicPartition(firstRecord.topic(), firstRecord.partition()),
+                          new OffsetAndMetadata(firstRecord.offset())
+                      ));
+                    }
+                  }
+                })
+                .handle(Exception.class)
+        )
+        .run(ctx -> {
+          log.info("trying to consume: {}", records);
+          consumingConfig
+              .getBatchCallback()
+              .accept(consumer, records, null);
+        });
+    consumer.commitSync();
+  }
+
+  private <K, V> ConsumerRecord<K, V> getFirstRecord(ConsumerRecords<K, V> records, TopicPartition partition) {
+    final List<ConsumerRecord<K, V>> partitionRecords = records.records(partition);
+    return partitionRecords.isEmpty() ? null : partitionRecords.get(0);
+  }
+
+  private <K, V> void doConsume(
+      Consumer<K, V> consumer,
+      ConsumingConfig<K, V> consumingConfig,
+      ConsumerRecords<K, V> records,
+      RetryPolicy<?> retryPolicy
+  ) {
+    for (final ConsumerRecord<K, V> record : records) {
+      Failsafe
+          .with(
+              Fallback.ofAsync(it -> {
+                log.info("exhausted tries....: {}", it);
+              }),
+              retryPolicy
+                  .onRetry(it -> {
+                    log.info("failed to consume: {}", it);
+                    consumer.commitSync(Collections.singletonMap(
+                        new TopicPartition(record.topic(), record.partition()),
+                        new OffsetAndMetadata(record.offset())
+                    ));
+                  })
+                  .handle(Exception.class)
+          )
+          .run(ctx -> {
+            log.info("trying to consume: {}", record);
+            consumingConfig
+                .getCallback()
+                .accept(consumer, record, null);
+          });
+    }
+    consumer.commitSync();
   }
 }
