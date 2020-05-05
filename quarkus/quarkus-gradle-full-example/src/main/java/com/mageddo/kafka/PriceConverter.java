@@ -16,6 +16,13 @@ public class PriceConverter {
   @Outgoing("my-data-stream")
   @Broadcast
   public double process(int priceInUsd) {
+    System.out.printf("id=%d, name=%s, price=%d%n",
+        Thread.currentThread()
+            .getId(),
+        Thread.currentThread()
+            .getName(),
+        priceInUsd
+    );
     return priceInUsd * CONVERSION_RATE;
   }
 

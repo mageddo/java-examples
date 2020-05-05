@@ -21,8 +21,8 @@ public class PriceGenerator {
 
   @Outgoing("generated-price")
   public Flowable<Integer> generate() {
-    return Flowable.interval(5, TimeUnit.SECONDS)
-        .map(tick -> random.nextInt(100));
+    return Flowable.interval(1, TimeUnit.SECONDS)
+        .map(tick -> random.nextInt(1000));
   }
 
 }
