@@ -1,8 +1,6 @@
 plugins {
   id "java"
-  id "com.github.johnrengelman.shadow" version "5.2.0"
-  id "org.mikeneck.graalvm-native-image" version "0.3.0"
-  id "org.flywaydb.flyway" version "6.0.8"
+  id "application"
 }
 
 repositories {
@@ -10,40 +8,12 @@ repositories {
 }
 sourceCompatibility = JavaVersion.VERSION_11
 
-def mainClassName = "com.mageddo.micronaut.Application"
-
-task run(type: JavaExec) {
-  classpath = sourceSets.main.runtimeClasspath
-  main = mainClassName
-}
+mainClassName = "com.mageddo.micronaut.Application"
 
 task debug(type: JavaExec) {
   debug = true
   classpath = sourceSets.main.runtimeClasspath
   main = mainClassName
-}
-
-nativeImage {
-  graalVmHome = System.getProperty("java.home")
-  mainClass = mainClassName
-  executableName = rootProject.name
-  arguments(
-      "--no-server",
-      "-J-Xmx7G"
-  )
-}
-
-flyway {
-  url = "jdbc:postgresql://localhost:5433/db"
-  user = "root"
-  password = "root"
-  validateOnMigrate = false
-  locations = ["filesystem:src/main/resources/db/migrations"]
-  schemas = ["micronaut"]
-}
-
-configurations {
-  compile.exclude module: "spring-jcl"
 }
 
 dependencies {
@@ -57,9 +27,9 @@ dependencies {
 
   implementation("org.postgresql:postgresql:42.2.5")
   implementation("io.micronaut.configuration:micronaut-jdbc-hikari")
-  implementation("io.micronaut.configuration:micronaut-flyway")
   implementation("org.springframework:spring-jdbc:5.1.5.RELEASE")
   implementation("io.micronaut:micronaut-spring")
+  implementation("io.micronaut.configuration:micronaut-flyway")
 
   implementation("io.micronaut:micronaut-validation")
   implementation("io.micronaut:micronaut-http-server-netty")
@@ -73,6 +43,9 @@ dependencies {
 
   runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
+  testCompileOnly "org.projectlombok:lombok:1.18.10"
+  testAnnotationProcessor "org.projectlombok:lombok:1.18.10"
+
   testAnnotationProcessor platform("io.micronaut:micronaut-bom:${micronautVersion}")
   testImplementation platform("io.micronaut:micronaut-bom:${micronautVersion}")
 
@@ -84,21 +57,13 @@ dependencies {
   testImplementation("org.junit.jupiter:junit-jupiter:5.4.2")
   testImplementation("org.mockito:mockito-junit-jupiter:3.1.0")
   testImplementation("io.rest-assured:rest-assured:4.1.2")
-  testImplementation("io.zonky.test:embedded-postgres:1.2.5")
-  testImplementation("io.zonky.test.postgres:embedded-postgres-binaries-bom:11.6.0")
+
+  // embedded Postgres for testing but main app is using for the convenience
+  implementation("io.zonky.test:embedded-postgres:1.2.5")
+  runtimeOnly enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:12.2.0")
 
 }
 
 test {
   useJUnitPlatform()
-}
-
-jar {
-  manifest {
-    attributes "Main-Class": mainClassName
-  }
-}
-
-shadowJar {
-  mergeServiceFiles()
 }

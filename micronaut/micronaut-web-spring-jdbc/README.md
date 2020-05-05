@@ -7,6 +7,7 @@
 * [x] Static resources
 * [x] Automated Component Tests
 * [x] Junit 5
+* [x] Embedded Postgres
 
 ### Building binary and running
 
