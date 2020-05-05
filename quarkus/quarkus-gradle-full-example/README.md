@@ -2,7 +2,9 @@
 
 * [x] Static Resources
 * [x] Rest Server
-* [x] Kafka Streaming
+* [x] [Kafka Streaming][1]
+
+![](https://i.imgur.com/xNSZ0m5.png)
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
@@ -37,3 +39,5 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./build/code-with-quarkus-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling#building-a-native-executable.
+
+[1]: https://quarkus.io/guides/kafka#starting-kafka
