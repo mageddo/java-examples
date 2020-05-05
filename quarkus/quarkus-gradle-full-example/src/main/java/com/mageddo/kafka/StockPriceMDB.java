@@ -37,10 +37,12 @@ public class StockPriceMDB {
 
   public void consume(@Observes StartupEvent ev) {
     log.info("status=consume fired");
+    final ConsumerConfig<String, byte[]> consumerConfig = new ConsumerConfig<>();
+    consumerConfig.
     final Consumer<String, byte[]> consumer = consumerFactory.create(
         Map.of(GROUP_ID_CONFIG, "stock_client"), "stock_changed"
     );
-    consumerFactory.poll(consumer, (records, e) -> {
+    consumerFactory.poll(new ConsumingConfig<>(consumer, (records, e) -> {
       for (final var record : records) {
         Failsafe
             .with(
@@ -67,7 +69,7 @@ public class StockPriceMDB {
         ;
       }
       consumer.commitSync();
-    }, Duration.ofMillis(100), Duration.ofMillis(1000 / 30));
+    }, Duration.ofMillis(100), Duration.ofMillis(1000 / 30)));
   }
 
   @Scheduled(cron = EVERY_5_SECONDS)
