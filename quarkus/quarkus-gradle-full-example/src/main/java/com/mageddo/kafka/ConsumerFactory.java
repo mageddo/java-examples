@@ -1,12 +1,13 @@
 package com.mageddo.kafka;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+
+import javax.enterprise.context.ApplicationScoped;
 
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -16,8 +17,9 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
-import javax.enterprise.context.ApplicationScoped;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ApplicationScoped
 public class ConsumerFactory {
 
@@ -32,6 +34,7 @@ public class ConsumerFactory {
     consumer.subscribe(Arrays.asList(topics));
     return consumer;
   }
+
   public <K,V> void poll(
       Consumer<K, V> consumer,
       BiConsumer<ConsumerRecords<K, V>, Exception> callback,
@@ -40,8 +43,15 @@ public class ConsumerFactory {
   ){
     while (true){
       try {
-        callback.accept(consumer.poll(timeout), null);
+        final var records = consumer.poll(timeout);
+        if(log.isTraceEnabled()){
+          log.trace("status=polled, records={}", records.count());
+        }
+        callback.accept(records, null);
       } catch (Exception e){
+        if(log.isTraceEnabled()){
+          log.trace("status=poll-error", e);
+        }
         callback.accept(null, e);
       }
       try {
