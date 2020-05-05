@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	th:replace="layoutFile :: layout(
+		title=~{::title}, headerScripts=~{::headerScripts}, content=~{::section}, footerScripts=~{::footerScripts}
+	)"
+>
+<head>
+	<title>Hello World</title>
+	<headerScripts>
+		<script th:src="@{/static/script.js}"></script>
+	</headerScripts>
+</head>
+<body>
+<section >
+	<div th:if="${loggedIn}">
+		<h2>
+			username:
+			<span th:text="${username}" th:remove="tag"></span>
+			| <a th:href="@{/logout}">logout</a>
+		</h2>
+		<p class="red-color">If this text is red, then static resources are working</p>
+		<code>Loading fruits...</code>
+	</div>
+	<div th:unless="${loggedIn}">
+		<h2>You are not logged in</h2>
+		<p><a th:href="@{/}" >Log In</a>
+	</div>
+</section>
+</body>
+</html>

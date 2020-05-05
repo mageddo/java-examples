@@ -1,0 +1,4 @@
+INSERT INTO FRUITS_TRACE VALUES
+  (NOW()),
+  (NOW())
+;
