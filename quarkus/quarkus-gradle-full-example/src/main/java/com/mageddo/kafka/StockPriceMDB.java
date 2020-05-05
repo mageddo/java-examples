@@ -3,13 +3,17 @@ package com.mageddo.kafka;
 import java.time.Duration;
 import java.util.Map;
 
-import io.quarkus.runtime.StartupEvent;
-
-import org.apache.kafka.clients.consumer.Consumer;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+
+import io.quarkus.runtime.StartupEvent;
+import io.quarkus.scheduler.Scheduled;
+import io.quarkus.scheduler.ScheduledExecution;
 
 import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG;
 
@@ -18,6 +22,9 @@ public class StockPriceMDB {
 
   @Inject
   ConsumerFactory consumerFactory;
+
+  @Inject
+  Producer<String, byte[]> producer;
 
   public void consume(@Observes StartupEvent ev) {
     final Consumer<String, byte[]> consumer = consumerFactory.create(
@@ -29,5 +36,15 @@ public class StockPriceMDB {
       }
       consumer.commitSync();
     }), Duration.ofMillis(100), Duration.ofMillis(1000 / 30));
+  }
+
+  @Scheduled(cron = "0/5 * * * * ?")
+  void notifyStockUpdates(ScheduledExecution execution) {
+    producer.send(new ProducerRecord<>(
+        "stock_changed",
+        String.format("stock=PAGS, price=%.2f", Math.random() * 100)
+            .getBytes()
+    ));
+    System.out.println(execution.getScheduledFireTime());
   }
 }

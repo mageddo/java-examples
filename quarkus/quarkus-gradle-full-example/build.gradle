@@ -9,14 +9,21 @@ repositories {
 }
 
 dependencies {
+
+  compileOnly 'org.projectlombok:lombok:1.18.12'
+  annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   implementation 'io.quarkus:quarkus-jdbc-postgresql'
   implementation 'io.quarkus:quarkus-flyway'
   implementation 'io.quarkus:quarkus-jackson'
   implementation 'io.quarkus:quarkus-resteasy'
   implementation 'io.quarkus:quarkus-kafka-client'
+  implementation 'io.quarkus:quarkus-scheduler'
   implementation 'net.jodah:failsafe:2.3.5'
 
+  testCompileOnly 'org.projectlombok:lombok:1.18.12'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
   testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'io.rest-assured:rest-assured'
 }
