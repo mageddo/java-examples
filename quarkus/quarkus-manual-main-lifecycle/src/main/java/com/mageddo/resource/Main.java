@@ -8,7 +8,9 @@ import io.quarkus.runtime.annotations.QuarkusMain;
 public class Main {
 
   /**
-   * Running main from intellij don't works yet, see open issue https://github.com/quarkusio/quarkus/issues/8737
+   * Running main from intellij don't works yet, see open issues
+   * https://github.com/quarkusio/quarkus/issues/8737
+   * https://github.com/quarkusio/quarkus/issues/2143
    */
   public static void main(String... args) {
     Quarkus.run(MyApp.class, args);

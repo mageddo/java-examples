@@ -4,9 +4,7 @@ https://github.com/mageddo/quarkus-quickstarts/tree/master/lifecycle-quickstart
 
 * [x] Static Resources
 * [x] Rest Server
-* [x] [Kafka Streaming][1]
 
-![](https://i.imgur.com/xNSZ0m5.png)
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
