@@ -1,4 +1,4 @@
-package org.acme;
+package com.mageddo.resource;
 
 import io.quarkus.test.junit.NativeImageTest;
 
