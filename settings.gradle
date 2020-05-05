@@ -12,6 +12,7 @@ include ':databases-benchmark'
 include ':distributed-tracing:jaeger'
 include ':distributed-tracing:jaeger-spark'
 
+include ':failsafe'
 include ':gradle-examples:shadow-plugin'
 
 include ':java-examples'
