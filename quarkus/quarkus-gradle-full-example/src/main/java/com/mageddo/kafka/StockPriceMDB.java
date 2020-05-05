@@ -8,6 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 
 import net.jodah.failsafe.Failsafe;
+import net.jodah.failsafe.Fallback;
 import net.jodah.failsafe.RetryPolicy;
 
 import org.apache.kafka.clients.consumer.Consumer;
@@ -42,16 +43,24 @@ public class StockPriceMDB {
     consumerFactory.poll(consumer, (records, e) -> {
       for (final var record : records) {
         Failsafe
-            .with(getRetry())
-            .(it -> {
-              log.info("failed to consume: {}", it);
-              consumer.commitSync(Collections.singletonMap(
-                  new TopicPartition(record.topic(), record.partition()),
-                  new OffsetAndMetadata(record.offset())
-              ));
-            })
+            .with(
+                Fallback.ofAsync(it -> {
+                  log.info("exhausted tries....: {}", it);
+                }),
+                new RetryPolicy<>()
+                    .withMaxAttempts(2)
+                    .withDelay(Duration.ofSeconds(60 * 4))
+                    .onRetry(it -> {
+                      log.info("failed to consume: {}", it);
+                      consumer.commitSync(Collections.singletonMap(
+                          new TopicPartition(record.topic(), record.partition()),
+                          new OffsetAndMetadata(record.offset())
+                      ));
+                    })
+                    .handle(Exception.class)
+            )
             .run(ctx -> {
-              log.info("trying to consume");
+              log.info("trying to consume: {}", record);
               throw new RuntimeException("failed to consume");
 //              log.info("key={}, value={}", record.key(), new String(record.value()));
             });
@@ -59,13 +68,6 @@ public class StockPriceMDB {
       }
       consumer.commitSync();
     }, Duration.ofMillis(100), Duration.ofMillis(1000 / 30));
-  }
-
-  private RetryPolicy getRetry() {
-    return new RetryPolicy<>()
-        .withMaxAttempts(3)
-        .withDelay(Duration.ofSeconds(5))
-        .handle(Exception.class);
   }
 
   @Scheduled(cron = EVERY_5_SECONDS)
