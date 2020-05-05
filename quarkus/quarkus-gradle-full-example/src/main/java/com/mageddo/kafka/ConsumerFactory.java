@@ -14,8 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ConsumerFactory {
 
   public <K, V> void consume(ConsumerConfig<K, V> consumerConfig) {
-    final Consumer<K, V> consumer = this.create(consumerConfig.getConsumerCreateConfig());
-    this.poll(consumer, consumerConfig.getConsumingConfig());
+    final Consumer<K, V> consumer = this.create(consumerConfig);
+    this.poll(consumer, consumerConfig);
   }
 
   public <K, V> KafkaConsumer<K, V> create(final ConsumerCreateConfig<K, V> consumerCreateConfig) {
@@ -33,14 +33,14 @@ public class ConsumerFactory {
         }
         consumingConfig
             .getCallback()
-            .accept(records, null);
+            .accept(consumer, records, null);
       } catch (Exception e) {
         if (log.isTraceEnabled()) {
           log.trace("status=poll-error", e);
         }
         consumingConfig
             .getCallback()
-            .accept(null, e);
+            .accept(consumer, null, e);
       }
       try {
         TimeUnit.MILLISECONDS.sleep(

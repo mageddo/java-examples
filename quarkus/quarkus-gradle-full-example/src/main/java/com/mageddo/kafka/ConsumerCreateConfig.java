@@ -1,31 +1,17 @@
 package com.mageddo.kafka;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Value;
+public interface ConsumerCreateConfig<K, V> {
 
-@Value
-@Builder
-public class ConsumerCreateConfig<K, V> {
+  Map<String, Object> getProps();
 
-  @Getter
-  private Map<String, Object> props = new HashMap<>();
+  String getGroupId();
 
-  @NonNull
-  private String groupId;
+  Collection<String> getTopics();
 
-  @NonNull
-  private Collection<String> topics;
+  RecoverCallback<K, V> getRecoverCallback();
 
-  private RecoverCallback<K, V> recoverCallback;
-
-  public ConsumerCreateConfig<K, V> withProp(String k, Object v) {
-    this.props.put(k, v);
-    return this;
-  }
+  ConsumerCreateConfig<K, V> withProp(String k, Object v);
 }
