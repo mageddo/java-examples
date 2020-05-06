@@ -16,7 +16,6 @@ public class ConsumingConfigDefault<K, V> implements ConsumingConfig<K, V> {
   public static final RetryPolicy DEFAULT_RETRY_STRATEGY = RetryPolicy
       .builder()
       .delay(Duration.ofSeconds(5))
-      .addRetryableException(Exception.class)
       .build();
 
   @NonNull

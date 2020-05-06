@@ -2,6 +2,7 @@ package com.mageddo.kafka;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -9,7 +10,6 @@ import javax.enterprise.context.ApplicationScoped;
 
 import net.jodah.failsafe.Failsafe;
 import net.jodah.failsafe.Fallback;
-import net.jodah.failsafe.RetryPolicy;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -38,20 +38,30 @@ public class ConsumerFactory {
   }
 
   public <K, V> void poll(Consumer<K, V> consumer, ConsumingConfig<K, V> consumingConfig) {
+    if (consumingConfig.getBatchCallback() == null && consumingConfig.getCallback() == null) {
+      throw new IllegalArgumentException("You should inform BatchCallback Or Callback");
+    }
+    final boolean batchConsuming = consumingConfig.getBatchCallback() != null;
     while (true) {
       try {
         final var records = consumer.poll(consumingConfig.getTimeout());
         if (log.isTraceEnabled()) {
           log.trace("status=polled, records={}", records.count());
         }
-        this.consume(consumer, consumingConfig, records);
+        this.consume(consumer, consumingConfig, records, batchConsuming);
       } catch (Exception e) {
         if (log.isWarnEnabled()) {
-          log.warn("status=poll-error", e);
+          log.warn("status=consuming-error", e);
         }
-        consumingConfig
-            .getCallback()
-            .accept(consumer, null, e);
+        if (batchConsuming) {
+          consumingConfig
+              .getBatchCallback()
+              .accept(consumer, null, e);
+        } else {
+          consumingConfig
+              .getCallback()
+              .accept(consumer, null, e);
+        }
       }
       try {
         TimeUnit.MILLISECONDS.sleep(
@@ -71,13 +81,10 @@ public class ConsumerFactory {
   private <K, V> void consume(
       Consumer<K, V> consumer,
       ConsumingConfig<K, V> consumingConfig,
-      ConsumerRecords<K, V> records
+      ConsumerRecords<K, V> records,
+      boolean batchConsuming
   ) {
 
-    if (consumingConfig.getBatchCallback() == null && consumingConfig.getCallback() == null) {
-      throw new IllegalArgumentException("You should inform BatchCallback Or Callback");
-    }
-    final boolean batchConsuming = consumingConfig.getBatchCallback() != null;
     if (log.isTraceEnabled()) {
       log.trace("batch-consuming={}, records={}", batchConsuming, records.count());
     }
@@ -98,11 +105,11 @@ public class ConsumerFactory {
     Failsafe
         .with(
             Fallback.ofAsync(it -> {
-              log.info("exhausted tries....: {}", it);
+              log.info("status=exhausted-tries: {}", it);
               records.forEach(
-                  record -> consumingConfig
-                      .getRecoverCallback()
-                      .recover(record)
+                  record -> Optional
+                  .ofNullable(consumingConfig.getRecoverCallback())
+                  .ifPresent(callback -> callback.recover(record))
               );
             }),
             retryPolicyToFailSafeRetryPolicy(consumingConfig.getRetryPolicy())

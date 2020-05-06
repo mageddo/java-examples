@@ -8,7 +8,6 @@ import javax.enterprise.event.Observes;
 
 import net.jodah.failsafe.Failsafe;
 import net.jodah.failsafe.Fallback;
-import net.jodah.failsafe.RetryPolicy;
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.clients.producer.Producer;
@@ -47,9 +46,16 @@ public class StockPriceMDB {
         .withProp(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
         .withProp(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName())
         .withProp(VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class.getName())
+        .setRetryPolicy(RetryPolicy
+            .builder()
+            .maxTries(4)
+            .delay(Duration.ofSeconds(90))
+            .build()
+        )
         .setBatchCallback((consumer, records, e) -> {
           for (final var record : records) {
-            log.info("key={}, value={}", record.key(), new String(record.value()));
+            throw new RuntimeException("an error occurred");
+//            log.info("key={}, value={}", record.key(), new String(record.value()));
           }
         });
 

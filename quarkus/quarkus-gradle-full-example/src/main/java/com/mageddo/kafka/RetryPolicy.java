@@ -4,12 +4,9 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashSet;
 
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Setter;
 import lombok.Value;
 
 @Value
@@ -28,9 +25,13 @@ public class RetryPolicy {
   public static class RetryPolicyBuilder {
 
     public RetryPolicyBuilder() {
-      this.retryableExceptions = new ArrayList<>();
+      this.retryableExceptions = new LinkedHashSet<>();
+      this.retryableExceptions.add(Exception.class);
     }
 
+    /**
+     * Replace all before handled exceptions by the informed
+     */
     public RetryPolicyBuilder handleExceptions(Class<? extends Throwable>... exceptions) {
       this.retryableExceptions.clear();
       this.retryableExceptions.addAll(Arrays.asList(exceptions));
