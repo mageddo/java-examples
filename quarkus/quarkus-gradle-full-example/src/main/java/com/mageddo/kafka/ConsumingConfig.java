@@ -29,6 +29,6 @@ public interface ConsumingConfig<K, V> {
    */
   Duration getInterval();
 
-  RetryStrategy getRetryStrategy();
+  RetryPolicy getRetryPolicy();
 
 }

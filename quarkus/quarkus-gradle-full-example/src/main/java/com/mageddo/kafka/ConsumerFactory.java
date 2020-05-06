@@ -1,6 +1,5 @@
 package com.mageddo.kafka;
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +19,8 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 
 import lombok.extern.slf4j.Slf4j;
+
+import static com.mageddo.kafka.RetryPolicyConverter.retryPolicyToFailSafeRetryPolicy;
 
 @Slf4j
 @ApplicationScoped
@@ -73,20 +74,17 @@ public class ConsumerFactory {
       ConsumerRecords<K, V> records
   ) {
 
-    if(consumingConfig.getBatchCallback() == null && consumingConfig.getCallback() == null){
+    if (consumingConfig.getBatchCallback() == null && consumingConfig.getCallback() == null) {
       throw new IllegalArgumentException("You should inform BatchCallback Or Callback");
     }
     final boolean batchConsuming = consumingConfig.getBatchCallback() != null;
-    final RetryPolicy<?> retryPolicy = new RetryPolicy<>()
-        .withMaxAttempts(2)
-        .withDelay(Duration.ofSeconds(60 * 4));
-    if(log.isTraceEnabled()){
+    if (log.isTraceEnabled()) {
       log.trace("batch-consuming={}, records={}", batchConsuming, records.count());
     }
     if (batchConsuming) {
-      this.doBatchConsume(consumer, consumingConfig, records, retryPolicy);
+      this.doBatchConsume(consumer, consumingConfig, records);
     } else {
-      this.doConsume(consumer, consumingConfig, records, retryPolicy);
+      this.doConsume(consumer, consumingConfig, records);
     }
 
   }
@@ -94,8 +92,7 @@ public class ConsumerFactory {
   private <K, V> void doBatchConsume(
       Consumer<K, V> consumer,
       ConsumingConfig<K, V> consumingConfig,
-      ConsumerRecords<K, V> records,
-      RetryPolicy<?> retryPolicy
+      ConsumerRecords<K, V> records
   ) {
 
     Failsafe
@@ -108,7 +105,7 @@ public class ConsumerFactory {
                       .recover(record)
               );
             }),
-            retryPolicy
+            retryPolicyToFailSafeRetryPolicy(consumingConfig.getRetryPolicy())
                 .onRetry(it -> {
                   log.info("failed to consume: {}", it);
                   final Set<TopicPartition> partitions = records.partitions();
@@ -125,7 +122,7 @@ public class ConsumerFactory {
                 .handle(Exception.class)
         )
         .run(ctx -> {
-          if(log.isTraceEnabled()){
+          if (log.isTraceEnabled()) {
             log.debug("status=consuming, records={}", records);
           }
           consumingConfig
@@ -138,8 +135,7 @@ public class ConsumerFactory {
   private <K, V> void doConsume(
       Consumer<K, V> consumer,
       ConsumingConfig<K, V> consumingConfig,
-      ConsumerRecords<K, V> records,
-      RetryPolicy<?> retryPolicy
+      ConsumerRecords<K, V> records
   ) {
     for (final ConsumerRecord<K, V> record : records) {
       Failsafe
@@ -149,7 +145,7 @@ public class ConsumerFactory {
                 consumingConfig.getRecoverCallback()
                     .recover(record);
               }),
-              retryPolicy
+              retryPolicyToFailSafeRetryPolicy(consumingConfig.getRetryPolicy())
                   .onRetry(it -> {
                     log.info("failed to consume: {}", it);
                     consumer.commitSync(Collections.singletonMap(
@@ -160,7 +156,7 @@ public class ConsumerFactory {
                   .handle(Exception.class)
           )
           .run(ctx -> {
-            if(log.isTraceEnabled()){
+            if (log.isTraceEnabled()) {
               log.info("status=consuming, record={}", record);
             }
             consumingConfig

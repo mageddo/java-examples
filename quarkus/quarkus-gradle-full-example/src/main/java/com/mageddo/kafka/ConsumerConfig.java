@@ -32,14 +32,13 @@ public class ConsumerConfig<K, V> implements ConsumerCreateConfig<K, V>, Consumi
   private Duration interval = ConsumingConfigDefault.FPS_30_DURATION;
 
   @NonNull
-  private RetryStrategy retryStrategy = ConsumingConfigDefault.DEFAULT_RETRY_STRATEGY;
+  private RetryPolicy retryPolicy = ConsumingConfigDefault.DEFAULT_RETRY_STRATEGY;
 
   private RecoverCallback<K, V> recoverCallback;
 
   private ConsumeCallback<K, V> callback;
 
   private BatchConsumeCallback<K, V> batchCallback;
-
 
   public ConsumerConfig<K, V> withProp(String k, Object v) {
     this.props.put(k, v);
