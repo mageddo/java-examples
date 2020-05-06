@@ -22,6 +22,10 @@ public class RetryPolicy {
 
   private Collection<Class<? extends Throwable>> retryableExceptions;
 
+  public Duration calcMaxTotalWaitTime(){
+    return Duration.ofMillis(this.delay.toMillis() * maxTries);
+  }
+
   public static class RetryPolicyBuilder {
 
     public RetryPolicyBuilder() {

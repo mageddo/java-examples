@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
 
 @Slf4j
@@ -42,14 +43,15 @@ public class StockPriceMDB {
     final ConsumerConfig<String, byte[]> consumerConfig = new ConsumerConfig<String, byte[]>()
         .setTopics(Collections.singletonList("stock_changed"))
         .setGroupId("stock_client")
+        .withProp(MAX_POLL_INTERVAL_MS_CONFIG, (int) Duration.ofMinutes(1).toMillis())
         .withProp(GROUP_ID_CONFIG, "stock_client")
         .withProp(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
         .withProp(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName())
         .withProp(VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class.getName())
         .setRetryPolicy(RetryPolicy
             .builder()
-            .maxTries(4)
-            .delay(Duration.ofSeconds(90))
+            .maxTries(3)
+            .delay(Duration.ofSeconds(29))
             .build()
         )
         .setBatchCallback((consumer, records, e) -> {

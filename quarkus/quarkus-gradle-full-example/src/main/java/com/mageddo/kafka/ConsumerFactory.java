@@ -1,10 +1,13 @@
 package com.mageddo.kafka;
 
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -21,12 +24,14 @@ import org.apache.kafka.common.TopicPartition;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.mageddo.kafka.RetryPolicyConverter.retryPolicyToFailSafeRetryPolicy;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG;
 
 @Slf4j
 @ApplicationScoped
 public class ConsumerFactory {
 
   public <K, V> void consume(ConsumerConfig<K, V> consumerConfig) {
+    this.checkReasonablePollInterval(consumerConfig);
     final Consumer<K, V> consumer = this.create(consumerConfig);
     this.poll(consumer, consumerConfig);
   }
@@ -50,9 +55,7 @@ public class ConsumerFactory {
         }
         this.consume(consumer, consumingConfig, records, batchConsuming);
       } catch (Exception e) {
-        if (log.isWarnEnabled()) {
-          log.warn("status=consuming-error", e);
-        }
+        log.warn("status=consuming-error", e);
         if (batchConsuming) {
           consumingConfig
               .getBatchCallback()
@@ -105,12 +108,8 @@ public class ConsumerFactory {
     Failsafe
         .with(
             Fallback.ofAsync(it -> {
-              log.info("status=exhausted-tries: {}", it);
-              records.forEach(
-                  record -> Optional
-                  .ofNullable(consumingConfig.getRecoverCallback())
-                  .ifPresent(callback -> callback.recover(record))
-              );
+              log.info("status=exhausted-tries: {}, records={}", it, records.count());
+              records.forEach(record -> this.doRecoverWhenAvailable(consumer, consumingConfig, record));
             }),
             retryPolicyToFailSafeRetryPolicy(consumingConfig.getRetryPolicy())
                 .onRetry(it -> {
@@ -119,14 +118,12 @@ public class ConsumerFactory {
                   for (final TopicPartition partition : partitions) {
                     final ConsumerRecord<K, V> firstRecord = getFirstRecord(records, partition);
                     if (firstRecord != null) {
-                      consumer.commitSync(Collections.singletonMap(
-                          new TopicPartition(firstRecord.topic(), firstRecord.partition()),
-                          new OffsetAndMetadata(firstRecord.offset())
-                      ));
+                      this.commitSyncRecord(consumer, firstRecord);
                     }
                   }
                 })
-                .handle(Exception.class)
+                .handle(new ArrayList<>(consumingConfig.getRetryPolicy()
+                    .getRetryableExceptions()))
         )
         .run(ctx -> {
           if (log.isTraceEnabled()) {
@@ -145,22 +142,21 @@ public class ConsumerFactory {
       ConsumerRecords<K, V> records
   ) {
     for (final ConsumerRecord<K, V> record : records) {
+      final AtomicBoolean recovered = new AtomicBoolean();
       Failsafe
           .with(
               Fallback.ofAsync(it -> {
                 log.info("exhausted tries....: {}", it);
-                consumingConfig.getRecoverCallback()
-                    .recover(record);
+                this.doRecoverWhenAvailable(consumer, consumingConfig, record);
+                recovered.set(true);
               }),
               retryPolicyToFailSafeRetryPolicy(consumingConfig.getRetryPolicy())
                   .onRetry(it -> {
                     log.info("failed to consume: {}", it);
-                    consumer.commitSync(Collections.singletonMap(
-                        new TopicPartition(record.topic(), record.partition()),
-                        new OffsetAndMetadata(record.offset())
-                    ));
+                    this.commitSyncRecord(consumer, record);
                   })
-                  .handle(Exception.class)
+                  .handle(new ArrayList<>(consumingConfig.getRetryPolicy()
+                      .getRetryableExceptions()))
           )
           .run(ctx -> {
             if (log.isTraceEnabled()) {
@@ -170,8 +166,34 @@ public class ConsumerFactory {
                 .getCallback()
                 .accept(consumer, record, null);
           });
+      if (recovered.get()) {
+        // pare o consumo para fazer poll imediatamente
+        // e não chegar no timeout por não ter chamado poll
+        // por causa das retentativas dessa mensagem
+        return;
+      }
     }
     consumer.commitSync();
+  }
+
+  private <K, V> void doRecoverWhenAvailable(
+      Consumer<K, V> consumer,
+      ConsumingConfig<K, V> consumingConfig,
+      ConsumerRecord<K, V> record
+  ) {
+    if(consumingConfig.getRecoverCallback() != null){
+      consumingConfig.getRecoverCallback().recover(record);
+      this.commitSyncRecord(consumer, record);
+    } else {
+      log.warn("status=no recover callback was specified");
+    }
+  }
+
+  private <K, V> void commitSyncRecord(Consumer<K, V> consumer, ConsumerRecord<K, V> record) {
+    consumer.commitSync(Collections.singletonMap(
+        new TopicPartition(record.topic(), record.partition()),
+        new OffsetAndMetadata(record.offset())
+    ));
   }
 
   private <K, V> ConsumerRecord<K, V> getFirstRecord(ConsumerRecords<K, V> records, TopicPartition partition) {
@@ -179,4 +201,31 @@ public class ConsumerFactory {
     return partitionRecords.isEmpty() ? null : partitionRecords.get(0);
   }
 
+  private <V, K> void checkReasonablePollInterval(ConsumerConfig<K, V> consumerConfig) {
+    final int defaultPollInterval = (int) Duration
+        .ofMinutes(5)
+        .toMillis();
+
+    final int currentPollInterval = (int) consumerConfig
+        .getProps()
+        .getOrDefault(MAX_POLL_INTERVAL_MS_CONFIG, defaultPollInterval);
+
+    final RetryPolicy retryPolicy = consumerConfig.getRetryPolicy();
+
+    final long retryMaxWaitTime = retryPolicy
+        .calcMaxTotalWaitTime()
+        .toMillis();
+
+    if (currentPollInterval < retryMaxWaitTime) {
+      log.warn(
+          "msg=your 'max.poll.interval.ms' is set to a value less than the retry policy, it will cause consumer "
+              + "rebalancing, increase 'max.poll.interval.ms' or decrease the retry policy delay or retries, "
+              + "max.poll.interval.ms={}, retryMaxWaitTime={} (retries={}, delay={})",
+          Duration.ofMillis(currentPollInterval),
+          Duration.ofMillis(retryMaxWaitTime),
+          retryPolicy.getMaxTries(),
+          retryPolicy.getDelay()
+      );
+    }
+  }
 }
