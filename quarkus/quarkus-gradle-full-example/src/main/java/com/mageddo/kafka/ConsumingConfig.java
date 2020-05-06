@@ -4,6 +4,9 @@ import java.time.Duration;
 
 public interface ConsumingConfig<K, V> {
 
+  /**
+   * The callback to be called after all tries be exhausted
+   */
   RecoverCallback<K, V> getRecoverCallback();
 
   /**
@@ -11,6 +14,9 @@ public interface ConsumingConfig<K, V> {
    */
   ConsumeCallback<K, V> getCallback();
 
+  /**
+   * The call which will be called after poll the messages in batch mode
+   */
   BatchConsumeCallback<K, V> getBatchCallback();
 
   /**
@@ -22,5 +28,7 @@ public interface ConsumingConfig<K, V> {
    * The interval between poll calls
    */
   Duration getInterval();
+
+  RetryStrategy getRetryStrategy();
 
 }

@@ -3,7 +3,6 @@ package com.mageddo.kafka;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +12,6 @@ import net.jodah.failsafe.Failsafe;
 import net.jodah.failsafe.Fallback;
 import net.jodah.failsafe.RetryPolicy;
 
-import org.apache.commons.lang3.Validate;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -47,8 +45,8 @@ public class ConsumerFactory {
         }
         this.consume(consumer, consumingConfig, records);
       } catch (Exception e) {
-        if (log.isTraceEnabled()) {
-          log.trace("status=poll-error", e);
+        if (log.isWarnEnabled()) {
+          log.warn("status=poll-error", e);
         }
         consumingConfig
             .getCallback()
