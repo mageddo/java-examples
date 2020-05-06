@@ -19,8 +19,6 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class ConsumerConfig<K, V> implements ConsumerCreateConfig<K, V>, ConsumingConfig<K, V> {
 
-  public static final int FPS_30 = 1000 / 30;
-
   @Getter
   private Map<String, Object> props = new HashMap<>();
 
@@ -31,10 +29,10 @@ public class ConsumerConfig<K, V> implements ConsumerCreateConfig<K, V>, Consumi
   private Collection<String> topics;
 
   @NonNull
-  private Duration timeout = Duration.ofMillis(100);
+  private Duration timeout = ConsumingConfigDefault.DEFAULT_POLL_TIMEOUT;
 
   @NonNull
-  private Duration interval = Duration.ofMillis(FPS_30);
+  private Duration interval = ConsumingConfigDefault.FPS_30_DURATION;
 
   private RecoverCallback<K, V> recoverCallback;
 

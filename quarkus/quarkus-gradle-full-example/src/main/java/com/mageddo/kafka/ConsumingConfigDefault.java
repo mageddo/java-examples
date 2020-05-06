@@ -11,25 +11,21 @@ import lombok.Value;
 public class ConsumingConfigDefault<K, V> implements ConsumingConfig<K, V> {
 
   public static final int FPS_30 = 1000 / 30;
+  public static final Duration FPS_30_DURATION = Duration.ofMillis(FPS_30);
+  public static final Duration DEFAULT_POLL_TIMEOUT = Duration.ofMillis(100);
 
-  /**
-   * The callback which will be called after poll the message
-   */
-  @NonNull
-  private final ConsumeCallback<K, V> callback;
+  private RecoverCallback<K, V> recoverCallback;
 
-  /**
-   * How long to wait the poll call
-   */
-  @NonNull
-  @Builder.Default
-  private final Duration timeout = Duration.ofMillis(100);
+  private ConsumeCallback<K, V> callback;
 
-  /**
-   * The interval between poll calls
-   */
+  private BatchConsumeCallback<K, V> batchCallback;
+
   @NonNull
   @Builder.Default
-  private final Duration interval = Duration.ofMillis(FPS_30);
+  private Duration timeout = DEFAULT_POLL_TIMEOUT;
+
+  @NonNull
+  @Builder.Default
+  private Duration interval = FPS_30_DURATION;
 
 }

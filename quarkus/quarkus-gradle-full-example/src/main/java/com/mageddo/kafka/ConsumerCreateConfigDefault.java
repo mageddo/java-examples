@@ -22,8 +22,6 @@ public class ConsumerCreateConfigDefault<K, V> implements ConsumerCreateConfig<K
   @NonNull
   private Collection<String> topics;
 
-  private RecoverCallback<K, V> recoverCallback;
-
   public ConsumerCreateConfigDefault<K, V> withProp(String k, Object v) {
     this.props.put(k, v);
     return this;

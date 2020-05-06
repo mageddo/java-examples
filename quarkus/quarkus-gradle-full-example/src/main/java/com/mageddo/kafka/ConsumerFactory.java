@@ -3,6 +3,7 @@ package com.mageddo.kafka;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +13,7 @@ import net.jodah.failsafe.Failsafe;
 import net.jodah.failsafe.Fallback;
 import net.jodah.failsafe.RetryPolicy;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -73,13 +75,20 @@ public class ConsumerFactory {
       ConsumerRecords<K, V> records
   ) {
 
+    if(consumingConfig.getBatchCallback() == null && consumingConfig.getCallback() == null){
+      throw new IllegalArgumentException("You should inform BatchCallback Or Callback");
+    }
+    final boolean batchConsuming = consumingConfig.getBatchCallback() != null;
     final RetryPolicy<?> retryPolicy = new RetryPolicy<>()
         .withMaxAttempts(2)
         .withDelay(Duration.ofSeconds(60 * 4));
-    if (consumingConfig.getCallback() != null) {
-      this.doConsume(consumer, consumingConfig, records, retryPolicy);
-    } else {
+    if(log.isTraceEnabled()){
+      log.trace("batch-consuming={}, records={}", batchConsuming, records.count());
+    }
+    if (batchConsuming) {
       this.doBatchConsume(consumer, consumingConfig, records, retryPolicy);
+    } else {
+      this.doConsume(consumer, consumingConfig, records, retryPolicy);
     }
 
   }
@@ -118,7 +127,9 @@ public class ConsumerFactory {
                 .handle(Exception.class)
         )
         .run(ctx -> {
-          log.info("trying to consume: {}", records);
+          if(log.isTraceEnabled()){
+            log.debug("status=consuming, records={}", records);
+          }
           consumingConfig
               .getBatchCallback()
               .accept(consumer, records, null);
@@ -151,7 +162,9 @@ public class ConsumerFactory {
                   .handle(Exception.class)
           )
           .run(ctx -> {
-            log.info("trying to consume: {}", record);
+            if(log.isTraceEnabled()){
+              log.info("status=consuming, record={}", record);
+            }
             consumingConfig
                 .getCallback()
                 .accept(consumer, record, null);
