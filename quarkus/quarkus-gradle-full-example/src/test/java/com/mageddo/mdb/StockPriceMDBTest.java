@@ -12,8 +12,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
-import templates.ConsumerRecordTemplates;
 import templates.ConsumerRecordsTemplates;
+import templates.ContextTemplates;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,14 +38,13 @@ class StockPriceMDBTest {
         .symbol("PAGS")
         .build();
     final ConsumerRecords<String, byte[]> consumerRecords = ConsumerRecordsTemplates.build(
-        "fruit_topic",
-        ConsumerRecordTemplates.build(this.objectMapper.writeValueAsBytes(stock))
+        this.objectMapper.writeValueAsBytes(stock)
     );
 
     // act
     this.stockPriceMDB
         .consume()
-        .accept(null, consumerRecords, null);
+        .accept(ContextTemplates.build(consumerRecords), consumerRecords);
 
     // assert
     final var foundStock = this.stockPriceDao.getStock("PAGS");

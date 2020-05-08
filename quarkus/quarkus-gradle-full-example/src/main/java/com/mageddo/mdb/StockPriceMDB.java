@@ -54,7 +54,7 @@ public class StockPriceMDB {
   }
 
   BatchConsumeCallback<String, byte[]> consume() {
-    return (consumer, records, e) -> {
+    return (ctx, records) -> {
       for (final var record : records) {
         final Stock stock = this.objectMapper.readValue(record.value(), Stock.class);
         this.stockPriceService.updateStockPrice(stock);
@@ -64,8 +64,8 @@ public class StockPriceMDB {
   }
 
   RecoverCallback<String, byte[]> recover() {
-    return (record, lastFailure) -> {
-      log.error("status=exhausted, record={}", new String(record.value()), lastFailure);
+    return (ctx) -> {
+      log.error("status=exhausted, record={}", new String(ctx.record().value()), ctx.lastFailure());
     };
   }
 
