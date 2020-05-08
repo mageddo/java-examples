@@ -38,7 +38,7 @@ public class StockPriceMDB {
 
   @PostConstruct
   public void init() {
-    Consumers.consume(consumerConfig
+    Consumers.consume(this.consumerConfig
         .toBuilder()
         .topics("stock_changed")
         .consumers(3)
