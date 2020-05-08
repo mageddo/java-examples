@@ -2,6 +2,7 @@ package com.mageddo.mdb;
 
 import java.time.Duration;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +12,6 @@ import com.mageddo.kafka.client.ConsumerConfig;
 import com.mageddo.kafka.client.Consumers;
 import com.mageddo.kafka.client.RecoverCallback;
 import com.mageddo.kafka.client.RetryPolicy;
-
 import com.mageddo.service.StockPriceService;
 
 import org.apache.kafka.clients.producer.Producer;
@@ -19,27 +19,23 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import io.quarkus.scheduler.Scheduled;
 import io.quarkus.scheduler.ScheduledExecution;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ApplicationScoped
+@RequiredArgsConstructor
 public class StockPriceMDB {
 
   public static final String EVERY_5_SECONDS = "0/5 * * * * ?";
 
   private final Producer<String, byte[]> producer;
+  private final ConsumerConfig<String, byte[]> consumerConfig;
   private final StockPriceService stockPriceService;
   private final ObjectMapper objectMapper;
 
-  public StockPriceMDB(
-      Producer<String, byte[]> producer,
-      ConsumerConfig<String, byte[]> consumerConfig,
-      StockPriceService stockPriceService,
-      ObjectMapper objectMapper
-  ) {
-    this.producer = producer;
-    this.stockPriceService = stockPriceService;
-    this.objectMapper = objectMapper;
+  @PostConstruct
+  public void init(){
     Consumers.consume(consumerConfig
         .toBuilder()
         .topics("stock_changed")
