@@ -1,7 +1,6 @@
 package com.mageddo.mdb;
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,6 +15,8 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.eclipse.microprofile.config.ConfigProvider;
 
+import io.quarkus.arc.DefaultBean;
+
 import static org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
@@ -26,7 +27,9 @@ import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_
 
 @ApplicationScoped
 public class ConsumerConfigFactory {
+
   @Produces
+  @DefaultBean
   public ConsumerConfig<String, byte[]> consumerConfig() {
     return ConsumerConfig
         .<String, byte[]>builder()
@@ -39,11 +42,8 @@ public class ConsumerConfigFactory {
         ;
   }
 
-  private String getProperty(String k, Class<String> clazz) {
-    return ConfigProvider.getConfig().getValue(k, clazz);
-  }
-
   @Produces
+  @DefaultBean
   public KafkaProducer<String, byte[]> kafkaProducer(){
     final var props = Map.<String, Object>of(
         BOOTSTRAP_SERVERS_CONFIG, "localhost:9092",
@@ -51,5 +51,9 @@ public class ConsumerConfigFactory {
         VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getName()
     );
     return new KafkaProducer<>(props);
+  }
+
+  private String getProperty(String k, Class<String> clazz) {
+    return ConfigProvider.getConfig().getValue(k, clazz);
   }
 }
