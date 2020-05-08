@@ -9,7 +9,6 @@ import javax.enterprise.context.ApplicationScoped;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mageddo.domain.Stock;
 import com.mageddo.kafka.client.BatchConsumeCallback;
-import com.mageddo.kafka.client.ConsumerConfig;
 import com.mageddo.kafka.client.Consumers;
 import com.mageddo.kafka.client.RecoverCallback;
 import com.mageddo.kafka.client.RetryPolicy;
@@ -32,13 +31,13 @@ public class StockPriceMDB {
   public static final String EVERY_5_SECONDS = "0/5 * * * * ?";
 
   private final Producer<String, byte[]> producer;
-  private final ConsumerConfig<String, byte[]> consumerConfig;
+  private final Consumers<String, byte[]> consumers;
   private final StockPriceService stockPriceService;
   private final ObjectMapper objectMapper;
 
   @PostConstruct
   public void init() {
-    Consumers.consume(this.consumerConfig
+    this.consumers
         .toBuilder()
         .topics("stock_changed")
         .consumers(3)
@@ -50,7 +49,8 @@ public class StockPriceMDB {
         )
         .recoverCallback(recover())
         .batchCallback(consume())
-        .build());
+        .build()
+        .consume();
   }
 
   BatchConsumeCallback<String, byte[]> consume() {

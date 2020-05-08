@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
-import com.mageddo.kafka.client.ConsumerConfig;
+import com.mageddo.kafka.client.Consumers;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
@@ -30,8 +30,8 @@ public class ConsumerConfigFactory {
 
   @Produces
   @DefaultBean
-  public ConsumerConfig<String, byte[]> consumerConfig() {
-    return ConsumerConfig
+  public Consumers<String, byte[]> consumerConfig() {
+    return Consumers
         .<String, byte[]>builder()
         .prop(MAX_POLL_INTERVAL_MS_CONFIG, (int) Duration.ofMinutes(20).toMillis())
         .prop(GROUP_ID_CONFIG, getProperty("kafka.consumer.group.id", String.class))
