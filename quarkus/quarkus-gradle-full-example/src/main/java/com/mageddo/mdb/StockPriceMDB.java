@@ -1,5 +1,6 @@
 package com.mageddo.mdb;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +21,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import io.quarkus.scheduler.Scheduled;
 import io.quarkus.scheduler.ScheduledExecution;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,7 +37,7 @@ public class StockPriceMDB {
   private final ObjectMapper objectMapper;
 
   @PostConstruct
-  public void init(){
+  public void init() {
     Consumers.consume(consumerConfig
         .toBuilder()
         .topics("stock_changed")
@@ -62,15 +64,22 @@ public class StockPriceMDB {
   }
 
   RecoverCallback<String, byte[]> recover() {
-    return (record, lastFailure) -> {};
+    return (record, lastFailure) -> {
+      log.error("status=exhausted, record={}", new String(record.value()), lastFailure);
+    };
   }
 
+  @SneakyThrows
   @Scheduled(cron = EVERY_5_SECONDS)
   void notifyStockUpdates(ScheduledExecution execution) {
     producer.send(new ProducerRecord<>(
         "stock_changed",
-        String.format("stock=PAGS, price=%.2f", Math.random() * 100)
-            .getBytes()
+        this.objectMapper.writeValueAsBytes(Stock
+            .builder()
+            .symbol("PAGS")
+            .price(BigDecimal.valueOf(Math.random() * 100))
+            .build()
+        )
     ));
     log.info(
         "status=scheduled, scheduled-fire-time={}, fire-time={}",
