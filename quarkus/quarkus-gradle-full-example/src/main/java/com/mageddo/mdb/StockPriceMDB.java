@@ -1,14 +1,18 @@
-package com.mageddo.kafka;
+package com.mageddo.mdb;
 
 import java.time.Duration;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mageddo.domain.Stock;
 import com.mageddo.kafka.client.BatchConsumeCallback;
 import com.mageddo.kafka.client.ConsumerConfig;
 import com.mageddo.kafka.client.Consumers;
 import com.mageddo.kafka.client.RecoverCallback;
 import com.mageddo.kafka.client.RetryPolicy;
+
+import com.mageddo.service.StockPriceService;
 
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -24,9 +28,18 @@ public class StockPriceMDB {
   public static final String EVERY_5_SECONDS = "0/5 * * * * ?";
 
   private final Producer<String, byte[]> producer;
+  private final StockPriceService stockPriceService;
+  private final ObjectMapper objectMapper;
 
-  public StockPriceMDB(Producer<String, byte[]> producer, ConsumerConfig<String, byte[]> consumerConfig) {
+  public StockPriceMDB(
+      Producer<String, byte[]> producer,
+      ConsumerConfig<String, byte[]> consumerConfig,
+      StockPriceService stockPriceService,
+      ObjectMapper objectMapper
+  ) {
     this.producer = producer;
+    this.stockPriceService = stockPriceService;
+    this.objectMapper = objectMapper;
     Consumers.consume(consumerConfig
         .toBuilder()
         .topics("stock_changed")
@@ -45,7 +58,8 @@ public class StockPriceMDB {
   BatchConsumeCallback<String, byte[]> consume() {
     return (consumer, records, e) -> {
       for (final var record : records) {
-//            throw new RuntimeException("an error occurred");
+        final Stock stock = this.objectMapper.readValue(record.value(), Stock.class);
+        this.stockPriceService.updateStockPrice(stock);
         log.info("key={}, value={}", record.key(), new String(record.value()));
       }
     };

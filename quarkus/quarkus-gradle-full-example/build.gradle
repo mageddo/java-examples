@@ -26,6 +26,7 @@ dependencies {
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
   testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'io.rest-assured:rest-assured'
+  testImplementation 'org.mockito:mockito-junit-jupiter:3.3.3'
 }
 
 group 'com.mageddo'

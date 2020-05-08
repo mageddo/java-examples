@@ -1,4 +1,4 @@
-package com.mageddo.kafka;
+package com.mageddo.mdb;
 
 import java.time.Duration;
 import java.util.Collections;
