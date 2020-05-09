@@ -1,7 +1,8 @@
 package templates;
 
-import com.mageddo.kafka.client.Context;
-import com.mageddo.kafka.client.DefaultContext;
+
+import com.mageddo.kafka.client.CallbackContext;
+import com.mageddo.kafka.client.DefaultCallbackContext;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.MockConsumer;
@@ -11,8 +12,8 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ContextTemplates {
-  public static <K, V> Context<K, V> build(ConsumerRecords<K, V> consumerRecords) {
-    return DefaultContext
+  public static <K, V> CallbackContext<K, V> build(ConsumerRecords<K, V> consumerRecords) {
+    return DefaultCallbackContext
         .<K,V>builder()
         .consumer(new MockConsumer<>(OffsetResetStrategy.LATEST))
         .records(consumerRecords)
