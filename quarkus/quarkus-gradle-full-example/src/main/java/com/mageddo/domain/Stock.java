@@ -1,12 +1,12 @@
 package com.mageddo.domain;
 
+import java.math.BigDecimal;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Value;
-
-import java.math.BigDecimal;
 
 @Value
 @Builder
