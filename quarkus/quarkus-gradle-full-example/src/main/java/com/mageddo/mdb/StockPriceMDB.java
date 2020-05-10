@@ -23,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import static org.apache.kafka.clients.CommonClientConfigs.GROUP_ID_CONFIG;
+
 @Slf4j
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -39,7 +41,8 @@ public class StockPriceMDB {
   public void init() {
     this.consumers
         .toBuilder()
-        .topics("stock_changed")
+        .topics("stock_changed_v2")
+        .prop(GROUP_ID_CONFIG, "quarkus_gradle_stock_changed_v2")
         .consumers(3)
         .retryPolicy(RetryPolicy
             .builder()
