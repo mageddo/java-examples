@@ -1,0 +1,17 @@
+plugins {
+  id "application"
+}
+
+repositories {
+  jcenter()
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+dependencies {
+  implementation "org.luaj:luaj-jse:3.0.1"
+}
+
+application {
+  mainClassName = "com.mageddo.luaj.LuajMain"
+}
