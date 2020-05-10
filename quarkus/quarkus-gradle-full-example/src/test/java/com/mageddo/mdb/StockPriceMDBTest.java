@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
-class StockPriceMDBTest {
+public class StockPriceMDBTest {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
