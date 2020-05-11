@@ -1,35 +1,46 @@
 package ex03;
 
-import java.util.List;
-
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.statement.StatementException;
 
-import ex02.DuplicatedUser;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Ex03TransactionalMain {
 
   /*
-   * Validates constraint exception
+   https://jdbi.org/#_transactions
    */
-
   public static void main(String[] args) {
 
     final var cp = JdbcConnectionPool.create("jdbc:h2:mem:test", "sa", "");
     final var jdbi = Jdbi.create(cp);
 
-    jdbi.
-    final var userService = new UserService(new UserDaoH2(jdbi));
-    userService.createTable();
-    try {
-      userService.create(List.of(
-          new User(1, "Alice"),
-          new User(1, "Angela")
-      ));
-    } catch (DuplicatedUser e){}
-    final var users = userService.find();
+    jdbi.useHandle(handle -> {
+      handle.execute("CREATE TABLE user (id INTEGER PRIMARY KEY, name VARCHAR)");
+    });
 
-    System.out.println(users);
+    try {
+
+      final var user = new User(1, "Alice");
+      jdbi.useTransaction(handle -> {
+        handle.execute("INSERT INTO user(id, name) VALUES (?, ?)", user.getId(), user.getName());
+        handle.execute("INSERT INTO user(id, name) VALUES (?, ?)", user.getId(), user.getName());
+      });
+    } catch (StatementException e) {
+      if (!e.getMessage().contains("PRIMARY KEY ON PUBLIC.USER")) {
+        throw e;
+      }
+    }
+
+    final var users = jdbi.withHandle(handle -> {
+      return handle.createQuery("SELECT * FROM user ORDER BY name")
+          .mapToBean(User.class)
+          .list();
+    });
+
     cp.dispose();
+    System.out.println(users);
+    assertTrue(users.isEmpty());
   }
 }

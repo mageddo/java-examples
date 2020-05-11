@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.jdbi.v3.core.Jdbi;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class Ex01Main {
   /*
    *
@@ -41,5 +43,9 @@ public class Ex01Main {
     });
 
     System.out.println(users);
+    assertEquals(
+        "[{id=0, name='Alice'}, {id=1, name='Bob'}, {id=2, name='Clarice'}, {id=3, name='David'}]",
+        users.toString()
+    );
   }
 }

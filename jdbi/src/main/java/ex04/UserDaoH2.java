@@ -1,4 +1,4 @@
-package ex03;
+package ex04;
 
 import java.util.List;
 
@@ -22,16 +22,7 @@ public class UserDaoH2 implements UserDao {
   }
 
   public void create(User user){
-    try {
-      jdbi.useHandle(handle -> {
-        handle.execute("INSERT INTO user(id, name) VALUES (?, ?)", user.getId(), user.getName());
-      });
-    } catch (StatementException e){
-      if(e.getMessage().contains("PRIMARY KEY ON PUBLIC.USER")){
-        throw new DuplicatedUser(user.getName());
-      }
-      throw e;
-    }
+
   }
 
   @Override

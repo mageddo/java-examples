@@ -1,6 +1,8 @@
-package ex03;
+package ex04;
 
 import java.util.List;
+
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 public class UserService {
 
@@ -14,6 +16,7 @@ public class UserService {
     this.userDao.createTable();
   }
 
+  @Transaction
   public void create(List<User> users){
     users.forEach(this::create);
   }

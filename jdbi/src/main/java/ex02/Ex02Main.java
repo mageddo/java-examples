@@ -4,6 +4,7 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.StatementException;
 
 import ex01.User;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Ex02Main {
 
@@ -29,5 +30,6 @@ public class Ex02Main {
           .list();
     });
     System.out.println(users);
+    assertEquals("[{id=1, name='Alice'}]", users.toString());
   }
 }
