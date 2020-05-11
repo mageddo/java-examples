@@ -3,7 +3,6 @@ package com.mageddo.mdb;
 import java.time.Duration;
 import java.util.Map;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
 import com.mageddo.kafka.client.Consumers;
@@ -25,7 +24,6 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZE
 import static org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
 
-@ApplicationScoped
 public class ConsumerConfigFactory {
 
   @Produces

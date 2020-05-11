@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Singleton;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mageddo.domain.Stock;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import static org.apache.kafka.clients.CommonClientConfigs.GROUP_ID_CONFIG;
 
 @Slf4j
-@ApplicationScoped
+@Singleton
 @RequiredArgsConstructor
 public class StockPriceMDB {
 
@@ -59,7 +59,7 @@ public class StockPriceMDB {
   BatchConsumeCallback<String, byte[]> consume() {
     return (ctx, records) -> {
       for (final var record : records) {
-        final Stock stock = this.objectMapper.readValue(record.value(), Stock.class);
+        final var stock = this.objectMapper.readValue(record.value(), Stock.class);
         this.stockPriceService.updateStockPrice(stock);
         log.info("key={}, value={}", record.key(), new String(record.value()));
       }

@@ -2,7 +2,11 @@
 
 * [x] Static Resources
 * [x] Rest Server
-* [x] [Kafka Streaming][1]
+* [x] [kafka Consuming
+* [x] Schedule
+* [ ] Swagger
+* [ ] Transactional JDBC
+* [ ] Flyway
 
 ![](https://i.imgur.com/xNSZ0m5.png)
 

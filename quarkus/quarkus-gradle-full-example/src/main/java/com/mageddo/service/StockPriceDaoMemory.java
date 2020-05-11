@@ -1,13 +1,13 @@
 package com.mageddo.service;
 
-import com.mageddo.domain.Stock;
-
-import javax.enterprise.context.ApplicationScoped;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@ApplicationScoped
+import javax.inject.Singleton;
+
+import com.mageddo.domain.Stock;
+
+@Singleton
 public class StockPriceDaoMemory implements StockPriceDao {
 
   private Map<String, Stock> stocks = new LinkedHashMap<>();
