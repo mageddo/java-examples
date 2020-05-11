@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.jdbi.v3.core.Jdbi;
 
-public class Main {
+public class Ex01Main {
+  /*
+   *
+   */
   public static void main(String[] args) {
     Jdbi jdbi = Jdbi.create("jdbc:h2:mem:test"); // (H2 in-memory database)
 
