@@ -2,6 +2,7 @@ package ex04;
 
 import java.util.List;
 
+import org.jdbi.v3.core.statement.StatementException;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 public class UserService {
@@ -22,7 +23,13 @@ public class UserService {
   }
 
   public void create(User user){
-    this.userDao.create(user);
+    try {
+      this.userDao.create(user);
+    } catch (StatementException e){
+      if (!e.getMessage().contains("PRIMARY KEY ON PUBLIC.USER")) {
+        throw e;
+      }
+    }
   }
 
   public List<User> find() {
