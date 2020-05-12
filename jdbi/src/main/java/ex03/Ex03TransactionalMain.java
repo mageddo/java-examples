@@ -21,7 +21,6 @@ public class Ex03TransactionalMain {
     });
 
     try {
-
       final var user = new User(1, "Alice");
       jdbi.useTransaction(handle -> {
         handle.execute("INSERT INTO user(id, name) VALUES (?, ?)", user.getId(), user.getName());
