@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import testing.DatabaseConfigurator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -58,6 +59,33 @@ class StockPriceServiceTest {
 
     // assert
     assertTrue(this.stockPriceService.find().isEmpty());
+
+  }
+
+  @Test
+  void mustGetErrorOnInsertAndRollbackJustTheSecondWhenUsingNestedPropagation() {
+
+    // arrange
+    final var stocks = List.of(
+        Stock
+            .builder()
+            .price(BigDecimal.TEN)
+            .symbol("PAGS")
+            .build(),
+        Stock
+            .builder()
+            .price(BigDecimal.ONE)
+            .symbol("PAGS")
+            .build()
+    );
+
+    // act
+    assertThrows(DuplicatedStockException.class, () -> {
+      this.stockPriceService.createStockNested(stocks);
+    });
+
+    // assert
+    assertEquals(1, this.stockPriceService.find().size());
 
   }
 }

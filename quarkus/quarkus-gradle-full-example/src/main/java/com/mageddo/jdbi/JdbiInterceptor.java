@@ -17,8 +17,21 @@ public class JdbiInterceptor {
 
   @AroundInvoke
   public Object intercept(InvocationContext ctx) throws Exception {
-    final var transactionalAnnotation = ctx.getMethod().getAnnotation(Transactional.class);
-    System.out.println("something: " + ctx);
+    final var transactionDef = ctx.getMethod().getAnnotation(Transactional.class);
+    if(transactionDef.propagation()  == Propagation.NESTED){
+      return jdbi.inTransaction(handle -> {
+        final var savePoint = String.format("savepoint-%d", System.nanoTime());
+        handle.savepoint(savePoint);
+        try {
+          return ctx.proceed();
+        } catch (Exception e){
+          handle.rollbackToSavepoint(savePoint);
+          throw e;
+        } finally {
+          handle.commit();
+        }
+      });
+    }
     return jdbi.inTransaction(handle -> {
       return ctx.proceed();
     });

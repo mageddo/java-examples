@@ -23,6 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
 
 /**
@@ -60,6 +61,7 @@ public @interface Transactional {
    * <p>Defaults to {@link Propagation#REQUIRED}.
    *
    */
+  @Nonbinding
   Propagation propagation() default Propagation.REQUIRED;
 
   /**
@@ -73,6 +75,7 @@ public @interface Transactional {
    * isolation level.
    *
    */
+  @Nonbinding
   Isolation isolation() default Isolation.DEFAULT;
 
   /**
@@ -83,6 +86,7 @@ public @interface Transactional {
    * transactions.
    *
    */
+  @Nonbinding
   int timeout() default TransactionDefinition.TIMEOUT_DEFAULT;
 
   /**
@@ -96,6 +100,7 @@ public @interface Transactional {
    * but rather silently ignore the hint.
    *
    */
+  @Nonbinding
   boolean readOnly() default false;
 
   /**
@@ -111,6 +116,7 @@ public @interface Transactional {
    *
    * @see #rollbackForClassName
    */
+  @Nonbinding
   Class<? extends Throwable>[] rollbackFor() default {};
 
   /**
@@ -131,6 +137,7 @@ public @interface Transactional {
    *
    * @see #rollbackFor
    */
+  @Nonbinding
   String[] rollbackForClassName() default {};
 
   /**
@@ -144,6 +151,7 @@ public @interface Transactional {
    *
    * @see #noRollbackForClassName
    */
+  @Nonbinding
   Class<? extends Throwable>[] noRollbackFor() default {};
 
   /**
@@ -156,6 +164,7 @@ public @interface Transactional {
    *
    * @see #noRollbackFor
    */
+  @Nonbinding
   String[] noRollbackForClassName() default {};
 
 }
