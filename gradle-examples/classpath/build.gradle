@@ -1,0 +1,26 @@
+plugins {
+  id "java"
+  id "application"
+  id "com.github.johnrengelman.shadow" version "5.2.0"
+}
+
+repositories {
+  mavenLocal()
+  jcenter()
+}
+
+dependencies {
+  implementation("org.apache.commons:commons-lang3:3.10")
+}
+
+application {
+  mainClassName = "com.mageddo.classpath.Main"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+jar {
+  manifest {
+    attributes 'Main-Class': application.mainClassName
+  }
+}
