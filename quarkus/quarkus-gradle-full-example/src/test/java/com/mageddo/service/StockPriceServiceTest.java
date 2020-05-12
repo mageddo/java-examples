@@ -8,9 +8,11 @@ import javax.inject.Inject;
 import com.mageddo.domain.Stock;
 import com.mageddo.exception.DuplicatedStockException;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
+import testing.DatabaseConfigurator;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,6 +22,14 @@ class StockPriceServiceTest {
 
   @Inject
   StockPriceService stockPriceService;
+
+  @Inject
+  DatabaseConfigurator databaseConfigurator;
+
+  @BeforeEach
+  void before(){
+    this.databaseConfigurator.truncateTables();
+  }
 
   /**
    * Must rollback because it is trying to create PAGS symbol twice
