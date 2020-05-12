@@ -17,6 +17,7 @@ dependencies {
 
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   implementation "io.quarkus:quarkus-jdbc-postgresql"
+  implementation "net.java.dev.jna:jna"
   implementation "io.quarkus:quarkus-flyway"
   implementation "io.quarkus:quarkus-jackson"
   implementation "io.quarkus:quarkus-resteasy"
