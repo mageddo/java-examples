@@ -13,7 +13,7 @@ public class StockPriceService {
 
   private final StockPriceDao stockPriceDao;
 
-  @Transactional
+  @Transactional()
   public void updateStockPrice(Stock stock){
     this.stockPriceDao.updateStockPrice(stock);
   }

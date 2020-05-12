@@ -76,7 +76,7 @@ public class StockPriceMDB {
   @Scheduled(cron = EVERY_5_SECONDS)
   void notifyStockUpdates(ScheduledExecution execution) {
     producer.send(new ProducerRecord<>(
-        "stock_changed",
+        "stock_changed_v2",
         this.objectMapper.writeValueAsBytes(Stock
             .builder()
             .symbol("PAGS")

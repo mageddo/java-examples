@@ -5,8 +5,10 @@
 * [x] [kafka Consuming
 * [x] Schedule
 * [ ] Swagger
-* [ ] Transactional JDBC
+* [ ] Transactional JDBC 
+* [ ] Transactional JDBI
 * [ ] Flyway
+* [ ] Thymeleaf
 
 ![](https://i.imgur.com/xNSZ0m5.png)
 

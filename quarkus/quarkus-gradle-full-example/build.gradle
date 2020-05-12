@@ -26,6 +26,9 @@ dependencies {
   implementation "io.quarkus:quarkus-arc-deployment:${quarkusPlatformVersion}"
 //  compile group: "io.quarkus", name: "quarkus-core-deployment", version: "1.4.2.Final"
 
+  implementation platform("org.jdbi:jdbi3-bom:3.13.0")
+  implementation "org.jdbi:jdbi3-core"
+
   implementation "com.mageddo.kafka-client:kafka-client:1.0.0"
 
   testCompileOnly "org.projectlombok:lombok:1.18.12"
