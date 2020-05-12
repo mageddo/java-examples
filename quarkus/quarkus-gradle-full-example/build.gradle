@@ -1,43 +1,53 @@
 plugins {
-  id 'java'
-  id 'io.quarkus'
+  id "java"
+  id "io.quarkus"
 }
 
 repositories {
-  mavenLocal()
-  mavenCentral()
+  jcenter()
 }
 
 dependencies {
 
-  compileOnly 'org.projectlombok:lombok:1.18.12'
-  annotationProcessor 'org.projectlombok:lombok:1.18.12'
+  compileOnly "org.projectlombok:lombok:1.18.12"
+  annotationProcessor "org.projectlombok:lombok:1.18.12"
+
+//  compileOnly("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
+//  annotationProcessor("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
 
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
-  implementation 'io.quarkus:quarkus-jdbc-postgresql'
-  implementation 'io.quarkus:quarkus-flyway'
-  implementation 'io.quarkus:quarkus-jackson'
-  implementation 'io.quarkus:quarkus-resteasy'
-  implementation 'io.quarkus:quarkus-kafka-client'
-  implementation 'io.quarkus:quarkus-scheduler'
-  implementation 'net.jodah:failsafe:2.3.5'
+  implementation "io.quarkus:quarkus-jdbc-postgresql"
+  implementation "io.quarkus:quarkus-flyway"
+  implementation "io.quarkus:quarkus-jackson"
+  implementation "io.quarkus:quarkus-resteasy"
+  implementation "io.quarkus:quarkus-scheduler"
+  implementation "io.quarkus:quarkus-kafka-client"
+  implementation "io.quarkus:quarkus-core-deployment:${quarkusPlatformVersion}"
+  implementation "io.quarkus:quarkus-arc-deployment:${quarkusPlatformVersion}"
+//  compile group: "io.quarkus", name: "quarkus-core-deployment", version: "1.4.2.Final"
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.12'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-  testImplementation 'io.quarkus:quarkus-junit5'
-  testImplementation 'io.rest-assured:rest-assured'
+  implementation platform("org.jdbi:jdbi3-bom:3.13.0")
+  implementation "org.jdbi:jdbi3-core"
+
+  implementation "com.mageddo.kafka-client:kafka-client:1.0.0"
+
+  testCompileOnly "org.projectlombok:lombok:1.18.12"
+  testAnnotationProcessor "org.projectlombok:lombok:1.18.12"
+  testImplementation "io.quarkus:quarkus-junit5"
+  testImplementation "io.rest-assured:rest-assured"
+  testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
 }
 
-group 'com.mageddo'
-version '1.0.0-SNAPSHOT'
+group "com.mageddo"
+version "1.0.0-SNAPSHOT"
 
 compileJava {
-  options.encoding = 'UTF-8'
-  options.compilerArgs << '-parameters'
+  options.encoding = "UTF-8"
+  options.compilerArgs << "-parameters"
 }
 
 compileTestJava {
-  options.encoding = 'UTF-8'
+  options.encoding = "UTF-8"
 }
 
 java {

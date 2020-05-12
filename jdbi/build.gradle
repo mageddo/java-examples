@@ -1,0 +1,27 @@
+plugins {
+  id "java"
+  id "application"
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  implementation platform("org.jdbi:jdbi3-bom:3.13.0")
+  implementation "org.jdbi:jdbi3-core"
+  implementation "org.jdbi:jdbi3-sqlobject"
+  implementation "com.h2database:h2:1.4.200"
+
+  implementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+  runtimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+
+application {
+  mainClassName = ""
+}
