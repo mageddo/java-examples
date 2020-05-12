@@ -12,8 +12,8 @@ dependencies {
   compileOnly "org.projectlombok:lombok:1.18.12"
   annotationProcessor "org.projectlombok:lombok:1.18.12"
 
-  compileOnly("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
-  annotationProcessor("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
+//  compileOnly("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
+//  annotationProcessor("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
 
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   implementation "io.quarkus:quarkus-jdbc-postgresql"
