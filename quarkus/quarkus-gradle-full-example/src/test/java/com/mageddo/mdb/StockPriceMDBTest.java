@@ -49,6 +49,6 @@ public class StockPriceMDBTest {
     // assert
     final var foundStock = this.stockPriceDao.getStock("PAGS");
     assertNotNull(foundStock);
-    assertEquals(BigDecimal.TEN, foundStock.getPrice());
+    assertEquals(new BigDecimal("10.00"), foundStock.getPrice());
   }
 }
