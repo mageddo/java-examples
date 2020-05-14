@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Singleton;
+import javax.transactionv2.Propagation;
+import javax.transactionv2.Transactional;
 
 import com.mageddo.domain.Stock;
-import com.mageddo.jdbi.Propagation;
-import com.mageddo.jdbi.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +17,7 @@ public class StockPriceService {
 
   private final StockPriceDao stockPriceDao;
 
+//  @javax.transaction.Transactional
   @Transactional
   public void createStock(List<Stock> stocks){
     stocks.forEach(this.stockPriceDao::createStock);

@@ -1,3 +1,4 @@
+package javax.transactionv2;
 /*
  * Copyright 2002-2018 the original author or authors.
  *
@@ -13,8 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.mageddo.jdbi;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

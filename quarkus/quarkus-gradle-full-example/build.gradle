@@ -4,6 +4,7 @@ plugins {
 }
 
 repositories {
+  mavenLocal()
   jcenter()
 }
 
@@ -25,7 +26,7 @@ dependencies {
   implementation "io.quarkus:quarkus-kafka-client"
   implementation "io.quarkus:quarkus-core-deployment:${quarkusPlatformVersion}"
   implementation "io.quarkus:quarkus-arc-deployment:${quarkusPlatformVersion}"
-//  compile group: "io.quarkus", name: "quarkus-core-deployment", version: "1.4.2.Final"
+  implementation "com.mageddo.javaee-jdbi:javaee-jdbi:0.1.0"
 
   implementation platform("org.jdbi:jdbi3-bom:3.13.0")
   implementation "org.jdbi:jdbi3-core"

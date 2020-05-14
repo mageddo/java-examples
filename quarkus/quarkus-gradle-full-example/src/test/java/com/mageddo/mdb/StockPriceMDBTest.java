@@ -31,6 +31,7 @@ public class StockPriceMDBTest {
 
   @Test
   void mustConsumeAndSave() throws Exception {
+
     // arrange
     final var stock = Stock
         .builder()
