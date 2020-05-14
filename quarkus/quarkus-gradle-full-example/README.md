@@ -2,12 +2,11 @@
 
 * [x] Static Resources
 * [x] Rest Server
-* [x] [kafka Consuming
+* [x] [kafka Consuming][2]
 * [x] Schedule
+* [x] [Transactional support on services + JDBI][3]
+* [x] Flyway
 * [ ] Swagger
-* [ ] Transactional JDBC 
-* [ ] Transactional JDBI
-* [ ] Flyway
 * [ ] Thymeleaf
 
 ![](https://i.imgur.com/xNSZ0m5.png)
@@ -49,3 +48,5 @@ If you want to learn more about building native executables, please consult http
     curl -v -X POST -H 'Content-Type: text/plain' http://localhost:8084/prices/ --data '13'
 
 [1]: https://quarkus.io/guides/kafka#starting-kafka
+[2]: https://github.com/mageddo-projects/kafka-client
+[3]: https://github.com/mageddo-projects/javaee-jdbi
