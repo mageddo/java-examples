@@ -17,7 +17,6 @@ public class StockPriceService {
 
   private final StockPriceDao stockPriceDao;
 
-//  @javax.transaction.Transactional
   @Transactional
   public void createStock(List<Stock> stocks){
     stocks.forEach(this.stockPriceDao::createStock);
