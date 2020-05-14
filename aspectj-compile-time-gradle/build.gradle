@@ -1,39 +1,51 @@
 plugins {
-	id "java"
-	id "application"
-	id "io.freefair.aspectj.post-compile-weaving" version "3.1.4"
-	id "com.palantir.graal" version "0.6.0"
-	id "org.jetbrains.gradle.plugin.idea-ext" version "0.5"
+  id "java"
+  id "com.github.johnrengelman.shadow" version "5.2.0"
+  id "org.mikeneck.graalvm-native-image" version "0.3.0"
+  id "io.freefair.aspectj.post-compile-weaving" version "3.1.4"
 }
 
 repositories {
-	mavenLocal()
-	mavenCentral()
-}
-
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
-mainClassName = "com.huongdanjava.aspectj.Application"
-
-graal {
-	mainClass "com.huongdanjava.aspectj.Application"
-	graalVersion("19.2.0.1")
-	outputName(project.name)
-	option("-Dfile.encoding=UTF-8")
-	option("--no-server")
-}
-
-test {
-	useJUnitPlatform()
-	testLogging {
-		showStandardStreams = true
-		events "passed", "skipped", "failed"
-	}
+  mavenLocal()
+  jcenter()
 }
 
 dependencies {
-	compile ("org.aspectj:aspectjrt:1.9.2")
-	testCompile('org.junit.jupiter:junit-jupiter:5.4.0')
+
+  implementation("org.aspectj:aspectjrt:1.9.5")
+  testImplementation('org.junit.jupiter:junit-jupiter:5.4.0')
+
+}
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+def mainClassName = "com.huongdanjava.aspectj.Application"
+
+nativeImage {
+  graalVmHome = System.getProperty("java.home")
+  mainClass = mainClassName
+  executableName = rootProject.name
+  arguments(
+    "--no-fallback",
+    "--no-server",
+    "-Dfile.encoding=UTF-8",
+    "-J-Xmx7G"
+  )
 }
 
+test {
+  useJUnitPlatform()
+  testLogging {
+    showStandardStreams = true
+    events "passed", "skipped", "failed"
+  }
+}
+
+jar {
+  manifest {
+    attributes "Main-Class": mainClassName
+  }
+}
+
+shadowJar {
+  mergeServiceFiles()
+}

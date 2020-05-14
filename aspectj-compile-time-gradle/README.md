@@ -1,7 +1,8 @@
 Compiling and running aspectj compile time
 
 ```
-./gradlew aspectj-compile-time-gradle:run
+$ ./gradlew shadowJar && java -jar ./build/libs/aspectj-compile-time-gradle-all.jar
+
 before
 Hello
 after
@@ -10,8 +11,9 @@ after
 
 Compiling to binary with graalvm
 ```
-./gradlew aspectj-compile-time-gradle:nativeImage
-./aspectj-compile-time-gradle/build/graal/aspectj-compile-time-gradle 
+$ ./gradlew nativeImage
+$ ./build/native-image/aspectj-compile-time-gradle
+ 
 before
 Hello
 after
