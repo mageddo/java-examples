@@ -10,14 +10,17 @@ import com.mageddo.service.StockPriceDao;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.quarkus.test.junit.QuarkusTest;
 import templates.ConsumerRecordsTemplates;
 import templates.ContextTemplates;
+import testing.SingleInstancePostgresExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(SingleInstancePostgresExtension.class)
 @QuarkusTest
 public class StockPriceMDBTest {
 

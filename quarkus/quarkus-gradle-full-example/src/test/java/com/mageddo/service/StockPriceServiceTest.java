@@ -10,14 +10,17 @@ import com.mageddo.exception.DuplicatedStockException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.quarkus.test.junit.QuarkusTest;
 import testing.DatabaseConfigurator;
+import testing.SingleInstancePostgresExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(SingleInstancePostgresExtension.class)
 @QuarkusTest
 class StockPriceServiceTest {
 

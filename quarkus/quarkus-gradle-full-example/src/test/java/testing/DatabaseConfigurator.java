@@ -3,6 +3,7 @@ package testing;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Singleton;
 
@@ -33,14 +34,14 @@ public class DatabaseConfigurator {
         .append("AND TABLE_NAME NOT IN (<tables>) \n")
         .append("ORDER BY TABLE_NAME \n");
     jdbi.useHandle(handle -> {
-      final var tables = handle
+      final List<String> tables = handle
           .createQuery(sql.toString())
           .bindList("tables", skipTables())
           .map((rs, i) -> rs.getString(1))
           .list();
 
       handle.execute("SET CONSTRAINTS ALL DEFERRED");
-      for (final var table : tables) {
+      for (final String table : tables) {
         handle.execute("DELETE FROM " + table + " -- truncating table");
       }
       handle.execute("SET CONSTRAINTS ALL IMMEDIATE");
@@ -51,8 +52,7 @@ public class DatabaseConfigurator {
   }
 
   Collection<String> skipTables() {
-    return List.of("flyway_schema_history")
-        .stream()
+    return Stream.of("flyway_schema_history")
         .map(String::toLowerCase)
         .collect(Collectors.toList())
         ;
