@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="/templates/user/layout.html :: layout(
+		title=~{::title}, headerScripts=~{::headerScripts}, content=~{::section}, footerScripts=~{::footerScripts}
+	)"
+>
+<head>
+  <title>Hello World</title>
+  <headerScripts>
+  </headerScripts>
+</head>
+<body>
+<section >
+  <div th:if="${loggedIn}">
+    <h2>
+      username: <span th:text="${username}" th:remove="tag"></span> | <a href="/logout">logout</a>
+    </h2>
+  </div>
+  <div th:unless="${loggedIn}">
+    <h2>You are not logged in</h2>
+    <p><a href="/" >Log In</a>
+  </div>
+</section>
+</body>
+</html>

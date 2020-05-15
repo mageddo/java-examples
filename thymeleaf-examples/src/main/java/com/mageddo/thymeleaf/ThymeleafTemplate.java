@@ -9,37 +9,35 @@ import java.util.Map;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.StringTemplateResolver;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 public class ThymeleafTemplate {
 
   private TemplateEngine templateEngine;
 
   public ThymeleafTemplate() {
-    this.init();
-  }
-
-  private void init() {
     this.templateEngine = new TemplateEngine();
-    StringTemplateResolver templateResolver = new StringTemplateResolver();
-    templateResolver.setTemplateMode(TemplateMode.HTML);
+//    StringTemplateResolver templateResolver = new StringTemplateResolver();
+//    templateResolver.setTemplateMode(TemplateMode.HTML);
+    final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver(System.class.getClassLoader());
+    templateResolver.setCacheable(true);
     templateEngine.setTemplateResolver(templateResolver);
   }
 
-  public String processFromPath(String templateName, Map<String, Object> variables) {
-    return this.processFromPath(templateName, new Context(Locale.getDefault(), variables));
+  public String fromPath(String templateName, Map<String, Object> variables) {
+    return this.fromPath(templateName, new Context(Locale.getDefault(), variables));
   }
 
-  public String processFromPath(String templateName, Context context) {
-    return this.process(resourceToString(templateName), context);
+  public String fromPath(String templateName, Context context) {
+//    return this.from(resourceToString(templateName), context);
+    return this.from(templateName, context);
   }
 
-  public String process(String template, Map<String, Object> variables) {
-    return process(template, new Context(Locale.getDefault(), variables));
+  public String from(String template, Map<String, Object> variables) {
+    return from(template, new Context(Locale.getDefault(), variables));
   }
 
-  public String process(String template, Context context) {
+  public String from(String template, Context context) {
     StringWriter stringWriter = new StringWriter();
     this.templateEngine.process(template, context, stringWriter);
     return stringWriter.toString();

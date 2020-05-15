@@ -11,19 +11,19 @@ public final class Thymeleafs {
   private Thymeleafs() {
   }
 
-  public static String processFromPath(String templateName, Map<String, Object> variables) {
-    return instance.processFromPath(templateName, variables);
+  public static String fromPath(String templateName, Map<String, Object> variables) {
+    return instance.fromPath(templateName, variables);
   }
 
-  public static String processFromPath(String templateName, Context context) {
-    return instance.processFromPath(templateName, context);
+  public static String fromPath(String templateName, Context context) {
+    return instance.fromPath(templateName, context);
   }
 
-  public static String process(String template, Map<String, Object> variables) {
-    return instance.processFromPath(template, variables);
+  public static String from(String template, Map<String, Object> variables) {
+    return instance.fromPath(template, variables);
   }
 
-  public static String process(String template, Context context) {
-    return instance.processFromPath(template, context);
+  public static String from(String template, Context context) {
+    return instance.fromPath(template, context);
   }
 }
