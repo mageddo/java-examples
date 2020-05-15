@@ -1,7 +1,15 @@
+plugins {
+  id "java"
+}
+
+repositories {
+  jcenter()
+}
+
 dependencies {
-  compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.11.RELEASE'
-  testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
-  testCompile('org.junit.jupiter:junit-jupiter:5.5.2')
+  implementation("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
+  testImplementation("commons-io:commons-io:2.6")
+  testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
 }
 
 test {

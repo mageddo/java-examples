@@ -2,7 +2,7 @@
 
 * [x] Static Resources
 * [x] Rest Server
-* [x] [kafka Consuming][2]
+* [x] [Kafka Consuming][2]
 * [x] Schedule
 * [x] [Transactional support on services + JDBI][3]
 * [x] Flyway
