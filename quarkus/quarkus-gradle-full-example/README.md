@@ -1,11 +1,11 @@
 # code-with-quarkus project
 
-* [x] Static Resources
-* [x] Reactive WebSockets
-* [x] Rest Server
-* [x] [Kafka Consuming][2]
-* [x] Scheduler
-* [x] [Transactional support on services + JDBI][3]
+* [x] [Static Resources][8]
+* [x] [Reactive WebSockets][9]
+* [x] [Rest Server][10]
+* [x] [Kafka Consuming][12]
+* [x] [Scheduler][11]
+* [x] [Transactional support on services + JDBI][13]
 * [x] Flyway
 * [x] Swagger
 * [x] [Thymeleaf][7]
@@ -81,10 +81,8 @@ See [consumer example][4], also take a look at [mageddo's kafka-client][2] libra
 [Click here][5] to see a Scheduler working sample
 
 ### Transactional + JDBI
-
 See [this reference][6] for a Transactional working sample sample, [click here][3] to take a look at the library for
  Transactional support for JDBI on JAVA EE apps.
-
 
 [1]: https://quarkus.io/guides/kafka#starting-kafka
 [2]: https://github.com/mageddo-projects/kafka-client
@@ -92,4 +90,10 @@ See [this reference][6] for a Transactional working sample sample, [click here][
 [4]: src/main/java/com/mageddo/mdb/StockPriceMDB.java
 [5]: src/main/java/com/mageddo/mdb/StockPriceMDB.java#L76
 [6]: src/main/java/com/mageddo/service/StockPriceService.java#L48
-[7]: src/main/java/com/mageddo/resource/StockResource.java
+[7]: src/main/java/com/mageddo/resource/UserResource.java
+[8]: #static-resources
+[9]: #reactive-websockets
+[10]: #rest-server
+[11]: #scheduer
+[12]: #kafka-consuming
+[13]: #transactional--jdbi
