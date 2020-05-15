@@ -46,3 +46,8 @@ nativeImage {
       "-J-Xmx7G"
   )
 }
+
+task run(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  main = mainClassName
+}
