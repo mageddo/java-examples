@@ -1,9 +1,6 @@
 package com.mageddo.thymeleaf;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
-import java.io.UncheckedIOException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -16,11 +13,13 @@ public class ThymeleafTemplate {
   private TemplateEngine templateEngine;
 
   public ThymeleafTemplate() {
+    this(true);
+  }
+
+  public ThymeleafTemplate(boolean cacheable) {
     this.templateEngine = new TemplateEngine();
-//    StringTemplateResolver templateResolver = new StringTemplateResolver();
-//    templateResolver.setTemplateMode(TemplateMode.HTML);
-    final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver(Thread.currentThread().getContextClassLoader());
-    templateResolver.setCacheable(true);
+    final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+    templateResolver.setCacheable(cacheable);
     templateEngine.setTemplateResolver(templateResolver);
   }
 
@@ -29,7 +28,6 @@ public class ThymeleafTemplate {
   }
 
   public String fromPath(String templateName, Context context) {
-//    return this.from(resourceToString(templateName), context);
     return this.from(templateName, context);
   }
 
@@ -41,27 +39,6 @@ public class ThymeleafTemplate {
     StringWriter stringWriter = new StringWriter();
     this.templateEngine.process(template, context, stringWriter);
     return stringWriter.toString();
-  }
-
-  private String resourceToString(String resourcePath) {
-    try {
-      final StringBuilder sb = new StringBuilder();
-      final byte[] buff = new byte[128];
-      try(InputStream in = getClass().getResourceAsStream(resourcePath)){
-        for (;;){
-          final int read = in.read(buff);
-          if(read == -1){
-            break;
-          }
-          for (int i = 0; i < read; i++) {
-            sb.append((char)buff[i]);
-          }
-        }
-        return sb.toString();
-      }
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
   }
 
 }

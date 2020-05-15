@@ -6,7 +6,7 @@ import org.thymeleaf.context.Context;
 
 public final class Thymeleafs {
 
-  private static final ThymeleafTemplate instance = new ThymeleafTemplate();
+  private static ThymeleafTemplate instance = new ThymeleafTemplate();
 
   private Thymeleafs() {
   }

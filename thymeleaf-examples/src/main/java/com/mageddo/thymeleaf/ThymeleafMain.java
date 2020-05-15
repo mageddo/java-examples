@@ -7,9 +7,7 @@ import java.nio.file.Path;
 import org.thymeleaf.context.Context;
 
 public class ThymeleafMain {
-  public static void main(String[] args) throws IOException, NoSuchMethodException {
-
-//    System.out.println(Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/user/index.html"));
+  public static void main(String[] args) throws IOException {
 
     final Context context = new Context();
     context.setVariable("loggedIn", true);
