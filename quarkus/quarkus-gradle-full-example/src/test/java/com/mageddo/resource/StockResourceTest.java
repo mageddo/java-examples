@@ -5,19 +5,22 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
 public class StockResourceTest {
 
   @Test
-  public void testHelloEndpoint() {
+  public void mustGetStocks() {
     given()
         .when()
-        .get("/hello")
+        .get("/stocks")
         .then()
         .statusCode(200)
-        .body(is("hello"));
+        .log().all()
+        .body("size()", is(1))
+        .body("[0].symbol", equalTo("PAGS"));
   }
 
 }

@@ -37,7 +37,10 @@ dependencies {
   testCompileOnly "org.projectlombok:lombok:1.18.12"
   testAnnotationProcessor "org.projectlombok:lombok:1.18.12"
   testImplementation "io.quarkus:quarkus-junit5"
-  testImplementation "io.rest-assured:rest-assured"
+  testImplementation "io.rest-assured:rest-assured:4.3.0"
+//  testImplementation "io.rest-assured:rest-assured-all:4.3.0"
+//  ':jar:4.3.0'
+
   testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
 }
 
