@@ -1,13 +1,14 @@
 # code-with-quarkus project
 
 * [x] Static Resources
+* [x] Reactive WebSockets
 * [x] Rest Server
 * [x] [Kafka Consuming][2]
-* [x] Schedule
+* [x] Scheduler
 * [x] [Transactional support on services + JDBI][3]
 * [x] Flyway
 * [x] Swagger
-* [x] Thymeleaf
+* [x] [Thymeleaf][7]
 
 ![](https://i.imgur.com/xNSZ0m5.png)
 
@@ -45,8 +46,50 @@ You can then execute your native executable with: `./build/code-with-quarkus-1.0
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling#building-a-native-executable.
 
-    curl -v -X POST -H 'Content-Type: text/plain' http://localhost:8084/prices/ --data '13'
+
+## Features 
+
+### Static Resources
+
+Access: http://localhost:8084/prices.html
+
+### Reactive WebSockets
+
+Take a look at http://localhost:8084/prices.html to see a client working sample for web sockets. 
+
+```
+$ curl http://localhost:8084/prices/stream
+
+data: 32.10
+
+data: 13.87
+```
+
+### Rest Server
+
+```bash
+$ curl -w '\n' http://localhost:8084/stocks
+[{"symbol":"PAGS","price":1.2084996008677629}]
+```
+
+### Kafka Consuming
+
+See [consumer example][4], also take a look at [mageddo's kafka-client][2] library
+
+### Scheduler
+
+[Click here][5] to see a Scheduler working sample
+
+### Transactional + JDBI
+
+See [this reference][6] for a Transactional working sample sample, [click here][3] to take a look at the library for
+ Transactional support for JDBI on JAVA EE apps.
+
 
 [1]: https://quarkus.io/guides/kafka#starting-kafka
 [2]: https://github.com/mageddo-projects/kafka-client
 [3]: https://github.com/mageddo-projects/javaee-jdbi
+[4]: src/main/java/com/mageddo/mdb/StockPriceMDB.java
+[5]: src/main/java/com/mageddo/mdb/StockPriceMDB.java#L76
+[6]: src/main/java/com/mageddo/service/StockPriceService.java#L48
+[7]: src/main/java/com/mageddo/resource/StockResource.java
