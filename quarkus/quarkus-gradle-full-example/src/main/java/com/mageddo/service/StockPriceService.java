@@ -8,9 +8,12 @@ import javax.transactionv2.Propagation;
 import javax.transactionv2.Transactional;
 
 import com.mageddo.domain.Stock;
+import com.mageddo.exception.DuplicatedStockException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Singleton
 @RequiredArgsConstructor
 public class StockPriceService {
@@ -33,7 +36,13 @@ public class StockPriceService {
 
   @Transactional
   public void createStockNested(List<Stock> stocks) {
-    stocks.forEach(it -> self().createStockNested(it));
+    stocks.forEach(it -> {
+      try {
+        self().createStockNested(it);
+      } catch (DuplicatedStockException e) {
+        log.info("status=already-exists, stock={}", it.getSymbol());
+      }
+    });
   }
 
   @Transactional(propagation = Propagation.NESTED)
