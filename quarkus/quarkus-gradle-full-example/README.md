@@ -10,6 +10,20 @@
 * [x] Swagger
 * [x] [Thymeleaf][7]
 
+# Running
+
+Start Postgres instance
+```
+$ docker-compose up
+```
+
+Run the app
+```
+$ ./gradlew quarkusDev
+```
+
+Access http://localhost:8084
+
 ![](https://i.imgur.com/xNSZ0m5.png)
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
