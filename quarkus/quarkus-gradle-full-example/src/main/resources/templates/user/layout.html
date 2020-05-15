@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(title, headerScripts, content)"
+      th:with="footerScripts=${footerScripts} ?: null"
+>
+<head>
+  <title th:replace="${title}"></title>
+  <div th:include="${headerScripts}" th:remove="tag"/>
+</head>
+<body>
+<h1>Thymeleaf views are working!</h1>
+<div th:replace="${content}">
+  <p>Layout content</p>
+</div>
+<footer>
+  Under <a href="https://www.apache.org/licenses/LICENSE-2.0"> APACHE LICENSE, VERSION 2.0</a>
+</footer>
+<div th:if="${footerScripts != null}" th:remove="tag">
+  <div th:include="${footerScripts}" th:remove="tag"/>
+</div>
+</body>
+</html>
