@@ -22,7 +22,7 @@ public class ThymeleafTest {
   }
 
   @Test
-  public void mustRenderPageWithNotLoggedInState() throws Exception {
+  public void mustRenderPageWithLoggedInState() throws Exception {
 
     // arrange
     final Context context = new Context();
@@ -37,7 +37,7 @@ public class ThymeleafTest {
   }
 
   @Test
-  public void mustRenderPageWithLoggedInState() throws Exception {
+  public void mustRenderPageWithNotLoggedInState() throws Exception {
 
     // arrange
     final Context context = new Context();

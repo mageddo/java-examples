@@ -1,5 +1,7 @@
 plugins {
   id "java"
+  id "com.github.johnrengelman.shadow" version "5.2.0"
+  id "org.mikeneck.graalvm-native-image" version "0.3.0"
 }
 
 repositories {
@@ -7,8 +9,10 @@ repositories {
 }
 
 dependencies {
+
   implementation("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
-  testImplementation("commons-io:commons-io:2.6")
+  compileOnly("com.oracle.substratevm:svm:19.2.1")
+
   testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
 }
 
@@ -19,3 +23,26 @@ test {
   }
 }
 
+def mainClassName = "com.mageddo.thymeleaf.ThymeleafMain"
+jar {
+  manifest {
+    attributes "Main-Class": mainClassName
+  }
+}
+
+shadowJar {
+  mergeServiceFiles()
+}
+
+nativeImage {
+  graalVmHome = System.getProperty("java.home")
+  mainClass = mainClassName
+  executableName = rootProject.name
+  arguments(
+      "--report-unsupported-elements-at-runtime",
+      "-H:+ReportExceptionStackTraces",
+      "--no-fallback",
+      "--no-server",
+      "-J-Xmx7G"
+  )
+}

@@ -19,7 +19,7 @@ public class ThymeleafTemplate {
     this.templateEngine = new TemplateEngine();
 //    StringTemplateResolver templateResolver = new StringTemplateResolver();
 //    templateResolver.setTemplateMode(TemplateMode.HTML);
-    final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver(System.class.getClassLoader());
+    final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver(Thread.currentThread().getContextClassLoader());
     templateResolver.setCacheable(true);
     templateEngine.setTemplateResolver(templateResolver);
   }
@@ -63,4 +63,5 @@ public class ThymeleafTemplate {
       throw new UncheckedIOException(e);
     }
   }
+
 }
