@@ -22,10 +22,9 @@ dependencies {
   implementation "io.quarkus:quarkus-flyway"
   implementation "io.quarkus:quarkus-jackson"
   implementation "io.quarkus:quarkus-resteasy"
+  implementation "io.quarkus:quarkus-smallrye-openapi"
   implementation "io.quarkus:quarkus-scheduler"
   implementation "io.quarkus:quarkus-kafka-client"
-  implementation "io.quarkus:quarkus-core-deployment:${quarkusPlatformVersion}"
-  implementation "io.quarkus:quarkus-arc-deployment:${quarkusPlatformVersion}"
   implementation "com.mageddo.javaee-jdbi:javaee-jdbi:0.1.0"
 
   implementation platform("org.jdbi:jdbi3-bom:3.13.0")

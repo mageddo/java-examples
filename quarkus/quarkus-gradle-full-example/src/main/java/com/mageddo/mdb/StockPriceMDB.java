@@ -30,7 +30,7 @@ import static org.apache.kafka.clients.CommonClientConfigs.GROUP_ID_CONFIG;
 @RequiredArgsConstructor
 public class StockPriceMDB {
 
-  public static final String EVERY_5_SECONDS = "0/5 * * * * ?";
+  public static final String EVERY_5_SECONDS = "0/1 * * * * ?";
 
   private final Producer<String, byte[]> producer;
   private final Consumers<String, byte[]> consumers;

@@ -6,7 +6,7 @@
 * [x] Schedule
 * [x] [Transactional support on services + JDBI][3]
 * [x] Flyway
-* [ ] Swagger
+* [x] Swagger
 * [ ] Thymeleaf
 
 ![](https://i.imgur.com/xNSZ0m5.png)
