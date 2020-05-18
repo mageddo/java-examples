@@ -8,7 +8,8 @@ repositories {
 }
 
 sourceCompatibility = JavaVersion.VERSION_14
-mainClassName = "com.mageddo.java15.Java15Main"
+mainClassName = "com.mageddo.java14.Java14Main"
+applicationDefaultJvmArgs = ['-XX:+ShowCodeDetailsInExceptionMessages']
 
 dependencies {
   testCompile "org.junit.jupiter:junit-jupiter:5.6.2"
@@ -16,6 +17,7 @@ dependencies {
 }
 
 test {
+  jvmArgs = ['-XX:+ShowCodeDetailsInExceptionMessages']
   useJUnitPlatform()
   testLogging {
     events "passed", "skipped", "failed"

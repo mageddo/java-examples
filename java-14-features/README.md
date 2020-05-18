@@ -3,6 +3,7 @@ In this example I cover the new Java features which I consider relevant,
  commonly the ones related to code style, I don't have the habit to cover preview features. 
 
 * [Switch Expressions][2]
+* [Helpful NullPointerExceptions][3]
 
 # Running
 
@@ -14,3 +15,4 @@ In this example I cover the new Java features which I consider relevant,
 
 [1]: https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/tag/jdk-14.0.1%2B7.1
 [2]: https://openjdk.java.net/jeps/361
+[3]: https://openjdk.java.net/jeps/358
