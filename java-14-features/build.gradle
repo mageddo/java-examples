@@ -12,8 +12,8 @@ mainClassName = "com.mageddo.java14.Java14Main"
 applicationDefaultJvmArgs = ['-XX:+ShowCodeDetailsInExceptionMessages']
 
 dependencies {
-  testCompile "org.junit.jupiter:junit-jupiter:5.6.2"
-  testCompile "org.mockito:mockito-junit-jupiter:3.3.3"
+  testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
+  testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
 }
 
 test {
