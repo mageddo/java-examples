@@ -16,9 +16,9 @@ public class Java14Main {
     System.out.printf("## find color%n");
     System.out.printf("color = %s%n", color);
 
-    System.out.println("# NullPointerExceptions");
+    System.out.println("\n# NullPointerExceptions");
     final var nullPointerExceptions = new NullPointerExceptions();
-    System.out.println("getting a value in at three level map tree");
+    System.out.println("## getting a value in at three level map tree");
     try {
       nullPointerExceptions.treeValueFind();
     } catch (NullPointerException e){
