@@ -1,0 +1,25 @@
+plugins {
+  id "java"
+  id "application"
+}
+
+repositories {
+  jcenter()
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+mainClassName = "com.mageddo.java11.Java11Main"
+applicationDefaultJvmArgs = ['-XX:+ShowCodeDetailsInExceptionMessages']
+
+dependencies {
+  testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
+  testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
+}
+
+test {
+  jvmArgs = ['-XX:+ShowCodeDetailsInExceptionMessages']
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+}
