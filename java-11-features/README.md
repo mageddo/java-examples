@@ -6,6 +6,7 @@ In this example I cover the new Java features which I consider relevant,
 * [JEP 321: HTTP Client (Standard)][3]
     * [Http Client Doc][4]
     * [Examples][5]
+* [JEP 328: Flight Recorder][6]
 
 # Running
 
@@ -20,3 +21,4 @@ In this example I cover the new Java features which I consider relevant,
 [3]: https://openjdk.java.net/jeps/321
 [4]: https://openjdk.java.net/groups/net/httpclient/
 [5]: https://openjdk.java.net/groups/net/httpclient/recipes-incubating.html
+[6]: https://openjdk.java.net/jeps/328
