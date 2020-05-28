@@ -8,4 +8,4 @@ pluginManagement {
     id 'io.quarkus' version "${quarkusPluginVersion}"
   }
 }
-rootProject.name = 'quarkus-gradle-full-example'
+rootProject.name = 'quarkus-gradle-kafka-example'

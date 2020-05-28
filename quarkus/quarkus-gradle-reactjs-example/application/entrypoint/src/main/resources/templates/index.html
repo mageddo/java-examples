@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="/templates/layout.html :: layout(
+    title=~{::title}, headerScripts=~{::headerScripts}, content=~{::section}, footerScripts=~{::footerScripts}
+  )"
+>
+<head>
+  <title>MyApp</title>
+  <headerScripts>
+    <link href="/css/login.css" rel="stylesheet" />
+  </headerScripts>
+</head>
+<body>
+<section>
+  <center>
+    <h1>Welcome to <strong>MyApp</strong></h1><br />
+    <a href="/user/login">click here</a> to login and check today stocks
+  </center>
+</section>
+</body>
+</html>

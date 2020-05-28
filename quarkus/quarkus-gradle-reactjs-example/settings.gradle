@@ -1,0 +1,18 @@
+pluginManagement {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    gradlePluginPortal()
+  }
+  plugins {
+    id "io.quarkus" version "${quarkusPluginVersion}"
+  }
+}
+
+include ':application'
+include ':application:core'
+include ':application:dataprovider'
+include ':application:entrypoint'
+include ':application:frontend'
+
+include ':templates'

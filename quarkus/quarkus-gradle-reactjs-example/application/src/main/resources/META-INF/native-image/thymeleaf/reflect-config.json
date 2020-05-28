@@ -1,0 +1,50 @@
+[
+  {
+    "name": "org.thymeleaf.standard.expression.AdditionExpression",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.thymeleaf.standard.expression.EqualsExpression",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.thymeleaf.standard.expression.NotEqualsExpression",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ognl.OgnlRuntime$ClassPropertyMethodCache",
+    "methods": [
+      {
+        "name": "get",
+        "parameterTypes": [
+          "java.lang.Class",
+          "java.lang.String"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "org.thymeleaf.standard.expression.AdditionSubtractionExpression",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.thymeleaf.standard.expression.AndExpression",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.thymeleaf.standard.expression.EqualsNotEqualsExpression",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.thymeleaf.standard.expression.GreaterLesserExpression",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.thymeleaf.standard.expression.MultiplicationDivisionRemainderExpression",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.thymeleaf.standard.expression.OrExpression",
+    "allDeclaredConstructors": true
+  }
+]

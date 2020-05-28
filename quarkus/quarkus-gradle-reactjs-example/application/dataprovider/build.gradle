@@ -1,0 +1,14 @@
+dependencies {
+
+  api(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
+
+  api(project(":application:core"))
+  api("io.quarkus:quarkus-jdbc-postgresql")
+  api("net.java.dev.jna:jna")
+  api("io.quarkus:quarkus-flyway")
+
+  api(platform("org.jdbi:jdbi3-bom:3.13.0"))
+  api("org.jdbi:jdbi3-core")
+  api("com.mageddo.javaee-jdbi:javaee-jdbi:0.1.0")
+
+}

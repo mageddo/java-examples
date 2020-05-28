@@ -1,0 +1,29 @@
+plugins {
+  id "io.quarkus"
+}
+
+dependencies {
+
+
+  implementation project(":application:core")
+  implementation project(":application:entrypoint")
+  implementation project(":application:dataprovider")
+  implementation project(":application:frontend")
+
+  implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+  testImplementation("io.quarkus:quarkus-junit5")
+  testImplementation("io.rest-assured:rest-assured")
+
+}
+
+group "com.mageddo"
+version "1.0.0-SNAPSHOT"
+
+compileJava {
+  options.encoding = "UTF-8"
+  options.compilerArgs << "-parameters"
+}
+
+compileTestJava {
+  options.encoding = "UTF-8"
+}

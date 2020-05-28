@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="/templates/layout.html :: layout(
+    title=~{::title}, headerScripts=~{::headerScripts}, content=~{::section}, footerScripts=~{::footerScripts}
+  )"
+>
+<head>
+  <title>Login - MyApp</title>
+  <headerScripts>
+    <link href="/css/login.css" rel="stylesheet" />
+  </headerScripts>
+</head>
+<body>
+<section>
+  <form class="form-signin" action="/stocks">
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <label for="iptLogin" class="sr-only">Login</label>
+    <input type="text" id="iptLogin" class="form-control" placeholder="Login" required autofocus>
+    <label for="iptPassword" class="sr-only">Password</label>
+    <input type="password" id="iptPassword" class="form-control" placeholder="Password" required>
+    <div class="mb-3 mt-2">Hit: any password will be accepted</div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  </form>
+</section>
+</body>
+</html>
