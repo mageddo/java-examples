@@ -6,7 +6,7 @@ dependencies {
 
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 
-  implementation project(":application:frontend")
+//  implementation project(":application:frontend")
   implementation project(":application:dataprovider")
   implementation project(":application:core")
   implementation project(":application:entrypoint")
