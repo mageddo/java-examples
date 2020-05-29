@@ -19,10 +19,11 @@
 <footer>
   Under <a href="https://www.apache.org/licenses/LICENSE-2.0"> APACHE LICENSE, VERSION 2.0</a>
 </footer>
-<script src="http://localhost:3000/static/js/bundle.js"></script>
-<script src="http://localhost:3000/static/js/0.chunk.js"></script>
-<script src="http://localhost:3000/static/js/1.chunk.js"></script>
-<script src="http://localhost:3000/static/js/main.chunk.js"></script>
+
+<div th:replace="/META-INF/resources/reactjs.html" >
+  reactjs!
+</div>
+
 <div th:if="${footerScripts != null}" th:remove="tag">
   <div th:include="${footerScripts}" th:remove="tag" />
 </div>

@@ -12,7 +12,7 @@ pluginManagement {
 include ':application'
 include ':application:core'
 include ':application:dataprovider'
-include ':application:entrypoint'
 include ':application:frontend'
+include ':application:entrypoint'
 
 include ':templates'

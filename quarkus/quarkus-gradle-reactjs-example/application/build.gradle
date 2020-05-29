@@ -4,11 +4,10 @@ plugins {
 
 dependencies {
 
-
+  implementation project(":application:frontend")
+  implementation project(":application:dataprovider")
   implementation project(":application:core")
   implementation project(":application:entrypoint")
-  implementation project(":application:dataprovider")
-  implementation project(":application:frontend")
 
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   testImplementation("io.quarkus:quarkus-junit5")

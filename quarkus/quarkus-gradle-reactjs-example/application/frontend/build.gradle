@@ -1,14 +1,15 @@
 task buildJs(type: Exec) {
   commandLine "${projectDir}/node_modules/.bin/react-scripts", "build"
   doLast {
+    ant.move(file: "${buildDir}/index.html", tofile: "${buildDir}/reactjs.html")
     ant.move(todir: "${buildDir}/transpiled"){
       fileset(dir: "${buildDir}")
     }
   }
 }
-assemble.dependsOn(buildJs)
 
 jar {
+  dependsOn(buildJs)
   archiveBaseName = "frontend"
   from("${buildDir}/transpiled") {
     into "META-INF/resources/"

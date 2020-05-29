@@ -2,7 +2,7 @@ dependencies {
 
   api(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
 
-  api(project(":application:dataprovider"))
+  compileOnly(project(":application:dataprovider"))
   api("io.quarkus:quarkus-jackson")
   api("io.quarkus:quarkus-resteasy-jackson")
   api("io.quarkus:quarkus-scheduler")
