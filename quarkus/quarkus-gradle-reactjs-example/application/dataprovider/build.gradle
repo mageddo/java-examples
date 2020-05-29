@@ -4,7 +4,6 @@ dependencies {
 
   api(project(":application:core"))
   api("io.quarkus:quarkus-jdbc-postgresql")
-  api("net.java.dev.jna:jna")
   api("io.quarkus:quarkus-flyway")
 
   api(platform("org.jdbi:jdbi3-bom:3.13.0"))
