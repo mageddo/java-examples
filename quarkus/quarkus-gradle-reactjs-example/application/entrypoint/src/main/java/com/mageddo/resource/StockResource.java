@@ -1,6 +1,5 @@
 package com.mageddo.resource;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -9,17 +8,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.mageddo.usecase.domain.Stock;
+import com.mageddo.usecase.service.StockPriceService;
 
-@Path("/stocks")
+import lombok.RequiredArgsConstructor;
+
+@Path("/api/stocks")
+@RequiredArgsConstructor
 public class StockResource {
+
+  private final StockPriceService stockPriceService;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public List<Stock> hello() {
-    return List.of(Stock
-        .builder()
-        .symbol("PAGS")
-        .price(BigDecimal.valueOf(Math.random() * 100))
-        .build());
+    return this.stockPriceService.find();
   }
 }

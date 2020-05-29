@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mageddo.usecase.domain.Stock;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
@@ -21,26 +22,27 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class StockPricesScheduler {
 
-  public static final String EVERY_5_SECONDS = "0/1 * * * * ?";
+  public static final String EVERY_5_SECONDS = "0/5 * * * * ?";
   private final Producer<String, byte[]> producer;
   private final ObjectMapper objectMapper;
 
   @SneakyThrows
   @Scheduled(cron = EVERY_5_SECONDS)
   void notifyStockUpdates(ScheduledExecution execution) {
-    producer.send(new ProducerRecord<>(
-        "stock_changed_v2",
-        this.objectMapper.writeValueAsBytes(Stock
-            .builder()
-            .symbol("PAGS")
-            .price(BigDecimal.valueOf(Math.random() * 100))
-            .build()
-        )
-    ));
+
+    final var stock = Stock
+        .builder()
+        .symbol(RandomStringUtils.random(3, 'A', 'B', 'C')
+            .toUpperCase())
+        .price(BigDecimal.valueOf(Math.random() * 100))
+        .build();
+    this.producer.send(new ProducerRecord<>("stock_changed_v3", this.objectMapper.writeValueAsBytes(stock)));
     log.info(
-        "status=scheduled, scheduled-fire-time={}, fire-time={}",
+        "status=scheduled, symbol={}, scheduled-fire-time={}, fire-time={}",
+        stock.getSymbol(),
         execution.getScheduledFireTime(),
         execution.getFireTime()
     );
   }
+
 }

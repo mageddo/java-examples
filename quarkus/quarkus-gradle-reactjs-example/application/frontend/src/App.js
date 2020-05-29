@@ -1,26 +1,14 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Stocks} from './Stocks';
+import {AjaxStocksLoader} from "./AjaxStocksLoader";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App;
+export default {
+  startStocks() {
+    let stocksLoader = new AjaxStocksLoader()
+    return (
+      <div className="Stocks">
+        <Stocks stocksLoader={stocksLoader}/>
+      </div>
+    );
+  }
+};

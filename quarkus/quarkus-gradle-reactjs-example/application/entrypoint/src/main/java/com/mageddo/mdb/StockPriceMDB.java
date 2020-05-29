@@ -2,17 +2,20 @@ package com.mageddo.mdb;
 
 import java.time.Duration;
 
-import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
 import javax.inject.Singleton;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mageddo.kafka.client.BatchConsumeCallback;
+import com.mageddo.kafka.client.ConsumerFactory;
 import com.mageddo.kafka.client.Consumers;
 import com.mageddo.kafka.client.RecoverCallback;
 import com.mageddo.kafka.client.RetryPolicy;
 import com.mageddo.usecase.domain.Stock;
 import com.mageddo.usecase.service.StockPriceService;
 
+import io.quarkus.runtime.ShutdownEvent;
+import io.quarkus.runtime.StartupEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,13 +29,14 @@ public class StockPriceMDB {
   private final Consumers<String, byte[]> consumers;
   private final StockPriceService stockPriceService;
   private final ObjectMapper objectMapper;
+  private ConsumerFactory<String, byte[]> consumerFactory;
 
-  @PostConstruct
-  public void init() {
-    this.consumers
+  public void init(@Observes StartupEvent startupEvent) {
+    log.info("status=starting, this={}", this);
+    this.consumerFactory = this.consumers
         .toBuilder()
-        .topics("stock_changed_v2")
-        .prop(GROUP_ID_CONFIG, "quarkus_gradle_stock_changed_v2")
+        .topics("stock_changed_v3")
+        .prop(GROUP_ID_CONFIG, "quarkus_gradle_stock_changed_v3")
         .consumers(3)
         .retryPolicy(RetryPolicy
             .builder()
@@ -40,6 +44,7 @@ public class StockPriceMDB {
             .delay(Duration.ofSeconds(29))
             .build()
         )
+        .pollInterval(Duration.ofSeconds(1))
         .recoverCallback(recover())
         .batchCallback(consume())
         .build()
@@ -60,6 +65,10 @@ public class StockPriceMDB {
     return (ctx) -> {
       log.error("status=exhausted, record={}", new String(ctx.record().value()), ctx.lastFailure());
     };
+  }
+
+  public void close(@Observes ShutdownEvent event) throws Exception {
+    this.consumerFactory.close();
   }
 
 }

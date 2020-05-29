@@ -27,7 +27,7 @@ public class StockPriceDaoPostgres implements StockPriceDao {
         .append("ON CONFLICT (IDT_STOCK) DO UPDATE \n")
         .append("SET \n")
         .append("  NUM_PRICE = :price \n");
-    jdbi.useHandle(handle -> {
+    this.jdbi.useHandle(handle -> {
       handle
           .createUpdate(sql.toString())
           .bind("symbol", stock.getSymbol())
@@ -39,7 +39,7 @@ public class StockPriceDaoPostgres implements StockPriceDao {
 
   @Override
   public Stock getStock(String symbol) {
-    return jdbi.withHandle(handle -> {
+    return this.jdbi.withHandle(handle -> {
       return handle
           .createQuery("SELECT * FROM STOCK WHERE IDT_STOCK = ?")
           .bind(0, symbol)
@@ -68,7 +68,7 @@ public class StockPriceDaoPostgres implements StockPriceDao {
   public List<Stock> find() {
     return this.jdbi.withHandle(handle -> {
       return handle
-          .createQuery("SELECT * FROM STOCK")
+          .createQuery("SELECT * FROM STOCK ORDER BY IDT_STOCK")
           .map(new StockRowMapper())
           .list()
           ;
