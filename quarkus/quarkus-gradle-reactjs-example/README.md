@@ -23,3 +23,10 @@ $ cd application/frontend &&  ./node_modules/.bin/react-scripts start
 ```
 
 Access http://localhost:8084
+
+# Building and testing 
+
+```
+./gradlew clean quarkusBuild
+```
+

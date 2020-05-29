@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mageddo.domain.Stock;
-import com.mageddo.service.StockPriceDao;
+import com.mageddo.dataprovider.StockPriceDao;
+import com.mageddo.usecase.domain.Stock;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.junit.jupiter.api.Test;

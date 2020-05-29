@@ -5,8 +5,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.mageddo.domain.Stock;
-import com.mageddo.exception.DuplicatedStockException;
+import com.mageddo.usecase.domain.Stock;
+import com.mageddo.usecase.exception.DuplicatedStockException;
+import com.mageddo.usecase.service.StockPriceService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

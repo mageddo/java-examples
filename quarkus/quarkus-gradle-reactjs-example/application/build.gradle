@@ -4,12 +4,13 @@ plugins {
 
 dependencies {
 
+  implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+
   implementation project(":application:frontend")
   implementation project(":application:dataprovider")
   implementation project(":application:core")
   implementation project(":application:entrypoint")
 
-  implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   testImplementation("io.quarkus:quarkus-junit5")
   testImplementation("io.rest-assured:rest-assured")
 
