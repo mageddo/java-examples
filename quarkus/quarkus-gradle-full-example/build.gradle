@@ -4,41 +4,39 @@ plugins {
 }
 
 repositories {
-  mavenLocal()
   jcenter()
 }
 
 dependencies {
 
-  compileOnly "org.projectlombok:lombok:1.18.12"
-  annotationProcessor "org.projectlombok:lombok:1.18.12"
+  compileOnly("org.projectlombok:lombok:1.18.12")
+  annotationProcessor("org.projectlombok:lombok:1.18.12")
 
   compileOnly("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
   annotationProcessor("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
 
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
-  implementation "io.quarkus:quarkus-jdbc-postgresql"
-  implementation "net.java.dev.jna:jna"
-  implementation "io.quarkus:quarkus-flyway"
-  implementation "io.quarkus:quarkus-jackson"
-  implementation "io.quarkus:quarkus-resteasy-jackson"
-//  implementation "io.quarkus:quarkus-resteasy"
-  implementation "io.quarkus:quarkus-smallrye-openapi"
-  implementation "io.quarkus:quarkus-scheduler"
-  implementation "io.quarkus:quarkus-kafka-client"
-  implementation "com.mageddo.javaee-jdbi:javaee-jdbi:0.1.1"
-  implementation "org.thymeleaf:thymeleaf:3.0.11.RELEASE"
+  implementation("io.quarkus:quarkus-jdbc-postgresql")
+  implementation("net.java.dev.jna:jna")
+  implementation("io.quarkus:quarkus-flyway")
+  implementation("io.quarkus:quarkus-jackson")
+  implementation("io.quarkus:quarkus-resteasy-jackson")
+  implementation("io.quarkus:quarkus-smallrye-openapi")
+  implementation("io.quarkus:quarkus-scheduler")
+  implementation("io.quarkus:quarkus-kafka-client")
+  implementation("com.mageddo.javaee-jdbi:javaee-jdbi:0.1.1")
+  implementation("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
 
   implementation platform("org.jdbi:jdbi3-bom:3.13.0")
-  implementation "org.jdbi:jdbi3-core"
+  implementation("org.jdbi:jdbi3-core")
 
-  implementation "com.mageddo.kafka-client:kafka-client:1.0.0"
+  implementation("com.mageddo.kafka-client:kafka-client:1.0.1")
 
-  testCompileOnly "org.projectlombok:lombok:1.18.12"
-  testAnnotationProcessor "org.projectlombok:lombok:1.18.12"
-  testImplementation "io.quarkus:quarkus-junit5"
-  testImplementation "io.rest-assured:rest-assured"
-  testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
+  testCompileOnly("org.projectlombok:lombok:1.18.12")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.12")
+  testImplementation("io.quarkus:quarkus-junit5")
+  testImplementation("io.rest-assured:rest-assured")
+  testImplementation("org.mockito:mockito-junit-jupiter:3.3.3")
 
   testImplementation("io.zonky.test:embedded-postgres:1.2.5")
   testRuntimeOnly enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:12.2.0")
