@@ -1,15 +1,23 @@
-task buildJs(type: Exec) {
-  commandLine "${projectDir}/node_modules/.bin/react-scripts", "build"
+task reactBuild() {
+  onlyIf {
+    file("${projectDir}/src").lastModified() > file("${buildDir}/transpiled").lastModified()
+  }
   doLast {
+    ant.exec(executable: "npm") {
+      arg(line: "install")
+    }
+    ant.exec(executable: "${projectDir}/node_modules/.bin/react-scripts") {
+      arg(line: "build")
+    }
     ant.move(file: "${buildDir}/index.html", tofile: "${buildDir}/reactjs.html")
-    ant.move(todir: "${buildDir}/transpiled"){
+    ant.move(todir: "${buildDir}/transpiled") {
       fileset(dir: "${buildDir}")
     }
   }
 }
 
 jar {
-  dependsOn(buildJs)
+  dependsOn(reactBuild)
   archiveBaseName = "frontend"
   from("${buildDir}/transpiled") {
     into "META-INF/resources/"
