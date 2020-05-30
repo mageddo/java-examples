@@ -12,4 +12,5 @@ public class JdbiConfig {
   public Jdbi jdbi(DataSource dataSource) {
     return Jdbi.create(dataSource);
   }
+
 }
