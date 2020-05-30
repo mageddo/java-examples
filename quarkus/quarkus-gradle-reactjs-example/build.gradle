@@ -3,7 +3,6 @@ subprojects {
   apply plugin: 'java-library'
 
   repositories {
-    mavenLocal()
     jcenter()
   }
 
