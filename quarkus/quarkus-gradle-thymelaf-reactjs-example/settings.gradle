@@ -1,4 +1,4 @@
-pluginManagement {
+pluginManagement {i
   repositories {
     mavenLocal()
     mavenCentral()
@@ -8,6 +8,8 @@ pluginManagement {
     id "io.quarkus" version "${quarkusPluginVersion}"
   }
 }
+
+rootProject.name = "quarkus-gradle-thymeleaf-reactjs-example"
 
 include ':application'
 include ':application:core'
