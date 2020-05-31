@@ -1,0 +1,31 @@
+plugins {
+  id "antlr"
+  id "com.github.johnrengelman.shadow" version "5.2.0"
+}
+
+repositories {
+  jcenter()
+}
+
+configurations {
+  compile {
+    extendsFrom = extendsFrom.findAll { it != configurations.antlr }
+  }
+}
+
+dependencies {
+  antlr  group: "org.antlr", name: "antlr4", version: "4.7.2"
+  implementation group: "org.antlr", name: "antlr4-runtime", version: "4.7.2"
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+jar {
+  manifest {
+    attributes "Main-Class": "Main"
+  }
+}
+
+shadowJar {
+  mergeServiceFiles()
+}
