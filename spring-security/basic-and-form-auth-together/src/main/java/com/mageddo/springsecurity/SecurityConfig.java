@@ -15,56 +15,57 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Bean
-	public UserDetailsService userDetailsService(final PasswordEncoder encoder) {
-		final InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-		manager.createUser(
-			User
-				.withUsername("admin")
-				.password(encoder.encode("admin-2"))
-				.roles("ADMIN")
-				.build()
-		);
-		return manager;
-	}
+  @Bean
+  public UserDetailsService userDetailsService(final PasswordEncoder encoder) {
+    final InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+    manager.createUser(
+        User
+            .withUsername("admin")
+            .password(encoder.encode("secret"))
+            .roles("ADMIN", "API_USER")
+            .build()
+    );
+    return manager;
+  }
 
-	@Bean PasswordEncoder encoder(){
-		return new BCryptPasswordEncoder();
-	}
+  @Bean
+  PasswordEncoder encoder() {
+    return new BCryptPasswordEncoder();
+  }
 
 
-	@Configuration
-	@Order(1)
-	public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
+  @Configuration
+  @Order(1)
+  public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http
-				.antMatcher("/api/**")
-				.authorizeRequests()
-					.anyRequest().hasRole("API_USER")
-				.and()
-				.httpBasic()
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http
+          .antMatcher("/api/**")
+          .authorizeRequests()
+          .anyRequest().hasRole("API_USER")
+          .and()
+          .httpBasic()
 //				.and()
 //				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			;
-		}
-	}
+      ;
+    }
+  }
 
-	@Configuration
-	@Order(2)
-	public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable()
-				.authorizeRequests()
-				.antMatchers("/website/**").hasRole("ADMIN")
-				.and()
-				.formLogin()
-				.and()
-				.logout().permitAll()
-			;
-		}
-	}
+  @Configuration
+  @Order(2)
+  public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable()
+          .authorizeRequests()
+          .antMatchers("/secret-area/**").hasRole("ADMIN")
+          .and()
+          .formLogin()
+          .and()
+          .logout().permitAll()
+      ;
+    }
+  }
 
 }

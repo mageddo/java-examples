@@ -5,11 +5,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class MainController {
+public class UsersRestController {
 
-	@RequestMapping("/api/users")
-	@ResponseBody
-	public String body(){
-		return "[Joao, Maria]";
-	}
+  @RequestMapping("/api/users")
+  @ResponseBody
+  public String body() {
+    return "[Joao, Maria]";
+  }
 }
