@@ -1,0 +1,12 @@
+plugins {
+  id "java"
+  id "application"
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.5.0'
+}
