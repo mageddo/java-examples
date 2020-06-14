@@ -1,0 +1,15 @@
+plugins {
+  id "java"
+}
+
+repositories {
+  jcenter()
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+  implementation("net.bytebuddy:byte-buddy-agent:1.10.11")
+}
