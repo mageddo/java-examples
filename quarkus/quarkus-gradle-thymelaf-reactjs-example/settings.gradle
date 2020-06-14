@@ -1,4 +1,4 @@
-pluginManagement {i
+pluginManagement {
   repositories {
     mavenLocal()
     mavenCentral()
