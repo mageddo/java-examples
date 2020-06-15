@@ -8,10 +8,6 @@ model {
     x64 {
       architecture "x64"
     }
-    linux64 {
-      operatingSystem "linux"
-      architecture "x86_64"
-    }
   }
 
   components {
