@@ -1,3 +1,13 @@
+## Compiling and running using gradle
+
+```
+$ ./gradlew build
+$ ./gradlew run
+I'm inside main()
+I'm a native Agent....
+```
+
+## Compiling manually
 Compiling DLL
 
 ```bash
