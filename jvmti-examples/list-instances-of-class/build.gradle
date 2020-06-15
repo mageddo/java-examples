@@ -1,0 +1,48 @@
+plugins {
+  id "c"
+  id "java"
+}
+
+model {
+  platforms {
+    x64 {
+      architecture "x64"
+    }
+  }
+
+  components {
+    jvmtiHelloWorld(NativeLibrarySpec) {
+      targetPlatform "x64"
+      sources {
+        c {
+          source {
+            srcDir "src/main/c"
+            include "**/*.c"
+          }
+          exportedHeaders {
+            srcDir "src/main/headers"
+          }
+        }
+      }
+      binaries.all {
+        cCompiler.args '-m64'
+        if (targetPlatform.operatingSystem.linux) {
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/linux"
+          cCompiler.args '-D_FILE_OFFSET_BITS=64'
+        } else if (targetPlatform.operatingSystem.windows) {
+          cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+          cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include/win32"
+//          linker.args "Shlwapi.lib", "Advapi32.lib"
+        }
+      }
+    }
+  }
+}
+
+task run(type: JavaExec) {
+  main = 'HelloWorld'
+  classpath sourceSets.main.runtimeClasspath
+  classpath configurations.runtime
+  jvmArgs = ["-agentpath:${projectDir}/build/libs/jvmtiHelloWorld/shared/jvmtiHelloWorld.dll"]
+}
