@@ -27,7 +27,7 @@ import com.sun.tools.jdi.ThreadReferenceImpl;
 public class ProcessAttachJdiDebugger {
 
   public static void main(String[] args) throws Exception {
-    VirtualMachine vm = attach(2184);
+    VirtualMachine vm = attach(23736);
     while (true){
       listInstances(vm);
       Thread.sleep(5000);
