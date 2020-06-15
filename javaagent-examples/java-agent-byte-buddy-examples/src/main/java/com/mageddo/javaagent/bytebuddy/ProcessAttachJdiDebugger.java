@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sun.jdi.Bootstrap;
+import com.sun.jdi.Field;
 import com.sun.jdi.Method;
 import com.sun.jdi.ObjectReference;
 import com.sun.jdi.ReferenceType;
@@ -26,10 +27,10 @@ import com.sun.tools.jdi.ThreadReferenceImpl;
 public class ProcessAttachJdiDebugger {
 
   public static void main(String[] args) throws Exception {
-    VirtualMachine vm = attach(24184);
+    VirtualMachine vm = attach(2184);
     while (true){
       listInstances(vm);
-//      Thread.sleep(3000);
+      Thread.sleep(5000);
       System.out.println("=================================================");
     }
   }
@@ -47,10 +48,15 @@ public class ProcessAttachJdiDebugger {
       //objectReference holds referenct to remote object.
       for (ObjectReference objectReference : o) {
         try {
-          final Method m = classes.get(0).methodsByName("toString").get(0);
-          final Value v = objectReference.invokeMethod(vm.allThreads().get(0), m,
-              Arrays.asList(), ObjectReference.INVOKE_SINGLE_THREADED);
-
+//          final Method m = classes.get(0).methodsByName("toString").get(0);
+//          final Value v = objectReference.invokeMethod(vm.allThreads().get(0), m,
+//              Arrays.asList(), ObjectReference.INVOKE_SINGLE_THREADED);
+          final Field idField = classes.get(0).fieldByName("id");
+          System.out.printf(
+              "instances=%d, field=%s%n",
+              o.size(),
+              objectReference.getValue(idField)
+          );
           //show text representation of remote object
 //          System.out.println(objectReference.toString());
         } catch (com.sun.jdi.ObjectCollectedException e) {
