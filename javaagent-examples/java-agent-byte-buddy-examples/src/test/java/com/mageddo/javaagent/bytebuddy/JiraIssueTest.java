@@ -9,17 +9,17 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class OrangeFruitTest {
+class JiraIssueTest {
 
   @Test
   void mustInstallToCurrentVmAndFINDOrangeFruit(){
     // arrange
-    new OrangeFruit();
+    new JiraIssue("");
     final Instrumentation instrumentation = ByteBuddyAgent.install();
     // act
     final long found = Arrays
         .stream(instrumentation.getAllLoadedClasses())
-        .filter(it -> it.getName().equals(OrangeFruit.class.getName()))
+        .filter(it -> it.getName().equals(JiraIssue.class.getName()))
         .count()
         ;
 

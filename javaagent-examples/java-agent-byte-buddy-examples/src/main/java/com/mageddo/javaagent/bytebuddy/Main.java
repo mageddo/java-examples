@@ -1,12 +1,24 @@
 package com.mageddo.javaagent.bytebuddy;
 
-import net.bytebuddy.agent.ByteBuddyAgent;
-
-import java.lang.instrument.Instrumentation;
-
 public class Main {
-  public static void main(String[] args) {
-    final Instrumentation instrumentation = ByteBuddyAgent.install();
-    System.out.println(instrumentation.getAllLoadedClasses());
+
+  public static void main(String[] args) throws InterruptedException {
+
+    new Thread(() -> { while (true){
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }}, "worker").start();
+
+    new Thread(() -> {}, "worker-2");
+
+    System.out.println("pid = " + VmUtils.getCurrentPid());
+    for (int id = 1; id < 10_000; id++) {
+      final JiraIssue jiraIssue = new JiraIssue(String.format("SUS-%d", id));
+      System.out.println("created: " + jiraIssue);
+      Thread.sleep(2000);
+    }
   }
 }
