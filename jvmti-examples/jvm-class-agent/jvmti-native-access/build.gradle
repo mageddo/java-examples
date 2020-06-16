@@ -23,7 +23,8 @@ dependencies {
   implementation("net.metzweb:tinyserver:1.0.0")
   implementation("org.apache.commons:commons-lang3:3.10")
   implementation("commons-io:commons-io:2.7")
-
+//  implementation("org.slf4j:slf4j-simple:1.7.30")
+  implementation("ch.qos.logback:logback-classic:1.2.3")
 
   testCompileOnly 'org.projectlombok:lombok:1.18.12'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
@@ -40,7 +41,7 @@ task run(type: JavaExec) {
 
 jar {
   manifest {
-    attributes (
+    attributes(
       "Main-Class": mainClassName,
       "Premain-Class": "com.mageddo.jvmti.agents.ClassAgent",
       "Agent-Class": "com.mageddo.jvmti.agents.ClassAgent"

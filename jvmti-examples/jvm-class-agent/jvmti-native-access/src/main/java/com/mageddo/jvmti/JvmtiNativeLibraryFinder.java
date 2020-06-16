@@ -5,9 +5,13 @@ import org.apache.commons.lang3.SystemUtils;
 public class JvmtiNativeLibraryFinder {
 
   public NativeLibrary find(){
-    if(SystemUtils.IS_OS_LINUX && SystemUtils.OS_ARCH.equals("x64")){
+    if(SystemUtils.IS_OS_LINUX && SystemUtils.OS_ARCH.equals("amd64")){
       return new NativeLibrary("/linux-x64/jvmti.so");
     }
-    throw new UnsupportedOperationException("Os not implemented yet");
+    throw new UnsupportedOperationException(String.format(
+      "Os not implemented yet: %s (%s)",
+      SystemUtils.OS_NAME,
+      SystemUtils.OS_ARCH
+    ));
   }
 }

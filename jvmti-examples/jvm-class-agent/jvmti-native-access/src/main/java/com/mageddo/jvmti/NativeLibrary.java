@@ -2,6 +2,7 @@ package com.mageddo.jvmti;
 
 import lombok.SneakyThrows;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
 
@@ -10,6 +11,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Slf4j
 @Value
 public class NativeLibrary {
 
@@ -25,8 +27,8 @@ public class NativeLibrary {
       .getJavaIoTmpDir()
       .toPath()
       .resolve("jvmti-class-agent")
-      .resolve(path);
-
+      .resolve(path.startsWith("/") ? path.substring(1) : path);
+    log.debug("installing at {}", tmpPath);
     Files.createDirectories(tmpPath.getParent());
 
     try(
