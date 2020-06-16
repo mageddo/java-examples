@@ -11,7 +11,7 @@ model {
   }
 
   components {
-    jvmtiHelloWorld(NativeLibrarySpec) {
+    jvmtiInstanceCounter(NativeLibrarySpec) {
       targetPlatform "x64"
       sources {
         c {
@@ -44,5 +44,5 @@ task run(type: JavaExec) {
   main = "com.mageddo.jvmti.HelloWorld"
   classpath sourceSets.main.runtimeClasspath
   classpath configurations.runtime
-  jvmArgs = ["-agentpath:${projectDir}/build/libs/jvmtiHelloWorld/shared/jvmtiHelloWorld.dll"]
+  jvmArgs = ["-agentpath:${projectDir}/build/libs/jvmtiInstanceCounter/shared/jvmtiInstanceCounter.dll"]
 }
