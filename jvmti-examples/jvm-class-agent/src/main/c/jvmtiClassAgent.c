@@ -1,9 +1,14 @@
 #include <jvmti.h>
 #include <stdio.h>
-#include "jvmInstanceCounter.h"
+#include "jvmtiClassAgent.h"
 
 static jvmtiEnv *jvmti = NULL;
 static jvmtiCapabilities capa;
+
+JNIEXPORT jint JNICALL
+Agent_OnAttach(JavaVM* vm, char *options, void *reserved){
+  return Agent_OnLoad(vm, options, reserved);
+}
 
 JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *jvm,char *options,void *reserved) {
   printf("I'm a native Agent....\n");
@@ -38,7 +43,7 @@ JNICALL jint objectCountingCallback(jlong class_tag, jlong size, jlong* tag_ptr,
  return JVMTI_VISIT_OBJECTS;
 }
 
-JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JniHelloWorld_countInstances(JNIEnv *env, jclass thisClass, jclass klass){
+JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_countInstances(JNIEnv *env, jclass thisClass, jclass klass){
   return countInstances(klass);
 }
 

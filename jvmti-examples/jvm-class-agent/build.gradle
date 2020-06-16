@@ -1,6 +1,7 @@
 plugins {
   id "c"
   id "java"
+  id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
 repositories {
@@ -8,8 +9,9 @@ repositories {
 }
 
 dependencies {
-  implementation("net.java.dev.jna:jna:5.5.0")
-  implementation("net.java.dev.jna:jna-platform:5.5.0")
+//  implementation("net.java.dev.jna:jna:5.5.0")
+//  implementation("net.java.dev.jna:jna-platform:5.5.0")
+  implementation("net.bytebuddy:byte-buddy-agent:1.10.11")
 }
 
 model {
@@ -48,9 +50,28 @@ model {
   }
 }
 
+def mainClassName = "com.mageddo.jvmti.HelloWorld"
+
 task run(type: JavaExec) {
-  main = "com.mageddo.jvmti.JniHelloWorld"
+  main = mainClassName
   classpath sourceSets.main.runtimeClasspath
   classpath configurations.runtime
-  jvmArgs = ["-agentpath:${projectDir}/build/libs/jvmtiInstanceCounter/shared/jvmtiInstanceCounter.dll"]
+}
+
+
+jar {
+  manifest {
+    attributes (
+      "Main-Class": mainClassName,
+      "Premain-Class": "com.mageddo.jvmti.agents.ClassAgent",
+      "Agent-Class": "com.mageddo.jvmti.agents.ClassAgent"
+    )
+  }
+}
+
+shadowJar {
+  mergeServiceFiles()
+  transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
+    mergeStrategy = "append"
+  }
 }
