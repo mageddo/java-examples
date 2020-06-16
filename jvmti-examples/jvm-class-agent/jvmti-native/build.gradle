@@ -1,6 +1,5 @@
 plugins {
   id "c"
-  id "java"
 }
 
 model {

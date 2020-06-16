@@ -6,6 +6,9 @@ plugins {
 // must compile dll/so before generate the jar
 tasks."compileJava".dependsOn project(":jvmti-native").tasks."assemble"
 
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
   mavenLocal()
@@ -13,9 +16,17 @@ repositories {
 }
 
 dependencies {
-  implementation(project(":jvmti-native"))
+  compileOnly 'org.projectlombok:lombok:1.18.12'
+  annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
   implementation("net.bytebuddy:byte-buddy-agent:1.10.11")
   implementation("net.metzweb:tinyserver:1.0.0")
+  implementation("org.apache.commons:commons-lang3:3.10")
+  implementation("commons-io:commons-io:2.7")
+
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.12'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
 def mainClassName = "com.mageddo.jvmti.HelloWorld"
@@ -44,7 +55,7 @@ shadowJar {
     paths = []
     mergeStrategy = "append"
   }
-  from("${project(":jvmti-native").buildDir}/libs/jvmtiInstanceCounter/shared") {
-    into "resources/"
-  }
+//  from("${project(":jvmti-native").buildDir}/libs/jvmtiInstanceCounter/shared") {
+//    into "resources/"
+//  }
 }

@@ -38,10 +38,10 @@ public class ClassAgent {
     tinyServer.post("/instances", request -> {
       try {
         System.out.println("listing instances");
-        final var instances = JvmtiClass.countInstances(Class.forName(request.getData()));
+        final int instances = JvmtiClass.countInstances(Class.forName(request.getData()));
         request.write(String.format("%d instances", instances));
       } catch (Exception e) {
-        final var stringWriter = new StringWriter();
+        final StringWriter stringWriter = new StringWriter();
         e.printStackTrace(new PrintWriter(stringWriter));
         request.write("Fatal: " + stringWriter.toString());
       }
