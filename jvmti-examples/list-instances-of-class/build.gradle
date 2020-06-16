@@ -3,6 +3,15 @@ plugins {
   id "java"
 }
 
+repositories {
+  jcenter()
+}
+
+dependencies {
+  implementation("net.java.dev.jna:jna:5.5.0")
+  implementation("net.java.dev.jna:jna-platform:5.5.0")
+}
+
 model {
   platforms {
     x64 {
@@ -25,7 +34,7 @@ model {
         }
       }
       binaries.all {
-        cCompiler.args '-m64'
+        cCompiler.args ''
         if (targetPlatform.operatingSystem.linux) {
           cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
           cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/linux"
