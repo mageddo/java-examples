@@ -41,7 +41,7 @@ model {
 }
 
 task run(type: JavaExec) {
-  main = 'HelloWorld'
+  main = "com.mageddo.jvmti.HelloWorld"
   classpath sourceSets.main.runtimeClasspath
   classpath configurations.runtime
   jvmArgs = ["-agentpath:${projectDir}/build/libs/jvmtiHelloWorld/shared/jvmtiHelloWorld.dll"]

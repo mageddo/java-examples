@@ -21,7 +21,7 @@ Running program
 ```bash
 $ ${JAVA_HOME}/bin/java \
 -agentpath:"$PWD/build/JvmtiHelloWorld.dll" \
--cp ./build/classes/java/main HelloWorld
+-cp ./build/classes/java/main com.mageddo.jvmti.HelloWorld
 
 I'm a native Agent....
 I'm inside main()
