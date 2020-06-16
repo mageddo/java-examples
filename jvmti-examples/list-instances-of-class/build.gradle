@@ -49,7 +49,7 @@ model {
 }
 
 task run(type: JavaExec) {
-  main = "com.mageddo.jvmti.HelloWorld"
+  main = "com.mageddo.jvmti.JniHelloWorld"
   classpath sourceSets.main.runtimeClasspath
   classpath configurations.runtime
   jvmArgs = ["-agentpath:${projectDir}/build/libs/jvmtiInstanceCounter/shared/jvmtiInstanceCounter.dll"]
