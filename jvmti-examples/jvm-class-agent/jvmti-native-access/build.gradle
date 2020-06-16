@@ -1,0 +1,46 @@
+plugins {
+  id "java"
+  id "com.github.johnrengelman.shadow" version "5.2.0"
+}
+
+repositories {
+  mavenLocal()
+  jcenter()
+}
+
+dependencies {
+  implementation(project(":jvmti-native"))
+  implementation("net.bytebuddy:byte-buddy-agent:1.10.11")
+  implementation("net.metzweb:tinyserver:1.0.0")
+}
+
+def mainClassName = "com.mageddo.jvmti.HelloWorld"
+
+task run(type: JavaExec) {
+  main = mainClassName
+  classpath sourceSets.main.runtimeClasspath
+  classpath configurations.runtime
+}
+
+
+jar {
+  manifest {
+    attributes (
+      "Main-Class": mainClassName,
+      "Premain-Class": "com.mageddo.jvmti.agents.ClassAgent",
+      "Agent-Class": "com.mageddo.jvmti.agents.ClassAgent"
+    )
+  }
+  from("${project(":jvmti-native").buildDir}/libs/jvmtiInstanceCounter/shared") {
+    into "resources/"
+  }
+}
+
+shadowJar {
+  mergeServiceFiles()
+  append 'META-INF/resources'
+  transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
+    paths = []
+    mergeStrategy = "append"
+  }
+}

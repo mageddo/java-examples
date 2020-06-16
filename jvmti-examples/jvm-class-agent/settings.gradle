@@ -1,3 +1,4 @@
 rootProject.name = "jvmti-jvm-class-agent"
 
-include ':javalib'
+include ':jvmti-native'
+include ':jvmti-native-access'
