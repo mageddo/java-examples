@@ -3,6 +3,10 @@ plugins {
   id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
+// must compile dll/so before generate the jar
+tasks."compileJava".dependsOn project(":jvmti-native").tasks."assemble"
+
+
 repositories {
   mavenLocal()
   jcenter()
@@ -31,9 +35,6 @@ jar {
       "Agent-Class": "com.mageddo.jvmti.agents.ClassAgent"
     )
   }
-  from("${project(":jvmti-native").buildDir}/libs/jvmtiInstanceCounter/shared") {
-    into "resources/"
-  }
 }
 
 shadowJar {
@@ -42,5 +43,8 @@ shadowJar {
   transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
     paths = []
     mergeStrategy = "append"
+  }
+  from("${project(":jvmti-native").buildDir}/libs/jvmtiInstanceCounter/shared") {
+    into "resources/"
   }
 }
