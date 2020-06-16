@@ -38,11 +38,11 @@ JNICALL jint objectCountingCallback(jlong class_tag, jlong size, jlong* tag_ptr,
  return JVMTI_VISIT_OBJECTS;
 }
 
-JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_HelloWorld_countInstances(JNIEnv *env, jclass thisClass, jclass klass){
+JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JniHelloWorld_countInstances(JNIEnv *env, jclass thisClass, jclass klass){
   return countInstances(klass);
 }
 
-int countInstances(jclass jclass){
+JNIEXPORT int countInstances(jclass jclass){
   int count = 0;
   jvmtiHeapCallbacks callbacks;
   (void)memset(&callbacks, 0, sizeof(callbacks));
@@ -50,7 +50,7 @@ int countInstances(jclass jclass){
   jvmtiError error = (*jvmti)->IterateThroughHeap(jvmti, 0, jclass, &callbacks, &count);
   return count;
 }
-//
-//int sum(int a, int b){
-//  return a + b;
-//}
+
+JNIEXPORT int sum(int a, int b){
+  return a + b;
+}

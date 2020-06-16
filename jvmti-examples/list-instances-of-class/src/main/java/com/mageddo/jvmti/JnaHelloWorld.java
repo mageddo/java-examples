@@ -3,10 +3,13 @@ package com.mageddo.jvmti;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 
+/**
+ * Don't work yet
+ */
 public class JnaHelloWorld {
   public static void main(String[] args) {
     FruitInstanceMaker.makeInstances(7);
-//    System.out.println(JvmtiInstanceCounter.INSTANCE.countInstances(Fruit.class));
+    System.out.println(JvmtiInstanceCounter.INSTANCE.countInstances(Fruit.class));
     System.out.println(JvmtiInstanceCounter.INSTANCE.sum(5, 7));
 
   }
@@ -17,7 +20,7 @@ public class JnaHelloWorld {
       JvmtiInstanceCounter.class
     );
 
-    //    int countInstances(Class jclass);
+    int countInstances(Class jclass);
     int sum(int a, int b);
   }
 }
