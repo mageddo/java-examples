@@ -5,6 +5,7 @@ plugins {
 }
 
 repositories {
+  mavenLocal()
   jcenter()
 }
 
@@ -12,6 +13,7 @@ dependencies {
 //  implementation("net.java.dev.jna:jna:5.5.0")
 //  implementation("net.java.dev.jna:jna-platform:5.5.0")
   implementation("net.bytebuddy:byte-buddy-agent:1.10.11")
+  implementation("net.metzweb:tinyserver:1.0.0")
 }
 
 model {
@@ -60,12 +62,16 @@ task run(type: JavaExec) {
 
 
 jar {
+//  dependsOn(assembleVariant)
   manifest {
     attributes (
       "Main-Class": mainClassName,
       "Premain-Class": "com.mageddo.jvmti.agents.ClassAgent",
       "Agent-Class": "com.mageddo.jvmti.agents.ClassAgent"
     )
+  }
+  from("${buildDir}/libs/jvmtiInstanceCounter/shared") {
+    into "META-INF/resources/"
   }
 }
 

@@ -6,6 +6,18 @@ import java.util.List;
 public class Main {
 
   public static void main(String[] args) throws InterruptedException {
+
+//    TinyServer server = new TinyServer(8300);
+//
+//// define a GET route
+//    server.get("/instances", request -> {
+//      request.write("Hello world :)");
+//    });
+//
+//// start server
+//    server.start();
+    System.out.println("started");
+
 //    for (Object k : System.getProperties().keySet()) {
 //      System.out.printf("k=%s, v=%s%n", k, System.getProperties().get(k));
 //    }

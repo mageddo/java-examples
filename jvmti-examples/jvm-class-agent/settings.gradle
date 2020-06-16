@@ -1,1 +1,3 @@
 rootProject.name = "jvmti-jvm-class-agent"
+
+include ':javalib'
