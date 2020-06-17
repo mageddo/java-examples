@@ -59,22 +59,19 @@ JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_countInstances(JNIEnv *
 // https://github.com/cheat-engine/cheat-engine/blob/master/Cheat%20Engine/Java/CEJVMTI/CEJVMTI/JavaServer.cpp
 static jint classcount=0;
 static jclass *classes=NULL;
+static jobjectArray javaClasses=NULL;
 
-JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_findLoadedClasses(){
+JNIEXPORT jobjectArray JNICALL Java_com_mageddo_jvmti_JvmtiClass_findLoadedClasses(JNIEnv *env){
   if (classes){
     (*jvmti)->Deallocate(jvmti, (unsigned char *)classes);
   }
-  int i;
   if ( (*jvmti)->GetLoadedClasses(jvmti, &classcount, &classes) == JVMTI_ERROR_NONE) {
-//    for (i=0; i < classcount; i++) {
-//      char *sig=NULL;
-//      char *gen=NULL;
-//      WriteQword((UINT_PTR)classes[i]);
-//      SendClassSignature(classes[i]);
-//    }
-    printf("loaded %d classes\n", classcount);
-  } else {
-    printf("no loaded %d classes\n", classcount);
+    javaClasses = (*env)->NewObjectArray(env, classcount, (*env)->FindClass(env, "java/lang/Class"), classes[0]);
+    int i;
+    for (i=0; i < classcount; i++) {
+      (*env)->SetObjectArrayElement(env, javaClasses, i, classes[i]);
+    }
+    return javaClasses;
   }
-  return classcount;
+  return NULL;
 }

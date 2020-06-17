@@ -8,7 +8,12 @@ public class CurrentProcessJvmAttach {
 
     new JiraIssue("xxx");
     System.out.printf("instances: %d%n", JvmtiClass.countInstances(JiraIssue.class));
-    System.out.printf("instances: %d%n", JvmtiClass.findLoadedClasses());
+//    System.out.printf("classes: %s%n", JvmtiClass.findLoadedClasses());
+    final Class[] classes = JvmtiClass.findLoadedClasses();
+    for (Class jclass : classes) {
+      System.out.println(jclass.getSimpleName());
+    }
+    System.out.println(classes.length);
 
   }
 }
