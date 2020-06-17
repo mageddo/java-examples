@@ -30,12 +30,13 @@ dependencies {
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
-def mainClassName = "com.mageddo.jvmti.HelloWorld"
+def mainClassName = "com.mageddo.jvmti.poc.CurrentProcessJvmAttach"
 
 task run(type: JavaExec) {
   main = mainClassName
   classpath sourceSets.main.runtimeClasspath
   classpath configurations.runtime
+  jvmArgs = ["-agentpath:${project(":jvmti-native").buildDir}/libs/jvmtiInstanceCounter/shared/libjvmtiInstanceCounter.so"]
 }
 
 

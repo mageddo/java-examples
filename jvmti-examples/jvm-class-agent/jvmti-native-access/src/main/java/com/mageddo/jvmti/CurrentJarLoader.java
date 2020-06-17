@@ -9,6 +9,9 @@ import java.nio.file.Paths;
 
 public class CurrentJarLoader {
 
+  /**
+   * Loads the current running jar into the specified process
+   */
   public void load(int pid) {
     final Path jarPath = getCurrentJar();
     Validate.isTrue(jarPath.toString().endsWith(".jar"), "Not running in a jar: %s", jarPath);

@@ -1,4 +1,4 @@
-package com.mageddo.jvmti;
+package com.mageddo.jvmti.poc;
 
 public class JiraIssue {
 

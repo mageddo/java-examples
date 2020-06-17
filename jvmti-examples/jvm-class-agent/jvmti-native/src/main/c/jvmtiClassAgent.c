@@ -23,7 +23,7 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *jvm,char *options,void *reserved) {
   capa.can_tag_objects = 1;
 
   error = (*jvmti)->AddCapabilities(jvmti, &capa);
-  printf("%s", error);
+  printf("%s\n", error);
 //  check_jvmti_error(jvmti, error, "Unable to get necessary JVMTI capabilities.");
 
   return JNI_OK;
@@ -36,15 +36,10 @@ JNIEXPORT void JNICALL Agent_OnUnload(JavaVM *vm) {
 JNIEXPORT void doSomeThing(int a){
 }
 
-JNICALL jint objectCountingCallback(jlong class_tag, jlong size, jlong* tag_ptr, jint length, void* user_data)
-{
+JNICALL jint objectCountingCallback(jlong class_tag, jlong size, jlong* tag_ptr, jint length, void* user_data){
  int* count = (int*) user_data;
  *count += 1;
  return JVMTI_VISIT_OBJECTS;
-}
-
-JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_countInstances(JNIEnv *env, jclass thisClass, jclass klass){
-  return countInstances(klass);
 }
 
 JNIEXPORT int countInstances(jclass jclass){
@@ -56,6 +51,30 @@ JNIEXPORT int countInstances(jclass jclass){
   return count;
 }
 
-JNIEXPORT int sum(int a, int b){
-  return a + b;
+// public interfaces
+JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_countInstances(JNIEnv *env, jclass thisClass, jclass klass){
+  return countInstances(klass);
+}
+
+// https://github.com/cheat-engine/cheat-engine/blob/master/Cheat%20Engine/Java/CEJVMTI/CEJVMTI/JavaServer.cpp
+static jint classcount=0;
+static jclass *classes=NULL;
+
+JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_findLoadedClasses(){
+  if (classes){
+    (*jvmti)->Deallocate(jvmti, (unsigned char *)classes);
+  }
+  int i;
+  if ( (*jvmti)->GetLoadedClasses(jvmti, &classcount, &classes) == JVMTI_ERROR_NONE) {
+//    for (i=0; i < classcount; i++) {
+//      char *sig=NULL;
+//      char *gen=NULL;
+//      WriteQword((UINT_PTR)classes[i]);
+//      SendClassSignature(classes[i]);
+//    }
+    printf("loaded %d classes\n", classcount);
+  } else {
+    printf("no loaded %d classes\n", classcount);
+  }
+  return classcount;
 }

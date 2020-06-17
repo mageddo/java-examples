@@ -13,7 +13,7 @@ java -cp ./build/libs/jvmti-jvm-class-agent-all.jar com.mageddo.jvmti.Main
 
 Attach the agent passing the example program pid 
 ```
-java -cp ./build/libs/jvmti-jvm-class-agent-all.jar com.mageddo.jvmti.HelloWorld 13674
+java -cp ./build/libs/jvmti-jvm-class-agent-all.jar com.mageddo.jvmti.ExternalJvmAttach 13674
 ```
 
 Count how many instances of JiraIssue class example program has 

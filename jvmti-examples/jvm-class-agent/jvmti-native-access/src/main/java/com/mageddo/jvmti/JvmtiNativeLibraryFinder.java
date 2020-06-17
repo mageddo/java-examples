@@ -2,6 +2,9 @@ package com.mageddo.jvmti;
 
 import org.apache.commons.lang3.SystemUtils;
 
+/**
+ * Discover the OS and ARCH respective jvmti native library
+ */
 public class JvmtiNativeLibraryFinder {
 
   public NativeLibrary find(){

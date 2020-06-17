@@ -1,4 +1,6 @@
-package com.mageddo.jvmti;
+package com.mageddo.jvmti.poc;
+
+import com.mageddo.jvmti.poc.JiraIssue;
 
 import java.util.ArrayList;
 import java.util.List;

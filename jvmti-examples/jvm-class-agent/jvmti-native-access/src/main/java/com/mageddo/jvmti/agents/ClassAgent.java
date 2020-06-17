@@ -1,6 +1,6 @@
 package com.mageddo.jvmti.agents;
 
-import com.mageddo.jvmti.JiraIssue;
+import com.mageddo.jvmti.poc.JiraIssue;
 import com.mageddo.jvmti.JvmtiClass;
 import net.metzweb.tinyserver.TinyServer;
 

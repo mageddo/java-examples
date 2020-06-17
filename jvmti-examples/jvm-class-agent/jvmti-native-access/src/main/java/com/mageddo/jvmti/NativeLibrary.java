@@ -21,6 +21,10 @@ public class NativeLibrary {
     return JvmtiNativeLibraryFinder.class.getResourceAsStream(this.path);
   }
 
+  /**
+   * Copy the library from jar into a temp path,
+   * then this library can be loaded to some JVM
+   */
   @SneakyThrows
   public Path installAtTempPath(){
     final Path tmpPath = SystemUtils

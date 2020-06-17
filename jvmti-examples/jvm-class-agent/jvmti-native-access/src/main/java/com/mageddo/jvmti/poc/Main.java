@@ -1,4 +1,6 @@
-package com.mageddo.jvmti;
+package com.mageddo.jvmti.poc;
+
+import com.mageddo.jvmti.ProcessUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,22 +8,7 @@ import java.util.List;
 public class Main {
 
   public static void main(String[] args) throws InterruptedException {
-
-//    TinyServer server = new TinyServer(8300);
-//
-//// define a GET route
-//    server.get("/instances", request -> {
-//      request.write("Hello world :)");
-//    });
-//
-//// start server
-//    server.start();
-    System.out.println("started");
-
-//    for (Object k : System.getProperties().keySet()) {
-//      System.out.printf("k=%s, v=%s%n", k, System.getProperties().get(k));
-//    }
-    final int pid = VmUtils.getCurrentPid();
+    final int pid = ProcessUtils.getCurrentPid();
     System.out.println("pid = " + pid);
     List instances = new ArrayList();
     for (int id = 1; id < 10_000; id++) {
