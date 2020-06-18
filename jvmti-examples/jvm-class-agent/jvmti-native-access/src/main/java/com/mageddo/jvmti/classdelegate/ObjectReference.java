@@ -26,6 +26,9 @@ public class ObjectReference {
   }
 
   public static ObjectReference of(Object instance) {
+    if(instance == null){
+      return null;
+    }
     return new ObjectReference(instance);
   }
 
