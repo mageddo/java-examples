@@ -25,6 +25,7 @@ dependencies {
   implementation("commons-io:commons-io:2.7")
 //  implementation("org.slf4j:slf4j-simple:1.7.30")
   implementation("ch.qos.logback:logback-classic:1.2.3")
+  implementation ("com.google.inject:guice:4.2.3")
 
   testCompileOnly 'org.projectlombok:lombok:1.18.12'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'

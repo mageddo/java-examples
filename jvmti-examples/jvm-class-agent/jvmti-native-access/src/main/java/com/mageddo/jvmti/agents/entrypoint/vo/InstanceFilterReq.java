@@ -1,4 +1,4 @@
-package com.mageddo.jvmti.agents.entrypoint.vos;
+package com.mageddo.jvmti.agents.entrypoint.vo;
 
 import com.mageddo.jvmti.classdelegate.scanning.InstanceFilter;
 import lombok.Data;

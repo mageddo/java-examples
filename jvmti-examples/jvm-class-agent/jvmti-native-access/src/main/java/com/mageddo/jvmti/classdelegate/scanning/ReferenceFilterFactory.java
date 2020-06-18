@@ -6,11 +6,18 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ReferenceFilterFactory {
-  public void filter(List<ObjectReference> references, InstanceFilter filter){
+  /**
+   * @return how many were removed
+   */
+  public int filter(List<ObjectReference> references, InstanceFilter filter){
     final Iterator<ObjectReference> it = references.iterator();
+    int removed = 0;
     while (it.hasNext()){
       final ObjectReference reference = it.next();
-      RuleMatcher.apply(it, reference, filter);
+      if(!RuleMatcher.apply(it, reference, filter)){
+        removed++;
+      }
     }
+    return removed;
   }
 }

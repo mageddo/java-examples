@@ -1,4 +1,4 @@
-package com.mageddo.jvmti.agents.entrypoint.vos;
+package com.mageddo.jvmti.agents.entrypoint.vo;
 
 public class RuleReq {
   String name;
