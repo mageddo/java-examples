@@ -8,8 +8,16 @@ import java.util.stream.Stream;
 
 @UtilityClass
 public class MethodReflections {
+
   @SneakyThrows
-  public static Method getMethod(Class<?> jClass, String name, Class<?> ... parameters){
+  static Method getMethod(Class<?> jClass, String name, Class<?> ... parameters){
+    final Method m = getMethod0(jClass, name, parameters);
+    m.setAccessible(true);
+    return m;
+  }
+
+  @SneakyThrows
+  static Method getMethod0(Class<?> jClass, String name, Class<?> ... parameters){
     try {
       return jClass.getMethod(name, parameters);
     } catch (NoSuchMethodException e) {

@@ -17,6 +17,15 @@ public class ObjectReference {
     );
   }
 
+  @SneakyThrows
+  public ObjectReference setFieldValue(String name, Object value){
+    FieldReflections
+      .getField(this.getInstanceClass(), name)
+      .set(this.instance, value)
+    ;
+    return this;
+  }
+
   public ObjectReference invoke(String name, Object ... args) {
     return of(MethodReflections.invoke(this.instance, name, args));
   }
