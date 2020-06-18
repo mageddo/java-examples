@@ -1,9 +1,15 @@
 package com.mageddo.jvmti.poc;
 
 import com.mageddo.jvmti.JvmtiClass;
+import com.mageddo.jvmti.Server;
 
 public class CurrentProcessJvmAttach {
+
   public static void main(String[] args) {
+    Server.start();
+  }
+
+  public static void main0(String[] args) {
 //    new NativeLoader(new JvmtiNativeLibraryFinder()).load();
 
     new JiraIssue("x1");

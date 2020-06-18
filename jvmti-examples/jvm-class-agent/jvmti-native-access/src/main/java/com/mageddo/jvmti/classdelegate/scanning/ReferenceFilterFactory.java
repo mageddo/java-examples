@@ -2,9 +2,11 @@ package com.mageddo.jvmti.classdelegate.scanning;
 
 import com.mageddo.jvmti.classdelegate.ObjectReference;
 
+import javax.inject.Singleton;
 import java.util.Iterator;
 import java.util.List;
 
+@Singleton
 public class ReferenceFilterFactory {
   /**
    * @return how many were removed

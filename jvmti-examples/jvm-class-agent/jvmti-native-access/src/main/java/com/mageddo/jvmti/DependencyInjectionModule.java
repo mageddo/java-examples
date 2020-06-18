@@ -1,4 +1,4 @@
-package com.mageddo.jvmti.dependencies;
+package com.mageddo.jvmti;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
@@ -6,6 +6,7 @@ import com.google.inject.Provides;
 import com.mageddo.jvmti.agents.entrypoint.ClassInstancesFilterResource;
 import com.mageddo.jvmti.agents.entrypoint.ClassInstancesFinderResource;
 import com.mageddo.jvmti.classdelegate.ClassInstanceService;
+import com.mageddo.jvmti.classdelegate.scanning.ReferenceFilterFactory;
 import net.metzweb.tinyserver.TinyServer;
 
 public class DependencyInjectionModule extends AbstractModule {
@@ -16,7 +17,10 @@ public class DependencyInjectionModule extends AbstractModule {
   }
 
   @Provides
-  static ClassInstancesFinderResource classInstancesFinderResource(TinyServer tinyServer){
+  static ClassInstancesFinderResource classInstancesFinderResource(
+    TinyServer tinyServer,
+    ClassInstanceService classInstanceService
+  ){
     return new ClassInstancesFinderResource(tinyServer, classInstanceService);
   }
 
@@ -27,6 +31,16 @@ public class DependencyInjectionModule extends AbstractModule {
     ClassInstanceService classInstanceService
   ){
     return new ClassInstancesFilterResource(tinyServer, classInstanceService, objectMapper);
+  }
+
+  @Provides
+  static ReferenceFilterFactory referenceFilterFactory(){
+    return new ReferenceFilterFactory();
+  }
+
+  @Provides
+  static ClassInstanceService classInstanceService(ReferenceFilterFactory referenceFilterFactory){
+    return new ClassInstanceService(referenceFilterFactory);
   }
 
   @Provides
