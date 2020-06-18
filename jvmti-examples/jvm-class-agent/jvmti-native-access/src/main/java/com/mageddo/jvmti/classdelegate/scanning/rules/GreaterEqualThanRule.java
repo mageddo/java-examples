@@ -1,7 +1,6 @@
 package com.mageddo.jvmti.classdelegate.scanning.rules;
 
 import com.mageddo.jvmti.classdelegate.ObjectReference;
-import com.mageddo.jvmti.classdelegate.scanning.Rule;
 
 public class GreaterEqualThanRule implements Rule<ObjectReference> {
 

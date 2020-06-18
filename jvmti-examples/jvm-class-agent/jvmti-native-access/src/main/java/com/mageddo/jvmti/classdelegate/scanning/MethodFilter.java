@@ -1,5 +1,6 @@
 package com.mageddo.jvmti.classdelegate.scanning;
 
+import com.mageddo.jvmti.classdelegate.scanning.rules.Rule;
 import lombok.Builder;
 import lombok.Value;
 

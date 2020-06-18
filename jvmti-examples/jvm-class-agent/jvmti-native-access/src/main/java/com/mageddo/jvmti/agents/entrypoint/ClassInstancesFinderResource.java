@@ -21,7 +21,6 @@ public class ClassInstancesFinderResource implements Response {
   public ClassInstancesFinderResource(TinyServer tinyServer, ClassInstanceService classInstanceService) {
     this.classInstanceService = classInstanceService;
     tinyServer.post("/class-instances/find", this);
-    System.out.println(this.getClass().getSimpleName() + tinyServer);
   }
 
   @Override

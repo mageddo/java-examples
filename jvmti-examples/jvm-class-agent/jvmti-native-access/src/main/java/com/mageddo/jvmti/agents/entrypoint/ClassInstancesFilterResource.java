@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mageddo.jvmti.agents.entrypoint.vo.InstanceFilterReq;
 import com.mageddo.jvmti.classdelegate.ClassInstanceService;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import net.metzweb.tinyserver.Request;
 import net.metzweb.tinyserver.Response;
 import net.metzweb.tinyserver.TinyServer;
@@ -11,6 +12,7 @@ import net.metzweb.tinyserver.TinyServer;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+@Slf4j
 @Singleton
 public class ClassInstancesFilterResource implements Response {
 
@@ -26,17 +28,20 @@ public class ClassInstancesFilterResource implements Response {
     this.classInstanceService = classInstanceService;
     this.objectMapper = objectMapper;
     tinyServer.post("/class-instances/filter", this);
-    System.out.println(this.getClass().getSimpleName() + tinyServer);
   }
 
   @Override
   @SneakyThrows
   public void callback(Request request) {
-    final int removed = this.classInstanceService.filter(
-      this.objectMapper
-        .readValue(request.getData(), InstanceFilterReq.class)
-        .toInstanceFilter()
-    );
-    request.write("removed instances after filtering: " + removed);
+    try {
+      final int removed = this.classInstanceService.filter(
+        this.objectMapper
+          .readValue(request.getData(), InstanceFilterReq.class)
+          .toInstanceFilter()
+      );
+      request.write("removed instances after filtering: " + removed);
+    } catch (Exception e){
+      log.warn("status=can't-filter, req={}", request.getData(), e);
+    }
   }
 }

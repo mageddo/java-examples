@@ -1,6 +1,7 @@
 package com.mageddo.jvmti.classdelegate.scanning;
 
 import com.mageddo.jvmti.classdelegate.ObjectReference;
+import com.mageddo.jvmti.classdelegate.scanning.rules.Rule;
 
 import java.util.Iterator;
 import java.util.List;
