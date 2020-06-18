@@ -5,7 +5,7 @@ import com.mageddo.jvmti.classdelegate.ObjectReference;
 import java.util.Iterator;
 import java.util.List;
 
-public class FilterFactory {
+public class ReferenceFilterFactory {
   public void filter(List<ObjectReference> references, InstanceFilter filter){
     final Iterator<ObjectReference> it = references.iterator();
     while (it.hasNext()){

@@ -41,4 +41,7 @@ public class ObjectReference {
     return new ObjectReference(instance);
   }
 
+  public String asText() {
+    return String.valueOf(this.instance);
+  }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MethodFilter {
   String methodName;
-  List<MethodArgument> arguments;
+  List<Object> arguments;
   String returnValue;
   List<Rule> rules;
 }

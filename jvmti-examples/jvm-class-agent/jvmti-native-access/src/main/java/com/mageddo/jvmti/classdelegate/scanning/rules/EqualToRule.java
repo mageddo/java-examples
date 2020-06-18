@@ -1,8 +1,9 @@
 package com.mageddo.jvmti.classdelegate.scanning.rules;
 
+import com.mageddo.jvmti.classdelegate.ObjectReference;
 import com.mageddo.jvmti.classdelegate.scanning.Rule;
 
-public class EqualToRule implements Rule<Object> {
+public class EqualToRule implements Rule<ObjectReference> {
 
   private final Object expected;
 
@@ -11,7 +12,7 @@ public class EqualToRule implements Rule<Object> {
   }
 
   @Override
-  public boolean matches(Object value) {
-    return String.valueOf(this.expected).equals(String.valueOf(value));
+  public boolean matches(ObjectReference value) {
+    return String.valueOf(this.expected).equals(value.asText());
   }
 }

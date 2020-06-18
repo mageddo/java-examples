@@ -19,6 +19,6 @@ public class ClassInstanceService {
   }
 
   public void filter(InstanceFilter filter){
-    filter.
+
   }
 }
