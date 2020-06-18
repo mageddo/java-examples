@@ -1,5 +1,6 @@
 package com.mageddo.jvmti.poc;
 
+import com.mageddo.jvmti.ClassDefinition;
 import com.mageddo.jvmti.JvmtiClass;
 
 public class CurrentProcessJvmAttach {
@@ -15,5 +16,9 @@ public class CurrentProcessJvmAttach {
     }
     System.out.println(classes.length);
 
+    System.out.println("findClassMethods");
+    final ClassDefinition classDefinition = new ClassDefinition();
+    JvmtiClass.findClassMethods(JiraIssue.class, ClassDefinition.class, classDefinition);
+    System.out.println(classDefinition);
   }
 }

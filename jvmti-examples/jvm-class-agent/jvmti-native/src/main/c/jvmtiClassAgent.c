@@ -56,6 +56,15 @@ JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_countInstances(JNIEnv *
   return countInstances(klass);
 }
 
+jobjectArray toObjectArray(JNIEnv *env, int classcount, jobject *objs){
+  jobjectArray objectArray = (*env)->NewObjectArray(env, classcount, (*env)->FindClass(env, "java/lang/Class"), NULL);
+  int i;
+  for (i=0; i < classcount; i++) {
+    (*env)->SetObjectArrayElement(env, objectArray, i, (objs[i]));
+  }
+  return objectArray;
+}
+
 // https://github.com/cheat-engine/cheat-engine/blob/master/Cheat%20Engine/Java/CEJVMTI/CEJVMTI/JavaServer.cpp
 static jint classcount=0;
 static jclass *classes=NULL;
@@ -66,12 +75,45 @@ JNIEXPORT jobjectArray JNICALL Java_com_mageddo_jvmti_JvmtiClass_findLoadedClass
     (*jvmti)->Deallocate(jvmti, (unsigned char *)classes);
   }
   if ( (*jvmti)->GetLoadedClasses(jvmti, &classcount, &classes) == JVMTI_ERROR_NONE) {
-    javaClasses = (*env)->NewObjectArray(env, classcount, (*env)->FindClass(env, "java/lang/Class"), classes[0]);
-    int i;
-    for (i=0; i < classcount; i++) {
-      (*env)->SetObjectArrayElement(env, javaClasses, i, classes[i]);
-    }
+    javaClasses = toObjectArray(env, classcount, classes);
     return javaClasses;
   }
   return NULL;
+}
+
+JNIEXPORT void JNICALL Java_com_mageddo_jvmti_JvmtiClass_findClassMethods(
+  JNIEnv *env,
+  jclass klass,
+  jclass classDefinitionClass,
+  jobject classDefinition
+  ){
+  jmethodID *methods=NULL;
+  jint count;
+
+  if ((*jvmti)->GetClassMethods(jvmti, klass, &count, &methods) != JVMTI_ERROR_NONE){
+    printf("error to get class methods");
+  }
+
+  jobjectArray methodNames = (*env)->NewObjectArray(env, count, (*env)->FindClass(env, "java/lang/String"), NULL);
+  int i;
+  for (i=0; i<count; i++){
+    char *name=NULL, *sig=NULL, *gen=NULL;
+    int len;
+    jmethodID methodid = methods[i];
+    if ((*jvmti)->GetMethodName(jvmti, methodid, &name, &sig, &gen)!=JVMTI_ERROR_NONE) {
+      printf("error to get method name");
+    }
+    (*env)->SetObjectArrayElement(env, methodNames, i, (*env)->NewStringUTF(env, name));
+//    jvmti->Deallocate((unsigned char *)methods);
+
+  }
+  jclass ent_clazz = (*env)->FindClass(env, "com/mageddo/jvmti/ClassDefinition");
+  printf("methods found %d\n", count);
+  jfieldID fid = (*env)->GetFieldID(env, ent_clazz, "methods", "[Ljava/lang/String;");
+  printf("field id ");
+  if(fid == NULL){
+     printf("can't get field for class %s\n", classDefinitionClass);
+     return ;
+  }
+  (*env)->SetObjectField(env, ent_clazz, fid, methodNames);
 }
