@@ -1,7 +1,8 @@
 package com.mageddo.jvmti.agents;
 
 import com.mageddo.jvmti.JvmtiClass;
-import com.mageddo.jvmti.agents.entrypoint.ObjectReferenceResource;
+import com.mageddo.jvmti.agents.entrypoint.ClassInstancesFinderResource;
+import com.mageddo.jvmti.dependencies.DependencyInjector;
 import com.mageddo.jvmti.poc.JiraIssue;
 import net.metzweb.tinyserver.TinyServer;
 
@@ -35,9 +36,10 @@ public class ClassAgent {
       return;
     }
     System.out.println("starting tiny server");
-    tinyServer = new TinyServer(8200);
-    tinyServer.post("/class-instances/find", new ObjectReferenceResource());
-    tinyServer.post("/class-instances/filter", new ObjectReferenceResource());
+    final DependencyInjector dependencyInjector = new DependencyInjector();
+    tinyServer = dependencyInjector.get(TinyServer.class);
+    new ClassInstancesFinderResource(tinyServer);
+    new ClassInstancesFilterResource(tinyServer, classInstanceService, objectMapper);
     tinyServer.post("/instances", request -> {
       try {
         System.out.println("listing instances");
