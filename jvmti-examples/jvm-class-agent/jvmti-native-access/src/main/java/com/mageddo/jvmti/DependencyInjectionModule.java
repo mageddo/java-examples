@@ -6,7 +6,7 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.mageddo.jvmti.entrypoint.ClassInstancesFilterResource;
 import com.mageddo.jvmti.entrypoint.ClassInstancesFinderResource;
-import com.mageddo.jvmti.classdelegate.ClassInstanceService;
+import com.mageddo.jvmti.classdelegate.LocalClassInstanceService;
 import com.mageddo.jvmti.classdelegate.scanning.ReferenceFilterFactory;
 import net.metzweb.tinyserver.TinyServer;
 
@@ -18,7 +18,7 @@ public class DependencyInjectionModule extends AbstractModule {
   protected void configure() {
     this.bind(ClassInstancesFilterResource.class).asEagerSingleton();
     this.bind(ClassInstancesFinderResource.class).asEagerSingleton();
-    this.bind(ClassInstanceService.class).in(Scopes.SINGLETON);
+    this.bind(LocalClassInstanceService.class).in(Scopes.SINGLETON);
     this.bind(ReferenceFilterFactory.class).in(Scopes.SINGLETON);
   }
 

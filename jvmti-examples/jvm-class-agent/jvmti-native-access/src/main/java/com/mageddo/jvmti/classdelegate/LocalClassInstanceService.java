@@ -15,14 +15,14 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Singleton
-public class ClassInstanceService {
+public class LocalClassInstanceService {
 
   private final ReferenceFilterFactory referenceFilterFactory;
   private List<ObjectReference> instances;
   private Map<InstanceId, ObjectReference> instanceStore;
 
   @Inject
-  public ClassInstanceService(ReferenceFilterFactory referenceFilterFactory) {
+  public LocalClassInstanceService(ReferenceFilterFactory referenceFilterFactory) {
     this.referenceFilterFactory = referenceFilterFactory;
   }
 
@@ -39,7 +39,7 @@ public class ClassInstanceService {
     return this.referenceFilterFactory.filter(this.instances, filter);
   }
 
-  public ObjectReference invoke(InstanceId id, String name, List<ArgsReq> argsReq) {
+  public ObjectReference methodInvoke(InstanceId id, String name, List<ArgsReq> argsReq) {
     final ObjectReference objectReference = this.getReference(id);
     final Object[] args = argsReq
       .stream()
