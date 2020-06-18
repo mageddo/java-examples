@@ -81,6 +81,63 @@ JNIEXPORT jobjectArray JNICALL Java_com_mageddo_jvmti_JvmtiClass_findLoadedClass
   return NULL;
 }
 
+
+JNICALL jint objectGetInstancesCallback(jlong class_tag, jlong size, jlong* tag_ptr, jint length, void* user_data){
+ int* count = (int*) user_data;
+ *count += 1;
+ return JVMTI_VISIT_OBJECTS;
+}
+
+/**
+ * tags the instance to later usage when finding class object instances
+ */
+jvmtiIterationControl JNICALL FindClassObjects_callback(jlong class_tag, jlong size, jlong* tag_ptr, void* user_data){
+  *tag_ptr=*(jlong *)user_data;
+  return JVMTI_ITERATION_CONTINUE;
+}
+
+int tagCount = 0;
+JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_getClassInstances(JNIEnv *env, jclass thisClass, jclass klass){
+
+  jlong tagToFind = 0xce000000 + (tagCount++);
+  (*jvmti)->IterateOverInstancesOfClass(jvmti, clazz, JVMTI_HEAP_OBJECT_EITHER, FindClassObjects_callback, &tagToFind);
+
+  jlong *tags;
+  jint foundObjects=0;
+  jobject *results = NULL;
+  if ((*jvmti)->GetObjectsWithTags(jvmti, 1, &tagToFind, &foundObjects, &results, &tags) == JVMTI_ERROR_NONE) {
+    
+    int i;
+    int count = 0;
+
+    for (i=0; i<foundObjects; i++){
+      (*jvmti)->SetTag(results[i],0);
+      if ((*env)->IsInstanceOf(results[i], clazz)){
+        count++;
+      } else {
+        (*env)->DeleteLocalRef(results[i]);
+        results[i]=NULL;
+      }
+    }
+
+//    for (i=0; i<foundObjects; i++) {
+//      if (results[i]){
+//        WriteQword((UINT_PTR)results[i]);
+//      }
+//    }
+    jobjectArray objectArray = (*env)->NewObjectArray(env, classcount, (*env)->FindClass(env, "java/lang/Object"), NULL);
+    int i;
+    for (i=0; i < foundObjects; i++) {
+      (*env)->SetObjectArrayElement(env, objectArray, i, results[i]);
+    }
+    return objectArray;
+  } else {
+    printf("failed to get class object instances");
+  }
+
+}
+
+
 JNIEXPORT jobject JNICALL Java_com_mageddo_jvmti_JvmtiClass_findClassMethods(
   JNIEnv *env,
   jclass klass,
