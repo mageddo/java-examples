@@ -23,7 +23,10 @@ public class RuleMatcher {
 
   static boolean applyForMethods(ObjectReference reference, List<MethodFilter> methodFilters) {
     for (MethodFilter filter : methodFilters) {
-      final ObjectReference methodReturnReference = reference.invoke(filter.getMethodName(), filter.getArguments());
+      final ObjectReference methodReturnReference = reference.invoke(
+        filter.getMethodName(),
+        filter.getArguments().toArray()
+      );
       if(!apply(methodReturnReference, filter.getRules())){
         return false;
       }

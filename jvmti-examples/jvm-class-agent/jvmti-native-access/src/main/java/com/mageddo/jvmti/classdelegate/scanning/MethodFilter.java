@@ -1,18 +1,32 @@
 package com.mageddo.jvmti.classdelegate.scanning;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
 import lombok.Value;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Value
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-@AllArgsConstructor
+@Builder
 public class MethodFilter {
+
   String methodName;
-  List<Object> arguments;
-  String returnValue;
+
+  @Builder.Default
+  List<Object> arguments = Collections.emptyList();
+
   List<Rule> rules;
+
+  public static class MethodFilterBuilder {
+
+    public MethodFilterBuilder() {
+      this.rules = new ArrayList<>();
+    }
+
+    public MethodFilterBuilder addRule(Rule r) {
+      this.rules.add(r);
+      return this;
+    }
+  }
 }

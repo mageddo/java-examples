@@ -12,12 +12,6 @@ public class FieldFilter {
 
   String fieldName;
 
-  /**
-   * O valor já deveria estar dentro da rule
-   */
-  @Deprecated
-  String value;
-
   List<Rule> rules;
 
   public static class FieldFilterBuilder {

@@ -44,4 +44,8 @@ public class ObjectReference {
   public String asText() {
     return String.valueOf(this.instance);
   }
+
+  public Double asDouble() {
+    return ((Number) this.instance).doubleValue();
+  }
 }
