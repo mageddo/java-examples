@@ -1,4 +1,4 @@
-package com.mageddo.jvmti.agents;
+package com.mageddo.jvmti.agent;
 
 import com.mageddo.jvmti.Server;
 

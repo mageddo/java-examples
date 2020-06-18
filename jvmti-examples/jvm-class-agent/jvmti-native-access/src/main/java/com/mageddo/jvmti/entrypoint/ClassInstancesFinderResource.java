@@ -1,4 +1,4 @@
-package com.mageddo.jvmti.agents.entrypoint;
+package com.mageddo.jvmti.entrypoint;
 
 import com.mageddo.jvmti.classdelegate.ClassInstanceService;
 import lombok.SneakyThrows;

@@ -3,6 +3,7 @@ package com.mageddo.jvmti.classdelegate;
 import com.mageddo.jvmti.JvmtiClass;
 import com.mageddo.jvmti.classdelegate.scanning.InstanceFilter;
 import com.mageddo.jvmti.classdelegate.scanning.ReferenceFilterFactory;
+import com.mageddo.jvmti.entrypoint.vo.ArgsReq;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
@@ -28,11 +29,23 @@ public class ClassInstanceService {
       .of(JvmtiClass.getClassInstances(clazz))
       .map(ObjectReference::new)
       .collect(Collectors.toList());
-    log.info("status=scanned, instances={}", instances.size());
-    return instances.size();
+    log.info("status=scanned, instances={}", this.instances.size());
+    return this.instances.size();
   }
 
-  public int filter(InstanceFilter filter){
+  public int filter(InstanceFilter filter) {
     return this.referenceFilterFactory.filter(this.instances, filter);
+  }
+
+  public void invoke(int instanceHashCode, String name, List<ArgsReq> argsReq) {
+    Object[] args = argsReq
+      .stream()
+      .map(it -> {
+        // todo
+        // converter argreq para objeto primitivo ou ObjectReference
+        throw new UnsupportedOperationException();
+      })
+      .toArray();
+
   }
 }

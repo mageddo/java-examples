@@ -1,7 +1,7 @@
-package com.mageddo.jvmti.agents.entrypoint;
+package com.mageddo.jvmti.entrypoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mageddo.jvmti.agents.entrypoint.vo.InstanceFilterReq;
+import com.mageddo.jvmti.entrypoint.vo.InstanceFilterReq;
 import com.mageddo.jvmti.classdelegate.ClassInstanceService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
