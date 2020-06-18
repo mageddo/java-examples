@@ -6,6 +6,8 @@ import com.mageddo.jvmti.Server;
 public class CurrentProcessJvmAttach {
 
   public static void main(String[] args) {
+    final JiraIssue jiraIssue = new JiraIssue("ZRQ-1");
+    final JiraIssue jiraIssue1 = new JiraIssue("ZRQ-99");
     Server.start();
   }
 

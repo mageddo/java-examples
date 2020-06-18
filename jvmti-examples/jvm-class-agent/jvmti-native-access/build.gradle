@@ -47,6 +47,7 @@ task run(type: JavaExec) {
   classpath sourceSets.main.runtimeClasspath
   classpath configurations.runtime
   jvmArgs = ["-agentpath:${project(":jvmti-native").buildDir}/libs/jvmtiInstanceCounter/shared/libjvmtiInstanceCounter.so"]
+//  debug = true
 }
 
 
