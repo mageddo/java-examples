@@ -97,10 +97,10 @@ jvmtiIterationControl JNICALL FindClassObjects_callback(jlong class_tag, jlong s
 }
 
 int tagCount = 0;
-JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_getClassInstances(JNIEnv *env, jclass thisClass, jclass klass){
+JNIEXPORT jobjectArray JNICALL Java_com_mageddo_jvmti_JvmtiClass_getClassInstances(JNIEnv *env, jclass thisClass, jclass klass){
 
   jlong tagToFind = 0xce000000 + (tagCount++);
-  (*jvmti)->IterateOverInstancesOfClass(jvmti, clazz, JVMTI_HEAP_OBJECT_EITHER, FindClassObjects_callback, &tagToFind);
+  (*jvmti)->IterateOverInstancesOfClass(jvmti, klass, JVMTI_HEAP_OBJECT_EITHER, FindClassObjects_callback, &tagToFind);
 
   jlong *tags;
   jint foundObjects=0;
@@ -111,11 +111,11 @@ JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_getClassInstances(JNIEn
     int count = 0;
 
     for (i=0; i<foundObjects; i++){
-      (*jvmti)->SetTag(results[i],0);
-      if ((*env)->IsInstanceOf(results[i], clazz)){
+      (*jvmti)->SetTag(jvmti, results[i],0);
+      if ((*env)->IsInstanceOf(env, results[i], klass)){
         count++;
       } else {
-        (*env)->DeleteLocalRef(results[i]);
+        (*env)->DeleteLocalRef(env, results[i]);
         results[i]=NULL;
       }
     }
@@ -125,10 +125,12 @@ JNIEXPORT jint JNICALL Java_com_mageddo_jvmti_JvmtiClass_getClassInstances(JNIEn
 //        WriteQword((UINT_PTR)results[i]);
 //      }
 //    }
-    jobjectArray objectArray = (*env)->NewObjectArray(env, classcount, (*env)->FindClass(env, "java/lang/Object"), NULL);
-    int i;
+    int j = 0;
+    jobjectArray objectArray = (*env)->NewObjectArray(env, count, (*env)->FindClass(env, "java/lang/Object"), NULL);
     for (i=0; i < foundObjects; i++) {
-      (*env)->SetObjectArrayElement(env, objectArray, i, results[i]);
+      if( results[i] != NULL){
+        (*env)->SetObjectArrayElement(env, objectArray, j++, results[i]);
+      }
     }
     return objectArray;
   } else {
