@@ -37,7 +37,7 @@ public class ClassInstanceMethodInvokeResource implements Response {
       final MethodInvokeReq methodInvoke = this.objectMapper
         .readValue(request.getData(), MethodInvokeReq.class);
       this.classInstanceService.invoke(
-        methodInvoke.getInstanceHashCode(),
+        methodInvoke.getInstanceId(),
         methodInvoke.getName(),
         methodInvoke.getArgs()
       );

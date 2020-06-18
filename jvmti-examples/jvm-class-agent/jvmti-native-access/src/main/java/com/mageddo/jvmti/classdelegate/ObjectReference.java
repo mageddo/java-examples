@@ -3,6 +3,8 @@ package com.mageddo.jvmti.classdelegate;
 import lombok.SneakyThrows;
 import lombok.Value;
 
+import java.util.UUID;
+
 @Value
 public class ObjectReference {
 
@@ -32,6 +34,14 @@ public class ObjectReference {
 
   public Class<?> getInstanceClass() {
     return this.instance.getClass();
+  }
+
+  public UUID id(){
+    return UUID.nameUUIDFromBytes(String.valueOf(this.hashCode()).getBytes());
+  }
+
+  public int hashCode(){
+    return this.instance.hashCode();
   }
 
   public static ObjectReference of(Object instance) {

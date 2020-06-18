@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,6 +19,7 @@ public class ClassInstanceService {
 
   private final ReferenceFilterFactory referenceFilterFactory;
   private List<ObjectReference> instances;
+  private Map<InstanceId, ObjectReference> instanceStore;
 
   @Inject
   public ClassInstanceService(ReferenceFilterFactory referenceFilterFactory) {
@@ -37,15 +39,22 @@ public class ClassInstanceService {
     return this.referenceFilterFactory.filter(this.instances, filter);
   }
 
-  public void invoke(int instanceHashCode, String name, List<ArgsReq> argsReq) {
-    Object[] args = argsReq
+  public ObjectReference invoke(InstanceId id, String name, List<ArgsReq> argsReq) {
+    final ObjectReference objectReference = this.getReference(id);
+    final Object[] args = argsReq
       .stream()
       .map(it -> {
-        // todo
-        // converter argreq para objeto primitivo ou ObjectReference
-        throw new UnsupportedOperationException();
+        final Object arg = it.toArg();
+        if(arg instanceof InstanceId){
+          return this.getReference((InstanceId) arg);
+        }
+        return arg;
       })
       .toArray();
+    return objectReference.invoke(name, args);
+  }
 
+  ObjectReference getReference(InstanceId id) {
+    return this.instanceStore.get(id);
   }
 }
