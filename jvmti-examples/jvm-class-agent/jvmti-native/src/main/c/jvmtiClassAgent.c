@@ -81,7 +81,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_mageddo_jvmti_JvmtiClass_findLoadedClass
   return NULL;
 }
 
-JNIEXPORT void JNICALL Java_com_mageddo_jvmti_JvmtiClass_findClassMethods(
+JNIEXPORT jobject JNICALL Java_com_mageddo_jvmti_JvmtiClass_findClassMethods(
   JNIEnv *env,
   jclass klass,
   jclass classDefinitionClass,
@@ -94,7 +94,7 @@ JNIEXPORT void JNICALL Java_com_mageddo_jvmti_JvmtiClass_findClassMethods(
     printf("error to get class methods");
   }
 
-  jobjectArray methodNames = (*env)->NewObjectArray(env, count, (*env)->FindClass(env, "java/lang/String"), NULL);
+  jobjectArray methodNames = (*env)->NewObjectArray(env, count, (*env)->FindClass(env, "java/lang/Object"), NULL);
   int i;
   for (i=0; i<count; i++){
     char *name=NULL, *sig=NULL, *gen=NULL;
@@ -109,11 +109,15 @@ JNIEXPORT void JNICALL Java_com_mageddo_jvmti_JvmtiClass_findClassMethods(
   }
   jclass ent_clazz = (*env)->FindClass(env, "com/mageddo/jvmti/ClassDefinition");
   printf("methods found %d\n", count);
-  jfieldID fid = (*env)->GetFieldID(env, ent_clazz, "methods", "[Ljava/lang/String;");
+//  jfieldID fid = (*env)->GetFieldID(env, ent_clazz, "methods", "[Ljava/lang/Object;");
+  jfieldID fid = (*env)->GetFieldID(env, ent_clazz, "methods", "Ljava/lang/String;");
   printf("field id ");
   if(fid == NULL){
      printf("can't get field for class %s\n", classDefinitionClass);
      return ;
   }
-  (*env)->SetObjectField(env, ent_clazz, fid, methodNames);
+  printf("setting field value");
+//  (*env)->SetObjectField(env, classDefinition, fid, methodNames);
+  (*env)->SetObjectField(env, classDefinition, fid, (*env)->NewStringUTF(env, "hi!"));
+  return classDefinition;
 }

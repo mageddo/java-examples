@@ -3,6 +3,8 @@ package com.mageddo.jvmti.poc;
 import com.mageddo.jvmti.ClassDefinition;
 import com.mageddo.jvmti.JvmtiClass;
 
+import java.util.stream.Stream;
+
 public class CurrentProcessJvmAttach {
   public static void main(String[] args) {
 //    new NativeLoader(new JvmtiNativeLibraryFinder()).load();
@@ -18,7 +20,11 @@ public class CurrentProcessJvmAttach {
 
     System.out.println("findClassMethods");
     final ClassDefinition classDefinition = new ClassDefinition();
-    JvmtiClass.findClassMethods(JiraIssue.class, ClassDefinition.class, classDefinition);
+    final Object result = JvmtiClass.findClassMethods(JiraIssue.class, ClassDefinition.class, classDefinition);
     System.out.println(classDefinition);
+//    System.out.println("result: "  + );
+    System.out.println(">>>>>>>>>");
+    Stream.of(result.getClass().getFields()).forEach(it -> System.out.println(it.getName()));
+    System.out.println("<<<<<<<<<<<<<");
   }
 }

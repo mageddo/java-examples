@@ -4,5 +4,5 @@ import lombok.ToString;
 
 @ToString
 public class ClassDefinition {
-  public String[] methods;
+  public String methods;
 }
