@@ -4,9 +4,19 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @UtilityClass
 public class FieldReflections {
+
+  public static Set<Field> getFields(Class<?> jClass) {
+    final Set<Field> fields = new LinkedHashSet<>();
+    fields.addAll(Arrays.asList(jClass.getFields()));
+    fields.addAll(Arrays.asList(jClass.getDeclaredFields()));
+    return fields;
+  }
 
   @SneakyThrows
   public static Field getField(Class<?> jClass, String name) {

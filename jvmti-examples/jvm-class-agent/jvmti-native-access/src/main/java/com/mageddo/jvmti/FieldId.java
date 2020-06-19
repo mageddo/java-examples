@@ -1,10 +1,13 @@
 package com.mageddo.jvmti;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 @Value
-@EqualsAndHashCode(of = "name")
+@Builder
+@EqualsAndHashCode(of = {"name", "classId"})
 public class FieldId {
+  ClassId classId;
   String name;
 }

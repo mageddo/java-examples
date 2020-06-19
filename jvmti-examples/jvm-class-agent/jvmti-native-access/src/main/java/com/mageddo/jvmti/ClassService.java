@@ -12,6 +12,6 @@ public interface ClassService {
 
   FieldId getField(ClassId classId, String name);
 
-  FieldId getMethod(ClassId classId, String name, Class... argsTypes);
+  MethodId getMethod(ClassId classId, String name, ClassId... argsTypes);
 
 }
