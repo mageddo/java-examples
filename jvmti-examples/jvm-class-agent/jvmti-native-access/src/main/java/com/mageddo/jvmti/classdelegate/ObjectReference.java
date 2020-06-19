@@ -1,10 +1,12 @@
 package com.mageddo.jvmti.classdelegate;
 
 import com.mageddo.jvmti.InstanceValue;
+import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 import lombok.Value;
 
 @Value
+@EqualsAndHashCode(of = "instance")
 public class ObjectReference {
 
   private final Object instance;
@@ -37,10 +39,6 @@ public class ObjectReference {
 
   public InstanceId id(){
     return InstanceId.of(this.instance);
-  }
-
-  public int hashCode(){
-    return this.instance.hashCode();
   }
 
   public static ObjectReference of(Object instance) {
