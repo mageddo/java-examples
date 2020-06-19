@@ -1,8 +1,9 @@
 package com.mageddo.jvmti.entrypoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mageddo.jvmti.entrypoint.vo.InstanceFilterReq;
+import com.mageddo.jvmti.ClassInstanceService;
 import com.mageddo.jvmti.classdelegate.LocalClassInstanceService;
+import com.mageddo.jvmti.entrypoint.vo.InstanceFilterReq;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.metzweb.tinyserver.Request;
@@ -16,16 +17,16 @@ import javax.inject.Singleton;
 @Singleton
 public class ClassInstancesFilterResource implements Response {
 
-  private final LocalClassInstanceService localClassInstanceService;
+  private final ClassInstanceService classInstanceService;
   private final ObjectMapper objectMapper;
 
   @Inject
   public ClassInstancesFilterResource(
     TinyServer tinyServer,
-    LocalClassInstanceService localClassInstanceService,
+    LocalClassInstanceService classInstanceService,
     ObjectMapper objectMapper
   ) {
-    this.localClassInstanceService = localClassInstanceService;
+    this.classInstanceService = classInstanceService;
     this.objectMapper = objectMapper;
     tinyServer.post("/class-instances/filter", this);
   }
@@ -34,7 +35,7 @@ public class ClassInstancesFilterResource implements Response {
   @SneakyThrows
   public void callback(Request request) {
     try {
-      final int removed = this.localClassInstanceService.filter(
+      final int removed = this.classInstanceService.filter(
         this.objectMapper
           .readValue(request.getData(), InstanceFilterReq.class)
           .toInstanceFilter()

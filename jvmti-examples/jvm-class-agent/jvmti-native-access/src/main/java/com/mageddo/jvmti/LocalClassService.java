@@ -3,12 +3,14 @@ package com.mageddo.jvmti;
 import com.mageddo.jvmti.classdelegate.FieldReflections;
 import com.mageddo.jvmti.classdelegate.MethodReflections;
 
+import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Singleton
 public class LocalClassService implements ClassService {
 
   @Override
@@ -73,7 +75,7 @@ public class LocalClassService implements ClassService {
       ;
   }
 
-  private Class[] toClasses(ClassId[] argsTypes) {
+  Class[] toClasses(ClassId[] argsTypes) {
     return Stream
       .of(argsTypes)
       .map(ClassId::toClass)

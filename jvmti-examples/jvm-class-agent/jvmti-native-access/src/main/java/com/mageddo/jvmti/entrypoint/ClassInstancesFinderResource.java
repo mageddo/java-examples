@@ -1,5 +1,7 @@
 package com.mageddo.jvmti.entrypoint;
 
+import com.mageddo.jvmti.ClassId;
+import com.mageddo.jvmti.ClassInstanceService;
 import com.mageddo.jvmti.classdelegate.LocalClassInstanceService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +17,11 @@ import javax.inject.Singleton;
 @Singleton
 public class ClassInstancesFinderResource implements Response {
 
-  private final LocalClassInstanceService localClassInstanceService;
+  private final ClassInstanceService classInstanceService;
 
   @Inject
-  public ClassInstancesFinderResource(TinyServer tinyServer, LocalClassInstanceService localClassInstanceService) {
-    this.localClassInstanceService = localClassInstanceService;
+  public ClassInstancesFinderResource(TinyServer tinyServer, LocalClassInstanceService classInstanceService) {
+    this.classInstanceService = classInstanceService;
     tinyServer.post("/class-instances/find", this);
   }
 
@@ -28,7 +30,7 @@ public class ClassInstancesFinderResource implements Response {
   public void callback(Request request) {
     try {
       final String clazzName = request.getData();
-      final int found = this.localClassInstanceService.scan(Class.forName(clazzName.trim()));
+      final int found = this.classInstanceService.scanInstances(ClassId.of(clazzName.trim()));
       request.write(String.format("%d instances found", found));
     } catch (Exception e){
       log.warn("status=can't-find-class, class={}, e", request.getData(), e);

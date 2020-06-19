@@ -30,6 +30,5 @@ public class CurrentProcessJvmAttach {
       System.out.printf("instance = %s%n", instance);
     }
 
-
   }
 }

@@ -1,8 +1,10 @@
 package com.mageddo.jvmti.entrypoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mageddo.jvmti.classdelegate.LocalClassInstanceService;
+import com.mageddo.jvmti.ClassInstanceService;
 import com.mageddo.jvmti.classdelegate.InstanceId;
+import com.mageddo.jvmti.classdelegate.LocalClassInstanceService;
+import com.mageddo.jvmti.entrypoint.vo.ArgsReq;
 import com.mageddo.jvmti.entrypoint.vo.MethodInvokeReq;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +19,16 @@ import javax.inject.Singleton;
 @Singleton
 public class ClassInstanceMethodInvokeResource implements Response {
 
-  private final LocalClassInstanceService localClassInstanceService;
+  private final ClassInstanceService classInstance;
   private final ObjectMapper objectMapper;
 
   @Inject
   public ClassInstanceMethodInvokeResource(
     TinyServer tinyServer,
-    LocalClassInstanceService localClassInstanceService,
+    LocalClassInstanceService classInstance,
     ObjectMapper objectMapper
   ) {
-    this.localClassInstanceService = localClassInstanceService;
+    this.classInstance = classInstance;
     this.objectMapper = objectMapper;
     tinyServer.post("/class-instances/method-invoke", this);
   }
@@ -37,10 +39,10 @@ public class ClassInstanceMethodInvokeResource implements Response {
     try {
       final MethodInvokeReq methodInvoke = this.objectMapper
         .readValue(request.getData(), MethodInvokeReq.class);
-      this.localClassInstanceService.methodInvoke(
+      this.classInstance.methodInvoke(
         InstanceId.of(methodInvoke.getInstanceId()),
         methodInvoke.getName(),
-        methodInvoke.getArgs()
+        ArgsReq.toInstanceValues(methodInvoke.getArgs())
       );
       request.write("");
     } catch (Exception e){

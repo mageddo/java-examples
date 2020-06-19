@@ -1,5 +1,6 @@
 package com.mageddo.jvmti.entrypoint.vo;
 
+import com.mageddo.jvmti.InstanceValue;
 import com.mageddo.jvmti.dataconverter.ConverterFactory;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -23,6 +24,13 @@ public class ArgsReq {
     return args
       .stream()
       .map(ArgsReq::toArg)
+      .collect(Collectors.toList());
+  }
+
+  public static List<InstanceValue> toInstanceValues(List<ArgsReq> args) {
+    return args
+      .stream()
+      .map(it -> InstanceValue.of(it.toArg()))
       .collect(Collectors.toList());
   }
 
