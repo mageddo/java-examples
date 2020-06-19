@@ -1,7 +1,10 @@
 package com.mageddo.jvmti.poc;
 
+import com.mageddo.jvmti.ClassId;
 import com.mageddo.jvmti.JvmtiClass;
 import com.mageddo.jvmti.Server;
+import com.mageddo.jvmti.classdelegate.LocalClassInstanceService;
+import com.mageddo.jvmti.classdelegate.scanning.ReferenceFilterFactory;
 
 public class CurrentProcessJvmAttach {
 

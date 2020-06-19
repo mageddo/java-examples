@@ -40,7 +40,7 @@ test {
   }
 }
 
-def mainClassName = "com.mageddo.jvmti.poc.CurrentProcessJvmAttach"
+def mainClassName = "com.mageddo.jvmti.poc.ExternalJvmAttach"
 
 task run(type: JavaExec) {
   main = mainClassName
@@ -55,8 +55,8 @@ jar {
   manifest {
     attributes(
       "Main-Class": mainClassName,
-      "Premain-Class": "com.mageddo.jvmti.agents.ClassAgent",
-      "Agent-Class": "com.mageddo.jvmti.agents.ClassAgent"
+      "Premain-Class": "com.mageddo.jvmti.agent.ClassAgent",
+      "Agent-Class": "com.mageddo.jvmti.agent.ClassAgent"
     )
   }
 }
