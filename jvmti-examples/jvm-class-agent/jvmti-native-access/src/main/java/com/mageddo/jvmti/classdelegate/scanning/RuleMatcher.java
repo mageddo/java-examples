@@ -9,7 +9,7 @@ import java.util.List;
 public class RuleMatcher {
 
   public static boolean apply(Iterator it, ObjectReference reference, InstanceFilter instanceFilter){
-    if(!apply(reference, instanceFilter)){
+    if(reference == null || !apply(reference, instanceFilter)){
       it.remove();
       return false;
     }

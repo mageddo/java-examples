@@ -11,9 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,7 +25,7 @@ import java.util.stream.Stream;
 public class LocalClassInstanceService implements ClassInstanceService {
 
   private final ReferenceFilterFactory referenceFilterFactory;
-  private Map<InstanceId, ObjectReference> instanceStore;
+  private final Map<InstanceId, WeakReference<ObjectReference>> instanceStore = new HashMap<>();
 
   @Inject
   public LocalClassInstanceService(ReferenceFilterFactory referenceFilterFactory) {
@@ -61,15 +64,15 @@ public class LocalClassInstanceService implements ClassInstanceService {
 
   @Override
   public int scanInstances(ClassId classId) {
-    this.instanceStore = new HashMap<>();
+    final Object[] instances = JvmtiClass.getClassInstances(classId.toClass());
     Stream
-      .of(JvmtiClass.getClassInstances(classId.toClass()))
+      .of(instances)
       .forEach(it -> {
         final ObjectReference reference = new ObjectReference(it);
-        this.instanceStore.put(reference.id(), reference);
+        this.instanceStore.put(reference.id(), new WeakReference<>(reference));
       });
-    log.info("status=scanned, instances={}", this.instanceStore.size());
-    return this.instanceStore.size();
+    log.info("status=scanned, instances={}", instances.length);
+    return instances.length;
   }
 
   @Override
@@ -78,17 +81,27 @@ public class LocalClassInstanceService implements ClassInstanceService {
     return this.instanceStore
       .values()
       .stream()
-      .map(ObjectReference::toInstanceValue)
+      .flatMap(it -> {
+        final ObjectReference ref = it.get();
+        if(ref == null){
+          return Stream.of();
+        } else {
+          return Stream.of(ref.toInstanceValue());
+        }
+      })
       .collect(Collectors.toList())
       ;
   }
 
   ObjectReference getReference(InstanceId id) {
-    return this.instanceStore.get(id);
+    if(!this.instanceStore.containsKey(id)){
+      throw new IllegalArgumentException(String.format("Can't find instance for %s", id));
+    }
+    return Objects.requireNonNull(this.instanceStore.get(id).get(), "Instance was garbage collected: " + id);
   }
 
   void putToStore(ObjectReference reference) {
-    this.instanceStore.put(reference.id(), reference);
+    this.instanceStore.put(reference.id(), new WeakReference<>(reference));
   }
 
   Object toArg(InstanceValue value) {

@@ -42,7 +42,6 @@ public class RemoteClassInstanceService implements ClassInstanceService {
   @SneakyThrows
   @Override
   public void setFieldValue(InstanceId id, FieldId fieldId, InstanceValue value) {
-    log.info("status=setFieldValue, id={}, field={}, instance={}", id, fieldId, value);
     final String json = this.objectMapper.writeValueAsString(InstanceFieldValueSetReq
       .builder()
       .fieldId(fieldId)
@@ -65,6 +64,7 @@ public class RemoteClassInstanceService implements ClassInstanceService {
       .execute()){
       Validate.isTrue(res.isSuccessful(), "can't change field value: %s", res.body().string());
     }
+    log.debug("status=setFieldValue, id={}, field={}, instance={}", id, fieldId, value);
   }
 
   @Override

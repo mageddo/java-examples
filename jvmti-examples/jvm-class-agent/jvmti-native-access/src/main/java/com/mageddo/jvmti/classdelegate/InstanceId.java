@@ -21,6 +21,7 @@ public class InstanceId {
   }
 
   public static InstanceId of(Object o) {
-    return of(UUID.nameUUIDFromBytes(String.valueOf(o.hashCode()).getBytes()));
+    final String key = String.valueOf(String.format("%s-%s", o.getClass().getName(), o.hashCode()));
+    return of(UUID.nameUUIDFromBytes(key.getBytes()));
   }
 }

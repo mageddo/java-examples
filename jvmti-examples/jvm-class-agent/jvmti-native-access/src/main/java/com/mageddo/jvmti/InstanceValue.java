@@ -28,7 +28,7 @@ public class InstanceValue {
   }
 
   public static InstanceValue of(InstanceId id){
-    return new InstanceValue(id, ClassId.of(id.getClass()), String.valueOf(id));
+    return new InstanceValue(id, ClassId.of(InstanceId.class), String.valueOf(id.getCode()));
   }
 
   @SneakyThrows
