@@ -2,12 +2,17 @@ package com.mageddo.jvmti;
 
 import com.mageddo.jvmti.classdelegate.InstanceId;
 import com.mageddo.jvmti.dataconverter.ConverterFactory;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.Value;
 
 @Value
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class InstanceValue {
 
   InstanceId id;
@@ -20,6 +25,10 @@ public class InstanceValue {
       ClassId.of(instance.getClass().getName()),
       String.valueOf(instance)
     );
+  }
+
+  public static InstanceValue of(InstanceId id){
+    return new InstanceValue(id, ClassId.of(id.getClass()), String.valueOf(id));
   }
 
   @SneakyThrows

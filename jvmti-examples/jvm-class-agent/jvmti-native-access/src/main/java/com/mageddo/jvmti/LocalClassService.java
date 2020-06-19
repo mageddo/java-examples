@@ -43,7 +43,7 @@ public class LocalClassService implements ClassService {
   public FieldId getField(ClassId classId, String name) {
     return FieldId
       .builder()
-      .classId(classId)
+//      .classId(classId)
       .name(FieldReflections.getField(classId.toClass(), name).getName())
       .build()
       ;
@@ -60,7 +60,7 @@ public class LocalClassService implements ClassService {
   FieldId fieldToFieldId(Field field) {
     return FieldId
       .builder()
-      .classId(ClassId.of(field.getDeclaringClass()))
+//      .classId(ClassId.of(field.getDeclaringClass()))
       .name(field.getName())
       .build();
   }

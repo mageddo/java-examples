@@ -39,7 +39,7 @@ public class LocalClassInstanceService implements ClassInstanceService {
 
   @Override
   public void setFieldValue(InstanceId id, FieldId fieldId, InstanceValue value) {
-    this.getReference(id).setFieldValue(fieldId.getName(), value.toArg());
+    this.getReference(id).setFieldValue(fieldId.getName(), this.toArg(value));
   }
 
   @Override
@@ -47,7 +47,7 @@ public class LocalClassInstanceService implements ClassInstanceService {
     final ObjectReference objectReference = this.getReference(id);
     final Object[] parsedArgs = args
       .stream()
-      .map(InstanceValue::toArg)
+      .map(this::toArg)
       .toArray();
     final ObjectReference reference = objectReference.invoke(name, parsedArgs);
     this.putToStore(reference);
@@ -88,5 +88,13 @@ public class LocalClassInstanceService implements ClassInstanceService {
 
   void putToStore(ObjectReference reference) {
     this.instanceStore.put(reference.id(), reference);
+  }
+
+  Object toArg(InstanceValue value) {
+    final Object o = value.toArg();
+    if(o.getClass() == InstanceId.class){
+      return this.instanceStore.get(o);
+    }
+    return o;
   }
 }

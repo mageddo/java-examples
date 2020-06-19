@@ -4,11 +4,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mageddo.jvmti.classdelegate.InstanceId;
 import com.mageddo.jvmti.classdelegate.scanning.InstanceFilter;
+import com.mageddo.jvmti.entrypoint.vo.InstanceFieldValueSetReq;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import javax.inject.Inject;
@@ -35,9 +38,28 @@ public class RemoteClassInstanceService implements ClassInstanceService {
     throw new UnsupportedOperationException();
   }
 
+  @SneakyThrows
   @Override
   public void setFieldValue(InstanceId id, FieldId fieldId, InstanceValue value) {
     log.info("status=setFieldValue, id={}, field={}, instance={}", id, fieldId, value);
+    final String json = this.objectMapper.writeValueAsString(InstanceFieldValueSetReq
+      .builder()
+      .fieldId(fieldId)
+      .objectId(id)
+      .value(value)
+      .build()
+    );
+    this.client.newCall(new Request
+      .Builder()
+      .url(
+        this.baseUri
+          .newBuilder()
+          .addEncodedPathSegments("class-instances/fields/set-value")
+          .build()
+      )
+      .post(RequestBody.create(json, MediaType.get("text/plain")))
+      .build()
+    );
   }
 
   @Override
@@ -61,15 +83,17 @@ public class RemoteClassInstanceService implements ClassInstanceService {
     final Response res = this.client
       .newCall(new Request
         .Builder()
-        .get()
         .url(this.baseUri
           .newBuilder()
+          .addEncodedPathSegments("class-instances")
           .addQueryParameter("class", classId.getClassName())
           .build()
         )
+        .get()
         .build()
       )
       .execute();
-    return this.objectMapper.readValue(res.body().string(), new TypeReference<List<InstanceValue>>(){});
+    return this.objectMapper.readValue(res.body().string(), new TypeReference<List<InstanceValue>>() {
+    });
   }
 }
