@@ -64,7 +64,7 @@ public class RemoteClassInstanceService implements ClassInstanceService {
       .execute()){
       Validate.isTrue(res.isSuccessful(), "can't change field value: %s", res.body().string());
     }
-    log.debug("status=setFieldValue, id={}, field={}, instance={}", id, fieldId, value);
+    log.debug("status=set, id={}, field={}, instance={}", id, fieldId, value);
   }
 
   @Override

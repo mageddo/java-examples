@@ -40,6 +40,7 @@ public class ClassInstanceFieldSetterResource implements Response {
   @SneakyThrows
   public void callback(Request request) {
     try {
+      log.debug("status=before-set, data={}", request.getData());
       final InstanceFieldValueSetReq instanceFieldValueSetReq = this.objectMapper.readValue(
         request.getData(),
         InstanceFieldValueSetReq.class
@@ -49,7 +50,9 @@ public class ClassInstanceFieldSetterResource implements Response {
         instanceFieldValueSetReq.getFieldId(),
         instanceFieldValueSetReq.getValue()
       );
+      log.debug("status=after-set, data={}", request.getData());
       request.write("value changed!");
+      log.debug("status=success, data={}", request.getData());
     } catch (Exception e){
       final String msg = String.format("status=can't change field value: %s%n%s", request.getData(), e.getMessage());
       log.warn(msg, e);

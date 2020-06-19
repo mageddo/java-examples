@@ -13,12 +13,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -27,7 +25,6 @@ public class LocalClassInstanceService implements ClassInstanceService {
 
   private final ReferenceFilterFactory referenceFilterFactory;
   private final Map<InstanceId, WeakReference<ObjectReference>> instanceStore = new HashMap<>();
-  private final Map<ClassId, List<WeakReference<ObjectReference>>> classInstancesStore = new HashMap<>();
 
   @Inject
   public LocalClassInstanceService(ReferenceFilterFactory referenceFilterFactory) {
@@ -66,40 +63,22 @@ public class LocalClassInstanceService implements ClassInstanceService {
 
   @Override
   public int scanInstances(ClassId classId) {
-    if(!this.classInstancesStore.containsKey(classId)){
-      this.classInstancesStore.put(classId, new ArrayList<>());
-    }
-    this.classInstancesStore.get(classId).clear();
-
-    final Object[] instances = JvmtiClass.getClassInstances(classId.toClass());
-    Stream
-      .of(instances)
-      .forEach(it -> {
-        final ObjectReference reference = new ObjectReference(it);
-        final WeakReference<ObjectReference> weakRef = new WeakReference<>(reference);
-        this.instanceStore.put(reference.id(), weakRef);
-        this.classInstancesStore.get(classId).add(weakRef);
-      });
-    log.info("status=scanned, instances={}", instances.length);
-    return instances.length;
+    return scanAndGetValues(classId).size();
   }
 
   @Override
   public List<InstanceValue> scanAndGetValues(ClassId classId) {
-    this.scanInstances(classId);
-    return this.classInstancesStore
-      .get(classId)
-      .stream()
-      .flatMap(it -> {
-        final ObjectReference ref = it.get();
-        if(ref == null){
-          return Stream.of();
-        } else {
-          return Stream.of(ref.toInstanceValue());
-        }
-      })
-      .collect(Collectors.toList())
-      ;
+    final List<InstanceValue> references = new ArrayList<>();
+    Stream
+      .of(JvmtiClass.getClassInstances(classId.toClass()))
+      .forEach(it -> {
+        final ObjectReference reference = new ObjectReference(it);
+        final WeakReference<ObjectReference> weakRef = new WeakReference<>(reference);
+        this.instanceStore.put(reference.id(), weakRef);
+        references.add(reference.toInstanceValue());
+      });
+    log.info("status=scanned, instances={}", references.size());
+    return references;
   }
 
   ObjectReference getReference(InstanceId id) {
@@ -116,8 +95,9 @@ public class LocalClassInstanceService implements ClassInstanceService {
   Object toArg(InstanceValue value) {
     final Object o = value.toArg();
     if(o.getClass() == InstanceId.class){
-      return this.instanceStore.get(o);
+      return this.getReference((InstanceId) o).getInstance();
     }
     return o;
   }
+
 }
