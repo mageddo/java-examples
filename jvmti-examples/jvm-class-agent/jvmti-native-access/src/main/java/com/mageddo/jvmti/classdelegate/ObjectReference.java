@@ -1,5 +1,6 @@
 package com.mageddo.jvmti.classdelegate;
 
+import com.mageddo.jvmti.InstanceValue;
 import lombok.SneakyThrows;
 import lombok.Value;
 
@@ -55,5 +56,9 @@ public class ObjectReference {
 
   public Double asDouble() {
     return ((Number) this.instance).doubleValue();
+  }
+
+  public InstanceValue toInstanceValue() {
+    return InstanceValue.of(this.instance);
   }
 }

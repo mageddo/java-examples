@@ -1,5 +1,6 @@
 package com.mageddo.jvmti.dataconverter;
 
+import com.mageddo.jvmti.classdelegate.InstanceId;
 import lombok.Value;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ public class ConverterFactory {
 
   static {
     converters.put(Pair.of(String.class, Double.class), new StringToDoubleConverter());
+    converters.put(Pair.of(String.class, InstanceId.class), new StringToInstanceIdConverter());
   }
 
   public static <From, To> To convert(From from, Class<To> to) {

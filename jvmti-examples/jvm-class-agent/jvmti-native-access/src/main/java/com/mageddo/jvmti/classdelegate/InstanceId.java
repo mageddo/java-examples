@@ -1,10 +1,12 @@
 package com.mageddo.jvmti.classdelegate;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import java.util.UUID;
 
 @Value
+@EqualsAndHashCode(of = "code")
 public class InstanceId {
 
   UUID code;
