@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -68,6 +69,17 @@ public class LocalClassInstanceService implements ClassInstanceService {
       });
     log.info("status=scanned, instances={}", this.instanceStore.size());
     return this.instanceStore.size();
+  }
+
+  @Override
+  public List<InstanceValue> scanAndGetValues(ClassId classId) {
+    this.scanInstances(classId);
+    return this.instanceStore
+      .values()
+      .stream()
+      .map(ObjectReference::toInstanceValue)
+      .collect(Collectors.toList())
+      ;
   }
 
   ObjectReference getReference(InstanceId id) {

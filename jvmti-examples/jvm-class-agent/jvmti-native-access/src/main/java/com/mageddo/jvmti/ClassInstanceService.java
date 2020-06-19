@@ -17,4 +17,5 @@ public interface ClassInstanceService {
 
   int scanInstances(ClassId classId);
 
+  List<InstanceValue> scanAndGetValues(ClassId classId);
 }
