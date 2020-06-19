@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.metzweb.tinyserver.Request;
 import net.metzweb.tinyserver.Response;
 import net.metzweb.tinyserver.TinyServer;
+import net.metzweb.tinyserver.response.StatusCode;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +43,9 @@ public class ClassInstancesFilterResource implements Response {
       );
       request.write("removed instances after filtering: " + removed);
     } catch (Exception e){
-      log.warn("status=can't-filter, req={}", request.getData(), e);
+      String msg = String.format("status=can't-filter, req=%s", request.getData());
+      log.warn(msg, e);
+      request.write().write(StatusCode.BAD_REQUEST, msg);
     }
   }
 }

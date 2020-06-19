@@ -40,6 +40,7 @@ public class LocalClassInstanceService implements ClassInstanceService {
   @Override
   public void setFieldValue(InstanceId id, FieldId fieldId, InstanceValue value) {
     this.getReference(id).setFieldValue(fieldId.getName(), this.toArg(value));
+    log.debug("status=success, id={}, fieldId={}, value={}", id, fieldId, value);
   }
 
   @Override

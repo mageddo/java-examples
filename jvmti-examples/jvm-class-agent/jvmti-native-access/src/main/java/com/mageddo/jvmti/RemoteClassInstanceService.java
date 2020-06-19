@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.apache.commons.lang3.Validate;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,17 +50,21 @@ public class RemoteClassInstanceService implements ClassInstanceService {
       .value(value)
       .build()
     );
-    this.client.newCall(new Request
-      .Builder()
-      .url(
-        this.baseUri
-          .newBuilder()
-          .addEncodedPathSegments("class-instances/fields/set-value")
-          .build()
+    try(final Response res = this.client
+      .newCall(new Request
+        .Builder()
+        .url(
+          this.baseUri
+            .newBuilder()
+            .addEncodedPathSegments("class-instances/fields/set-value")
+            .build()
+        )
+        .post(RequestBody.create(json, MediaType.get("text/plain")))
+        .build()
       )
-      .post(RequestBody.create(json, MediaType.get("text/plain")))
-      .build()
-    );
+      .execute()){
+      Validate.isTrue(res.isSuccessful(), "can't change field value: %s", res.body().string());
+    }
   }
 
   @Override
@@ -80,7 +85,7 @@ public class RemoteClassInstanceService implements ClassInstanceService {
   @SneakyThrows
   @Override
   public List<InstanceValue> scanAndGetValues(ClassId classId) {
-    final Response res = this.client
+    try(final Response res = this.client
       .newCall(new Request
         .Builder()
         .url(this.baseUri
@@ -92,8 +97,10 @@ public class RemoteClassInstanceService implements ClassInstanceService {
         .get()
         .build()
       )
-      .execute();
-    return this.objectMapper.readValue(res.body().string(), new TypeReference<List<InstanceValue>>() {
-    });
+      .execute()){
+      final String body = res.body().string();
+      Validate.isTrue(res.isSuccessful(), "Cant' scan for class %s instances: %s", classId, body);
+      return this.objectMapper.readValue(body, new TypeReference<List<InstanceValue>>() {});
+    }
   }
 }

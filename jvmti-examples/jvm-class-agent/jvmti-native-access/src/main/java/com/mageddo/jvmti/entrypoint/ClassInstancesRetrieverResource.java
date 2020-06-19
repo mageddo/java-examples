@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.metzweb.tinyserver.Request;
 import net.metzweb.tinyserver.Response;
 import net.metzweb.tinyserver.TinyServer;
+import net.metzweb.tinyserver.response.StatusCode;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.inject.Inject;
@@ -42,12 +43,13 @@ public class ClassInstancesRetrieverResource implements Response {
       final List<InstanceValue> found = this.classInstanceService.scanAndGetValues(ClassId.of(className.trim()));
       request.write(this.objectMapper.writeValueAsString(found));
     } catch (Exception e){
-      log.warn("status=can't-retrieve-class-instances, class={}, e", request.getData(), e);
-      request.write(String.format(
+      final String msg = String.format(
         "can't-retrieve-class-instances=%s, msg=%s",
         request.getData(),
         ExceptionUtils.getRootCauseMessage(e)
-      ));
+      );
+      log.warn(msg);
+      request.write().write(StatusCode.BAD_REQUEST, msg);
     }
   }
 }

@@ -11,6 +11,7 @@ public class ConverterFactory {
   private static final Map<Pair, Converter> converters = new HashMap<>();
 
   static {
+    converters.put(Pair.of(String.class, Integer.class), new StringToIntegerConverter());
     converters.put(Pair.of(String.class, Double.class), new StringToDoubleConverter());
     converters.put(Pair.of(String.class, InstanceId.class), new StringToInstanceIdConverter());
   }

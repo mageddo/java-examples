@@ -2,7 +2,7 @@
 <configuration>
   <property
     name="logPattern"
-    value="%d{HH:mm:ss.SSS} \${LOG_LEVEL_PATTERN:-%5p} \${PID:- } [%15.15t] %-20.20logger{20} : %m%n}"
+    value="%d{HH:mm:ss.SSS} \${LOG_LEVEL_PATTERN:-%5p} \${PID:- } [%15.15t] %-20.20logger{20} m=%method l=%line %m%n}"
   />
 
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

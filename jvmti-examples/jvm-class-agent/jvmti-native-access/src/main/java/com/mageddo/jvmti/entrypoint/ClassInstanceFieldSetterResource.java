@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.metzweb.tinyserver.Request;
 import net.metzweb.tinyserver.Response;
 import net.metzweb.tinyserver.TinyServer;
+import net.metzweb.tinyserver.response.StatusCode;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.inject.Inject;
@@ -52,7 +53,7 @@ public class ClassInstanceFieldSetterResource implements Response {
     } catch (Exception e){
       final String msg = String.format("status=can't change field value: %s%n%s", request.getData(), e.getMessage());
       log.warn(msg, e);
-      request.write(msg);
+      request.write().write(StatusCode.BAD_REQUEST, msg);
     }
   }
 }

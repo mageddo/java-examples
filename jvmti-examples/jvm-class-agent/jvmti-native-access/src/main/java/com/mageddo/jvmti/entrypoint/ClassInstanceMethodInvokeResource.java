@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.metzweb.tinyserver.Request;
 import net.metzweb.tinyserver.Response;
 import net.metzweb.tinyserver.TinyServer;
+import net.metzweb.tinyserver.response.StatusCode;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,7 +47,9 @@ public class ClassInstanceMethodInvokeResource implements Response {
       );
       request.write("");
     } catch (Exception e){
-      log.warn("status=can't-invoke, req={}", request.getData(), e);
+      final String msg = String.format("status=can't-invoke, req=%s, msg=%s", request.getData(), e.getMessage());
+      log.warn(msg, e);
+      request.write().write(StatusCode.BAD_REQUEST, msg);
     }
   }
 }
