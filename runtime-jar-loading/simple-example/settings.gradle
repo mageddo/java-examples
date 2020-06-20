@@ -1,0 +1,3 @@
+rootProject.name = "runtime-jar-loading-simple-example"
+
+include ":hello-world-library"
