@@ -15,7 +15,7 @@ public class Main {
     final URLClassLoader jarClassLoader = createClassLoader(Paths.get(args[0]));
     {
       System.out.println("Simple class loading and method execution");
-    System.out.println("------------------------------");
+      System.out.println("------------------------------");
       final Class<?> helloWorldClass = loadClass(
           jarClassLoader,
           "com.mageddo.runtimejarloading.helloworldlibrary.HelloWorldLibrary"
