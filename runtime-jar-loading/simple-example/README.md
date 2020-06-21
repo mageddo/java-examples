@@ -4,8 +4,7 @@ Programmatically loading jar at running JVM
 # Running it
 ```bash
 $ ./gradlew clean build &&\
- java -jar ./build/libs/runtime-jar-loading-simple-example.jar \ 
- ./hello-world-library/build/libs/hello-world-library.jar
+ java -jar ./build/libs/runtime-jar-loading-simple-example.jar ./hello-world-library/build/libs/hello-world-library.jar
 
 Simple class loading and method execution
 ------------------------------

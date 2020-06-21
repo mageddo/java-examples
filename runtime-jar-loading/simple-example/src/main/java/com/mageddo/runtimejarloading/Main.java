@@ -11,7 +11,6 @@ import samepackage.Calculator;
 
 public class Main {
   public static void main(String[] args) throws Exception {
-
     final URLClassLoader jarClassLoader = createClassLoader(Paths.get(args[0]));
     {
       System.out.println("Simple class loading and method execution");
