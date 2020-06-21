@@ -8,7 +8,6 @@ import java.util.List;
 public class Main {
 
   public static void main(String[] args) throws InterruptedException {
-    System.load("/home/typer/dev/projects/ram-spider/jattach/build/libjattach.so");
     final int pid = ProcessUtils.getCurrentPid();
     System.out.println("pid = " + pid);
     List instances = new ArrayList();
