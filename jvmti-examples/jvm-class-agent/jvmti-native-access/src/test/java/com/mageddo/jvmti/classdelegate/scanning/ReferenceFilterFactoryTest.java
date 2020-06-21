@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.junit.jupiter.api.Test;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,25 +18,20 @@ class ReferenceFilterFactoryTest {
   final ReferenceFilterFactory referenceFilterFactory = new ReferenceFilterFactory();
 
   @Test
-  void mustFindPeople20YearsOld(){
+  void mustFindPeople20YearsOld() {
     // arrange
-    final List<ObjectReference> people = new ArrayList<>(Arrays.asList(
-      ObjectReference.of(new Person(20)),
-      ObjectReference.of(new Person(21)),
-      ObjectReference.of(new Person(19)),
-      ObjectReference.of(new Person(20))
-    ));
+    final List<WeakReference<ObjectReference>> people = createPersonList(20, 21, 19, 20);
 
     // act
     this.referenceFilterFactory.filter(
       people,
       new InstanceFilter()
-      .addFilter(FieldFilter
-        .builder()
-        .fieldName("age")
-        .addRule(new EqualToRule("20"))
-        .build()
-      )
+        .addFilter(FieldFilter
+          .builder()
+          .fieldName("age")
+          .addRule(new EqualToRule("20"))
+          .build()
+        )
 
     );
 
@@ -45,14 +40,9 @@ class ReferenceFilterFactoryTest {
   }
 
   @Test
-  void mustFindPeopleAtLeast20YearsOld(){
+  void mustFindPeopleAtLeast20YearsOld() {
     // arrange
-    final List<ObjectReference> people = new ArrayList<>(Arrays.asList(
-      ObjectReference.of(new Person(20)),
-      ObjectReference.of(new Person(21)),
-      ObjectReference.of(new Person(19)),
-      ObjectReference.of(new Person(20))
-    ));
+    final List<WeakReference<ObjectReference>> people =  createPersonList(20,21,19,20);
 
     // act
     this.referenceFilterFactory.filter(
@@ -72,13 +62,13 @@ class ReferenceFilterFactoryTest {
   }
 
   @Test
-  void mustCheckName(){
+  void mustCheckName() {
     // arrange
-    final List<ObjectReference> people = new ArrayList<>(Arrays.asList(
-      ObjectReference.of(new PersonV2("Uncle", "Bob")),
-      ObjectReference.of(new PersonV2("Sara", "Graham")),
-      ObjectReference.of(new PersonV2("Barack", "Obama"))
-    ));
+    final List<WeakReference<ObjectReference>> people = createPersonList(
+      new PersonV2("Uncle", "Bob"),
+      new PersonV2("Sara", "Graham"),
+      new PersonV2("Barack", "Obama")
+    );
 
     // act
     this.referenceFilterFactory.filter(
@@ -110,8 +100,25 @@ class ReferenceFilterFactoryTest {
     String firstName;
     String lastName;
 
-    public String fullName(){
+    public String fullName() {
       return String.format("%s %s", this.firstName, this.lastName);
     }
   }
+
+  List<WeakReference<ObjectReference>> createPersonList(int ... ages) {
+    final List<WeakReference<ObjectReference>> people = new ArrayList<>();
+    for (int age : ages) {
+      people.add(new WeakReference<>(ObjectReference.of(new Person(age))));
+    }
+    return people;
+  }
+
+  List<WeakReference<ObjectReference>> createPersonList(PersonV2 ... people) {
+    final List<WeakReference<ObjectReference>> peopleList = new ArrayList<>();
+    for (PersonV2 person : people) {
+      peopleList.add(new WeakReference<>(ObjectReference.of(person)));
+    }
+    return peopleList;
+  }
+
 }

@@ -1,3 +1,11 @@
+## jvm-class-agent
+This repository have a lot of code designed to
+ 
+* Dynamically inject a JavaAgent into a running JVM
+* JVMTI examples
+* JNI examples
+* List all JVM class instances 
+
 ## Compiling and running using gradle
 
 Build packages
