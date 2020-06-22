@@ -1,15 +1,15 @@
 package com.mageddo.dagger;
 
+import javax.inject.Singleton;
+
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
 
-import javax.inject.Singleton;
-
 @Singleton
 @Component(
     modules = {
-        AppConfig.FruitResourceModule.class
+        AppConfig.Modules.class
     }
 )
 public interface AppConfig {
@@ -17,10 +17,10 @@ public interface AppConfig {
   FruitDeliveryResource fruitResource();
 
   @Module
-  interface FruitResourceModule {
+  interface Modules {
     @Binds
     @Singleton
-    FruitDAO bindFruitResource(FruitDAOStdout impl);
+    FruitDAO bind(FruitDAOStdout impl);
   }
 
 }
