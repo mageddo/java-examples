@@ -18,19 +18,20 @@ public class App {
     this.fruitDeliveryResource.deliver(fruit);
   }
 
-  static void secondWay() {
-    final App app = new App();
-    AppFactory
-        .getInstance()
-        .inject(app);
-    app.deliver("Orange");
-  }
 
   static void firstWay() {
     AppFactory
         .getInstance()
         .fruitDeliveryResource()
         .deliver("Grape");
+  }
+
+  static void secondWay() {
+    final App app = new App();
+    AppFactory
+        .getInstance()
+        .inject(app);
+    app.deliver("Orange");
   }
 
 }
