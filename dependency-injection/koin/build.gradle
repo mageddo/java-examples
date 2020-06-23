@@ -1,0 +1,13 @@
+plugins {
+  id "java"
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  implementation "org.koin:koin-core:2.0.1"
+  implementation "org.koin:koin-java:2.0.1"
+  testImplementation "org.koin:koin-test:2.0.1"
+}
