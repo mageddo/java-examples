@@ -1,1 +1,2 @@
-"some text"
+# first comment
+# second comment

@@ -4,46 +4,31 @@ grammar Comment;
   package com.mageddo.antlr.parser.comment;
 }
 
-json
-   : STRING
+base
+   : value
    ;
 
-STRING
-   : '"' (ESC | SAFECODEPOINT)* '"'
+value
+  : arr
+  | comment
+  ;
+
+arr
+  : comment (NL comment)*
+  ;
+
+comment
+  : SINGLE_LINE_COMMENT
+  ;
+
+SINGLE_LINE_COMMENT
+   : '#' (LINE_TEXT)+
    ;
 
-fragment ESC
-   : '\\' (["\\/bfnrt] | UNICODE)
-   ;
+NL
+  : '\r'? '\n'
+  ;
 
-fragment UNICODE
-   : 'u' HEX HEX HEX HEX
-   ;
-
-fragment HEX
-   : [0-9a-fA-F]
-   ;
-
-fragment SAFECODEPOINT
-   : ~ ["\\\u0000-\u001F]
-   ;
-
-NUMBER
-   : '-'? INT ('.' [0-9] +)? EXP?
-   ;
-
-fragment INT
-   : '0' | [1-9] [0-9]*
-   ;
-
-// no leading zeros
-
-fragment EXP
-   : [Ee] [+\-]? INT
-   ;
-
-// \- since - means "range" inside [...]
-
-WS
-   : [ \t\n\r] + -> skip
+fragment LINE_TEXT
+   : ~ [\r\n] // what which isn't a new line
    ;

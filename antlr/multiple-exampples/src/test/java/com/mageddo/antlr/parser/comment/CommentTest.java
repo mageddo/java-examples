@@ -16,18 +16,19 @@ public class CommentTest {
   @Test
   void mustParseComment(){
 
-    final var lexer = new CommentLexer(CharStreams.fromString(getResourceAsString(
-        "/comment-test/scenario-01.txt"
-    )));
+    final var content = getResourceAsString("/comment-test/scenario-01.txt");
+    System.out.println(content);
+    final var lexer = new CommentLexer(CharStreams.fromString(content));
     final var tokens = new CommonTokenStream(lexer);
     final var parser = new CommentParser(tokens);
 
     final var valueListener = new CommentBaseListener(){
-      public void enterJson(CommentParser.JsonContext ctx) {
-        System.out.printf("enterJson: %s%n", ctx.getText());
+      public void enterComment(CommentParser.CommentContext ctx) {
+        System.out.println("comment: " + ctx.getText());
+//        System.out.println(ctx.SINGLE_LINE_COMMENT().getText());
       }
     };
-    ParseTreeWalker.DEFAULT.walk(valueListener, parser.json());
+    ParseTreeWalker.DEFAULT.walk(valueListener, parser.base());
 
   }
 }

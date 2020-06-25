@@ -17,14 +17,15 @@ public class StringLiteralTest {
   @Test
   void mustParseStringLiteral(){
 
-    final var lexer = new CommentLexer(CharStreams.fromString(getResourceAsString(
+    final var lexer = new StringLiteralLexer(CharStreams.fromString(getResourceAsString(
         "/stringliteral-test/scenario-01.txt"
     )));
     final var tokens = new CommonTokenStream(lexer);
-    final var parser = new CommentParser(tokens);
+    final var parser = new StringLiteralParser(tokens);
 
-    final var valueListener = new CommentBaseListener(){
-      public void enterJson(CommentParser.JsonContext ctx) {
+    final var valueListener = new StringLiteralBaseListener(){
+      @Override
+      public void enterJson(StringLiteralParser.JsonContext ctx) {
         System.out.printf("enterJson: %s%n", ctx.getText());
         assertEquals("\"some text\"", ctx.getText());
       }
