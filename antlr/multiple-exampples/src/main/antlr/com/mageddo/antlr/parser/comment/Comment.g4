@@ -9,12 +9,7 @@ base
    ;
 
 value
-  : arr
-  | comment
-  ;
-
-arr
-  : comment (NL comment)*
+  : comment NL (comment)*
   ;
 
 comment
