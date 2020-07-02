@@ -1,0 +1,11 @@
+plugins {
+  id "application"
+}
+
+dependencies {
+  implementation(project(":core"))
+}
+
+application {
+  mainClassName = "com.mageddo.di.dagger2.app.App"
+}

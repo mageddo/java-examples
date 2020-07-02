@@ -1,0 +1,26 @@
+plugins {
+  id "java"
+  id "com.github.johnrengelman.shadow" version "6.0.0"
+}
+
+repositories {
+  jcenter()
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+  implementation("com.google.dagger:dagger:2.28.1")
+  annotationProcessor("com.google.dagger:dagger-compiler:2.28.1")
+}
+
+jar {
+  manifest {
+    attributes(
+        "Main-Class": "com.mageddo.dagger.App"
+    )
+  }
+}

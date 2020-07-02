@@ -1,0 +1,42 @@
+plugins {
+  id "antlr"
+  id "com.github.johnrengelman.shadow" version "6.0.0"
+}
+
+repositories {
+  jcenter()
+}
+
+configurations {
+  compile {
+    extendsFrom = extendsFrom.findAll { it != configurations.antlr }
+  }
+}
+
+dependencies {
+  antlr("org.antlr:antlr4:4.8-1")
+  implementation("org.antlr:antlr4-runtime:4.8-1")
+  testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
+  testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+}
+
+jar {
+  manifest {
+    attributes "Main-Class": "Main"
+  }
+}
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+}
+
+shadowJar {
+  mergeServiceFiles()
+}
