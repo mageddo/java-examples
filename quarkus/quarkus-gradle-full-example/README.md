@@ -98,6 +98,11 @@ See [consumer example][4], also take a look at [mageddo's kafka-client][2] libra
 See [this reference][6] for a Transactional working sample sample, [click here][3] to take a look at the library for
  Transactional support for JDBI on JAVA EE apps.
 
+### Swagger
+
+http://localhost:8084/swagger-ui/
+
+
 [1]: https://quarkus.io/guides/kafka#starting-kafka
 [2]: https://github.com/mageddo-projects/kafka-client
 [3]: https://github.com/mageddo-projects/javaee-jdbi
