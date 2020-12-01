@@ -27,6 +27,6 @@ services:
     container_name: standalone-chrome
     hostname: standalone-chrome.dev
     ports:
-      - 4444
+      - 4444:4444
     network_mode: bridge
     privileged: true

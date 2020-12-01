@@ -14,19 +14,19 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  * The {@code Sample} class represents sample tests for
- * hotmail mail. 
- * 
+ * hotmail mail.
+ *
  * @author Waldemar Sojka
  *
  */
 public class HotmailTestCases extends TestCase {
 
 	private static final String USERNAME = "username@hotmail.com";
-	
+
 	private static final String PASSWORD = "password";
-	
-	private static final String SELENIUM_RC_URL = "http://selenium-hub.dev:4444/wd/hub";
-	
+
+	private static final String SELENIUM_RC_URL = "http://localhost:4444/wd/hub";
+
 	private static WebDriver driver = null;
 
 	/* (non-Javadoc)
@@ -41,7 +41,7 @@ public class HotmailTestCases extends TestCase {
 	/**
 	 * Test for signing in on hotmail.com with proper
 	 * username and password
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public static void testLogin() throws Exception {
@@ -63,7 +63,7 @@ public class HotmailTestCases extends TestCase {
 	/**
 	 * Test for signing in on hotmail.com with
 	 * incorrect username or password.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public static void testLoginError() throws Exception {
@@ -71,7 +71,7 @@ public class HotmailTestCases extends TestCase {
 
 		// open hotmail login page
 		lp.open();
-		
+
 		// signin with incorrect password
 		lp.login(USERNAME + "XYZ", PASSWORD, false);
 
@@ -107,7 +107,7 @@ public class HotmailTestCases extends TestCase {
 	/**
 	 * Test for reseting user password with sending
 	 * an email.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public static void testResetPasswordSendEmail() throws Exception {
@@ -127,7 +127,7 @@ public class HotmailTestCases extends TestCase {
 	/**
 	 * Test for reseting user password with security
 	 * question.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public static void testResetPasswordNewPassword() throws Exception {

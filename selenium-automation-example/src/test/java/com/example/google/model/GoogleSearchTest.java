@@ -21,7 +21,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
  */
 public class GoogleSearchTest {
 
-	private static final String SELENIUM_RC_URL = "http://standalone-chrome.dev:4444/wd/hub";
+	private static final String SELENIUM_RC_URL = "http://localhost:4444/wd/hub";
 
 	private WebDriver driver = null;
 

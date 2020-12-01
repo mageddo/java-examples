@@ -1,5 +1,7 @@
 package com.example.hotmail.model;
 
+import com.example.Page;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * The {@code LoginPage} represents hotmail.com login page.
- * 
+ *
  * @author Waldemar Sojka
  *
  */
@@ -20,7 +22,7 @@ public class LoginPage extends Page {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param driver
 	 */
 	public LoginPage(WebDriver driver) {
@@ -41,14 +43,14 @@ public class LoginPage extends Page {
 	public void open() {
 		driver.get(HOTMAIL_URL);
 	}
-	
+
 	/**
 	 * Sign-in to hotmail.com mailbox using given username and
 	 * password. If keep_signed_in is true, then checkbox
 	 * on login page with be marked.
-	 * 
+	 *
 	 * @param user account username
-	 * @param pass account password 
+	 * @param pass account password
 	 * @param keep_signed_in
 	 */
 	public void login(String user, String pass, boolean keep_signed_in) {
@@ -77,7 +79,7 @@ public class LoginPage extends Page {
 	/**
 	 * Returns true if there is an error visible on login page, which
 	 * indicates problems with signing in.
-	 * 
+	 *
 	 * @return true if error is visible, false otherwise
 	 */
 	public boolean isErrorVisible() {
