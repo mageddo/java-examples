@@ -1,0 +1,32 @@
+version: '2'
+services:
+  hub:
+    image: selenium/hub:2.53.0
+    container_name: selenium-hub
+    hostname: selenium-hub.dev
+    environment:
+      GRID_TIMEOUT: 120000
+    ports:
+      - 4444
+    network_mode: bridge
+    privileged: true
+
+  chrome:
+    image: selenium/node-chrome:2.53.0
+    container_name: selenium-chrome
+    hostname: selenium-chrome.dev
+    ports:
+      - 5555
+    links:
+      - hub
+    network_mode: bridge
+    privileged: true
+
+  standalone-chrome:
+    image: selenium/standalone-chrome:2.53.0
+    container_name: standalone-chrome
+    hostname: standalone-chrome.dev
+    ports:
+      - 4444
+    network_mode: bridge
+    privileged: true
