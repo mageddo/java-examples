@@ -10,3 +10,4 @@ services:
       - "5438:5432"
     volumes:
       - ./import.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my-postgres.conf:/etc/postgresql/postgresql.conf
