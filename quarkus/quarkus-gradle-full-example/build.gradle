@@ -9,8 +9,8 @@ repositories {
 
 dependencies {
 
-  compileOnly("org.projectlombok:lombok:1.18.12")
-  annotationProcessor("org.projectlombok:lombok:1.18.12")
+  compileOnly("org.projectlombok:lombok:1.18.16")
+  annotationProcessor("org.projectlombok:lombok:1.18.16")
 
   compileOnly("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
   annotationProcessor("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
@@ -32,8 +32,8 @@ dependencies {
 
   implementation("com.mageddo.kafka-client:kafka-client:1.0.2")
 
-  testCompileOnly("org.projectlombok:lombok:1.18.12")
-  testAnnotationProcessor("org.projectlombok:lombok:1.18.12")
+  testCompileOnly("org.projectlombok:lombok:1.18.16")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.16")
   testImplementation("io.quarkus:quarkus-junit5")
   testImplementation("io.rest-assured:rest-assured")
   testImplementation("org.mockito:mockito-junit-jupiter:3.3.3")
@@ -56,6 +56,6 @@ compileTestJava {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = JavaVersion.VERSION_15
+  targetCompatibility = JavaVersion.VERSION_15
 }
