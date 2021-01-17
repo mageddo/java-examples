@@ -2,7 +2,10 @@ version: "3"
 services:
   database:
     image: "postgres:10.5"
-    container_name: "elytron-security-jdbc-database"
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=db
     ports:
       - "5438:5432"
     volumes:
