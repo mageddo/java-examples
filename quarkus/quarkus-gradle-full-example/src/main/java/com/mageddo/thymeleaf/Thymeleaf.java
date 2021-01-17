@@ -1,13 +1,16 @@
 package com.mageddo.thymeleaf;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
 import java.io.StringWriter;
 import java.util.Locale;
 import java.util.Map;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+
+/**
+ * Version 1.1
+ */
 public class Thymeleaf {
 
   private TemplateEngine templateEngine;

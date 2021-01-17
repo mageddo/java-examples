@@ -30,7 +30,7 @@ dependencies {
   implementation platform("org.jdbi:jdbi3-bom:3.13.0")
   implementation("org.jdbi:jdbi3-core")
 
-  implementation("com.mageddo.kafka-client:kafka-client:1.0.1")
+  implementation("com.mageddo.kafka-client:kafka-client:1.0.2")
 
   testCompileOnly("org.projectlombok:lombok:1.18.12")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.12")
