@@ -3,7 +3,6 @@ package com.mageddo.mdb;
 import java.math.BigDecimal;
 import java.time.Duration;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
 import javax.inject.Singleton;
 
@@ -20,6 +19,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 import io.quarkus.runtime.ShutdownEvent;
+import io.quarkus.runtime.StartupEvent;
 import io.quarkus.scheduler.Scheduled;
 import io.quarkus.scheduler.ScheduledExecution;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +41,7 @@ public class StockPriceMDB {
   private final ObjectMapper objectMapper;
   private ConsumerFactory<String, byte[]> consumerFactory;
 
-  @PostConstruct
-  public void init() {
+  public void init(@Observes StartupEvent event) {
     this.consumerFactory = this.consumers
         .toBuilder()
         .topics("stock_changed_v2")
