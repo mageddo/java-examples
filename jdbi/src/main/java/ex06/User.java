@@ -1,14 +1,13 @@
-package ex05;
+package ex06;
 
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
 
 @Value
-@Builder(access = AccessLevel.PUBLIC)
+@Builder
 public class User {
 
   @Getter(onMethod_ = {@ColumnName("IDT_USER")})

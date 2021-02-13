@@ -1,4 +1,4 @@
-package ex05;
+package ex06;
 
 import java.util.List;
 

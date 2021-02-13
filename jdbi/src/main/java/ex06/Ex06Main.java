@@ -1,4 +1,4 @@
-package ex05;
+package ex06;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -8,9 +8,10 @@ import org.h2.jdbcx.JdbcConnectionPool;
 import org.jdbi.v3.core.Jdbi;
 
 import ex02.DuplicatedUser;
+import ex05.LombokBuilder;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class Ex05Main {
+public class Ex06Main {
 
   static <E extends Enum<?>> Optional<Class<?>> ifEnum(Type type) {
     if (type instanceof Class<?>) {
