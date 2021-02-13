@@ -24,8 +24,8 @@ public class Google20Example {
 
     public static void main(String... args) throws IOException, InterruptedException, ExecutionException {
         // Replace these with your client id and secret
-        final String clientId = "75363349449-qggdhh9pi8pp04u7b77h9jhvjua2s95i.apps.googleusercontent.com";
-        final String clientSecret = "y8wqQh4KyecKZdngivzDLDKd";
+        final String clientId = "";
+        final String clientSecret = "";
         final String secretState = "secret333";
         final OAuth20Service service = new ServiceBuilder(clientId)
                 .apiSecret(clientSecret)
