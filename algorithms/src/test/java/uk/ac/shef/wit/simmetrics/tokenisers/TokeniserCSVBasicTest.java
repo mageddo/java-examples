@@ -91,7 +91,7 @@ public class TokeniserCSVBasicTest   {
     @Test
     public void testTokeniseToArrayList() {
         List<String> results = tokeniser.tokenizeToArrayList("1a,2a,3a,4a\n1b,2b,3b,4b");
-        assertEquals(1, results.size());
+        assertEquals(8, results.size());
         assertEquals("1a", results.get(0));
         assertEquals("2a", results.get(1));
         assertEquals("3a", results.get(2));
