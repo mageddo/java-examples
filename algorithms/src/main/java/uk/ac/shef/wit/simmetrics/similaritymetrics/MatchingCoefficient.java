@@ -39,11 +39,11 @@
 
 package uk.ac.shef.wit.simmetrics.similaritymetrics;
 
+import java.io.Serializable;
+import java.util.List;
+
 import uk.ac.shef.wit.simmetrics.tokenisers.InterfaceTokeniser;
 import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserWhitespace;
-
-import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Package: uk.ac.shef.wit.simmetrics.similaritymetrics.matchingcoefficient
@@ -137,8 +137,8 @@ public final class MatchingCoefficient extends AbstractStringMetric implements S
      * @return a value between 0-1 of the similarity
      */
     public float getSimilarity(final String string1, final String string2) {
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
 
         final int totalPossible = Math.max(str1Tokens.size(), str2Tokens.size());
         return getUnNormalisedSimilarity(string1, string2) / (float) totalPossible;
@@ -152,8 +152,8 @@ public final class MatchingCoefficient extends AbstractStringMetric implements S
      * @return returns the score of the similarity measure (un-normalised)
      */
     public float getUnNormalisedSimilarity(String string1, String string2) {
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
 
         int totalFound = 0;
         for (Object str1Token : str1Tokens) {

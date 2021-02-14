@@ -1,4 +1,4 @@
-/**
+package uk.ac.shef.wit.simmetrics; /**
  * SimMetrics - SimMetrics is a java library of Similarity or Distance
  * Metrics, e.g. Levenshtein Distance, that provide float based similarity
  * measures between String Data. All metrics return consistant measures
@@ -37,6 +37,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,6 +56,7 @@ public class MathFuncsTest {
      *
      * Called before every test case method.
      */
+    @BeforeEach
     protected void setUp() {
         //create objects for testing
     }

@@ -39,13 +39,13 @@
 
 package uk.ac.shef.wit.simmetrics.similaritymetrics;
 
-import uk.ac.shef.wit.simmetrics.tokenisers.InterfaceTokeniser;
-import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserWhitespace;
-
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
+
+import uk.ac.shef.wit.simmetrics.tokenisers.InterfaceTokeniser;
+import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserWhitespace;
 
 /**
  * Package: uk.ac.shef.wit.simmetrics.similaritymetrics.blockdistance
@@ -140,8 +140,8 @@ public final class BlockDistance extends AbstractStringMetric implements Seriali
      * @return a 0-1 similarity score
      */
     public float getSimilarity(final String string1, final String string2) {
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
 
         final float totalPossible = (float)(str1Tokens.size() + str2Tokens.size());
 
@@ -157,8 +157,8 @@ public final class BlockDistance extends AbstractStringMetric implements Seriali
      * @return a block distance similarity score
      */
     public float getUnNormalisedSimilarity(final String string1, final String string2) {
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
 
         final Set<Object> allTokens = new HashSet<Object>();
         allTokens.addAll(str1Tokens);

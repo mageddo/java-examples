@@ -64,11 +64,15 @@
 
 package uk.ac.shef.wit.simmetrics.similaritymetrics;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import uk.ac.shef.wit.simmetrics.tokenisers.InterfaceTokeniser;
 import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserWhitespace;
-
-import java.io.Serializable;
-import java.util.*;
 
 /**
  * TagLink inplements a TagLink String Metric.
@@ -259,10 +263,10 @@ public final class TagLink extends AbstractStringMetric implements Serializable 
         if (T.equals(U)) {
             return 1.0f;
         } else {
-            ArrayList<String> tArrayList = tokeniser.tokenizeToArrayList(T);
-            ArrayList<String> uArrayList = tokeniser.tokenizeToArrayList(U);
-            String[] tTokens = tArrayList.toArray(new String[tArrayList.size()]),
-                    uTokens = uArrayList.toArray(new String[uArrayList.size()]);
+            List<String> tList = tokeniser.tokenizeToArrayList(T);
+            List<String> uList = tokeniser.tokenizeToArrayList(U);
+            String[] tTokens = tList.toArray(new String[tList.size()]),
+                    uTokens = uList.toArray(new String[uList.size()]);
             float[] tIdfArray = getIDFArray(tTokens),
                     uIdfArray = getIDFArray(uTokens);
             return algorithm1(tTokens, uTokens, tIdfArray, uIdfArray);
@@ -316,10 +320,10 @@ public final class TagLink extends AbstractStringMetric implements Serializable 
         if (T.equals(U)) {
             buff.append("\nS(T,U)=1.0\n");
         } else {
-            ArrayList<String> tArrayList = tokeniser.tokenizeToArrayList(T);
-            ArrayList<String> uArrayList = tokeniser.tokenizeToArrayList(U);
-            String[] tTokens = tArrayList.toArray(new String[tArrayList.size()]),
-                    uTokens = uArrayList.toArray(new String[uArrayList.size()]);
+            List<String> tList = tokeniser.tokenizeToArrayList(T);
+            List<String> uList = tokeniser.tokenizeToArrayList(U);
+            String[] tTokens = tList.toArray(new String[tList.size()]),
+                    uTokens = uList.toArray(new String[uList.size()]);
             buff.append("\nT={");
             for (String tToken : tTokens) {
                 buff.append(tToken).append(", ");
@@ -453,7 +457,7 @@ public final class TagLink extends AbstractStringMetric implements Serializable 
     /**
      * sortCandidateList sort a list of candidate pair of tokens.
      *
-     * @param list ArrayList of candidates
+     * @param list List<String> of candidates
      */
     private void sortCandidateList(ArrayList<Candidates> list) {
         java.util.Collections.sort(list, new java.util.Comparator() {
@@ -547,8 +551,8 @@ public final class TagLink extends AbstractStringMetric implements Serializable 
             HashMap<String,Object> rowMap = new HashMap<String, Object>();
             HashMap<String,Float> freqMap = new HashMap<String, Float>();
             String actualRow = dataSetArray[row];
-            ArrayList<String> tokenArrayList = tokeniser.tokenizeToArrayList(actualRow);
-            String[] rowArray = tokenArrayList.toArray(new String[tokenArrayList.size()]);
+            List<String> tokenList = tokeniser.tokenizeToArrayList(actualRow);
+            String[] rowArray = tokenList.toArray(new String[tokenList.size()]);
             for (String actualToken : rowArray) {
                 rowMap.put(actualToken, null);
 

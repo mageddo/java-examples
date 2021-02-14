@@ -39,6 +39,8 @@
 
 package uk.ac.shef.wit.simmetrics.similaritymetrics;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -56,6 +58,7 @@ public class ChapmanLengthDeviationTest {
      *
      * Called before every test case method.
      */
+    @BeforeEach
     protected void setUp() {
         metric = new ChapmanLengthDeviation();
     }

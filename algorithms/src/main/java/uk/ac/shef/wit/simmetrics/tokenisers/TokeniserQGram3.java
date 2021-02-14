@@ -39,13 +39,14 @@
 
 package uk.ac.shef.wit.simmetrics.tokenisers;
 
-import uk.ac.shef.wit.simmetrics.wordhandlers.InterfaceTermHandler;
-import uk.ac.shef.wit.simmetrics.wordhandlers.DummyStopTermHandler;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import uk.ac.shef.wit.simmetrics.wordhandlers.DummyStopTermHandler;
+import uk.ac.shef.wit.simmetrics.wordhandlers.InterfaceTermHandler;
 
 /**
  * Package: uk.ac.shef.wit.simmetrics.tokenisers
@@ -103,19 +104,19 @@ public final class TokeniserQGram3 implements InterfaceTokeniser, Serializable {
      * @param input
      * @return tokenized version of a string
      */
-    public final ArrayList<String> tokenizeToArrayList(final String input) {
-        final ArrayList<String> returnArrayList = new ArrayList<String>();
+    public final List<String> tokenizeToArrayList(final String input) {
+        final List<String> returnList = new ArrayList<String>();
         int curPos = 0;
         final int length = input.length() - 2;
         while (curPos < length) {
             final String term = input.substring(curPos, curPos + 3);
             if(!stopWordHandler.isWord(term)) {
-                returnArrayList.add(term);
+              returnList.add(term);
             }
             curPos++;
         }
 
-        return returnArrayList;
+        return returnList;
     }
 
     /**

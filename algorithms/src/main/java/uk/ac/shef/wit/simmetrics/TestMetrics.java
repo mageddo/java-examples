@@ -39,11 +39,12 @@
 
 package uk.ac.shef.wit.simmetrics;
 
-import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
-import uk.ac.shef.wit.simmetrics.metrichandlers.MetricHandler;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+
+import uk.ac.shef.wit.simmetrics.metrichandlers.MetricHandler;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 
 /**
  * Package: n/a
@@ -141,7 +142,7 @@ public final class TestMetrics {
      */
     public static void main(final String[] args) {
 
-        ArrayList<String> metricStrings = MetricHandler.GetMetricsAvailable();
+        List<String> metricStrings = MetricHandler.GetMetricsAvailable();
 
         //now create each metric in an ArrayList
         final ArrayList<AbstractStringMetric> testMetricArrayList = new ArrayList<AbstractStringMetric>();

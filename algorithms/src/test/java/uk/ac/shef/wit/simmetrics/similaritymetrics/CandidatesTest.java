@@ -39,6 +39,8 @@
 
 package uk.ac.shef.wit.simmetrics.similaritymetrics;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -53,6 +55,7 @@ public class CandidatesTest  {
      *
      * Called before every test case method.
      */
+    @BeforeEach
     protected void setUp() {
         //setUp before test provided here
     }

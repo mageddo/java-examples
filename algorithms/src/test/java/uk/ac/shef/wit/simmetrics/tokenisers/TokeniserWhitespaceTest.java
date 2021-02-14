@@ -39,7 +39,9 @@
 
 package uk.ac.shef.wit.simmetrics.tokenisers;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -68,6 +70,7 @@ public class TokeniserWhitespaceTest   {
      *
      * Called before every test case method.
      */
+    @BeforeEach
     protected void setUp() {
         tokeniser = new TokeniserWhitespace();
     }
@@ -85,7 +88,7 @@ public class TokeniserWhitespaceTest   {
      * Tests emptying the cart.
      */
     public void testTokeniseToArrayList() {
-        ArrayList results = tokeniser.tokenizeToArrayList("A B  C");
+        List<String> results = tokeniser.tokenizeToArrayList("A B  C");
         assertEquals(3, results.size());
         assertEquals("A", results.get(0));
         assertEquals("B", results.get(1));

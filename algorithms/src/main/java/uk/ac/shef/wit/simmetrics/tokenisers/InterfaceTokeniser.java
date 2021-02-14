@@ -39,10 +39,10 @@
 
 package uk.ac.shef.wit.simmetrics.tokenisers;
 
-import uk.ac.shef.wit.simmetrics.wordhandlers.InterfaceTermHandler;
-
+import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
+
+import uk.ac.shef.wit.simmetrics.wordhandlers.InterfaceTermHandler;
 
 /**
  * Package: uk.ac.shef.wit.simmetrics.api
@@ -86,9 +86,9 @@ public interface InterfaceTokeniser {
      *
      * @param input
      *
-     * @return ArrayList tokenized version of a string
+     * @return List<String> tokenized version of a string
      */
-    public ArrayList<String> tokenizeToArrayList(String input);
+    public List<String> tokenizeToArrayList(String input);
 
     /**
      * Return tokenized version of a string as a set.

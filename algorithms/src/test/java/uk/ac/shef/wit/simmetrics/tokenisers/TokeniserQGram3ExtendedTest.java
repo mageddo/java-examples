@@ -39,7 +39,9 @@
 
 package uk.ac.shef.wit.simmetrics.tokenisers;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -68,6 +70,7 @@ public class TokeniserQGram3ExtendedTest  {
      *
      * Called before every test case method.
      */
+    @BeforeEach
     protected void setUp() {
         tokeniser = new TokeniserQGram3Extended();
     }
@@ -85,7 +88,7 @@ public class TokeniserQGram3ExtendedTest  {
      * Tests emptying the cart.
      */
     public void testTokeniseToArrayList() {
-        ArrayList results = tokeniser.tokenizeToArrayList("12345678");
+        List<String> results = tokeniser.tokenizeToArrayList("12345678");
         assertEquals(10, results.size());
         assertEquals("##1", results.get(0));
         assertEquals("#12", results.get(1));

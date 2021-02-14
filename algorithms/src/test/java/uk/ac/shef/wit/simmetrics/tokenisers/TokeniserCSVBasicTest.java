@@ -39,7 +39,10 @@
 
 package uk.ac.shef.wit.simmetrics.tokenisers;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -68,6 +71,7 @@ public class TokeniserCSVBasicTest   {
      *
      * Called before every test case method.
      */
+    @BeforeEach
     protected void setUp() {
         tokeniser = new TokeniserCSVBasic();
     }
@@ -84,8 +88,9 @@ public class TokeniserCSVBasicTest   {
     /**
      * Tests emptying the cart.
      */
+    @Test
     public void testTokeniseToArrayList() {
-        ArrayList results = tokeniser.tokenizeToArrayList("1a,2a,3a,4a\n1b,2b,3b,4b");
+        List<String> results = tokeniser.tokenizeToArrayList("1a,2a,3a,4a\n1b,2b,3b,4b");
         assertEquals(1, results.size());
         assertEquals("1a", results.get(0));
         assertEquals("2a", results.get(1));

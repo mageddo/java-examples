@@ -39,13 +39,15 @@
 
 package uk.ac.shef.wit.simmetrics.tokenisers;
 
-import uk.ac.shef.wit.simmetrics.wordhandlers.InterfaceTermHandler;
-import uk.ac.shef.wit.simmetrics.wordhandlers.DummyStopTermHandler;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import uk.ac.shef.wit.simmetrics.wordhandlers.DummyStopTermHandler;
+import uk.ac.shef.wit.simmetrics.wordhandlers.InterfaceTermHandler;
 
 /**
  * Package: uk.ac.shef.wit.simmetrics.tokenisers
@@ -109,31 +111,10 @@ public final class TokeniserCSVBasic implements InterfaceTokeniser, Serializable
      * @param input
      * @return tokenized version of a string
      */
-    public final ArrayList<String> tokenizeToArrayList(final String input) {
-        final ArrayList<String> returnArrayList = new ArrayList<String>();
-        int curPos = 0;
-        while (curPos < input.length()) {
-            final char ch = input.charAt(curPos);
-            if (Character.isWhitespace(ch)) {
-                curPos++;
-            }
-            int nextGapPos = input.length();
-            //check delimitors
-            for (int i = 0; i < delimiters.length(); i++) {
-                final int testPos = input.indexOf(delimiters.charAt(i), curPos);
-                if (testPos < nextGapPos && testPos != -1) {
-                    nextGapPos = testPos;
-                }
-            }
-            //add new token
-            final String term = input.substring(curPos, nextGapPos);
-            if(!stopWordHandler.isWord(term) && !term.equals(" ")) {
-                returnArrayList.add(term);
-            }
-            curPos = nextGapPos;
-        }
-
-        return returnArrayList;
+    public final List<String> tokenizeToArrayList(final String input) {
+        return Arrays.stream(input.split("\n"))
+        .flatMap(it -> Arrays.stream(it.split(this.delimiters).clone()))
+        .collect(Collectors.toList());
     }
 
     /**

@@ -39,11 +39,11 @@
 
 package uk.ac.shef.wit.simmetrics.similaritymetrics;
 
+import java.io.Serializable;
+import java.util.List;
+
 import uk.ac.shef.wit.simmetrics.tokenisers.InterfaceTokeniser;
 import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserWhitespace;
-
-import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Package: uk.ac.shef.wit.simmetrics.similaritymetrics.mongeelkan
@@ -166,8 +166,8 @@ public class MongeElkan extends AbstractStringMetric implements Serializable {
      */
     public final float getSimilarity(final String string1, final String string2) {
         //split the strings into tokens for comparison
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
 
         float sumMatches = 0.0f;
         float maxFound;

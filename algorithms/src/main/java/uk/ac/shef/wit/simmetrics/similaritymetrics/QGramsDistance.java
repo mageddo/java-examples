@@ -137,8 +137,8 @@ public final class QGramsDistance extends AbstractStringMetric implements Serial
      * @return a value between 0-1 of the similarity
      */
     public float getSimilarity(final String string1, final String string2) {
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
 
         final int maxQGramsMatching = str1Tokens.size() + str2Tokens.size();
 
@@ -159,8 +159,8 @@ public final class QGramsDistance extends AbstractStringMetric implements Serial
      * @return returns the score of the similarity measure (un-normalised)
      */
     public float getUnNormalisedSimilarity(String string1, String string2) {
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
 
         final Set<String> allTokens = new HashSet<String>();
         allTokens.addAll(str1Tokens);

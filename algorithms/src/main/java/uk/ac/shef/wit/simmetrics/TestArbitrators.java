@@ -39,20 +39,21 @@
 
 package uk.ac.shef.wit.simmetrics;
 
-import uk.ac.shef.wit.simmetrics.arbitrators.InterfaceMetricArbitrator;
-import uk.ac.shef.wit.simmetrics.arbitrators.MeanMetricArbitrator;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.*;
-import uk.ac.shef.wit.simmetrics.metrichandlers.MetricHandler;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+
+import uk.ac.shef.wit.simmetrics.arbitrators.InterfaceMetricArbitrator;
+import uk.ac.shef.wit.simmetrics.arbitrators.MeanMetricArbitrator;
+import uk.ac.shef.wit.simmetrics.metrichandlers.MetricHandler;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.InterfaceStringMetric;
 
 /**
  *
  * Description: uk.ac.shef.wit.simmetrics.TestArbitrators implements a test class for uk.ac.shef.wit.simmetrics.arbitrators.
  * Date: 29-Apr-2004
  * Time: 12:45:12
- * 
+ *
  * @author Sam Chapman <a href="http://www.dcs.shef.ac.uk/~sam/">Website</a>, <a href="mailto:sam@dcs.shef.ac.uk">Email</a>.
  * @version 1.1
  */
@@ -124,16 +125,16 @@ public final class TestArbitrators {
      */
     public static void main(final String[] args) {
 
-        ArrayList<String> metricStrings = MetricHandler.GetMetricsAvailable();
+        List<String> metricStrings = MetricHandler.GetMetricsAvailable();
 
         //now create each metric in an ArrayList
-        final ArrayList<InterfaceStringMetric> testMetricArrayList = new ArrayList<InterfaceStringMetric>();
+        final ArrayList<InterfaceStringMetric> testMetricList = new ArrayList<InterfaceStringMetric>();
         for(String metricString : metricStrings) {
-            testMetricArrayList.add(MetricHandler.createMetric(metricString));
+          testMetricList.add(MetricHandler.createMetric(metricString));
         }
 
         final InterfaceMetricArbitrator arbitrator = new MeanMetricArbitrator();
-        arbitrator.setArbitrationMetrics(testMetricArrayList);
+        arbitrator.setArbitrationMetrics(testMetricList);
 
         //test metrics
         testMethod(arbitrator);

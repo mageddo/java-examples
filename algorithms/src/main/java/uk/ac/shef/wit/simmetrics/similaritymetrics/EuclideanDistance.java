@@ -39,13 +39,13 @@
 
 package uk.ac.shef.wit.simmetrics.similaritymetrics;
 
-import uk.ac.shef.wit.simmetrics.tokenisers.InterfaceTokeniser;
-import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserWhitespace;
-
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
+
+import uk.ac.shef.wit.simmetrics.tokenisers.InterfaceTokeniser;
+import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserWhitespace;
 
 /**
  * Package: uk.ac.shef.wit.simmetrics.similaritymetrics.euclideandistance
@@ -142,8 +142,8 @@ public final class EuclideanDistance extends AbstractStringMetric implements Ser
      * @return a value between 0-1 of the similarity 1.0 identical
      */
     public float getSimilarity(final String string1, final String string2) {
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
         float totalPossible = (float) Math.sqrt((str1Tokens.size()*str1Tokens.size()) + (str2Tokens.size()*str2Tokens.size()));
         final float totalDistance = getUnNormalisedSimilarity(string1, string2);
         return (totalPossible - totalDistance) / totalPossible;
@@ -157,8 +157,8 @@ public final class EuclideanDistance extends AbstractStringMetric implements Ser
      * @return returns the score of the similarity measure (un-normalised)
      */
     public float getUnNormalisedSimilarity(String string1, String string2) {
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
 
         final Set<String> allTokens = new HashSet<String>();
         allTokens.addAll(str1Tokens);
@@ -194,8 +194,8 @@ public final class EuclideanDistance extends AbstractStringMetric implements Ser
      * @return the actual euclidean distance
      */
     public float getEuclidDistance(final String string1, final String string2) {
-        final ArrayList<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
-        final ArrayList<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
+        final List<String> str1Tokens = tokeniser.tokenizeToArrayList(string1);
+        final List<String> str2Tokens = tokeniser.tokenizeToArrayList(string2);
 
         final Set<String> allTokens = new HashSet<String>();
         allTokens.addAll(str1Tokens);

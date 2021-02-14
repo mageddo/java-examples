@@ -39,6 +39,8 @@
 
 package uk.ac.shef.wit.simmetrics.similaritymetrics.costfunctions;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -60,6 +62,7 @@ public class AffineGap1_1Over3Test {
      *
      * Called before every test case method.
      */
+    @BeforeEach
     protected void setUp() {
         costFunction = new AffineGap1_1Over3();
     }

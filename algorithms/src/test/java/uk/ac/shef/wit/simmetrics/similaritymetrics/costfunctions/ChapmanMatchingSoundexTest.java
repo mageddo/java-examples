@@ -39,6 +39,8 @@
 
 package uk.ac.shef.wit.simmetrics.similaritymetrics.costfunctions;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.ChapmanMatchingSoundex;
@@ -58,6 +60,7 @@ public class ChapmanMatchingSoundexTest {
      *
      * Called before every test case method.
      */
+    @BeforeEach
     protected void setUp() {
         metric = new ChapmanMatchingSoundex();
     }
