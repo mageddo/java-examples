@@ -1,0 +1,1 @@
+https://maven.gentics.com/maven2/mlibwrapper/mlibwrapper_jai/1.1.3/mlibwrapper_jai-1.1.3.jar

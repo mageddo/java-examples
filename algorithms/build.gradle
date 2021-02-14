@@ -8,6 +8,8 @@ repositories {
 
 dependencies {
   dependencies {
+    implementation(fileTree("${projectDir}/libs/"))
+    implementation("com.github.romankh3:image-comparison:4.3.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("org.mockito:mockito-junit-jupiter:3.7.7")
   }
