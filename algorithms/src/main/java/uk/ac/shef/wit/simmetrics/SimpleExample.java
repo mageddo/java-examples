@@ -83,6 +83,7 @@ public class SimpleExample {
 
             //this single line performs the similarity test
             float result = metric.getSimilarity(str1, str2);
+//            /home/typer/Downloads/rick-and-morty/rick-and-morty.jpg
 
             //outputs the results
             outputResult(result, metric, str1, str2);
