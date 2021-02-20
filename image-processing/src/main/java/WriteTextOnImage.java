@@ -14,6 +14,9 @@ import static java.awt.RenderingHints.KEY_TEXT_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 import static java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
 
+/**
+ * https://stackoverflow.com/a/6416215/2979435
+ */
 public class WriteTextOnImage {
 
   public static final Color SOME_KIND_OF_GREY = Color.decode("0xF2F2F2");
