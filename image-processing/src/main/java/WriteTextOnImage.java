@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -20,8 +19,7 @@ public class WriteTextOnImage {
   public static final Color SOME_KIND_OF_GREY = Color.decode("0xF2F2F2");
 
   public static void main(String arg[]) throws IOException {
-
-    final var source = Paths.get("/home/typer/Pictures/20cb0811.jpg");
+    final var source = ImageIO.read(WriteTextOnImage.class.getResourceAsStream("/meme.jpg"));
     final var targetImage = Files.createTempFile("image", ".jpg");
     final var bufferedImage = writeText(source);
     final var success = ImageIO.write(bufferedImage, "jpg", targetImage.toFile());
