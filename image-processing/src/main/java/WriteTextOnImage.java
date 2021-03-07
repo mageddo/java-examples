@@ -55,7 +55,7 @@ public class WriteTextOnImage {
     final var font = new Font("Arial", Font.BOLD, 16);
 
     final var img = new BufferedImage(
-        source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_RGB // JPG
+        source.getWidth(), source.getHeight() + 20, BufferedImage.TYPE_INT_RGB // JPG
     );
     final var g2d = img.createGraphics();
     g2d.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
