@@ -1,15 +1,18 @@
 package com.mageddo.jpa;
 
-import com.mageddo.jpa.dao.PersonDAO;
-
 import com.mageddo.jpa.entity.Person;
-
 import com.mageddo.jpa.service.PersonService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import javax.sql.DataSource;
 
 /**
  * @author elvis
@@ -18,17 +21,23 @@ import org.springframework.scheduling.annotation.Scheduled;
  * @since 8/30/17 2:53 PM
  */
 
+@EnableScheduling
 @SpringBootApplication
-@Configuration
 public class Main {
+
+  private final Logger log = LoggerFactory.getLogger(getClass());
+
+  @Autowired
+  private PersonService personService;
 
   public static void main(String[] args) {
     SpringApplication.run(Main.class, args);
   }
 
-  @Scheduled(cron = "0/5 * * * *")
-  public void run(PersonService personService) {
+  @Scheduled(cron = "0/5 * * * * *")
+  public void run() {
     final Person person = personService.save(new Person("Elvis"));
-    System.out.println(personService.find(person.getId()));
+    final Person foundPerson = personService.find(person.getId());
+    log.info("status=ran, person={}", foundPerson.getId());
   }
 }
