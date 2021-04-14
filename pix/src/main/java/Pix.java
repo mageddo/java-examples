@@ -26,6 +26,8 @@ public class Pix {
 
     merchantPresentMode.addMerchantAccountInformation(accounts);
     System.out.println(merchantPresentMode.toString());
+    // 00020101021126370014BR.GOV.BCB.PIX0115edigitalb@gmail52040000530398654041.995802BR5905Elvis6002SP62070503***630423EF
+    // copy that to a qr code generator and be happy http://goqr.me/
   }
 
   // Merchant Account Information Template (IDs "26" to "51")
