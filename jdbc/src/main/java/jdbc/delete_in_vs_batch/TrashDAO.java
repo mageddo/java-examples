@@ -13,5 +13,7 @@ public interface TrashDAO {
 
   void deleteUsingBatch(Connection connection, List<UUID> ids) throws SQLException;
 
+  void deleteOneByOne(Connection connection, List<UUID> ids) throws SQLException;
+
   List<UUID> find(Connection connection) throws SQLException;
 }

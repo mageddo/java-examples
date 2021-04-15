@@ -3,6 +3,7 @@ package jdbc.delete_in_vs_batch;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,58 @@ class TrashServiceTest {
 
   }
 
+  @Test
+  void mustInsertAndDeleteUsingBatch() throws SQLException {
+
+    // arrange
+
+    // act
+    this.trashService.insertAndDeleteUsingBatch(this.connection);
+
+    // assert
+    assertTrue(this.trashDAO.find(this.connection).isEmpty());
+
+  }
+
+
+  @Test
+  void mustInsertAndDeleteUsingOneByOneStrategy() throws SQLException {
+
+    // arrange
+
+    // act
+    this.trashService.insertAndDeleteOneByOne(this.connection);
+
+    // assert
+    assertTrue(this.trashDAO.find(this.connection).isEmpty());
+
+  }
+
+  @Test
+  void batchVsInDeleteVsOneByOnePerformance() throws SQLException {
+    // arrange
+    final var stopWatch = StopWatch.createStarted();
+
+    // act
+    this.trashService.insertAndDeleteUsingBatch(this.connection);
+    final var batchTimeDisp = stopWatch.formatTime();
+    final var batchTime = stopWatch.getTime();
+
+    stopWatch.split();
+    this.trashService.insertAndDeleteUsingIn(this.connection);
+    final var inTimeDisp = stopWatch.formatSplitTime();
+    final var inTime = stopWatch.getSplitTime();
+
+    stopWatch.split();
+    this.trashService.insertAndDeleteOneByOne(this.connection);
+    final var oneByOneTimeDisp = stopWatch.formatSplitTime();
+    final var oneByOneTime = stopWatch.getSplitTime();
+
+    // assert
+    assertTrue(inTime - batchTime < 10 && inTime - batchTime > 0);
+    assertTrue(oneByOneTime - batchTime > 1000);
+    System.out.printf("batch=%s, in=%s, oneByOne=%s%n", batchTimeDisp, inTimeDisp, oneByOneTimeDisp);
+  }
 
   @Test
   void mustInsert() throws SQLException {

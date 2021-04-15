@@ -29,14 +29,34 @@ public class TrashDAOPostgres implements TrashDAO {
 
   @Override
   public void deleteUsingIn(Connection connection, List<UUID> ids) throws SQLException {
-    final var sql = "DELETE FROM TRASH WHERE IDT_TRASH IN (?)";
-    final var stm = connection.prepareStatement(sql);
+    final var sql = "DELETE FROM TRASH WHERE IDT_TRASH IN ('%s')";
+    final var stm = connection.createStatement();
     try (stm) {
-      final var param = ids.stream()
-          .map(String::valueOf)
-          .collect(Collectors.joining(", "));
-      stm.setString(1, param);
-      Validate.isTrue(stm.executeUpdate() == ids.size(), "Didn't update all records");
+      int skip = 0;
+      while (true) {
+
+        final var batchIds = ids
+            .stream()
+            .skip(skip)
+            .limit(1000)
+            .collect(Collectors.toList());
+
+        if (batchIds.isEmpty()) {
+          break;
+        }
+        skip += batchIds.size();
+
+        final var param = batchIds.stream()
+            .map(String::valueOf)
+            .collect(Collectors.joining("', '"));
+        final var affected = stm.executeUpdate(String.format(sql, param));
+
+        Validate.isTrue(
+            affected == batchIds.size(),
+            "Didn't delete all records, expected=%d, actual=%d",
+            batchIds.size(), affected
+        );
+      }
     }
   }
 
@@ -49,6 +69,22 @@ public class TrashDAOPostgres implements TrashDAO {
         stm.addBatch(String.format(sql, id));
       }
       Validate.isTrue(stm.executeBatch().length == ids.size(), "Didn't update all records");
+    }
+  }
+
+  @Override
+  public void deleteOneByOne(Connection connection, List<UUID> ids) throws SQLException {
+    for (UUID id : ids) {
+      this.deleteOneByOne(connection, id);
+    }
+  }
+
+  public void deleteOneByOne(Connection connection, UUID id) throws SQLException {
+    final var sql = "DELETE FROM TRASH WHERE IDT_TRASH = ?";
+    final var stm = connection.prepareStatement(sql);
+    try (stm) {
+      stm.setString(1, id.toString());
+      Validate.isTrue(stm.executeUpdate() == 1, "Didn't update record");
     }
   }
 
