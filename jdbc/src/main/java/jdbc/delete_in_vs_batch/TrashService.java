@@ -31,7 +31,7 @@ public class TrashService {
 
   List<UUID> insert(Connection connection) throws SQLException {
     final var ids = new ArrayList<UUID>();
-    for (int i = 0; i < 100_000; i++) {
+    for (int i = 0; i < 5_000; i++) {
       ids.add(UUID.randomUUID());
     }
     this.trashDAO.insert(connection, ids);
