@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -28,6 +29,14 @@ import utils.UncheckedInterruptedException;
 public class Main {
 
   private final Map<UUID, List<UUID>> map = new ConcurrentHashMap<>();
+  private final List<UUID> accountIds = List.of(
+      UUID.fromString("671782f5-650b-419d-aedb-20fc191b744e"),
+      UUID.fromString("85426177-d8f7-4e22-8ba8-6686b122c379"),
+      UUID.fromString("75fbce92-ffe3-48c1-a68d-b14e606994d1"),
+      UUID.fromString("b51b9487-bded-49e4-8230-91b8063ca38e"),
+      UUID.fromString("e5556ab7-a04e-491f-a175-2dba2c8893cc")
+  );
+  private Random random = new Random();
 
   public static void main(String[] args) {
     new Main().run();
@@ -48,14 +57,6 @@ public class Main {
       t.setDaemon(true);
       return t;
     });
-
-    final var accountIds = List.of(
-        UUID.fromString("671782f5-650b-419d-aedb-20fc191b744e"),
-        UUID.fromString("85426177-d8f7-4e22-8ba8-6686b122c379"),
-        UUID.fromString("75fbce92-ffe3-48c1-a68d-b14e606994d1"),
-        UUID.fromString("b51b9487-bded-49e4-8230-91b8063ca38e"),
-        UUID.fromString("e5556ab7-a04e-491f-a175-2dba2c8893cc")
-    );
 
     log.info("status=starting");
 
@@ -97,6 +98,7 @@ public class Main {
       } catch (InterruptedException e) {
         throw new UncheckedInterruptedException(e);
       } catch (ExecutionException e) {
+        log.error("status=error, msg={}", e.getMessage(), e);
         throw new UncheckedExecutionException(e);
       }
     }
@@ -119,7 +121,7 @@ public class Main {
   }
 
   @SneakyThrows
-  private static void updateBalance(
+  private void updateBalance(
       HikariDataSource ds, AtomicInteger counter, List<UUID> accountIds
   ) {
     final var stopWatch = StopWatch.createStarted();
@@ -129,6 +131,7 @@ public class Main {
 //      updateBalance0(connection, counter, accountIds);
       connection.commit();
     } catch (Exception e) {
+      log.error("status=rollback, msg={}", e.getMessage(), e);
       connection.rollback();
       throw e;
     } finally {
@@ -137,7 +140,8 @@ public class Main {
   }
 
   @SneakyThrows
-  private static void updateBalance0(Connection connection, AtomicInteger counter, List<UUID> accountIds) {
+  private void updateBalance0(Connection connection, AtomicInteger counter,
+      List<UUID> accountIds) {
     for (UUID accountId : accountIds) {
       final var stopWatch = StopWatch.createStarted();
       batchUpdateBalance0(connection, counter, List.of(accountId));
@@ -147,7 +151,7 @@ public class Main {
   }
 
   @SneakyThrows
-  private static void batchUpdateBalance0(Connection connection, AtomicInteger counter, List<UUID> ids) {
+  private void batchUpdateBalance0(Connection connection, AtomicInteger counter, List<UUID> ids) {
 //    final var stopWatch = StopWatch.createStarted();
     final var stm = connection.prepareStatement(
         "UPDATE FINANCIAL_ACCOUNT SET \n " +
@@ -155,6 +159,7 @@ public class Main {
             "WHERE IDT_FINANCIAL_ACCOUNT = ?"
     );
     try (stm) {
+//      ids.add(accountIds.get(nextId()));
       for (UUID id : ids) {
         final var strId = id.toString();
         stm.setBigDecimal(1, BigDecimal.valueOf(Integer.decode("0x" + strId.substring(35))));
@@ -165,5 +170,9 @@ public class Main {
       stm.executeBatch();
     }
 //    log.info("status=balanceUpdated, id={}, time={}", id, stopWatch.getTime());
+  }
+
+  private int nextId() {
+    return random.nextInt(this.accountIds.size());
   }
 }
