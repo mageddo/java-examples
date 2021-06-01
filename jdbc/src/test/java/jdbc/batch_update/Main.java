@@ -32,7 +32,11 @@ public class Main {
     config.setAutoCommit(false);
     final var ds = new HikariDataSource(config);
 
-    final var pool = Executors.newFixedThreadPool(20);
+    final var pool = Executors.newFixedThreadPool(20, r -> {
+      Thread t = Executors.defaultThreadFactory().newThread(r);
+      t.setDaemon(true);
+      return t;
+    });
 
     final var accountIds = List.of(
         UUID.fromString("671782f5-650b-419d-aedb-20fc191b744e"),
@@ -47,7 +51,6 @@ public class Main {
     final var hitsPerAccount = 10_000;
     final var hits = hitsPerAccount * accountIds.size();
     final var stopWatch = StopWatch.createStarted();
-
 
     final var futures = new ArrayList<Future<?>>();
     final var counter = new AtomicInteger();
@@ -84,7 +87,7 @@ public class Main {
         counter.incrementAndGet();
       }
       connection.commit();
-    }  catch (Exception e){
+    } catch (Exception e) {
       connection.rollback();
       throw e;
     } finally {
@@ -103,8 +106,9 @@ public class Main {
     try (stm) {
       stm.setBigDecimal(1, BigDecimal.valueOf(Math.random()));
       stm.setString(2, String.valueOf(id));
-      stm.addBatch();
-      stm.executeBatch();
+      stm.executeUpdate();
+//      stm.addBatch();
+//      stm.executeBatch();
     }
     log.info("status=balanceUpdated, id={}, time={}", id, stopWatch.getTime());
   }
