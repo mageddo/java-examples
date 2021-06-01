@@ -125,7 +125,8 @@ public class Main {
     final var stopWatch = StopWatch.createStarted();
     final var connection = ds.getConnection();
     try (connection) {
-      updateBalance0(connection, counter, accountIds);
+      batchUpdateBalance0(connection, counter, accountIds);
+//      updateBalance0(connection, counter, accountIds);
       connection.commit();
     } catch (Exception e) {
       connection.rollback();
@@ -136,7 +137,17 @@ public class Main {
   }
 
   @SneakyThrows
-  private static void updateBalance0(Connection connection, AtomicInteger counter, List<UUID> ids) {
+  private static void updateBalance0(Connection connection, AtomicInteger counter, List<UUID> accountIds) {
+    for (UUID accountId : accountIds) {
+      final var stopWatch = StopWatch.createStarted();
+      batchUpdateBalance0(connection, counter, List.of(accountId));
+      connection.commit();
+      log.info("status=updated, counter={}, tim={}", counter, stopWatch.getTime());
+    }
+  }
+
+  @SneakyThrows
+  private static void batchUpdateBalance0(Connection connection, AtomicInteger counter, List<UUID> ids) {
 //    final var stopWatch = StopWatch.createStarted();
     final var stm = connection.prepareStatement(
         "UPDATE FINANCIAL_ACCOUNT SET \n " +
