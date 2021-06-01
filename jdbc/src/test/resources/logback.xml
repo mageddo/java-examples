@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property
+    name="logPattern"
+    value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-15.15thread] %3.-3level %-0.70logger{70}, m=%method, l=%line, %msg%n"
+  />
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${logPattern}</pattern>
+      <charset>utf8</charset>
+    </encoder>
+  </appender>
+
+  <property
+    name="logFile"
+    value="${user.home}/.jvm-class-agent/jvm-class-agent.log"
+  />
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${logFile}</file>
+    <encoder>
+      <pattern>${logPattern}</pattern>
+      <charset>utf8</charset>
+    </encoder>
+  </appender>
+
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+<!--    <appender-ref ref="FILE"/>-->
+  </root>
+
+  <logger name="com.mageddo.jvmti" level="DEBUG"/>
+
+</configuration>

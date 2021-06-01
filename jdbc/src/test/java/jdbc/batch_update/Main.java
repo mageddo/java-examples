@@ -4,11 +4,15 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -22,7 +26,14 @@ import utils.UncheckedInterruptedException;
 
 @Slf4j
 public class Main {
+
+  private final Map<UUID, List<UUID>> map = new ConcurrentHashMap<>();
+
   public static void main(String[] args) {
+    new Main().run();
+  }
+
+  public void run() {
 
     final var config = new HikariConfig();
     config.setJdbcUrl("jdbc:postgresql://localhost:5432/db");
@@ -56,9 +67,30 @@ public class Main {
     final var counter = new AtomicInteger();
     for (int i = 0; i < hitsPerAccount; i++) {
       futures.add(pool.submit(() -> {
-        updateBalance(ds, counter, accountIds);
+        this.compute(accountIds);
+//        updateBalance(ds, counter, accountIds);
       }));
     }
+    this.processFutures(futures);
+    log.info("status=grouped, time={}", stopWatch.getTime());
+
+//
+    this.map.forEach((k, ids) -> {
+      futures.add(pool.submit(() -> {
+        updateBalance(ds, counter, ids);
+//        updateBalance(ds, counter, accountIds);
+      }));
+    });
+    this.processFutures(futures);
+
+    log.info(
+        "status=done, accounts={}, hits={}, time={}",
+        accountIds.size(), hits, stopWatch.toString()
+    );
+
+  }
+
+  private void processFutures(ArrayList<Future<?>> futures) {
     for (Future<?> future : futures) {
       try {
         future.get();
@@ -68,11 +100,22 @@ public class Main {
         throw new UncheckedExecutionException(e);
       }
     }
-    log.info(
-        "status=done, accounts={}, hits={}, time={}",
-        accountIds.size(), hits, stopWatch.toString()
-    );
+    futures.clear();
+  }
 
+  private void compute(List<UUID> accountIds) {
+    for (UUID accountId : accountIds) {
+      this.map.compute(accountId, (k, v) -> {
+        if (v == null) {
+          return Stream
+              .of(accountId)
+              .collect(Collectors.toList())
+              ;
+        }
+        v.add(accountId);
+        return v;
+      });
+    }
   }
 
   @SneakyThrows
@@ -97,13 +140,14 @@ public class Main {
 //    final var stopWatch = StopWatch.createStarted();
     final var stm = connection.prepareStatement(
         "UPDATE FINANCIAL_ACCOUNT SET \n " +
-            "  NUM_BALANCE = ? \n " +
+            "  NUM_BALANCE = NUM_BALANCE + ? \n " +
             "WHERE IDT_FINANCIAL_ACCOUNT = ?"
     );
     try (stm) {
       for (UUID id : ids) {
-        stm.setBigDecimal(1, BigDecimal.valueOf(Math.random()));
-        stm.setString(2, String.valueOf(id));
+        final var strId = id.toString();
+        stm.setBigDecimal(1, BigDecimal.valueOf(Integer.decode("0x" + strId.substring(35))));
+        stm.setString(2, strId);
         stm.addBatch();
         counter.incrementAndGet();
       }
