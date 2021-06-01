@@ -82,10 +82,7 @@ public class Main {
     final var stopWatch = StopWatch.createStarted();
     final var connection = ds.getConnection();
     try (connection) {
-      for (final var accountId : accountIds) {
-        updateBalance(connection, accountId);
-        counter.incrementAndGet();
-      }
+      updateBalance0(connection, counter, accountIds);
       connection.commit();
     } catch (Exception e) {
       connection.rollback();
@@ -96,20 +93,22 @@ public class Main {
   }
 
   @SneakyThrows
-  private static void updateBalance(Connection connection, UUID id) {
-    final var stopWatch = StopWatch.createStarted();
+  private static void updateBalance0(Connection connection, AtomicInteger counter, List<UUID> ids) {
+//    final var stopWatch = StopWatch.createStarted();
     final var stm = connection.prepareStatement(
         "UPDATE FINANCIAL_ACCOUNT SET \n " +
             "  NUM_BALANCE = ? \n " +
             "WHERE IDT_FINANCIAL_ACCOUNT = ?"
     );
     try (stm) {
-      stm.setBigDecimal(1, BigDecimal.valueOf(Math.random()));
-      stm.setString(2, String.valueOf(id));
-      stm.executeUpdate();
-//      stm.addBatch();
-//      stm.executeBatch();
+      for (UUID id : ids) {
+        stm.setBigDecimal(1, BigDecimal.valueOf(Math.random()));
+        stm.setString(2, String.valueOf(id));
+        stm.addBatch();
+        counter.incrementAndGet();
+      }
+      stm.executeBatch();
     }
-    log.info("status=balanceUpdated, id={}, time={}", id, stopWatch.getTime());
+//    log.info("status=balanceUpdated, id={}, time={}", id, stopWatch.getTime());
   }
 }
