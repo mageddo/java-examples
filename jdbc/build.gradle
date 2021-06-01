@@ -17,6 +17,10 @@ dependencies {
   implementation group: "com.zaxxer", name: "HikariCP", version: "4.0.3"
   implementation group: "org.flywaydb", name: "flyway-core", version: "7.6.0"
   implementation group: "org.postgresql", name: "postgresql", version: "42.2.19"
+  implementation group: 'org.jdbi', name: 'jdbi3-core', version: '3.20.0'
+  implementation 'com.zaxxer:HikariCP:4.0.3'
+  implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
 
   runtimeOnly enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:10.4.0")
 
