@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
 
 import com.google.common.util.concurrent.RateLimiter;
 
@@ -25,13 +26,7 @@ public class RateLimitMain {
       final var notAcquiredKey = String.format("%s-not", t);
 
       if (acquired) {
-        map.compute(acquiredKey, (k, v) -> {
-          if (v == null) {
-            return new AtomicInteger(1);
-          }
-          v.incrementAndGet();
-          return v;
-        });
+        map.compute(acquiredKey, increment());
 
         final var acquiredInThisSecond = String.valueOf(map.get(acquiredKey));
         final var notAcquiredInThisSecond = String.valueOf(map.get(notAcquiredKey));
@@ -42,16 +37,19 @@ public class RateLimitMain {
           );
         }
       } else {
-        map.compute(notAcquiredKey, (k, v) -> {
-          if (v == null) {
-            return new AtomicInteger(1);
-          }
-          v.incrementAndGet();
-          return v;
-        });
+        map.compute(notAcquiredKey, increment());
       }
     }
 
+  }
 
+  private static BiFunction<String, AtomicInteger, AtomicInteger> increment() {
+    return (k, v) -> {
+      if (v == null) {
+        return new AtomicInteger(1);
+      }
+      v.incrementAndGet();
+      return v;
+    };
   }
 }
