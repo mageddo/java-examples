@@ -2,6 +2,10 @@ plugins {
   id 'java'
 }
 
+repositories {
+  mavenCentral()
+}
+
 dependencies {
   implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
 }
