@@ -12,7 +12,7 @@ import ognl.DefaultClassResolver;
  *
  * @see DefaultClassResolver
  */
-public class HotSwapClassResolver extends Object implements ClassResolver {
+class HotSwapClassResolver extends Object implements ClassResolver {
 
   private final Map<String, Class<?>> classes = new ConcurrentHashMap<>(101);
 

@@ -1,14 +1,12 @@
 package com.mageddo.thymeleaf.quarkushotswapfix;
 
-import com.mageddo.reflection.FieldUtils;
+import javax.enterprise.event.Observes;
 
 import io.quarkus.runtime.StartupEvent;
 import io.quarkus.runtime.configuration.ProfileManager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ognl.OgnlContext;
-
-import javax.enterprise.event.Observes;
 
 @Slf4j
 public class QuarkusConfig {
