@@ -7,7 +7,7 @@
 
 accesss http://localhost:8080/referrer-test.html
 
-![](https://i.imgur.com/Zku7XBK.png)
+![](https://i.imgur.com/aKfFcfq.png)
 
 --------------------------------------------
 # web-http Project
