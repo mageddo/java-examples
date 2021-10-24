@@ -1,0 +1,49 @@
+<style>
+  * {
+    font-family: monospace;
+  }
+  iframe {
+    width: 100%;
+    height: 280px;
+    border: 2px solid #CCC;
+  }
+</style>
+<script>
+  function createPopUp(url, name, noReferrer) {
+    console.info('m=createPopUp', arguments);
+    let newwindow = window.open(url, name, 'width=560,height=340,toolbar=0,menubar=0,location=100' + (noReferrer ? ',noreferrer' : ''));
+    if (window.focus) {
+      newwindow.focus()
+    }
+    return newwindow;
+  }
+</script>
+<ol>
+  <li>
+    <button onClick="javascript:createPopUp('http://localhost:8080/referrers/watch', new Date().toString());">
+      (Referrer) ABRIR POPUP SOCIAL MEDIA HUNTER
+    </button>
+  </li>
+  <li>
+    <button
+      onClick="javascript:createPopUp('http://localhost:8080/referrers/watch', new Date().toString(), true);">
+      (NO Referrer) ABRIR POPUP SOCIAL MEDIA HUNTER
+    </button>
+  </li>
+  <li><a target="_blank" href="http://localhost:8080/referrers/watch">Go to social media hunter watch page</a>
+  </li>
+</ol>
+
+<h2>Social media hunter watch page</h2>
+<iframe
+  frameborder="0"
+  src="http://localhost:8080/referrers/watch"
+></iframe>
+<hr/>
+
+<h2>(No Referrer) Social media hunter watch page</h2>
+<iframe
+  frameborder="0"
+  referrerpolicy="no-referrer"
+  src="http://localhost:8080/referrers/watch"
+></iframe>

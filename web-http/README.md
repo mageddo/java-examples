@@ -1,3 +1,15 @@
+## Running it
+```
+./gradlew quarkusDev
+```
+
+## Referrer Testing
+
+accesss http://localhost:8080/referrer-test.html
+
+![](https://i.imgur.com/Zku7XBK.png)
+
+--------------------------------------------
 # web-http Project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.

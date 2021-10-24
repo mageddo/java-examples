@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h3>Referrer from javascript</h3>
+<pre id="javascriptReferrer"></pre>
+
+<h3>Referrer from Ajax</h3>
+<pre id="ajaxReferrer"></pre>
+
+<h3>Referrer from server</h3>
+<pre th:text="${headers}"></pre>
+
+<script>
+  $("#javascriptReferrer").html("JavaScript Referrer: " + document.referrer);
+  $(function(){
+    $.ajax({
+      url: 'http://localhost:8080/referrers/current',
+      method: 'GET',
+      success: function(data){
+        $("#ajaxReferrer").html(data);
+      }
+    })
+  });
+</script>
+</body>
+</html>
