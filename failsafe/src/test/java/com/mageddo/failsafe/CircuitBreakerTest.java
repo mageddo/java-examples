@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import net.jodah.failsafe.CircuitBreaker;
-import net.jodah.failsafe.CircuitBreakerOpenException;
-import net.jodah.failsafe.Failsafe;
 
 import org.junit.jupiter.api.Test;
 
+import dev.failsafe.CircuitBreaker;
+import dev.failsafe.CircuitBreakerOpenException;
+import dev.failsafe.Failsafe;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,11 +21,12 @@ public class CircuitBreakerTest {
 
     final var stats = new Stats();
 
-    final var breaker = new CircuitBreaker<String>()
+    final var breaker = CircuitBreaker.<String>builder()
         .handle(UncheckedIOException.class)
         .withFailureThreshold(3, 5)
         .withSuccessThreshold(5)
-        .withDelay(Duration.ofMillis(500));
+        .withDelay(Duration.ofMillis(500))
+        .build();
 
     calcStats(stats, () -> runSuccess(breaker));
     calcStats(stats, () -> runSuccess(breaker));

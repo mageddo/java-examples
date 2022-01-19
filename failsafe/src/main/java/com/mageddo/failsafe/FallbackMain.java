@@ -2,23 +2,27 @@ package com.mageddo.failsafe;
 
 import java.time.Duration;
 
-import net.jodah.failsafe.Failsafe;
-import net.jodah.failsafe.Fallback;
-import net.jodah.failsafe.RetryPolicy;
+import dev.failsafe.Failsafe;
+import dev.failsafe.Fallback;
+import dev.failsafe.RetryPolicy;
 
 public class FallbackMain {
   public static void main(String[] args) {
     Failsafe
         .with(
-            Fallback.ofAsync(it -> {
-              System.out.println("suppressing error");
-            }),
-            new RetryPolicy<>()
+            Fallback
+                .builder(it -> {
+                  System.out.println("suppressing error");
+                })
+                .withAsync()
+                .build(),
+            RetryPolicy.builder()
                 .withMaxAttempts(3)
                 .withDelay(Duration.ofSeconds(3))
                 .handle(RuntimeException.class)
                 .onRetriesExceeded(it -> System.out.println("retries exceeded: " + it))
                 .onRetry(it -> System.out.println("retry: " + it))
+                .build()
         )
         .onComplete(it -> System.out.println("completed :" + it))
         .onFailure(it -> System.out.println("failure: " + it))
