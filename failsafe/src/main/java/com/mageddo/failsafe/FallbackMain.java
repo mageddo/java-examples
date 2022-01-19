@@ -6,7 +6,7 @@ import net.jodah.failsafe.Failsafe;
 import net.jodah.failsafe.Fallback;
 import net.jodah.failsafe.RetryPolicy;
 
-public class Main {
+public class FallbackMain {
   public static void main(String[] args) {
     Failsafe
         .with(
