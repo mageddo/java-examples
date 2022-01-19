@@ -2,8 +2,12 @@ plugins {
   id "java"
 }
 
+repositories {
+  mavenCentral()
+}
+
 sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
-  implementation 'net.jodah:failsafe:2.3.5'
+  implementation 'net.jodah:failsafe:2.4.4'
 }
