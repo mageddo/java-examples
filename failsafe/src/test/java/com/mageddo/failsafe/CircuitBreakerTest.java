@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * https://failsafe.dev/circuit-breaker/
+ */
 public class CircuitBreakerTest {
 
   @Test
@@ -39,7 +42,8 @@ public class CircuitBreakerTest {
 
     calcStats(stats, () -> runSuccess(breaker));
 
-    sleep(1000);
+    Threads.sleep(1000);
+
     calcStats(stats, () -> runSuccess(breaker));
     calcStats(stats, () -> runSuccess(breaker));
 
@@ -72,14 +76,6 @@ public class CircuitBreakerTest {
   String runSuccess(CircuitBreaker<String> breaker) {
     return Failsafe.with(breaker)
         .get(() -> LocalDateTime.now().toString());
-  }
-
-  void sleep(int millis) {
-    try {
-      Thread.sleep(millis);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   public static class Stats {
