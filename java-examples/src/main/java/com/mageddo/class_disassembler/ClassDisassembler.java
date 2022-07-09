@@ -37,5 +37,4 @@ public class ClassDisassembler {
   public static void main(String[] args) {
     System.out.println(ClassDisassembler.findStructureAsText(ClassDisassembler.class));
   }
-
 }
