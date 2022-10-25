@@ -1,11 +1,13 @@
 plugins {
-  id 'java'
+  id 'java-library'
 }
 
 repositories {
   mavenCentral()
+  maven { url "https://jcenter.bintray.com" }
 }
 
 dependencies {
   implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
+  implementation group: 'me.himanshusoni.gpxparser', name: 'gpx-parser', version: '1.13'
 }
