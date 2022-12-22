@@ -11,13 +11,13 @@ import lombok.SneakyThrows;
 
 public class Car {
 
-  public static final int DOORS = 1;
-  public static final int WHEELS = 1 << DOORS;
-  public static final int FUEL = 1 << WHEELS;
-  public static final int BATTERY = 1 << FUEL;
-  public static final int MULTIMEDIA = 1 << BATTERY;
+  public static final int TURBO = 1;
+  public static final int WHEELS = TURBO << 1;
+  public static final int FUEL = WHEELS << 1;
+  public static final int BATTERY = FUEL << 1;
+  public static final int MULTIMEDIA = BATTERY << 1;
 
-  public static final int ALL_FLAGS = DOORS | WHEELS | FUEL | BATTERY | MULTIMEDIA;
+  public static final int ALL_FLAGS = TURBO | WHEELS | FUEL | BATTERY | MULTIMEDIA;
 
   public static void main(String[] args) {
     getFlags().forEach(Car::printValue);
