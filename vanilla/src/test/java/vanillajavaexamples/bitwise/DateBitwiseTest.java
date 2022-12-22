@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 class DateBitwiseTest {
 
-  public static final int DAYS = 31;
+  public static final int DAYS = 64;
   public static final LocalDate START_AT = LocalDate.parse("2021-03-03");
 
   @Test
