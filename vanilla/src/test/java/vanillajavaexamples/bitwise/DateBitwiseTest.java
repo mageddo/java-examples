@@ -75,7 +75,7 @@ class DateBitwiseTest {
   }
 
   @Test
-  void validateBytesUsed(){
+  void validateBytesUsed() {
     // arrange
     final var days = this.createDaysRange();
     final var flags = DateBitwise.toFlags(days);
@@ -118,7 +118,38 @@ class DateBitwiseTest {
   }
 
   @Test
-  void timeTest(){
+  void maxBytesNeedleToStoreFlags() {
+
+    // arrange
+    final var days = this.createDaysRange();
+    var flags = DateBitwise.toFlags(days);
+    int max = Integer.MIN_VALUE;
+
+    // act
+    // assert
+
+    // gzip + base64
+    {
+      for (int i = 0; i < days.size(); i++) {
+        final var day = days.get(i);
+
+        assertTrue(DateBitwise.hasDate(flags, START_AT, day));
+        flags = DateBitwise.removeDate(flags, START_AT, day);
+        assertFalse(DateBitwise.hasDate(flags, START_AT, day));
+
+        final var gzipBase64 = GzipUtils.gzipToBase64(flags.toByteArray());
+        max = Math.max(max, gzipBase64.length());
+        System.out.printf(
+            "length=%d, i=%d, gzipBase64=%s%n",
+            gzipBase64.length(), i + 1, gzipBase64
+        );
+      }
+    }
+    assertEquals(40, max);
+  }
+
+  @Test
+  void timeTest() {
     final var stopWatch = StopWatch.createStarted();
     final var days = this.createDaysRange();
     final var flags = DateBitwise.toFlags(days);
