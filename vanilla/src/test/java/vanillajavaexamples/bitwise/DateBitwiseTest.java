@@ -15,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static vanillajavaexamples.gzip.GzipUtils.gUnzip;
 import vanillajavaexamples.gzip.GzipUtils;
+import static vanillajavaexamples.gzip.GzipUtils.gUnzip;
 
 @Slf4j
 class DateBitwiseTest {
@@ -25,7 +25,7 @@ class DateBitwiseTest {
   public static final LocalDate START_AT = LocalDate.parse("2021-03-03");
 
   @Test
-  void mustAdd720DaysAndAllTestTrue() {
+  void mustAddDaysAndAllTestTrue() {
 
     // arrange
     final var days = this.createDaysRange();

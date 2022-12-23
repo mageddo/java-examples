@@ -22,7 +22,6 @@ public class DateBitwise {
       return v;
     }
     return BigInteger.ONE;
-//    return Integer.parseInt(date.toString().replace("-", ""));
   }
 
   public static boolean hasFlag(BigInteger flags, BigInteger flag) {

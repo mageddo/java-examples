@@ -19,12 +19,6 @@ public class Car {
 
   public static final int ALL_FLAGS = TURBO | WHEELS | FUEL | BATTERY | MULTIMEDIA;
 
-  public static void main(String[] args) {
-    getFlags().forEach(Car::printValue);
-    System.out.println(Car.hasFlag(ALL_FLAGS, MULTIMEDIA));
-    System.out.println(Car.hasFlag(Car.removeFlag(ALL_FLAGS, MULTIMEDIA), MULTIMEDIA));
-  }
-
   public static boolean hasFlag(int flags, int flag) {
     return (flags & flag) == flag;
   }
