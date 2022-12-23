@@ -118,7 +118,7 @@ class DateBitwiseTest {
   }
 
   @Test
-  void maxBytesNeedleToStoreFlags() {
+  void maxBytesNeedledToStoreFlags() {
 
     // arrange
     final var days = this.createDaysRange();
