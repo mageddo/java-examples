@@ -56,7 +56,7 @@ class DateBitwiseTest {
       final var hasDate = DateBitwise.hasDate(flags, START_AT, randomDate);
 
       if (hasDate) {
-        flags = DateBitwise.removeDate(flags, START_AT, randomDate);
+        flags = DateBitwise.removeFlag(flags, START_AT, randomDate);
         haystack.remove(randomDate);
         removed++;
       }
@@ -134,7 +134,7 @@ class DateBitwiseTest {
         final var day = days.get(i);
 
         assertTrue(DateBitwise.hasDate(flags, START_AT, day));
-        flags = DateBitwise.removeDate(flags, START_AT, day);
+        flags = DateBitwise.removeFlag(flags, START_AT, day);
         assertFalse(DateBitwise.hasDate(flags, START_AT, day));
 
         final var gzipBase64 = GzipUtils.gzipToBase64(flags.toByteArray());
@@ -154,7 +154,7 @@ class DateBitwiseTest {
     final var days = this.createDaysRange();
     final var flags = DateBitwise.toFlags(days);
     assertTrue(DateBitwise.hasDate(flags, START_AT, START_AT));
-    final var newFlags = DateBitwise.removeDate(flags, START_AT, START_AT);
+    final var newFlags = DateBitwise.removeFlag(flags, START_AT, START_AT);
     assertFalse(DateBitwise.hasDate(newFlags, START_AT, START_AT));
     assertTrue(stopWatch.getTime() < 300);
   }

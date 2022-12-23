@@ -16,28 +16,61 @@ public class DateBitwise {
   }
 
   public static BigInteger toFlag(LocalDate first, LocalDate date) {
-    final var days = (int) ChronoUnit.DAYS.between(first, date);
-    final var v = BigInteger.ONE.shiftLeft(days);
+    return toFlag((int) ChronoUnit.DAYS.between(first, date));
+  }
+
+  public static BigInteger toFlag(int idx) {
+    final var v = BigInteger.ONE.shiftLeft(idx);
     if (v.compareTo(BigInteger.ONE) > 0) {
       return v;
     }
     return BigInteger.ONE;
   }
 
-  public static boolean hasFlag(BigInteger flags, BigInteger flag) {
-    return flags.and(flag).equals(flag);
-  }
-
+  /**
+   * Removes a flag from the flag haystack.
+   *
+   * @return a new flag haystack without the removed flag.
+   */
   public static BigInteger removeFlag(BigInteger flags, BigInteger flag) {
     return flags.andNot(flag);
   }
 
-  public static boolean hasDate(BigInteger flags, LocalDate first, LocalDate d) {
+  /**
+   * Removes the respective for the d date calculating it's position using the first date.
+   *
+   * It only will work if all the dates between first and d were stored to the flags, example,
+   * if 2021-01-01,2021-01-02,2021-01-03 were stored and you are removing 2021-01-02 then pass it
+   * as d and 2021-01-01 as first.
+   *
+   * @param first the first date stored at the flags
+   * @param d the data to be removed
+   *
+   */
+  public static BigInteger removeFlag(BigInteger flags, LocalDate first, LocalDate d) {
+    return removeFlag(flags, toFlag(first, d));
+  }
+
+  /**
+   * Removes a flag with the passed index from the haystack, it's useful when storing
+   * dates or objects that are not sequential, then you can put them to a list and use the index
+   * here, example consider (Apple, Orange, Pineapple, Grape), if you pass idx=2 it will
+   * remove the flag 4 which is Pineapple.
+   */
+  public static BigInteger removeFlag(BigInteger flags, int idx) {
+    return removeFlag(flags, toFlag(idx));
+  }
+
+  public static boolean hasFlag(BigInteger flags, int idx) {
+    return hasFlag(flags, toFlag(idx));
+  }
+
+  public static boolean hasFlag(BigInteger flags, LocalDate first, LocalDate d) {
     return hasFlag(flags, toFlag(first, d));
   }
 
-  public static BigInteger removeDate(BigInteger flags, LocalDate first, LocalDate d) {
-    return removeFlag(flags, toFlag(first, d));
+  public static boolean hasFlag(BigInteger flags, BigInteger flag) {
+    return flags.and(flag).equals(flag);
   }
 
 }
