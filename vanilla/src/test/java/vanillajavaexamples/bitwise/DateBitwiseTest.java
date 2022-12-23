@@ -35,7 +35,7 @@ class DateBitwiseTest {
     // assert
     assertEquals(days.size(), DAYS);
     days.forEach(it -> {
-      assertTrue(DateBitwise.hasDate(flags, START_AT, it));
+      assertTrue(DateBitwise.hasFlag(flags, START_AT, it));
     });
   }
 
@@ -53,21 +53,21 @@ class DateBitwiseTest {
     while (!haystack.isEmpty()) {
 
       final var randomDate = days.get(randomPos());
-      final var hasDate = DateBitwise.hasDate(flags, START_AT, randomDate);
+      final var hasDate = DateBitwise.hasFlag(flags, START_AT, randomDate);
 
       if (hasDate) {
         flags = DateBitwise.removeFlag(flags, START_AT, randomDate);
         haystack.remove(randomDate);
         removed++;
       }
-      assertFalse(DateBitwise.hasDate(flags, START_AT, randomDate));
+      assertFalse(DateBitwise.hasFlag(flags, START_AT, randomDate));
 
       for (final var date : haystack) {
         final var msg = String.format(
             "removed=%d, randomDate=%s, flags=%d, date=%s",
             removed, randomDate, flags, date
         );
-        assertTrue(DateBitwise.hasDate(flags, START_AT, date), msg);
+        assertTrue(DateBitwise.hasFlag(flags, START_AT, date), msg);
       }
     }
     System.out.printf("status=finished, removed=%d%n", removed);
@@ -133,9 +133,9 @@ class DateBitwiseTest {
       for (int i = 0; i < days.size(); i++) {
         final var day = days.get(i);
 
-        assertTrue(DateBitwise.hasDate(flags, START_AT, day));
+        assertTrue(DateBitwise.hasFlag(flags, START_AT, day));
         flags = DateBitwise.removeFlag(flags, START_AT, day);
-        assertFalse(DateBitwise.hasDate(flags, START_AT, day));
+        assertFalse(DateBitwise.hasFlag(flags, START_AT, day));
 
         final var gzipBase64 = GzipUtils.gzipToBase64(flags.toByteArray());
         max = Math.max(max, gzipBase64.length());
@@ -153,9 +153,9 @@ class DateBitwiseTest {
     final var stopWatch = StopWatch.createStarted();
     final var days = this.createDaysRange();
     final var flags = DateBitwise.toFlags(days);
-    assertTrue(DateBitwise.hasDate(flags, START_AT, START_AT));
+    assertTrue(DateBitwise.hasFlag(flags, START_AT, START_AT));
     final var newFlags = DateBitwise.removeFlag(flags, START_AT, START_AT);
-    assertFalse(DateBitwise.hasDate(newFlags, START_AT, START_AT));
+    assertFalse(DateBitwise.hasFlag(newFlags, START_AT, START_AT));
     assertTrue(stopWatch.getTime() < 300);
   }
 
