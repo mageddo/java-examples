@@ -56,6 +56,22 @@ public class DateBitwise {
    * dates or objects that are not sequential, then you can put them to a list and use the index
    * here, example consider (Apple, Orange, Pineapple, Grape), if you pass idx=2 it will
    * remove the flag 4 which is Pineapple.
+   *
+   * <code><pre>
+   *   final int Apple = 1, Orange = Apple << 1, Pineapple = Orange << 1, Grape = Pineapple << 1;
+   *   final var flags = BigInteger.valueOf(Apple | Orange | Apple | Pineapple | Grape);
+   *   System.out.printf(
+   *       "Apple=%d, Orange=%d, Pineapple=%d, Grape=%d%n",
+   *       Apple, Orange, Pineapple, Grape
+   *   );
+   *   System.out.println("hasPineapple=" + hasFlag(flags, BigInteger.valueOf(Pineapple)));
+   *   final var resultFlags = removeFlag(flags, 2);
+   *   System.out.println("hasPineapple=" + hasFlag(resultFlags, BigInteger.valueOf(Pineapple)));
+   *
+   *   // Apple=1, Orange=2, Pineapple=4, Grape=8
+   *   // hasPineapple=true
+   *   // hasPineapple=false
+   * </pre></code>
    */
   public static BigInteger removeFlag(BigInteger flags, int idx) {
     return removeFlag(flags, toFlag(idx));
