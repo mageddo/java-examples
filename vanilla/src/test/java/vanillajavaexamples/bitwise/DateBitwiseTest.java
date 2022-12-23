@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 class DateBitwiseTest {
 
-  public static final int DAYS = 64;
+  public static final int DAYS = 720;
   public static final LocalDate START_AT = LocalDate.parse("2021-03-03");
 
   @Test
@@ -35,7 +36,7 @@ class DateBitwiseTest {
   }
 
   @Test
-  void mustAdd720DaysAndRandomlyRemoveEach() {
+  void mustAddDaysAndRandomlyRemoveEach() {
 
     // arrange
     final var days = this.createDaysRange();
@@ -58,17 +59,26 @@ class DateBitwiseTest {
       assertFalse(DateBitwise.hasDate(flags, START_AT, randomDate));
 
       for (final var date : haystack) {
-        assertTrue(
-            DateBitwise.hasDate(flags, START_AT, date),
-            String.format(
-                "removed=%d, randomDate=%s, flags=%d, date=%s",
-                removed, randomDate, flags, date
-            )
+        final var msg = String.format(
+            "removed=%d, randomDate=%s, flags=%d, date=%s",
+            removed, randomDate, flags, date
         );
+        assertTrue(DateBitwise.hasDate(flags, START_AT, date), msg);
       }
-
     }
+    System.out.printf("status=finished, removed=%d%n", removed);
 
+  }
+
+  @Test
+  void timeTest(){
+    final var stopWatch = StopWatch.createStarted();
+    final var days = this.createDaysRange();
+    final var flags = DateBitwise.toFlags(days);
+    assertTrue(DateBitwise.hasDate(flags, START_AT, START_AT));
+    final var newFlags = DateBitwise.removeDate(flags, START_AT, START_AT);
+    assertFalse(DateBitwise.hasDate(newFlags, START_AT, START_AT));
+    assertTrue(stopWatch.getTime() < 300);
   }
 
   int randomPos() {

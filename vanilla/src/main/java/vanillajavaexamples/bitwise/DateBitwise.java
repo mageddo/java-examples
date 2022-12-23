@@ -1,38 +1,43 @@
 package vanillajavaexamples.bitwise;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class DateBitwise {
 
-  public static long toFlags(List<LocalDate> dates) {
+  public static BigInteger toFlags(List<LocalDate> dates) {
     return dates
         .stream()
         .map(it -> toFlag(dates.get(0), it))
-        .reduce((a, b) -> a | b)
+        .reduce(BigInteger::or)
         .get();
   }
 
-  public static long toFlag(LocalDate first, LocalDate date) {
-    final var days = ChronoUnit.DAYS.between(first, date);
-    return Math.max(1L, 1L << days);
+  public static BigInteger toFlag(LocalDate first, LocalDate date) {
+    final var days = (int) ChronoUnit.DAYS.between(first, date);
+    final var v = BigInteger.ONE.shiftLeft(days);
+    if (v.compareTo(BigInteger.ONE) > 0) {
+      return v;
+    }
+    return BigInteger.ONE;
 //    return Integer.parseInt(date.toString().replace("-", ""));
   }
 
-  public static boolean hasFlag(long flags, long flag) {
-    return (flags & flag) == flag;
+  public static boolean hasFlag(BigInteger flags, BigInteger flag) {
+    return flags.and(flag).equals(flag);
   }
 
-  public static long removeFlag(long flags, long flag) {
-    return flags & (~flag);
+  public static BigInteger removeFlag(BigInteger flags, BigInteger flag) {
+    return flags.andNot(flag);
   }
 
-  public static boolean hasDate(long flags, LocalDate first, LocalDate d) {
+  public static boolean hasDate(BigInteger flags, LocalDate first, LocalDate d) {
     return hasFlag(flags, toFlag(first, d));
   }
 
-  public static long removeDate(long flags, LocalDate first, LocalDate d) {
+  public static BigInteger removeDate(BigInteger flags, LocalDate first, LocalDate d) {
     return removeFlag(flags, toFlag(first, d));
   }
 
