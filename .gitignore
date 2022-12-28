@@ -12,3 +12,4 @@ transient
 *.orig
 ajcore*
 **/resources/lib/
+*.map
