@@ -13,3 +13,6 @@ transient
 ajcore*
 **/resources/lib/
 *.map
+*.class
+*.jar
+*.hex
