@@ -18,6 +18,11 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+/**
+ * $ javac SpringLogLevelChanger.java
+ * $ java SpringLogLevelChanger "http://localhost:8080/actuator/loggers/com.acme"
+ * You are done!
+ */
 public class SpringLogLevelChanger {
 
   static {
