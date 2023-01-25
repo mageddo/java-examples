@@ -10,7 +10,7 @@
 </head>
 <body>
 <h1>Thymeleaf views are working!</h1>
-<div th:replace="${content}">
+<div th:include="${content}" th:remove="tag" >
   <p>Layout content</p>
 </div>
 <footer>
