@@ -4,16 +4,17 @@ plugins {
 }
 
 repositories {
-  jcenter()
+  mavenCentral()
+  mavenLocal()
 }
 
 dependencies {
 
-  compileOnly("org.projectlombok:lombok:1.18.16")
-  annotationProcessor("org.projectlombok:lombok:1.18.16")
+  compileOnly("org.projectlombok:lombok:1.18.24")
+  annotationProcessor("org.projectlombok:lombok:1.18.24")
 
-  compileOnly("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
-  annotationProcessor("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
+//  compileOnly("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
+//  annotationProcessor("com.mageddo.nativeimage:reflection-config-generator:2.3.4")
 
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   implementation("io.quarkus:quarkus-jdbc-postgresql")
@@ -30,13 +31,13 @@ dependencies {
   implementation platform("org.jdbi:jdbi3-bom:3.13.0")
   implementation("org.jdbi:jdbi3-core")
 
-  implementation("com.mageddo.kafka-client:kafka-client:1.0.2")
+  implementation("com.mageddo.rapids-kafka-client:rapids-kafka-client:2.0.6")
 
-  testCompileOnly("org.projectlombok:lombok:1.18.16")
-  testAnnotationProcessor("org.projectlombok:lombok:1.18.16")
+  testCompileOnly("org.projectlombok:lombok:1.18.24")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
   testImplementation("io.quarkus:quarkus-junit5")
   testImplementation("io.rest-assured:rest-assured")
-  testImplementation("org.mockito:mockito-junit-jupiter:3.3.3")
+  testImplementation("org.mockito:mockito-junit-jupiter:5.0.0")
 
   testImplementation("io.zonky.test:embedded-postgres:1.2.5")
   testRuntimeOnly enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:12.2.0")
@@ -56,6 +57,10 @@ compileTestJava {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_15
-  targetCompatibility = JavaVersion.VERSION_15
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+test {
+  systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
 }
