@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.quarkus.test.junit.QuarkusTest;
 import templates.ConsumerRecordsTemplates;
-import templates.ContextTemplates;
 import testing.SingleInstancePostgresExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,9 +45,7 @@ public class StockPriceMDBTest {
     );
 
     // act
-    this.stockPriceMDB
-        .consume()
-        .accept(ContextTemplates.build(consumerRecords), consumerRecords);
+    this.stockPriceMDB.consume(consumerRecords);
 
     // assert
     final var foundStock = this.stockPriceDao.getStock("PAGS");
