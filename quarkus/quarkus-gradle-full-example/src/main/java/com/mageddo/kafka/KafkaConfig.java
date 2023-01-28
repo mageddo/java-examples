@@ -1,63 +1,66 @@
 package com.mageddo.kafka;
 
-import com.mageddo.kafka.client.Consumer;
+import java.time.Duration;
+import java.util.Map;
+
+import javax.enterprise.inject.Produces;
+
 import com.mageddo.kafka.client.ConsumerConfig;
-import com.mageddo.kafka.client.ConsumerConfigDefault;
-import com.mageddo.kafka.client.ConsumerStarter;
 
-import io.quarkus.runtime.ShutdownEvent;
-import io.quarkus.runtime.StartupEvent;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.CommonClientConfigs;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import io.quarkus.arc.DefaultBean;
 
-import java.util.stream.Collectors;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
+import static org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG;
+import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
 
-@Slf4j
-@Singleton
 public class KafkaConfig {
 
-  private final ConsumerStarter<String, byte[]> consumerStarter;
-
-  @Inject
-  public KafkaConfig(ConsumerConfig<String, byte[]> config) {
-    this.consumerStarter = new ConsumerStarter<>(config);
-  }
-
-  public void init(
-      @Observes StartupEvent event,
-      Instance<Consumer> consumers,
-      DefaultRecoverStrategy recoverStrategy
+  @Produces
+  @DefaultBean
+  public Producer<String, byte[]> producer(
+      @ConfigProperty(name = "kafka.bootstrap.servers") String bootstrapServer
   ) {
-    final var consumersConfigs = consumers
-        .stream()
-        .map(it -> {
-          final ConsumerConfigDefault.Builder<String, byte[]> config = ConsumerConfigDefault.builderOf(it.config());
-          return (ConsumerConfig<String, byte[]>) config
-              .recoverCallback(ctx -> {
-                KafkaConsumingReporter.report(ctx);
-                recoverStrategy.recover(
-                    ctx,
-                    String.format(
-                        "%s_DLQ",
-                        it.config()
-                            .topics()
-                            .stream()
-                            .findFirst()
-                            .orElseThrow()
-                    )
-                );
-              })
-              .build();
-        })
-        .collect(Collectors.toList());
-    this.consumerStarter.startFromConfig(consumersConfigs);
+    return new KafkaProducer<>(Map.of(
+        CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer,
+        KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName(),
+        VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getName()
+    ));
   }
 
-  public void shutdown(@Observes ShutdownEvent event) {
-    this.consumerStarter.stop();
+  @Produces
+  @DefaultBean
+  public ConsumerConfig<String, byte[]> consumers(
+      @ConfigProperty(name = "kafka.bootstrap.servers") String bootstrapServer
+  ) {
+    return ConsumerConfig
+        .<String, byte[]>builder()
+        .prop(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer)
+        .prop(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName())
+        .prop(VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class.getName())
+        .prop(SESSION_TIMEOUT_MS_CONFIG, 30000)
+        .prop(MAX_POLL_INTERVAL_MS_CONFIG, (int) Duration.ofMinutes(20).toMillis())
+        .prop(GROUP_ID_CONFIG, getProperty("kafka.consumer.group.id", String.class))
+        .prop(BOOTSTRAP_SERVERS_CONFIG, getProperty("kafka.bootstrap.servers", String.class))
+        .build()
+        ;
+  }
+
+  private String getProperty(String k, Class<String> clazz) {
+    return ConfigProvider.getConfig().getValue(k, clazz);
   }
 }
