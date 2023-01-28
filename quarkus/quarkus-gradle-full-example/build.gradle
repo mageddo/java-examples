@@ -27,6 +27,8 @@ dependencies {
   implementation("io.quarkus:quarkus-kafka-client")
   implementation("com.mageddo.javaee-jdbi:javaee-jdbi:0.1.1")
 
+  implementation ("javax.servlet:javax.servlet-api:4.0.1") // graalvm thymeleaf fix
+
   implementation platform("org.jdbi:jdbi3-bom:3.36.0")
   implementation("org.jdbi:jdbi3-core")
 
