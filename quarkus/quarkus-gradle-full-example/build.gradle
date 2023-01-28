@@ -26,10 +26,12 @@ dependencies {
   implementation("io.quarkus:quarkus-scheduler")
   implementation("io.quarkus:quarkus-kafka-client")
   implementation("com.mageddo.javaee-jdbi:javaee-jdbi:0.1.1")
+
+  implementation platform("org.jdbi:jdbi3-bom:3.36.0")
+  implementation("org.jdbi:jdbi3-core")
+
   implementation("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
 
-  implementation platform("org.jdbi:jdbi3-bom:3.13.0")
-  implementation("org.jdbi:jdbi3-core")
 
   implementation("com.mageddo.rapids-kafka-client:rapids-kafka-client:2.0.6")
   implementation ("org.apache.commons:commons-lang3:3.12.0")
