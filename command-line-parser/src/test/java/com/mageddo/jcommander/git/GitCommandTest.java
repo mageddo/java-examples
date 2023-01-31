@@ -1,31 +1,31 @@
 package com.mageddo.jcommander.git;
 
-import org.junit.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
 
-public class GitCommandTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-	@Test
-	public void buildCommander() {
+class GitCommandTest {
 
-		final ByteArrayOutputStream bout = new ByteArrayOutputStream();
+  @Test
+  void buildCommander() {
 
-		// arrange
-		System.setOut(new PrintStream(bout));
+    final ByteArrayOutputStream bout = new ByteArrayOutputStream();
 
-		// act
-		GitCommand.parseAndRun("status", "do.txt", "stuff.txt");
+    // arrange
+    System.setOut(new PrintStream(bout));
 
-		// assert
-		assertEquals(
-			"git status command running, parameters=GitStatusCommand{paths=[do.txt, stuff.txt]}\n",
-			bout.toString()
-		);
+    // act
+    GitCommand.parseAndRun("status", "do.txt", "stuff.txt");
+
+    // assert
+    assertEquals(
+        "git status command running, parameters=GitStatusCommand{paths=[do.txt, stuff.txt]}\n",
+        bout.toString()
+    );
 
 
-	}
+  }
 }
