@@ -25,7 +25,7 @@ Limitations
 
 * Uses Reflections, not a good option for native image programs
 
-## 1. Pico Cli
+## 3. Pico Cli
 
 Limitations
 * Reflections but [it's compatible with native image][1]  
