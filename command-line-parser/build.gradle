@@ -1,4 +1,15 @@
+plugins {
+  id "java"
+}
+repositories {
+  mavenCentral()
+}
 dependencies {
-	compile group: 'com.beust', name: 'jcommander', version: '1.72'
-	testCompile 'junit:junit:4.12'
+  implementation(group: 'com.beust', name: 'jcommander', version: '1.72')
+  testImplementation("org.junit.jupiter:junit-jupiter:5.8.+")
+  testImplementation("org.mockito:mockito-junit-jupiter:4.2.+")
+}
+
+test {
+  useJUnitPlatform()
 }
