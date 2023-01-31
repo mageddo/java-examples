@@ -1,4 +1,4 @@
-package com.mageddo.jcommander.git.commonscli;
+package com.mageddo.commonscli;
 
 import com.mageddo.commonscli.SimpleBooleanArgs;
 
