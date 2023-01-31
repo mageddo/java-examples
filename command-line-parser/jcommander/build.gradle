@@ -1,4 +1,0 @@
-dependencies {
-	compile group: 'com.beust', name: 'jcommander', version: '1.72'
-	testCompile 'junit:junit:4.12'
-}
