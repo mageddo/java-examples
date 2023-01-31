@@ -2,8 +2,10 @@ package com.mageddo.jcommander.git.commonscli;
 
 import com.mageddo.commonscli.SimpleBooleanArgs;
 
+import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,9 +15,10 @@ class SimpleBooleanArgTest {
 
     // arrange
     final var args = new String[]{"-t"};
+    final var obj = SimpleBooleanArgs.parse(args);
 
     // act
-    assertTrue(SimpleBooleanArgs.isTrue(args));
+    assertTrue(obj.isTrue());
   }
 
   @Test
@@ -23,8 +26,28 @@ class SimpleBooleanArgTest {
 
     // arrange
     final var args = new String[]{};
+    final var obj = SimpleBooleanArgs.parse(args);
 
     // act
-    assertFalse(SimpleBooleanArgs.isTrue(args));
+    assertFalse(obj.isTrue());
+  }
+
+  @Test
+  void mustGenerateHelp() throws ParseException {
+    // arrange
+    final var args = new String[]{"-h"};
+
+    // act
+    final var obj = SimpleBooleanArgs.parse(args);
+
+    // assert
+    assertEquals(
+        """
+        usage: koeh
+         -h   Help
+         -t   display current time
+        """,
+        obj.help()
+    );
   }
 }
