@@ -26,8 +26,12 @@ Limitations
 * Uses Reflections, not a good option for native image programs
 
 ## 1. Pico Cli
-TBD
+
+Limitations
+* Reflections but [it's compatible with native image][1]  
 
 
 # Dictionary
 * Subcommands: A command like `git status` or `docker ps` different than `git --status`
+
+[1]: https://picocli.info/picocli-on-graalvm.html
