@@ -10,9 +10,16 @@ repositories {
 }
 
 dependencies {
+
+  compileOnly 'org.projectlombok:lombok:1.18.24'
+  annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
   implementation(group: 'com.beust', name: 'jcommander', version: '1.72')
   implementation group: 'commons-cli', name: 'commons-cli', version: '1.5.0'
   implementation group: 'info.picocli', name: 'picocli', version: '4.7.1'
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.24'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
   testImplementation("org.junit.jupiter:junit-jupiter:5.8.+")
   testImplementation("org.mockito:mockito-junit-jupiter:4.2.+")
 }
