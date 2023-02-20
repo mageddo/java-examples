@@ -1,0 +1,53 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 2
+
+[*.yml]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+[{*.java, *.kt}]
+
+# tag::generic[]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_size = 2
+indent_style = space
+trim_trailing_whitespace = true
+max_line_length = 100
+# end::generic[]
+
+# tag::intellij[]
+ij_continuation_indent_size = 4
+ij_any_wrap_first_method_in_call_chain = true
+ij_any_align_multiline_parameters = false
+ij_wrap_on_typing = true
+ij_any_wrap_long_lines = true
+# end::intellij[]
+
+# tag::intellij-java-specific[]
+ij_any_space_before_if_left_brace = true
+ij_any_space_before_if_parentheses = true
+ij_any_space_before_for_parentheses = true
+
+ij_java_class_count_to_use_import_on_demand = 1000
+ij_java_names_count_to_use_import_on_demand = 1000
+ij_java_packages_to_use_import_on_demand = 1000
+ij_java_layout_static_imports_separately = true
+ij_java_use_single_class_imports = true
+ij_java_imports_layout = java.**,|,javax.**,|,scala.**,|,com.**,|,net.**,|,org.**,|,*
+# end::intellij-java-specific[]
