@@ -26,7 +26,7 @@ public class NetworkMain {
         try {
           final var hardwareIp = toString(it.getHardwareAddress());
           final var interfaceAddresses = it.getInterfaceAddresses();
-          final var inetAddresses = it.inetAddresses().collect(Collectors.toList());
+          final var inetAddresses = it.inetAddresses().collect(Collectors.toList()); // preferred
 
 
           System.out.printf(
