@@ -11,7 +11,7 @@ public class Main {
   public static void main(String[] args) {
     final HttpServer server = SimpleFileServer.createFileServer(
       new InetSocketAddress(8080),
-      Path.of("/home/typer/dev/projects/dns-proxy-server/src/main/resources/META-INF/resources/static"),
+      Path.of("/tmp"),
       OutputLevel.VERBOSE
     );
     server.start();
