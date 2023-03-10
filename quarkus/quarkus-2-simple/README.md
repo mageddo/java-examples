@@ -1,6 +1,8 @@
 By some reason native-image won't generate arm64 binary because of `jna-platform` dependency along with quarkus, while
 it works great on x64.
 
+Issue opened on quarkus project: https://github.com/quarkusio/quarkus/issues/31750
+
 ```bash
 $ docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 $ docker-compose build -progress=plain
