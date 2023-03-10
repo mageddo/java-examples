@@ -1,0 +1,19 @@
+plugins {
+  id "java"
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+  testImplementation("org.mockito:mockito-junit-jupiter:5.1.1")
+}
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+}
