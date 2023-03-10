@@ -7,7 +7,7 @@ import com.sun.net.httpserver.SimpleFileServer.OutputLevel;
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
 
-public class Main {
+public class SimpleFileServerMain {
   public static void main(String[] args) {
     final HttpServer server = SimpleFileServer.createFileServer(
       new InetSocketAddress(8080),
