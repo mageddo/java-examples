@@ -1,4 +1,4 @@
-By some reason native-image won't generate binary because of `com.sun.jna.platform.win32.Advapi32` while
+By some reason native-image won't generate arm64 binary because of `jna-platform` dependency along with quarkus, while
 it works great on x64.
 
 ```bash
