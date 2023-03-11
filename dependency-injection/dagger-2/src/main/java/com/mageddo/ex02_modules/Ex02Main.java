@@ -1,4 +1,4 @@
-package com.mageddo.ex02;
+package com.mageddo.ex02_modules;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -7,7 +7,7 @@ import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 
-public class Ex02Modules {
+public class Ex02Main {
 
   /**
    * This bean doens't need a module because it's already defined as a Singleton and has a @Inject constructor.
@@ -50,7 +50,7 @@ public class Ex02Modules {
     Bean2 bean2();
 
     static Graph create() {
-      return DaggerEx02Modules_Graph
+      return DaggerEx02Main_Graph
           .builder()
           .module1(new Module1())
           .build();
