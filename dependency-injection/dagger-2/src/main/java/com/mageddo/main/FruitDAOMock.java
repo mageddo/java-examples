@@ -24,4 +24,8 @@ public class FruitDAOMock implements FruitDAO {
   public List<String> getDelivered() {
     return delivered;
   }
+
+  public void clear() {
+    this.delivered.clear();
+  }
 }
