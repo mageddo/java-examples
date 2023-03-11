@@ -1,8 +1,10 @@
-package com.mageddo.dagger;
+package com.mageddo.main;
+
+import com.mageddo.main.config.Ctx;
 
 public class App {
   public static void main(String[] args) {
-    final FruitDeliveryResource fruitResource = DaggerAppConfig
+    final FruitDeliveryResource fruitResource = Ctx
         .create()
         .fruitResource();
     fruitResource.deliver("Strawberry");

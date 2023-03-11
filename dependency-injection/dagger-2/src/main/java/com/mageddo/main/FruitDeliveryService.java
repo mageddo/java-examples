@@ -1,4 +1,4 @@
-package com.mageddo.dagger;
+package com.mageddo.main;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
