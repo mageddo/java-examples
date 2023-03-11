@@ -1,4 +1,4 @@
-package com.mageddo.dagger;
+package com.mageddo.main;
 
 import javax.inject.Inject;
 
@@ -10,6 +10,6 @@ public class FruitDAOStdout implements FruitDAO {
 
   @Override
   public void deliver(String fruitName) {
-    System.out.printf("%s was delivered", fruitName);
+    System.out.printf("%s was delivered%n", fruitName);
   }
 }
