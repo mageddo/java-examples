@@ -10,6 +10,7 @@ $ ./gradlew clean build shadowJar
 $ ls -lha build/libs/dagger-2-all.jar 
 -rw-rw-r-- 1 typer typer 57K mar 10 22:47 build/libs/dagger-2-all.jar
 $ java -jar build/libs/dagger-2-all.jar
+Strawberry was delivered
 ```
 
 [1]: src/main/java/com/mageddo/main
