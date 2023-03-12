@@ -199,8 +199,7 @@ But on Linux x64 works great
 $ uname -sm
 Linux x86_64
 
-$ ./gradlew build -Dquarkus.package.type=uber-jar
+$ ./gradlew build -Dquarkus.package.type=native
 Finished generating 'quarkus-example-1.0.0-runner' in 1m 9s.
-
 ```
 
