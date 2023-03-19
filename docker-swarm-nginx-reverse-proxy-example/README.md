@@ -1,0 +1,1 @@
+See https://github.com/mageddo/docker-swarm-nginx-reverse-proxy-example.git
