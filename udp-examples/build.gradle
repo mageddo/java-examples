@@ -1,0 +1,27 @@
+allprojects {
+	apply plugin: 'java'
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+
+	dependencies {
+		compile 'org.slf4j:slf4j-api:1.7.21'
+		testCompile 'junit:junit:4.12'
+	}
+}
+
+project(':udp-server'){
+	project.version = '1.0.0'
+	jar {
+		baseName = project.name
+		manifest {
+			attributes (
+				'Main-Class': 'com.mageddo.os.tools.udpserver.Main',
+				'Class-Path': configurations.compile.collect { "lib/${it.name}" }.join(' ')
+			)
+		}
+		from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	}
+}
+

@@ -1,0 +1,3 @@
+include ':udp-server'
+
+rootProject.name = 'os-tools'

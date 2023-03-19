@@ -1,0 +1,1 @@
+See https://github.com/mageddo/java-resources-optimization.git

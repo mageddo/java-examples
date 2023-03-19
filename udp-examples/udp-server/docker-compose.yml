@@ -1,0 +1,6 @@
+version: '3.6'
+services:
+  prod-build:
+    image: defreitas/udp-server:latest
+    build:
+      context: .
