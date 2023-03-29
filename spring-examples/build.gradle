@@ -1,0 +1,14 @@
+plugins {
+  id "java"
+}
+
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+dependencies {
+  implementation("org.springframework.boot:spring-boot-starter:2.7.10")
+}
