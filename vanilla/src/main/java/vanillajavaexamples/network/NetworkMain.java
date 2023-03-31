@@ -2,7 +2,6 @@ package vanillajavaexamples.network;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.stream.Collectors;
 
 /**
 name=veth0f553e2, isUp=true, virtual=false, loopback=false, mac=26:dd:93:43:45:7b, interfaceAddresses=[/fe80:0:0:0:24dd:93ff:fe43:457b%veth0f553e2/64 [null]], inetAddresses=[/fe80:0:0:0:24dd:93ff:fe43:457b%veth0f553e2]
@@ -19,38 +18,39 @@ public class NetworkMain {
 
 
   public static void main(String[] args) throws SocketException {
-    NetworkInterface
-      .networkInterfaces()
-      .forEach(it -> {
+    NetworkInterface.networkInterfaces()
+        .forEach(it -> {
+          System.out.println();
+          try {
+            System.out.printf(
+                "name=%5s, loopback=%s, pointToPoint=%s, virtual=%s%n",
+                it.getName(),
+                it.isLoopback(),
+                it.isPointToPoint(),
+                it.isVirtual()
+            );
+          } catch (SocketException e) {
+            e.printStackTrace();
+          }
 
-        try {
-          final var hardwareIp = toString(it.getHardwareAddress());
-          final var interfaceAddresses = it.getInterfaceAddresses();
-          final var inetAddresses = it.inetAddresses().collect(Collectors.toList()); // preferred
+          it.inetAddresses().forEach(it2 -> {
+            System.out.printf(
+                "  address=%s%n    anylocal=%s, linkLocal=%s, loopback=%s, multiCast=%s, mcgGlobal=%s, mcNodeLocal=%s, "
+                    + "mcOrgLocal=%s, mcSiteLocal=%s, siteLocal=%s%n",
+                it2.toString(),
+                it2.isAnyLocalAddress(),
+                it2.isLinkLocalAddress(),
+                it2.isLoopbackAddress(),
+                it2.isMulticastAddress(),
+                it2.isMCGlobal(),
+                it2.isMCNodeLocal(),
+                it2.isMCOrgLocal(),
+                it2.isMCSiteLocal(),
+                it2.isSiteLocalAddress()
+            );
+          });
 
-
-          System.out.printf(
-            "name=%s, isUp=%b, virtual=%b, loopback=%b, mac=%s, interfaceAddresses=%s, inetAddresses=%s%n",
-            it.getName(), it.isUp(), it.isVirtual(), it.isLoopback(), hardwareIp, interfaceAddresses, inetAddresses
-          );
-
-        } catch (Exception e){
-          throw new RuntimeException(e);
-        }
-
-      });
+        });
   }
 
-  private static String toString(byte[] addr) {
-    if(addr == null){
-      return null;
-    }
-    final var sb = new StringBuilder();
-    for (byte b : addr) {
-      sb.append(String.format("%02x", Byte.toUnsignedInt(b)));
-      sb.append(':');
-    }
-    sb.deleteCharAt(sb.length()-1);
-    return sb.toString();
-  }
 }
