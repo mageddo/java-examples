@@ -1,5 +1,7 @@
 package com.example;
 
+import java.time.Duration;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -7,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * This is basic abstract class that every other class representing
  * hotmail's page should inherit from.
- * 
+ *
  * @author Waldemar Sojka
  *
  */
@@ -19,14 +21,14 @@ public abstract class Page {
 	protected final String HOTMAIL_URL = "http://hotmail.com";
 
 	// default timeout for waitForPage() method
-	protected int TIMEOUT = 120;
+	protected Duration TIMEOUT = Duration.ofMillis(120);
 
 	// abstract method returning title for current page
 	public abstract String getTitle();
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param driver
 	 */
 	public Page(WebDriver driver) {
@@ -35,7 +37,7 @@ public abstract class Page {
 
 	/**
 	 * Checks whether given page is actually present
-	 * 
+	 *
 	 * @return true if page is present, false otherwise
 	 */
 	public boolean isPresent() {
@@ -55,8 +57,8 @@ public abstract class Page {
 	}
 
 	/**
-	 * Sleeps specified amount of milliseconds 
-	 * 
+	 * Sleeps specified amount of milliseconds
+	 *
 	 * @param ms time to wait in milliseconds
 	 */
 	public void sleep(int ms) {

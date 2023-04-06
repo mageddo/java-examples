@@ -28,7 +28,7 @@ public class GoogleSearch extends Page {
 
 	public int search(String word){
 		driver.get("https://www.google.com.br/search?site=&source=hp&q=" + word);
-		List<WebElement> userField = driver.findElements(By.className("rc"));
+		List<WebElement> userField = driver.findElements(By.id("rso"));
 		return userField.size();
 	}
 }
