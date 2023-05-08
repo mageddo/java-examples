@@ -16,8 +16,7 @@ dependencies {
 
   implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
   implementation 'org.apache.commons:commons-lang3:3.12.0'
-
-//  implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+  implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
 
   testCompileOnly 'org.projectlombok:lombok:1.18.26'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'

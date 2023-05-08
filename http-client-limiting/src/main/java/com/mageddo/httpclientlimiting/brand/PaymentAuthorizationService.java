@@ -3,14 +3,15 @@ package com.mageddo.httpclientlimiting.brand;
 import java.util.Random;
 
 import com.mageddo.common.concurrent.concurrent.Threads;
-
 import com.mageddo.httpclientlimiting.brand.resource.reqres.PaymentAuthorizationReq;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Service
 public class PaymentAuthorizationService {
 
   private final Random r = new Random();
