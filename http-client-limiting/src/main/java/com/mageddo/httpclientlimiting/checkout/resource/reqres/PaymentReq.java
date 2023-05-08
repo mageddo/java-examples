@@ -5,11 +5,15 @@ import java.util.UUID;
 
 import com.mageddo.httpclientlimiting.checkout.Payment;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentReq {
 
   private UUID id;

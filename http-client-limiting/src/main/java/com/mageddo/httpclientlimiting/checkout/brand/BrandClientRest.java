@@ -27,7 +27,7 @@ public class BrandClientRest implements BrandClient {
         .cardNumber(paymentReq.getCardNumber())
         .build();
     final var res = this.restTemplate.exchange(
-        "http://localhost:8080",
+        "http://localhost:8080/api/v1/brand-payment-authorizations",
         HttpMethod.POST,
         new HttpEntity<>(req),
         PaymentAuthorizationRes.class

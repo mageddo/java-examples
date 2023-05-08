@@ -16,7 +16,7 @@ public class PaymentAuthorizationService {
 
   private final Random r = new Random();
 
-  public void authorize(PaymentAuthorizationReq paymentReq) {
+  public boolean authorize(PaymentAuthorizationReq paymentReq) {
 
     final var stopWatch = StopWatch.createStarted();
     if (r.nextInt(10) == 1) {
@@ -24,7 +24,9 @@ public class PaymentAuthorizationService {
     } else {
       Threads.sleep(40);
     }
-    log.debug("paymentId={}, time={}", paymentReq.getId(), stopWatch.getTime());
+    final var authorized = r.nextBoolean();
+    log.debug("paymentId={}, authorized={}, time={}", paymentReq.getId(), authorized, stopWatch.getTime());
+    return authorized;
 
   }
 }
