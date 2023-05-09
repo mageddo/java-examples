@@ -16,13 +16,14 @@ public class RestTemplateConfig {
   @Bean
   public RestTemplate restTemplate() {
     final var connectionManager = new PoolingHttpClientConnectionManager();
-    connectionManager.setMaxTotal(20);
-    connectionManager.setDefaultMaxPerRoute(20);
+    final var poolSize = 100;
+    connectionManager.setMaxTotal(poolSize);
+    connectionManager.setDefaultMaxPerRoute(poolSize);
 
     final var requestConfig = RequestConfig
         .custom()
-        .setConnectionRequestTimeout(Timeout.of(Duration.ofMillis(30)))
-        .setResponseTimeout(Timeout.of(Duration.ofMillis(50)))
+        .setConnectionRequestTimeout(Timeout.of(Duration.ofMillis(5000)))
+        .setResponseTimeout(Timeout.of(Duration.ofMillis(90)))
         .setConnectTimeout(Timeout.of(Duration.ofMillis(50)))
         .build();
 
