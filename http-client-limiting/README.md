@@ -1,4 +1,10 @@
-My tests 
+## Advises
+* Configure timeouts with the avg server response + 10ms
+* Configure the retry strategy to 3 times with avg server response interval.
+* Check the spring server you are making calls have a considerable server threads config default = 200 `server.tomcat.threads.max`
+* When server threads are exhaust 5 seconds is the default
+
+## My tests 
 
 The expected transaction time is 40ms for the payment authorization + 30-50ms for saving = 70-90ms
 
