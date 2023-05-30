@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.Duration;
 
+import com.mageddo.failsafe.checkout.CheckoutApiClient;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
 
@@ -85,5 +87,10 @@ public class RetryTest {
             throw new UncheckedIOException(new IOException("File Not Found o.o!"));
           });
     });
+  }
+
+  @Test
+  void mustRunElaboratedSample(){
+    assertThrows(UncheckedIOException.class, CheckoutApiClient::checkout);
   }
 }
