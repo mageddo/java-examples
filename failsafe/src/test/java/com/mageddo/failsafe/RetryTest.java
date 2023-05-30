@@ -51,4 +51,39 @@ public class RetryTest {
     // assert
     assertTrue(stopWatch.getTime() >= 600);
   }
+
+  @Test
+  void mustRetryWithCustomizedHandler(){
+
+    // arrange
+    // act
+    // assert
+    assertThrows(UncheckedIOException.class, () -> {
+      Failsafe
+          .with(
+              RetryPolicy.builder()
+                  .withMaxAttempts(3)
+                  .withDelay(Duration.ofMillis(300))
+                  .handleIf((o, throwable) -> {
+                    log.info("status=handling, o={}, throwable={}", o, throwable);
+                    return throwable instanceof UncheckedIOException;
+                  })
+                  .onRetriesExceeded(it -> log.info("retries exceeded: " + it))
+                  .onRetry(it -> log.info("retry: " + it))
+                  .build()
+          )
+          .onComplete(it -> log.info("on sucess or error :" + it))
+          .onFailure(it -> log.info("after all failures: " + it))
+          .onSuccess(it -> log.info("success: " + it))
+          .get((ctx) -> {
+            log.info(
+                "trying, attempt={}, attemptTime={}, totalTime={}",
+                ctx.getAttemptCount(),
+                ctx.getElapsedAttemptTime().toMillis(),
+                ctx.getElapsedTime().toMillis()
+            );
+            throw new UncheckedIOException(new IOException("File Not Found o.o!"));
+          });
+    });
+  }
 }
