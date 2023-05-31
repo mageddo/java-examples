@@ -1,0 +1,41 @@
+plugins {
+  id "java-library"
+  id "application"
+}
+
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+mainClassName = "com.mageddo.httpclientlimiting.Main"
+
+dependencies {
+
+  compileOnly 'org.projectlombok:lombok:1.18.26'
+  annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+  implementation 'org.apache.commons:commons-lang3:3.12.0'
+  implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+  implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.7'
+  implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.7'
+  implementation 'com.mageddo.commons:commons-lang:0.1.16'
+//  implementation "io.javalin:javalin:5.5.0"
+  implementation group: 'com.sparkjava', name: 'spark-core', version: '2.9.4'
+
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.26'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+  testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+  testImplementation("org.mockito:mockito-junit-jupiter:5.1.1")
+}
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+}
