@@ -1,0 +1,6 @@
+version: '2'
+services:
+  thread-memory-usage:
+    build:
+      context: .
+    mem_limit: "500m"

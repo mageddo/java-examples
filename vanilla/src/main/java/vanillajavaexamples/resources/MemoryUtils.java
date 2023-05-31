@@ -19,16 +19,17 @@ public class MemoryUtils {
 
     final StringBuilder sb = new StringBuilder();
 
-    sb.append("free memory: ").append(format.format(freeMemory / 1024));
+    sb.append("stats (mb)\n");
+    sb.append("free memory: ").append(format.format(freeMemory / 1024 / 1024));
     sb.append('\n');
 
-    sb.append("allocated memory: ").append(format.format(allocatedMemory / 1024));
+    sb.append("allocated memory: ").append(format.format(allocatedMemory / 1024 / 1024));
     sb.append('\n');
 
-    sb.append("max memory: ").append(format.format(maxMemory / 1024));
+    sb.append("max memory: ").append(format.format(maxMemory / 1024 / 1024));
     sb.append('\n');
 
-    sb.append("total free memory: ").append(format.format(totalFreeMemory / 1024));
+    sb.append("total free memory: ").append(format.format(totalFreeMemory / 1024 / 1024));
     sb.append('\n');
     sb.append("-------------------------------------\n");
 
