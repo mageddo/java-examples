@@ -10,4 +10,4 @@
 *.jar binary
 *.png binary
 *.jpg binary
-
+*.ttl binary
