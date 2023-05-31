@@ -1,4 +1,4 @@
-package com.mageddo.httpclient.apachehttpclient;
+package com.mageddo.httpclient;
 
 import com.mageddo.commons.concurrent.Threads;
 import com.sun.net.httpserver.HttpExchange;

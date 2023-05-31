@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.mageddo.commons.concurrent.ThreadPool;
 
+import com.mageddo.httpclient.CheckoutControllerServer;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.hc.client5.http.async.methods.SimpleHttpRequest;
 import org.apache.hc.client5.http.async.methods.SimpleHttpResponse;
