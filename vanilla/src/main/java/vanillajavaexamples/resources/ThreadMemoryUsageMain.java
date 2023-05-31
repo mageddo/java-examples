@@ -20,14 +20,14 @@ import java.util.List;
  */
 public class ThreadMemoryUsageMain {
 
-  static final Thread[] threads = new Thread[2];
+  static final Thread[] threads = new Thread[2_001];
   static final List<byte[]> data = new LinkedList<>();
 
   public static void main(String[] args) throws Exception {
 
     System.out.printf("started with pid=%d%n", ProcessHandle.current().pid());
     System.out.println("> Before threads allocating");
-    System.out.println(MemoryUtils.dumpMemory());
+    dumpSystemStats();
 
     System.out.println("> Allocating threads");
     for (int i = 0; i < threads.length; i++) {
@@ -42,19 +42,21 @@ public class ThreadMemoryUsageMain {
 
       if(i % 1000 == 0){
         System.out.println("> Threads: " + (i + 1));
-        System.out.println(MemoryUtils.dumpMemory());
+        dumpSystemStats();
       }
 
     }
     System.out.println("> After threads allocated");
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 100; i++) {
       Thread.sleep(5_000);
-      System.out.println(MemoryUtils.dumpMemory());
+      dumpSystemStats();
 //      allocateRam();
     }
-    Threads.printAllThreads();
+  }
 
+  private static void dumpSystemStats() {
+    System.out.println(JVMStatsUtils.dumpStats());
   }
 
   private static void allocateRam() {
