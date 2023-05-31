@@ -1,13 +1,17 @@
 package vanillajavaexamples.resources;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * Avg of 20kb per thread created, 10k threads = 200mb allocated
  *
- *  $ ./gradlew build -x check && docker-compose up thread-memory-usage --build
+ *
+ * $ ./gradlew build shadowJar -x check && docker-compose up thread-memory-usage --build
  */
 public class ThreadMemoryUsageMain {
 
-  static final Thread[] threads = new Thread[50_000];
+  static final Thread[] threads = new Thread[30_000];
+  static final List<byte[]> data = new LinkedList<>();
 
   public static void main(String[] args) throws Exception {
 
@@ -26,7 +30,9 @@ public class ThreadMemoryUsageMain {
       thread.setDaemon(true);
       thread.start();
 
-      System.out.printf("> Started %d %n", i);
+      if(i % 1000 == 0){
+        System.out.println(MemoryUtils.dumpMemory());
+      }
 
     }
     System.out.println("> After threads allocated");
@@ -34,7 +40,18 @@ public class ThreadMemoryUsageMain {
     while (true){
       Thread.sleep(5_000);
       System.out.println(MemoryUtils.dumpMemory());
+      allocateRam();
     }
+  }
+
+  private static void allocateRam() {
+    final var mb = 50;
+    System.out.printf("allocating %dmb%n", mb);
+    final var b = new byte[mb * 1024 * 1024];
+    for (int i = 0; i < b.length; i++) {
+      b[i] = (byte) System.nanoTime();
+    }
+    data.add(b);
   }
 
   private static void randomSleep() {

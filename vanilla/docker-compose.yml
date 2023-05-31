@@ -3,4 +3,4 @@ services:
   thread-memory-usage:
     build:
       context: .
-    mem_limit: "500m"
+#    mem_limit: "750m"

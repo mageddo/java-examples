@@ -10,8 +10,6 @@ public class MemoryUtils {
   public static String dumpMemory(){
 
     final Runtime runtime = Runtime.getRuntime();
-    final NumberFormat format = NumberFormat.getInstance();
-
     final long freeMemory = runtime.freeMemory();
     final long allocatedMemory = runtime.totalMemory();
     final long maxMemory = runtime.maxMemory();
@@ -20,19 +18,24 @@ public class MemoryUtils {
     final StringBuilder sb = new StringBuilder();
 
     sb.append("stats (mb)\n");
-    sb.append("free memory: ").append(format.format(freeMemory / 1024 / 1024));
+    sb.append("free memory: ").append(toSummary(freeMemory));
     sb.append('\n');
 
-    sb.append("allocated memory: ").append(format.format(allocatedMemory / 1024 / 1024));
+    sb.append("allocated memory: ").append(toSummary(allocatedMemory));
     sb.append('\n');
 
-    sb.append("max memory: ").append(format.format(maxMemory / 1024 / 1024));
+    sb.append("max memory: ").append(toSummary(maxMemory));
     sb.append('\n');
 
-    sb.append("total free memory: ").append(format.format(totalFreeMemory / 1024 / 1024));
+    sb.append("total free memory: ").append(toSummary(totalFreeMemory));
     sb.append('\n');
     sb.append("-------------------------------------\n");
 
     return sb.toString();
+  }
+
+  static final NumberFormat format = NumberFormat.getInstance();
+  private static String toSummary(long freeMemory) {
+    return format.format(freeMemory / 1024);
   }
 }
