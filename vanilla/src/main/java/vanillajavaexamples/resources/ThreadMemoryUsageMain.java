@@ -31,6 +31,7 @@ public class ThreadMemoryUsageMain {
       thread.start();
 
       if(i % 1000 == 0){
+        System.out.println("> Threads: " + (i + 1));
         System.out.println(MemoryUtils.dumpMemory());
       }
 
