@@ -17,6 +17,7 @@ public class JVMStatsUtils {
 
   public static String dumpStats() {
 
+    // https://stackoverflow.com/questions/19781087/using-operatingsystemmxbean-to-get-cpu-usage
     final var jmx = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
     final Runtime runtime = Runtime.getRuntime();
