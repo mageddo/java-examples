@@ -12,8 +12,11 @@ import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * When doing req 1 the thread in the pool can't do req 2.
+ */
 @Slf4j
-public class Main {
+public class SyncMainExample {
   @SneakyThrows
   public static void main(String[] args) {
 
