@@ -3,4 +3,5 @@ services:
   thread-memory-usage:
     build:
       context: .
+      dockerfile: thread-memory-usage.Dockerfile
 #    mem_limit: "750m"

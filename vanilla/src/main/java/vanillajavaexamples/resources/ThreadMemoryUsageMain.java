@@ -46,12 +46,12 @@ public class ThreadMemoryUsageMain {
 
   private static void allocateRam() {
     final var mb = 50;
-    System.out.printf("allocating %dmb%n", mb);
     final var b = new byte[mb * 1024 * 1024];
     for (int i = 0; i < b.length; i++) {
       b[i] = (byte) System.nanoTime();
     }
     data.add(b);
+    System.out.printf("> Allocated %dmb%n", mb);
   }
 
   private static void randomSleep() {
