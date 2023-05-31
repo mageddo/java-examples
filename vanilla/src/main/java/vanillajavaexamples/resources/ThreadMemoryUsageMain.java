@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class ThreadMemoryUsageMain {
 
-  static final Thread[] threads = new Thread[30_000];
+  static final Thread[] threads = new Thread[2];
   static final List<byte[]> data = new LinkedList<>();
 
   public static void main(String[] args) throws Exception {
@@ -48,11 +48,13 @@ public class ThreadMemoryUsageMain {
     }
     System.out.println("> After threads allocated");
 
-    while (true){
+    for (int i = 0; i < 2; i++) {
       Thread.sleep(5_000);
       System.out.println(MemoryUtils.dumpMemory());
-      allocateRam();
+//      allocateRam();
     }
+    Threads.printAllThreads();
+
   }
 
   private static void allocateRam() {
