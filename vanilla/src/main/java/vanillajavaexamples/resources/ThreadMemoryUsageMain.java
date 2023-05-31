@@ -4,7 +4,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * To create 30k active threads java process growth to 1.3G which means 40k of memory to create
+ * and keep running every thread, the heap stats didn't grow that much which means most memory
+ * allocated to create a thread is done outside the heap (jvm and OS stuff to create a thread,
+ * things that won't go to the heap).
  *
+ * stats (kb)
+ * free memory: 32,326
+ * allocated memory: 53,248
+ * max memory: 153,600
+ * total free memory: 132,678
+ * process memory: 121,273
  *
  * $ ./gradlew build shadowJar -x check && docker-compose up thread-memory-usage --build
  */

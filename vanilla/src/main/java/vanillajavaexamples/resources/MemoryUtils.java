@@ -18,7 +18,7 @@ public class MemoryUtils {
 
     final StringBuilder sb = new StringBuilder();
 
-    sb.append("stats (mb)\n");
+    sb.append("stats (kb)\n");
     sb.append("free memory: ").append(toSummary(freeMemory));
     sb.append('\n');
 
