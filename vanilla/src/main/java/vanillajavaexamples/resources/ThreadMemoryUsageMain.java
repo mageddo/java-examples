@@ -56,7 +56,7 @@ public class ThreadMemoryUsageMain {
   }
 
   private static void dumpSystemStats() {
-    System.out.println(JVMStatsUtils.dumpStats());
+    System.out.println(JvmStatsUtils.dumpStats());
   }
 
   private static void allocateRam() {

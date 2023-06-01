@@ -3,21 +3,23 @@ package vanillajavaexamples.resources;
 import java.lang.management.ManagementFactory;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.sun.management.OperatingSystemMXBean;
 
 import org.apache.commons.lang3.ThreadUtils;
 
-public class JVMStatsUtils {
+public final class JvmStatsUtils {
 
-  static final NumberFormat format = NumberFormat.getInstance();
+  public static final String ID = UUID.randomUUID()
+      .toString()
+      .substring(0, 8);
 
-  private JVMStatsUtils() {
+  private JvmStatsUtils() {
   }
 
   public static String dumpStats() {
 
-    // https://stackoverflow.com/questions/19781087/using-operatingsystemmxbean-to-get-cpu-usage
     final var jmx = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
     final Runtime runtime = Runtime.getRuntime();
@@ -28,20 +30,28 @@ public class JVMStatsUtils {
 
     final StringBuilder sb = new StringBuilder();
 
+    sb.append("jvmId=")
+        .append(ID)
+        .append(' ');
+
     sb.append("localTime=");
     sb.append(LocalDateTime.now());
     sb.append(' ');
 
-    sb.append("heapAllocatedFreeMemory=").append(toSummary(freeMemory));
+    sb.append("heapAllocatedFreeMemory=")
+        .append(toSummary(freeMemory));
     sb.append(' ');
 
-    sb.append("heapAllocatedMemory=").append(toSummary(allocatedMemory));
+    sb.append("heapAllocatedMemory=")
+        .append(toSummary(allocatedMemory));
     sb.append(' ');
 
-    sb.append("heapMaxMemory=").append(toSummary(maxMemory));
+    sb.append("heapMaxMemory=")
+        .append(toSummary(maxMemory));
     sb.append(' ');
 
-    sb.append("heapFreeMemory=").append(toSummary(totalFreeMemory));
+    sb.append("heapFreeMemory=")
+        .append(toSummary(totalFreeMemory));
     sb.append(' ');
 
     sb.append("totalPhysicalMemorySize=");
@@ -56,8 +66,15 @@ public class JVMStatsUtils {
     sb.append(String.format("%.2f", jmx.getSystemCpuLoad()));
     sb.append(' ');
 
-    sb.append("threads=").append(format.format(ThreadUtils.getAllThreads().size()));
-    sb.append(' ');
+    final int threadsCount = ThreadUtils
+        .getAllThreads()
+        .size();
+    sb.append("threads=")
+        .append(NumberFormat
+            .getInstance()
+            .format(threadsCount)
+        )
+        .append(' ');
 
     sb.append('\n');
 
@@ -65,6 +82,7 @@ public class JVMStatsUtils {
   }
 
   private static String toSummary(long bytes) {
-    return format.format(bytes / 1024);
+    return NumberFormat.getInstance()
+        .format(bytes / 1024);
   }
 }
