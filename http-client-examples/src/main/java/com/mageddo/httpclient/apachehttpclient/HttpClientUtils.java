@@ -7,17 +7,8 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.util.Timeout;
 
-public class OkHttpClientUtils {
-  public static HttpClient build() {
-    final var connectionManager = new PoolingHttpClientConnectionManager();
-    connectionManager.setMaxTotal(1);
-    connectionManager.setDefaultMaxPerRoute(1);
-    connectionManager.setDefaultConnectionConfig(ConnectionConfig
-        .custom()
-        .setConnectTimeout(Timeout.ofMilliseconds(50))
-        .setSocketTimeout(Timeout.ofMilliseconds(2000))
-        .build()
-    );
+public class HttpClientUtils {
+  public static HttpClient build(PoolingHttpClientConnectionManager connectionManager) {
 
     final RequestConfig requestConfig = RequestConfig.custom()
 
@@ -26,7 +17,7 @@ public class OkHttpClientUtils {
 
         // tempo que irá esperar pela resposta da chamada,
         // sobrescreve o ConnectionConfig..setSocketTimeout
-        .setResponseTimeout(Timeout.ofMilliseconds(1000))
+        .setResponseTimeout(Timeout.ofMilliseconds(10_000))
         .build();
 
     final HttpClient httpClient = HttpClientBuilder.create()
@@ -35,5 +26,19 @@ public class OkHttpClientUtils {
         .build();
 
     return httpClient;
+  }
+
+  static PoolingHttpClientConnectionManager createPool() {
+    final var connectionManager = new PoolingHttpClientConnectionManager();
+    int conn = 300;
+    connectionManager.setMaxTotal(conn);
+    connectionManager.setDefaultMaxPerRoute(conn);
+    connectionManager.setDefaultConnectionConfig(ConnectionConfig
+        .custom()
+        .setConnectTimeout(Timeout.ofMilliseconds(2000))
+//        .setSocketTimeout(Timeout.ofMilliseconds(2000))
+        .build()
+    );
+    return connectionManager;
   }
 }

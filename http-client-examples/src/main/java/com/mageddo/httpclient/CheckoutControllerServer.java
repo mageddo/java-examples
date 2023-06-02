@@ -14,6 +14,7 @@ public class CheckoutControllerServer {
   public void start() {
 
     Spark.port(7272);
+    Spark.threadPool(305);
     Spark.get("/sleep", (req, res) -> {
       final int time = Integer.parseInt(req.queryParamOrDefault("time", "500"));
       Threads.sleep(time);
