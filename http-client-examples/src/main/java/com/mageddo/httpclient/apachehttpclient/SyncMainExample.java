@@ -41,6 +41,7 @@ public class SyncMainExample {
       executorService.submit(() -> {
         String name = Thread.currentThread().getName();
 //        log.info("status=requesting, thread={}", name);
+
         reqSleep(client, name);
       });
     }

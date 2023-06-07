@@ -20,6 +20,10 @@ public class CheckoutControllerServer {
       Threads.sleep(time);
       return "Slept for " + time + " millis\n";
     });
+    Spark.get("/too-many-requests", (req, res) -> {
+      res.status(429);
+      return "Too Many Requests\n";
+    });
 
 //    this.server = HttpServer.create(new InetSocketAddress(7272), 0);
 //    this.server.createContext("/sleep", exchange -> {
