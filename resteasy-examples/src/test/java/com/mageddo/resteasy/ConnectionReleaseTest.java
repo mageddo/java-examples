@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -20,23 +21,32 @@ import javax.ws.rs.core.Response;
 import com.mageddo.commons.concurrent.ThreadPool;
 import com.mageddo.commons.concurrent.Threads;
 import com.mageddo.httpclient.AutoExpiryPoolingHttpClientConnectionManager;
+import com.mageddo.httpclient.ConnectionTerminatorInterceptor;
 import com.mageddo.resteasy.testing.InMemoryRestServer;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.pool.PoolStats;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 
+import lombok.extern.slf4j.Slf4j;
 import static org.junit.Assert.assertEquals;
 
+@Slf4j
 public class ConnectionReleaseTest {
 
   @ClassRule
@@ -142,7 +152,7 @@ public class ConnectionReleaseTest {
           .request()
           .get(String.class);
       Assert.fail();
-    } catch (WebApplicationException e){
+    } catch (WebApplicationException e) {
       assertEquals(0, getPoolStats().getLeased());
       assertEquals(1, getPoolStats().getAvailable());
     }
@@ -165,7 +175,7 @@ public class ConnectionReleaseTest {
           .request()
           .get(String.class);
       Assert.fail();
-    } catch (ProcessingException e){
+    } catch (ProcessingException e) {
       assertEquals(0, getPoolStats().getLeased());
       assertEquals(0, getPoolStats().getAvailable());
     }
@@ -255,7 +265,94 @@ public class ConnectionReleaseTest {
     assertEquals(1, pool.getTotalStats().getAvailable());
   }
 
-  private static void parallelReqs(int threadPoolSize, ExecutorService executorService, Client localClient) {
+
+  @Test
+  public void terminatorMustCloseUnclosedConnections() throws Exception {
+
+    // arrange
+    final var threadPoolSize = 5;
+
+    final var pool = new PoolingHttpClientConnectionManager();
+    pool.setMaxTotal(100);
+    pool.setDefaultMaxPerRoute(100);
+
+    final var requestConfig = RequestConfig.custom()
+        .setConnectionRequestTimeout(100)
+        .setSocketTimeout(1000)
+        .setConnectTimeout(500)
+        .build();
+
+    final var queue = new LinkedList<ConnectionTerminatorInterceptor.Entry>();
+    final HttpClient httpClient = HttpClientBuilder.create()
+        .setConnectionManager(pool)
+        .setDefaultRequestConfig(requestConfig)
+        .addInterceptorLast((HttpResponseInterceptor) (response, context) -> {
+          queue.add(ConnectionTerminatorInterceptor.Entry.of(response, Duration.ofSeconds(1)));
+
+          int closedConnections = 0;
+          for (; ; ) {
+
+            final var res = queue.peek();
+            if (res == null || !res.hasExpired()) {
+              break;
+            }
+
+            log.info("status=expiring, conn={}", res);
+            queue.poll();
+            res
+                .getResponse()
+                .getEntity()
+                .getContent()
+                .close(); // << mata a connection
+            closedConnections++;
+
+          }
+          log.info("closedConnections={}", closedConnections);
+
+//          ((CloseableHttpResponse)response).close(); // << mantem connection aberta e disponivel
+        })
+        .build();
+
+    final var client = new ResteasyClientBuilder()
+        .httpEngine(new ApacheHttpClient43Engine(httpClient, true))
+        .build();
+
+
+    assertEquals(0, pool.getTotalStats().getLeased());
+    assertEquals(0, pool.getTotalStats().getAvailable());
+
+    // act
+    client
+        .target(server.getURL())
+        .path("/sleep")
+        .request()
+        .get(InputStream.class); // leaving leased <<<<<<
+
+    assertEquals(1, pool.getTotalStats().getLeased());
+    assertEquals(0, pool.getTotalStats().getAvailable());
+
+    client
+        .target(server.getURL())
+        .path("/sleep")
+        .request()
+        .get(String.class);
+    assertEquals(1, pool.getTotalStats().getLeased());
+    assertEquals(1, pool.getTotalStats().getAvailable());
+
+    Threads.sleep(1200);
+    client
+        .target(server.getURL())
+        .path("/sleep")
+        .request()
+        .get(String.class);
+
+    assertEquals(0, pool.getTotalStats().getLeased());
+    assertEquals(2, pool.getTotalStats().getAvailable());
+  }
+
+
+  private static void parallelReqs(int threadPoolSize, ExecutorService executorService,
+      Client localClient) {
     for (int i = 0; i < threadPoolSize; i++) {
       executorService.submit(() -> {
         localClient
