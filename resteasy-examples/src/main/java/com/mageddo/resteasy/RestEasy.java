@@ -1,5 +1,11 @@
 package com.mageddo.resteasy;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.Configuration;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -13,16 +19,22 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
 import org.jboss.resteasy.client.jaxrs.internal.ClientInvocation;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public class RestEasy {
 
+  /**
+   * All request time.
+   */
 	public static final String SOCKET_TIMEOUT = "SOCKET_TIMEOUT";
-	public static final String CONNECT_TIMEOUT = "CONNECT_TIMEOUT";
-	public static final String CONNECTION_REQUEST_TIMEOUT = "CONNECTION_REQUEST_TIMEOUT";
+
+  /**
+   * Time to connect to the server.
+   */
+  public static final String CONNECT_TIMEOUT = "CONNECT_TIMEOUT";
+
+  /**
+   * Time to request a connection from the thread connection pool.
+   */
+  public static final String CONNECTION_REQUEST_TIMEOUT = "CONNECTION_REQUEST_TIMEOUT";
 
 	public static final Map<HttpResponse, HttpContext> RESPONSES = new LinkedHashMap<>();
 
