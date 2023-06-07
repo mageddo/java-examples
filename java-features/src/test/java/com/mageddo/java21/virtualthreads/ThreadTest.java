@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * @see https://medium.com/javarevisited/how-to-use-java-19-virtual-threads-c16a32bad5f7
+ */
 class ThreadTest {
 
   @Test
