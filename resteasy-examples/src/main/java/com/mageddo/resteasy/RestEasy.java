@@ -42,11 +42,15 @@ public class RestEasy {
 		return newClient(10);
 	}
 
-	public static RestEasyClient newRestEasyClient(int poolSize){
-		final PoolingHttpClientConnectionManager pool = new PoolingHttpClientConnectionManager();
-		pool.setMaxTotal(poolSize);
-		// Senao vai estrangular o pool e deixar apenas duas conexoes serem usadas por host
-		pool.setDefaultMaxPerRoute(poolSize);
+  public static RestEasyClient newRestEasyClient(int poolSize) {
+    final var pool = new PoolingHttpClientConnectionManager();
+    pool.setMaxTotal(poolSize);
+    // Senao vai estrangular o pool e deixar apenas duas conexoes serem usadas por host
+    pool.setDefaultMaxPerRoute(poolSize);
+    return newRestEasyClient(pool);
+  }
+
+  public static RestEasyClient newRestEasyClient(PoolingHttpClientConnectionManager pool){
 		final CloseableHttpClient httpClient = HttpClientBuilder
 			.create()
 			.setDefaultRequestConfig(

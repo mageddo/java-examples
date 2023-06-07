@@ -11,14 +11,17 @@ targetCompatibility = JavaVersion.VERSION_11
 
 dependencies {
 
-	implementation group: 'org.jboss.resteasy', name: 'resteasy-client', version: restEasyVersion
-	implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: restEasyVersion
-	implementation group: 'org.jboss.resteasy', name: 'resteasy-multipart-provider', version: restEasyVersion
+  implementation group: 'org.jboss.resteasy', name: 'resteasy-client', version: restEasyVersion
+  implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: restEasyVersion
+  implementation group: 'org.jboss.resteasy', name: 'resteasy-multipart-provider', version: restEasyVersion
+  implementation 'org.apache.httpcomponents:httpclient:4.5.14'
 
-	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-	compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
 
-	testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
-	testImplementation group: 'org.jboss.resteasy', name: 'resteasy-undertow', version: restEasyVersion
-	testImplementation group: 'junit', name: 'junit', version: junitVersion
+  compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+  compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
+  implementation 'com.mageddo.commons:commons-lang:0.1.16'
+
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+  testImplementation group: 'org.jboss.resteasy', name: 'resteasy-undertow', version: restEasyVersion
+  testImplementation group: 'junit', name: 'junit', version: junitVersion
 }
