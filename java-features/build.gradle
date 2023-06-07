@@ -10,8 +10,16 @@ sourceCompatibility = JavaVersion.VERSION_20
 targetCompatibility = JavaVersion.VERSION_20
 
 dependencies {
+  compileOnly 'org.projectlombok:lombok:1.18.28'
+  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+  implementation('org.apache.commons:commons-lang3:3.12.0')
+  implementation('ch.qos.logback:logback-classic:1.4.7')
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.28'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
   testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
   testImplementation("org.mockito:mockito-junit-jupiter:5.1.1")
+
 }
 
 test {
@@ -19,4 +27,16 @@ test {
   testLogging {
     events "passed", "skipped", "failed"
   }
+}
+
+tasks.withType(JavaCompile) {
+  options.compilerArgs += "--enable-preview"
+}
+
+tasks.withType(Test) {
+  jvmArgs += "--enable-preview"
+}
+
+tasks.withType(JavaExec) {
+  jvmArgs += '--enable-preview'
 }
