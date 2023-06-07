@@ -1,13 +1,13 @@
 package com.mageddo.resteasy;
 
 import com.mageddo.resteasy.testing.InMemoryRestServer;
+
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

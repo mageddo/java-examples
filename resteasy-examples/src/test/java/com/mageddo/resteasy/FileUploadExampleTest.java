@@ -1,23 +1,24 @@
 package com.mageddo.resteasy;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.mageddo.imgur.ImageUploadReq;
 import com.mageddo.imgur.ImgurService;
 import com.mageddo.resteasy.testing.InMemoryRestServer;
+
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.InputStream;
-
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
 import static org.junit.Assert.assertEquals;
 

@@ -1,9 +1,11 @@
 package com.mageddo.resteasy;
+
+import java.io.Closeable;
+
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
-import javax.ws.rs.client.Client;
-import java.io.Closeable;
+import jakarta.ws.rs.client.Client;
 
 public class RestEasyClient implements Closeable {
 
