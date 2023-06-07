@@ -26,7 +26,7 @@ public class ImgurService {
     this.webTarget = webTarget;
   }
 
-  public ImageUploadRes uploadImage(ImageUploadReq imageUpload){
+  public ImageUploadRes uploadImage(ImageUploadReq imageUpload) {
 
     final var form = new MultipartFormDataOutput();
     form.addFormData("image", imageUpload.getIn(), APPLICATION_OCTET_STREAM_TYPE);
@@ -39,7 +39,8 @@ public class ImgurService {
         .request(APPLICATION_JSON_TYPE)
         .post(Entity.entity(form, MULTIPART_FORM_DATA_TYPE), InputStream.class));
 
-    Validate.isTrue(jsonNode.at("/status").asInt() == Status.OK.getStatusCode(), "Response must be ok");
+    Validate.isTrue(jsonNode.at("/status").asInt() == Status.OK.getStatusCode(), "Response must " +
+        "be ok");
     return JsonUtils.readValue(jsonNode.at("/data").traverse(), ImageUploadRes.class);
   }
 

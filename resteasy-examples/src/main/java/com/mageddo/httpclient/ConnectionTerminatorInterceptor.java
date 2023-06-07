@@ -56,7 +56,7 @@ public class ConnectionTerminatorInterceptor implements HttpResponseInterceptor 
       }
       log.debug("closedConnections={}", closedConnections);
 //          ((CloseableHttpResponse)response).close(); // << mantem connection aberta e disponivel
-    } catch (Exception e){
+    } catch (Exception e) {
       log.error("status=fatalError, msg={}", e);
     }
   }
@@ -69,16 +69,16 @@ public class ConnectionTerminatorInterceptor implements HttpResponseInterceptor 
     private final HttpResponse response;
     private final Duration ttl;
 
+    public static Entry of(HttpResponse entry, Duration ttl) {
+      return new Entry(LocalDateTime.now(), entry, ttl);
+    }
+
     public HttpResponse getResponse() {
       return response;
     }
 
     public boolean hasExpired() {
       return Duration.between(this.createdAt, LocalDateTime.now()).compareTo(this.ttl) >= 0;
-    }
-
-    public static Entry of(HttpResponse entry, Duration ttl) {
-      return new Entry(LocalDateTime.now(), entry, ttl);
     }
   }
 }

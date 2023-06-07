@@ -53,6 +53,26 @@ public class ConnectionReleaseTest {
   WebTarget webTarget;
   RestEasyClient client;
 
+  private static void parallelReqs(int threadPoolSize, ExecutorService executorService,
+      Client localClient) {
+    for (int i = 0; i < threadPoolSize; i++) {
+      executorService.submit(() -> {
+        localClient
+            .target(server.getURL())
+            .path("/sleep")
+            .request()
+            .get(String.class);
+      });
+    }
+  }
+
+  static Registry<ConnectionSocketFactory> getDefaultRegistry() {
+    return RegistryBuilder.<ConnectionSocketFactory>create()
+        .register("http", PlainConnectionSocketFactory.getSocketFactory())
+        .register("https", SSLConnectionSocketFactory.getSocketFactory())
+        .build();
+  }
+
   @Before
   public void before() {
     this.client = RestEasy.newRestEasyClient(10);
@@ -132,7 +152,6 @@ public class ConnectionReleaseTest {
     assertEquals(1, getPoolStats().getAvailable());
 
   }
-
 
   @Test
   public void mustAutomaticallyCloseWhenGetStatusError() throws IOException {
@@ -262,7 +281,6 @@ public class ConnectionReleaseTest {
     assertEquals(1, pool.getTotalStats().getAvailable());
   }
 
-
   @Test
   public void terminatorMustCloseUnclosedConnections() throws Exception {
 
@@ -320,20 +338,6 @@ public class ConnectionReleaseTest {
     assertEquals(2, pool.getTotalStats().getAvailable());
   }
 
-
-  private static void parallelReqs(int threadPoolSize, ExecutorService executorService,
-      Client localClient) {
-    for (int i = 0; i < threadPoolSize; i++) {
-      executorService.submit(() -> {
-        localClient
-            .target(server.getURL())
-            .path("/sleep")
-            .request()
-            .get(String.class);
-      });
-    }
-  }
-
   private PoolStats getPoolStats() {
     return this.client.getPool().getTotalStats();
   }
@@ -372,12 +376,5 @@ public class ConnectionReleaseTest {
     }
 
 
-  }
-
-  static Registry<ConnectionSocketFactory> getDefaultRegistry() {
-    return RegistryBuilder.<ConnectionSocketFactory>create()
-        .register("http", PlainConnectionSocketFactory.getSocketFactory())
-        .register("https", SSLConnectionSocketFactory.getSocketFactory())
-        .build();
   }
 }
