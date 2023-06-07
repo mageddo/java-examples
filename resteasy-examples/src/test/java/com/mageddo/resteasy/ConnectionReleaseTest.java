@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +24,6 @@ import com.mageddo.httpclient.ConnectionTerminatorInterceptor;
 import com.mageddo.resteasy.testing.InMemoryRestServer;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
@@ -270,8 +268,6 @@ public class ConnectionReleaseTest {
   public void terminatorMustCloseUnclosedConnections() throws Exception {
 
     // arrange
-    final var threadPoolSize = 5;
-
     final var pool = new PoolingHttpClientConnectionManager();
     pool.setMaxTotal(100);
     pool.setDefaultMaxPerRoute(100);
@@ -282,35 +278,10 @@ public class ConnectionReleaseTest {
         .setConnectTimeout(500)
         .build();
 
-    final var queue = new LinkedList<ConnectionTerminatorInterceptor.Entry>();
     final HttpClient httpClient = HttpClientBuilder.create()
         .setConnectionManager(pool)
         .setDefaultRequestConfig(requestConfig)
-        .addInterceptorLast((HttpResponseInterceptor) (response, context) -> {
-          queue.add(ConnectionTerminatorInterceptor.Entry.of(response, Duration.ofSeconds(1)));
-
-          int closedConnections = 0;
-          for (; ; ) {
-
-            final var res = queue.peek();
-            if (res == null || !res.hasExpired()) {
-              break;
-            }
-
-            log.info("status=expiring, conn={}", res);
-            queue.poll();
-            res
-                .getResponse()
-                .getEntity()
-                .getContent()
-                .close(); // << mata a connection
-            closedConnections++;
-
-          }
-          log.info("closedConnections={}", closedConnections);
-
-//          ((CloseableHttpResponse)response).close(); // << mantem connection aberta e disponivel
-        })
+        .addInterceptorLast(new ConnectionTerminatorInterceptor())
         .build();
 
     final var client = new ResteasyClientBuilder()
@@ -339,7 +310,7 @@ public class ConnectionReleaseTest {
     assertEquals(1, pool.getTotalStats().getLeased());
     assertEquals(1, pool.getTotalStats().getAvailable());
 
-    Threads.sleep(1200);
+    Threads.sleep(1500);
     client
         .target(server.getURL())
         .path("/sleep")

@@ -27,7 +27,7 @@ public class ConnectionTerminatorInterceptor implements HttpResponseInterceptor 
   });
 
   public ConnectionTerminatorInterceptor() {
-    this.pool.schedule(this::cleanupRoutine, 1, TimeUnit.SECONDS);
+    this.pool.scheduleAtFixedRate(this::cleanupRoutine, 0, 1, TimeUnit.SECONDS);
   }
 
   @Override
