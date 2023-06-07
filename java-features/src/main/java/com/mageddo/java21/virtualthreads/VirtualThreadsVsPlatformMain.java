@@ -1,4 +1,4 @@
-package com.mageddo.java21;
+package com.mageddo.java21.virtualthreads;
 
 import java.time.Duration;
 import java.util.concurrent.Executors;
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  *   * Virtual Threads: 0% CPU 110MB RAM ran in 5200ms
  */
 @Slf4j
-public class VirtualThreadsMain {
+public class VirtualThreadsVsPlatformMain {
   public static void main(String[] args) {
     log.info("pid={}", ProcessHandle.current().pid());
     final var stopWatch = StopWatch.createStarted();
