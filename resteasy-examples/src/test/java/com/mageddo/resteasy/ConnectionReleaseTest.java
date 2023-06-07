@@ -33,7 +33,6 @@ import org.apache.http.pool.PoolStats;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -212,7 +211,6 @@ public class ConnectionReleaseTest {
     assertEquals(1, pool.getTotalStats().getAvailable());
   }
 
-  @Ignore
   @Test
   public void mustCloseAllConnectionsAfterTTLEvenWhenLeased() throws Exception {
 
@@ -245,14 +243,13 @@ public class ConnectionReleaseTest {
     assertEquals(5, pool.getTotalStats().getLeased());
     assertEquals(0, pool.getTotalStats().getAvailable());
 
-    Thread.sleep(5000);
-    pool.closeExpiredConnections();
+    Thread.sleep(1100);
+    pool.closeExpiredConnections(); // <<<<<<<
     localClient
         .target(server.getURL())
         .path("/sleep")
         .request()
         .get(String.class);
-    Thread.sleep(5000);
 
     assertEquals(0, pool.getTotalStats().getLeased());
     assertEquals(1, pool.getTotalStats().getAvailable());
