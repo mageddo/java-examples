@@ -2,21 +2,19 @@ package com.mageddo.imgur;
 
 import java.io.InputStream;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response.Status;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mageddo.jackson.JsonUtils;
 
 import org.apache.commons.lang3.Validate;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
-import static com.mageddo.jackson.JsonUtils.readTree;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM_TYPE;
-import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE;
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN_TYPE;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM_TYPE;
+import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN_TYPE;
+import jakarta.ws.rs.core.Response.Status;
 
 public class ImgurService {
 
@@ -28,7 +26,7 @@ public class ImgurService {
     this.webTarget = webTarget;
   }
 
-  public ImageUploadRes uploadImage(ImageUploadReq imageUpload){
+  public ImageUploadRes uploadImage(ImageUploadReq imageUpload) {
 
     final var form = new MultipartFormDataOutput();
     form.addFormData("image", imageUpload.getIn(), APPLICATION_OCTET_STREAM_TYPE);
@@ -37,11 +35,12 @@ public class ImgurService {
     form.addFormData("title", imageUpload.getTitle(), TEXT_PLAIN_TYPE);
     form.addFormData("description", imageUpload.getDescription(), TEXT_PLAIN_TYPE);
 
-    final JsonNode jsonNode = readTree(webTarget.path(IMAGE_PATH)
+    final JsonNode jsonNode = JsonUtils.readTree(webTarget.path(IMAGE_PATH)
         .request(APPLICATION_JSON_TYPE)
         .post(Entity.entity(form, MULTIPART_FORM_DATA_TYPE), InputStream.class));
 
-    Validate.isTrue(jsonNode.at("/status").asInt() == Status.OK.getStatusCode(), "Response must be ok");
+    Validate.isTrue(jsonNode.at("/status").asInt() == Status.OK.getStatusCode(), "Response must " +
+        "be ok");
     return JsonUtils.readValue(jsonNode.at("/data").traverse(), ImageUploadRes.class);
   }
 
