@@ -14,8 +14,7 @@ dependencies {
   implementation group: 'org.jboss.resteasy', name: 'resteasy-client', version: restEasyVersion
   implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: restEasyVersion
   implementation group: 'org.jboss.resteasy', name: 'resteasy-multipart-provider', version: restEasyVersion
-  implementation 'org.apache.httpcomponents:httpclient:4.5.14'
-
+//  implementation 'org.apache.httpcomponents:httpclient:4.5.14'
 
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
   compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
