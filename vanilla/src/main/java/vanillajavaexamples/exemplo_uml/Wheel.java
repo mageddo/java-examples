@@ -1,23 +1,23 @@
-package exemplo-uml;
+package vanillajavaexamples.exemplo_uml;
 
 
 /**
 * @generated
 */
 public class Wheel {
-    
+
     /**
     * @generated
     */
     private int size;
-    
-    
+
+
     /**
     * @generated
     */
     private Vehicle vehicle;
-    
-    
+
+
 
     /**
     * @generated
@@ -25,30 +25,30 @@ public class Wheel {
     public int getSize() {
         return this.size;
     }
-    
+
     /**
     * @generated
     */
-    public int setSize(Integer size) {
+    public void setSize(Integer size) {
         this.size = size;
     }
-    
-    
-    
+
+
+
     /**
     * @generated
     */
     public Vehicle getVehicle() {
         return this.vehicle;
     }
-    
+
     /**
     * @generated
     */
-    public Vehicle setVehicle(Vehicle vehicle) {
+    public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
-    
-    
-    
+
+
+
 }

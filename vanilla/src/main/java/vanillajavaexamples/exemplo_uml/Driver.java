@@ -1,18 +1,18 @@
-package exemplo-uml;
+package vanillajavaexamples.exemplo_uml;
 
 
 /**
 * @generated
 */
 public class Driver {
-    
+
     /**
     * @generated
     */
     private String name;
-    
-    
-    
+
+
+
 
     /**
     * @generated
@@ -20,15 +20,15 @@ public class Driver {
     public String getName() {
         return this.name;
     }
-    
+
     /**
     * @generated
     */
-    public String setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
-    
-    
-    
-    
+
+
+
+
 }
