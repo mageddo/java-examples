@@ -20,6 +20,17 @@ jar {
   }
 }
 
+shadowJar {
+  mergeServiceFiles()
+  append 'META-INF/spring.handlers'
+  append 'META-INF/spring.schemas'
+  append 'META-INF/spring.tooling'
+  transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
+    paths = ['META-INF/spring.factories' ]
+    mergeStrategy = "append"
+  }
+}
+
 dependencies {
   compileOnly 'org.projectlombok:lombok:1.18.28'
   annotationProcessor 'org.projectlombok:lombok:1.18.28'
