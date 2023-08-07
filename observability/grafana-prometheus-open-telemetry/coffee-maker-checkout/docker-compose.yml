@@ -1,0 +1,8 @@
+version: '3'
+services:
+  build:
+    image: coffee-maker-checkout
+    build:
+      context: .
+    ports:
+      - "8080:8080"
