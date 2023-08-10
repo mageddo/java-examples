@@ -16,5 +16,6 @@ services:
 
   otel-collector:
     image: otel/opentelemetry-collector:0.82.0
+    hostname: otel-prometheus-collector.docker
     volumes:
-      - ./otel-config.properties:/etc/otel-collector-config.properties
+      - ./otel-config.yaml:/etc/otel-collector-config.yaml

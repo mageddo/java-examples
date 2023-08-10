@@ -1,0 +1,23 @@
+# https://github.com/open-telemetry/opentelemetry-collector/blob/main/receiver/otlpreceiver/README.md
+receivers:
+  otlp:
+    protocols:
+      grpc: #:4317
+      http: #:4318
+
+processors:
+  batch:
+
+exporters:
+  logging:
+    loglevel: debug
+  prometheus:
+    port: 9595
+    host: otel-prometheus-collector.docker
+
+service:
+  pipelines:
+    traces:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ logging, jaeger ]
