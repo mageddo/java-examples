@@ -1,7 +1,7 @@
 version: '3'
 services:
   prometheus:
-    image: prom/prometheus:v2.37.9
+    image: prom/prometheus:v2.46.0
     ports:
       - "9090:9090"
     volumes:
@@ -11,11 +11,14 @@ services:
     image: grafana/grafana:10.0.3-ubuntu
     ports:
       - "3000:3000"
+    environment:
+      - GF_SERVER_DOMAIN=grafana.docker
     volumes:
       - /data/databases/stg/grafana:/var/lib/grafana
+#      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
 
   otel-collector:
     image: otel/opentelemetry-collector:0.82.0
     hostname: otel-prometheus-collector.docker
     volumes:
-      - ./otel-config.yaml:/etc/otel-collector-config.yaml
+      - ./otelcol/config.yaml:/etc/otelcol/config.yaml

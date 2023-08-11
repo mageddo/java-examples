@@ -7,10 +7,10 @@ COPY ./build/libs/coffee-maker-checkout-all.jar /app/
 
 #ENV JAVA_TOOL_OPTIONS="-javaagent:/app/opentelemetry-javaagent.jar"
 ENV OTEL_SERVICE_NAME="coffee-maker-checkout"
-ENV OTEL_EXPORTER_OTLP_ENDPOINT=otel-prometheus-collector.docker:4317
+ENV OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-prometheus-collector.docker:4317
 
 ENTRYPOINT [ \
   "java", "-javaagent:/app/opentelemetry-javaagent.jar", \
-  "-Dotel.javaagent.configuration-file=/app/opentelemetry.properties", \
   "-jar", "/app/coffee-maker-checkout-all.jar" \
 ]
+#  "-Dotel.javaagent.configuration-file=/app/opentelemetry.properties", \
