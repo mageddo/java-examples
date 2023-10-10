@@ -10,5 +10,4 @@ import lombok.experimental.Accessors;
 public class CoffeeCheckoutReq {
   private String coffeeName;
   private BigDecimal amount;
-
 }

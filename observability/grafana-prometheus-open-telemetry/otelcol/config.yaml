@@ -6,6 +6,10 @@ receivers:
       http: #:4318
 
 processors:
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/cumulativetodeltaprocessor
+  cumulativetodelta:
+
+  # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
   batch:
 
 exporters:
