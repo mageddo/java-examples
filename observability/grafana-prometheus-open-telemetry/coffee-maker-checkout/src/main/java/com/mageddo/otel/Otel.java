@@ -22,12 +22,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 public class Otel {
+
+  /**
+   * Para fins de usar programaticamente, pois o agente nao suoporta bounderies no agent,
+   * apenas no sdk.
+   */
   @Bean
   public OpenTelemetry openTelemetry() {
     log.info("configurando o otel");
     Resource resource = Resource.getDefault().toBuilder()
         .put("service.name", "coffee-maker-checkout")
         .put("service.version", "0.1.0")
+        .put("backend", "programmatic")
         .build();
 
     SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder()
