@@ -22,7 +22,12 @@ public class CoffeeCheckoutService {
 
     final var stopWatch = StopWatch.createStarted();
 
-    Threads.sleep(this.r.nextInt(10, 80));
+//    Threads.sleep(this.r.nextInt(10, 105));
+    if(this.r.nextBoolean()){
+      Threads.sleep(10);
+    } else {
+      Threads.sleep(105);
+    }
     final var time = stopWatch.getTime();
 
     JobMetric.TIMES_RAN.add(1);

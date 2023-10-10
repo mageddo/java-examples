@@ -18,7 +18,8 @@ services:
 #      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
 
   otel-collector:
-    image: otel/opentelemetry-collector:0.82.0
+    image: otel/opentelemetry-collector-contrib:0.86.0
+    command: ["--config=/etc/otelcol/config.yaml", "${OTELCOL_ARGS}"]
     hostname: otel-prometheus-collector.docker
     volumes:
       - ./otelcol/config.yaml:/etc/otelcol/config.yaml

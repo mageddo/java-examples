@@ -1,7 +1,7 @@
 FROM openjdk:17
 
 WORKDIR /app
-ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.28.0/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
+ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.30.0/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
 COPY ./build/libs/coffee-maker-checkout-all.jar /app/
 #COPY opentelemetry.properties /app/
 
@@ -10,7 +10,11 @@ ENV OTEL_SERVICE_NAME="coffee-maker-checkout"
 ENV OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-prometheus-collector.docker:4317
 
 ENTRYPOINT [ \
-  "java", "-javaagent:/app/opentelemetry-javaagent.jar", \
   "-jar", "/app/coffee-maker-checkout-all.jar" \
 ]
+
+#ENTRYPOINT [ \
+#  "java", "-javaagent:/app/opentelemetry-javaagent.jar", \
+#  "-jar", "/app/coffee-maker-checkout-all.jar" \
+#]
 #  "-Dotel.javaagent.configuration-file=/app/opentelemetry.properties", \

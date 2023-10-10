@@ -16,8 +16,11 @@ public class JobMetric {
 
   public static final DoubleHistogram TIME_TO_PREPARE =
       ((ExtendedDoubleHistogramBuilder) GlobalOpenTelemetry.getMeter("CoffeeCheckoutJob")
-          .histogramBuilder("orderedSize"))
+          .histogramBuilder("timeToOrderCoffee"))
           .setExplicitBucketBoundariesAdvice(Arrays.asList(50.0, 100.0, 120.0))
-          .setUnit("ms")
+//          .setUnit("ms")
           .build();
+
+
+
 }
