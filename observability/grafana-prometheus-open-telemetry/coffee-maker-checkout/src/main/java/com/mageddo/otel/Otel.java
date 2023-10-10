@@ -41,7 +41,7 @@ public class Otel {
             PeriodicMetricReader.builder(
                     OtlpGrpcMetricExporter
                         .builder()
-                        .setEndpoint("http://otel-prometheus-collector.docker:4317")
+                        .setEndpoint("http://localhost:4317")
 //                        .setAggregationTemporalitySelector(AggregationTemporalitySelector.deltaPreferred())
                         .build()
                 )
