@@ -17,7 +17,6 @@ import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
-import io.opentelemetry.semconv.resource.attributes.ResourceAttributes;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,8 +26,8 @@ public class Otel {
   public OpenTelemetry openTelemetry() {
     log.info("configurando o otel");
     Resource resource = Resource.getDefault().toBuilder()
-        .put(ResourceAttributes.SERVICE_NAME, "coffee-maker-checkout")
-        .put(ResourceAttributes.SERVICE_VERSION, "0.1.0")
+        .put("service.name", "coffee-maker-checkout")
+        .put("service.version", "0.1.0")
         .build();
 
     SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder()
