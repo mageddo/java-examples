@@ -1,13 +1,48 @@
+# version: 1.0.3
 # https://help.github.com/articles/dealing-with-line-endings/
 
-* text eol=lf
+*.java text eol=lf
+*.cpp text eol=lf
+*.kt text eol=lf
+*.c text eol=lf
+*.go text eol=lf
+*.sql text eol=lf
 
+# docs
+*.md text eol=lf
+
+# data
+*.log text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+*.xml text eol=lf
+
+# frontend
+*.js text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+
+# infra
 *.bat text eol=crlf
+.gitignore text eol=lf
+.env text eol=lf
+.gitattributes text eol=lf
+.editorconfig text eol=lf
+Dockerfile text eol=lf
+*.Dockerfile text eol=lf
+Dockerfile.* text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.properties text eol=lf
+*.gradle text eol=lf
+*.jenkinsfile text eol=lf
+gradlew text eol=lf
 
+# Binary
 *.so binary
 *.dll binary
 *.exe binary
 *.jar binary
 *.png binary
 *.jpg binary
-*.ttf binary
+
