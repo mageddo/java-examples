@@ -1,6 +1,6 @@
 plugins {
   id "java-library"
-  id "com.github.johnrengelman.shadow" version "8.1.1"
+  id "org.springframework.boot" version "3.1.2"
 }
 
 repositories {
@@ -20,16 +20,6 @@ jar {
   }
 }
 
-shadowJar {
-  mergeServiceFiles()
-  append 'META-INF/spring.handlers'
-  append 'META-INF/spring.schemas'
-  append 'META-INF/spring.tooling'
-  transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
-    paths = ['META-INF/spring.factories' ]
-    mergeStrategy = "append"
-  }
-}
 
 dependencies {
   compileOnly 'org.projectlombok:lombok:1.18.28'
@@ -37,6 +27,7 @@ dependencies {
 
   implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.1.2'
+  implementation("org.springframework.boot:spring-boot-starter-actuator:3.1.2")
 
   implementation('io.opentelemetry:opentelemetry-sdk:1.31.0')
   implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.31.0')
