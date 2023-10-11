@@ -1,7 +1,7 @@
 ## Build
 
 ```bash
-$ ./gradlew build shadowJar && docker-compose build && docker-compose up
+$ ./gradlew build shadowJar && docker-compose build && docker-compose up --force-recreate
 ```
 
 ## Reference 

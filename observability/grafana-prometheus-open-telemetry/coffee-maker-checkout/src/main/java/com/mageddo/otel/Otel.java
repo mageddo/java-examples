@@ -10,6 +10,7 @@ import io.opentelemetry.exporter.otlp.logs.OtlpGrpcLogRecordExporter;
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporter;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
 import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import io.opentelemetry.sdk.logs.export.BatchLogRecordProcessor;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
@@ -24,11 +25,20 @@ import lombok.extern.slf4j.Slf4j;
 public class Otel {
 
   /**
-   * Para fins de usar programaticamente, pois o agente nao suoporta bounderies no agent,
-   * apenas no sdk.
+   * Vai gerar o OpenTelemetry usando o javaagent, não o sdk
    */
   @Bean
-  public OpenTelemetry openTelemetry() {
+  public OpenTelemetry openTelemetryA() {
+    log.info("opentelemetry a");
+    return AutoConfiguredOpenTelemetrySdk.initialize().getOpenTelemetrySdk();
+  }
+
+    /**
+     * Para fins de usar programaticamente, pois o agente nao suoporta bounderies no agent,
+     * apenas no sdk.
+     */
+//  @Bean
+  public OpenTelemetry openTelemetryB() {
     log.info("configurando o otel");
     Resource resource = Resource.getDefault().toBuilder()
         .put("service.name", "coffee-maker-checkout")
@@ -66,7 +76,8 @@ public class Otel {
         .setMeterProvider(sdkMeterProvider)
         .setLoggerProvider(sdkLoggerProvider)
         .setPropagators(ContextPropagators.create(W3CTraceContextPropagator.getInstance()))
-        .buildAndRegisterGlobal();
+        .buildAndRegisterGlobal()
+        ;
 
     return openTelemetry;
   }

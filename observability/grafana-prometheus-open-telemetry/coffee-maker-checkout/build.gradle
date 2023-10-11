@@ -43,6 +43,9 @@ dependencies {
   implementation('io.opentelemetry:opentelemetry-extension-incubator:1.31.0-alpha')
   implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:1.30.0')
 
+  implementation('io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.31.0');
+  implementation('io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:1.31.0');
+
   testCompileOnly 'org.projectlombok:lombok:1.18.28'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
 

@@ -5,6 +5,7 @@ import java.util.Random;
 import com.mageddo.commons.Threads;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
@@ -16,6 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 public class CoffeeCheckoutService {
 
   private final Random r = new Random();
+  private final CoffeeCheckoutMetrics metrics;
+
+  @Autowired
+  public CoffeeCheckoutService(CoffeeCheckoutMetrics metrics) {
+    this.metrics = metrics;
+  }
 
   @WithSpan
   public void checkout(CoffeeCheckoutReq req) {
@@ -30,8 +37,8 @@ public class CoffeeCheckoutService {
     }
     final var time = stopWatch.getTime();
 
-    JobMetric.TIMES_RAN.add(1);
-    JobMetric.TIME_TO_PREPARE.record(time);
+    this.metrics.getTimesRan().add(1);
+    this.metrics.getTimeToPrepare().record(time);
 
     log.info(
         "status=done, time={}, req={}, otel={}, provider={}",
