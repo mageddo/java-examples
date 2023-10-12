@@ -10,6 +10,7 @@ import io.opentelemetry.exporter.otlp.logs.OtlpGrpcLogRecordExporter;
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporter;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
 import io.opentelemetry.sdk.logs.SdkLoggerProvider;
 import io.opentelemetry.sdk.logs.export.BatchLogRecordProcessor;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
@@ -17,18 +18,32 @@ import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
-import io.opentelemetry.semconv.resource.attributes.ResourceAttributes;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
 public class Otel {
+
+  /**
+   * Vai gerar o OpenTelemetry usando o javaagent, não o sdk
+   */
   @Bean
-  public OpenTelemetry openTelemetry() {
+  public OpenTelemetry openTelemetryA() {
+    log.info("opentelemetry a");
+    return AutoConfiguredOpenTelemetrySdk.initialize().getOpenTelemetrySdk();
+  }
+
+    /**
+     * Para fins de usar programaticamente, pois o agente nao suoporta bounderies no agent,
+     * apenas no sdk.
+     */
+//  @Bean
+  public OpenTelemetry openTelemetryB() {
     log.info("configurando o otel");
     Resource resource = Resource.getDefault().toBuilder()
-        .put(ResourceAttributes.SERVICE_NAME, "coffee-maker-checkout")
-        .put(ResourceAttributes.SERVICE_VERSION, "0.1.0")
+        .put("service.name", "coffee-maker-checkout")
+        .put("service.version", "0.1.0")
+        .put("backend", "programmatic")
         .build();
 
     SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder()
@@ -61,7 +76,8 @@ public class Otel {
         .setMeterProvider(sdkMeterProvider)
         .setLoggerProvider(sdkLoggerProvider)
         .setPropagators(ContextPropagators.create(W3CTraceContextPropagator.getInstance()))
-        .buildAndRegisterGlobal();
+        .buildAndRegisterGlobal()
+        ;
 
     return openTelemetry;
   }
