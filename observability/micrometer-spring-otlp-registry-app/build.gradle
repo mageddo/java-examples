@@ -26,10 +26,13 @@ dependencies {
   // https://github.com/micrometer-metrics/micrometer/pull/3129/files
   implementation('io.micrometer:micrometer-registry-otlp:1.11.5')
 
-  // only needled for tracing (comes with open telemetry deps)
-  implementation('io.micrometer:micrometer-tracing:1.1.6')
-  implementation('io.micrometer:micrometer-tracing-bridge-otel:1.1.6')
+  // only needled for tracing
   implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.31.0')
+  implementation('org.springframework.kafka:spring-kafka:3.0.11')
+
+  //  implementation('io.micrometer:micrometer-tracing:1.1.6')
+//  implementation('io.micrometer:micrometer-tracing-bridge-otel:1.1.6')
+
 
   testCompileOnly 'org.projectlombok:lombok:1.18.28'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
