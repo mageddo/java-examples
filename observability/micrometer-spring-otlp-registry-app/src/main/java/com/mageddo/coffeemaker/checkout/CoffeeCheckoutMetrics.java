@@ -18,6 +18,19 @@ public class CoffeeCheckoutMetrics {
 
   public CoffeeCheckoutMetrics() {
 
+    /**
+     * Metric example at Prometheus:
+     * otel_timesRan{
+     *   app_name="micrometer-spring-otlp-registry-app",
+     *   exported_job="com.mageddo/unknown_service",
+     *   instance="otel-collector.docker:9595",
+     *   job="otel", service_id="123", service_name="unknown_service",
+     *   service_namespace="com.mageddo", service_version="2.1.9",
+     *   telemetry_sdk_language="java", telemetry_sdk_name="io.micrometer",
+     *   telemetry_sdk_version="1.11.5",
+     *   type="counter"
+     * }
+     */
     this.timesRan = Counter
         .builder("timesRan")
         .description("some detailed description for this metric")
