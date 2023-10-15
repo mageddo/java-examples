@@ -1,0 +1,25 @@
+plugins {
+  id "java-library"
+  id "org.springframework.boot" version "3.1.2"
+}
+
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+dependencies {
+  compileOnly 'org.projectlombok:lombok:1.18.28'
+  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+  implementation('org.apache.commons:commons-lang3:3.13.0')
+  implementation('org.springframework.boot:spring-boot-starter-web:3.1.2')
+  implementation("org.springframework.boot:spring-boot-starter-actuator:3.1.2")
+  implementation('io.micrometer:micrometer-tracing:1.1.6')
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.28'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+}
