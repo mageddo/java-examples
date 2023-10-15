@@ -5,6 +5,7 @@ plugins {
 
 repositories {
   mavenCentral()
+  maven {url = "https://repo.spring.io/milestone/"}
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -15,8 +16,11 @@ dependencies {
   annotationProcessor 'org.projectlombok:lombok:1.18.28'
 
   implementation('org.apache.commons:commons-lang3:3.13.0')
-  implementation('org.springframework.boot:spring-boot-starter-web:3.1.2')
-  implementation("org.springframework.boot:spring-boot-starter-actuator:3.1.2")
+
+  // using the milestone because of this issue, scheduler tracing problem:
+  // https://github.com/spring-projects/spring-boot/pull/35191
+  implementation('org.springframework.boot:spring-boot-starter-web:3.2.0-M3')
+  implementation("org.springframework.boot:spring-boot-starter-actuator:3.2.0-M3")
 
   // export open telemetry metrics without open telemetry deps
   // https://github.com/micrometer-metrics/micrometer/pull/3129/files
