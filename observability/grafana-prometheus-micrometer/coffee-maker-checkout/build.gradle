@@ -1,0 +1,43 @@
+plugins {
+  id "java-library"
+  id "org.springframework.boot" version "3.1.2"
+}
+
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+def mainClassName = "com.mageddo.coffeemaker.checkout.Main"
+
+jar {
+  manifest {
+    attributes(
+      "Main-Class": mainClassName
+    )
+  }
+}
+
+
+dependencies {
+  compileOnly 'org.projectlombok:lombok:1.18.28'
+  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0'
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.1.2'
+  implementation("org.springframework.boot:spring-boot-starter-actuator:3.1.2")
+
+  implementation('io.opentelemetry:opentelemetry-sdk:1.31.0')
+  implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.31.0')
+  implementation('io.opentelemetry:opentelemetry-extension-incubator:1.31.0-alpha')
+  implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:1.30.0')
+
+  implementation('io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.31.0');
+  implementation('io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:1.31.0');
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.28'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+}
