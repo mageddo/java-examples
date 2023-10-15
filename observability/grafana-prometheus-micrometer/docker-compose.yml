@@ -13,11 +13,11 @@ services:
     extra_hosts: [ 'host.docker.internal:host-gateway' ]
     ports:
       - "3000:3000"
-    environment:
+#    environment:
 #      - GF_SERVER_DOMAIN=grafana.docker
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
+#      - GF_AUTH_ANONYMOUS_ENABLED=true
+#      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+#      - GF_AUTH_DISABLE_LOGIN_FORM=true
     volumes:
       - grafana:/var/lib/grafana
       - ./grafana/datasources:/etc/grafana/provisioning/datasources:ro

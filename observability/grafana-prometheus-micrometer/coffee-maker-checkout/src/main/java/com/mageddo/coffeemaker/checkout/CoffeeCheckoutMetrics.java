@@ -21,6 +21,7 @@ public class CoffeeCheckoutMetrics {
     this.timesRan = Counter
         .builder("timesRan")
         .description("some detailed description for this metric")
+        .tag("app_name", "batata")
         .register(Metrics.globalRegistry)
     ;
 
@@ -28,6 +29,7 @@ public class CoffeeCheckoutMetrics {
         .builder("timeToOrderCoffee")
         .serviceLevelObjectives(50.0, 100.0, 120.0)
         .baseUnit("ms")
+        .tag("app_name", "batata")
         .register(Metrics.globalRegistry);
   }
 
