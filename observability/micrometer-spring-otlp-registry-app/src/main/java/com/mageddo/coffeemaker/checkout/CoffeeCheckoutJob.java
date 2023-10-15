@@ -18,7 +18,6 @@ public class CoffeeCheckoutJob {
 
   private final CoffeeCheckoutService coffeeCheckoutService;
 
-  @NewSpan
   @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
   public void checkout(){
     final var coffee = makeACoffeeRequest();

@@ -22,13 +22,11 @@ public class CoffeeCheckoutController {
     this.coffeeCheckoutService = coffeeCheckoutService;
   }
 
-  @NewSpan
   @PostMapping("/checkout")
   public void checkout(CoffeeCheckoutReq c){
     this.coffeeCheckoutService.checkout(c);
   }
 
-  @NewSpan
   @GetMapping("/ping")
   public String ping(){
     return LocalDateTime.now().toString();
