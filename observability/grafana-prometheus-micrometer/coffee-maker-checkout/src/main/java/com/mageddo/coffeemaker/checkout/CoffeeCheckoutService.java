@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.tracing.annotation.NewSpan;
-import io.opentelemetry.api.GlobalOpenTelemetry;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -41,8 +40,8 @@ public class CoffeeCheckoutService {
     this.metrics.getTimeToPrepare().record(time);
 
     log.info(
-        "status=done, time={}, req={}, otel={}, provider={}",
-        time, req, GlobalOpenTelemetry.get(), GlobalOpenTelemetry.get().getMeterProvider()
+        "status=done, time={}, req={}",
+        time, req
     );
   }
 }
