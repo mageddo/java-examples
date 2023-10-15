@@ -1,3 +1,5 @@
+App using Open Telemetry API and exporting metrics and Traces using OTLP Java Agent Instrumentor, no Micrometer used.
+
 ## Build
 
 ```bash
