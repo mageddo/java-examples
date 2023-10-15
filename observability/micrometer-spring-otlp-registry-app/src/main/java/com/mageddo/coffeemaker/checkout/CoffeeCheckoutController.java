@@ -1,6 +1,9 @@
 package com.mageddo.coffeemaker.checkout;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,5 +26,11 @@ public class CoffeeCheckoutController {
   @PostMapping("/checkout")
   public void checkout(CoffeeCheckoutReq c){
     this.coffeeCheckoutService.checkout(c);
+  }
+
+  @NewSpan
+  @GetMapping("/ping")
+  public String ping(){
+    return LocalDateTime.now().toString();
   }
 }
