@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.micrometer.tracing.annotation.NewSpan;
-
-
 @RestController
 @RequestMapping("/api/v1/")
 public class CoffeeCheckoutController {

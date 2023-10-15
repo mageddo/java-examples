@@ -8,7 +8,6 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.Metrics;
-import io.micrometer.tracing.annotation.NewSpan;
 import io.opentelemetry.api.trace.Span;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
