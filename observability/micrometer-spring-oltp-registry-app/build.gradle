@@ -19,6 +19,9 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator:3.1.2")
   implementation('io.micrometer:micrometer-tracing:1.1.6')
 
+  // https://github.com/micrometer-metrics/micrometer/pull/3129/files
+  implementation('io.micrometer:micrometer-registry-otlp:1.11.5')
+
   testCompileOnly 'org.projectlombok:lombok:1.18.28'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
 

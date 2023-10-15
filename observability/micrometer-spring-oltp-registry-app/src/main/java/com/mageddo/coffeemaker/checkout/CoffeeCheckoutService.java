@@ -8,6 +8,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.micrometer.core.instrument.Metrics;
 import io.micrometer.tracing.annotation.NewSpan;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,8 +41,8 @@ public class CoffeeCheckoutService {
     this.metrics.getTimeToPrepare().record(time);
 
     log.info(
-        "status=done, time={}, req={}",
-        time, req
+        "status=done, time={}, req={}, registries={}",
+        time, req, Metrics.globalRegistry.getRegistries()
     );
   }
 }

@@ -1,15 +1,12 @@
 FROM openjdk:17
 
-ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.30.0/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
 WORKDIR /app
-COPY ./build/libs/coffee-maker-checkout-micrometer.jar /app/
+COPY ./build/libs/micrometer-spring-otlp-registry-app.jar /app/
 
-# para fins de instrumentação e mandar metricas da jvm e libs dela automaticamente
-ENV OTEL_SERVICE_NAME="coffee-maker-checkout-micrometer"
-ENV OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.docker:4317
+ENV OTEL_SERVICE_NAME="micrometer-spring-otlp-registry-app"
+ENV JAVA_TOOL_OPTIONS="-Dotlp.url=http://otel-collector.docker:4318/v1/metrics"
 
 ENTRYPOINT [ \
   "java", \
-  "-javaagent:/app/opentelemetry-javaagent.jar", \
-  "-jar", "/app/coffee-maker-checkout-micrometer.jar" \
+  "-jar", "/app/micrometer-spring-otlp-registry-app.jar" \
 ]
