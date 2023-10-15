@@ -1,3 +1,5 @@
+App using Micrometer API and exporting metrics using OLTP Java Agent as exporters
+
 ## Build
 
 ```bash
