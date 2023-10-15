@@ -30,6 +30,7 @@ dependencies {
   implementation('io.micrometer:micrometer-tracing:1.1.6')
   implementation('io.micrometer:micrometer-tracing-bridge-otel:1.1.6')
   implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.31.0')
+  implementation('org.springframework.kafka:spring-kafka:3.0.11')
 
   testCompileOnly 'org.projectlombok:lombok:1.18.28'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
