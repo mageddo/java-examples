@@ -26,3 +26,9 @@ dependencies {
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
 
 }
+
+processResources {
+  filesMatching('application.properties') {
+    expand(project.properties)
+  }
+}

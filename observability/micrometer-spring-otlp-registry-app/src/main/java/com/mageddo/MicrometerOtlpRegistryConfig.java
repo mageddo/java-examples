@@ -1,20 +1,42 @@
 package com.mageddo;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.registry.otlp.OtlpConfig;
 import io.micrometer.registry.otlp.OtlpMeterRegistry;
 
-@Configuration
+/**
+ * Manual configuration alternative to spring `management.otlp.metrics` auto config
+ * OtlpMetricsExportAutoConfiguration
+ *
+ */
+//@Configuration
 public class MicrometerOtlpRegistryConfig {
 
-  @Bean
-  public OtlpMeterRegistry otelRegistry() {
+  /**
+   * Properties I identified:
+   * otlp.connectTimeout
+   * otlp.readTimeout
+   * otlp.batchSize
+   * otlp.numThreads
+   * otlp.url
+   * otlp.resourceAttributes
+   * otlp.aggregationTemporality
+   * otlp.step
+   * otlp.enabled
+   * otlp.batchSize
+   * otlp.url
+   * otlp.headers
+   */
+//  @Bean
+  public OtlpMeterRegistry otelRegistry(@Value("${info.version}") String version) {
     final var registry = new OtlpMeterRegistry(new OtlpConfig() {
       @Override
       public String get(String key) {
+        if (key.equals("otlp.resourceAttributes")) {
+          return "telemetry.sdk.version=" + version;
+        }
         return System.getProperty(key);
       }
     }, Clock.SYSTEM);
