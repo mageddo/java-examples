@@ -22,6 +22,7 @@ public class Main {
 
   /**
    * @param configurer will ensure `traceparent` param propagation.
+   * @see https://stackoverflow.com/a/75175448/2979435
    */
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilderConfigurer configurer){
