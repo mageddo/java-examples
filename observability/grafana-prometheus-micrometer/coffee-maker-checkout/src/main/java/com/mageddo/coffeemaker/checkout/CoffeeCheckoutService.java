@@ -8,8 +8,8 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.micrometer.tracing.annotation.NewSpan;
 import io.opentelemetry.api.GlobalOpenTelemetry;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,7 +24,7 @@ public class CoffeeCheckoutService {
     this.metrics = metrics;
   }
 
-  @WithSpan
+  @NewSpan
   public void checkout(CoffeeCheckoutReq req) {
 
     final var stopWatch = StopWatch.createStarted();
@@ -37,7 +37,7 @@ public class CoffeeCheckoutService {
     }
     final var time = stopWatch.getTime();
 
-    this.metrics.getTimesRan().add(1);
+    this.metrics.getTimesRan().increment(1);
     this.metrics.getTimeToPrepare().record(time);
 
     log.info(
