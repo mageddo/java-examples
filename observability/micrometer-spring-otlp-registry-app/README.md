@@ -1,4 +1,5 @@
-App using Micrometer API and exporting metrics using OLTP Java Agent as exporters
+App using Micrometer API and exporting metrics and traces using OLTP exporter configured via application.properties
+using Spring
 
 ## Build
 

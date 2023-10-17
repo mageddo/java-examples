@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Metrics;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.Getter;
 
 @Component
@@ -13,7 +14,7 @@ public class CoffeeCheckoutMetrics {
   @Getter
   private final Counter timesRan;
 
-  @Getter
+  @Getter(onMethod = @__({@WithSpan}))
   private final DistributionSummary timeToPrepare;
 
   public CoffeeCheckoutMetrics() {
@@ -38,7 +39,7 @@ public class CoffeeCheckoutMetrics {
         .register(Metrics.globalRegistry)
     ;
 
-    this.timeToPrepare =  DistributionSummary
+    this.timeToPrepare = DistributionSummary
         .builder("timeToOrderCoffee")
         .serviceLevelObjectives(50.0, 100.0, 120.0)
         .baseUnit("ms")
