@@ -6,6 +6,7 @@ import com.mageddo.commons.Threads;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,11 @@ public class CoffeeCheckoutService {
   private final Random r = new Random();
   private final CoffeeCheckoutMetrics metrics;
   private final CoffeeCheckoutDomainEventSender domainEventSender;
-  private final AcquirerRepository repository;
+  private final AcquirerRepository acquirerRepository;
+  private final CoffeeCheckoutDAO coffeeCheckoutDAO;
 
   @WithSpan
+  @Transactional
   public void checkout(CoffeeCheckoutReq req) {
 
     final var stopWatch = StopWatch.createStarted();
@@ -36,7 +39,8 @@ public class CoffeeCheckoutService {
 
     this.metrics.getTimesRan().increment(1);
     this.metrics.getTimeToPrepare().record(time);
-    this.repository.processPayment(req);
+    this.acquirerRepository.processPayment(req);
+    this.coffeeCheckoutDAO.save(req.toCheckout());
     this.domainEventSender.send(req);
 
     log.info(
