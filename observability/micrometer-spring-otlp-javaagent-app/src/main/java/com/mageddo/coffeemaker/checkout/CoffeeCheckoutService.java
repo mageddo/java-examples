@@ -37,15 +37,18 @@ public class CoffeeCheckoutService {
     }
     final var time = stopWatch.getTime();
 
+    this.acquirerRepository.processPayment(req);
+
+    final var checkout = req.toCheckout();
+    this.coffeeCheckoutDAO.save(checkout);
+    this.domainEventSender.send(checkout);
+    final var coffees = this.coffeeCheckoutDAO.countCheckoutsByName(checkout.getName());
     this.metrics.getTimesRan().increment(1);
     this.metrics.getTimeToPrepare().record(time);
-    this.acquirerRepository.processPayment(req);
-    this.coffeeCheckoutDAO.save(req.toCheckout());
-    this.domainEventSender.send(req);
 
     log.info(
-        "status=done, time={}, req={}",
-        time, req
+        "status=done, time={}, req={}, count={}",
+        time, req, coffees
     );
   }
 }

@@ -15,4 +15,15 @@ public class CoffeeCheckoutDAOImpl implements CoffeeCheckoutDAO {
   public void save(CoffeeCheckout checkout) {
     this.entityManager.merge(checkout);
   }
+
+  @Override
+  public Long countCheckoutsByName(String name) {
+    return (Long) this.entityManager.createNativeQuery("""
+                SELECT COUNT(1) FROM COFFEE_CHECKOUT WHERE NAM_COFFEE = :name
+                """,
+            Long.class
+        )
+        .setParameter("name", name)
+        .getSingleResult();
+  }
 }
