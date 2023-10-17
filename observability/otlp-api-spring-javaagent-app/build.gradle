@@ -22,22 +22,24 @@ jar {
 
 
 dependencies {
-  compileOnly 'org.projectlombok:lombok:1.18.28'
-  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+  dependencies {
+    compileOnly(group: 'org.projectlombok', name: 'lombok', version: '1.18.28')
+    annotationProcessor(group: 'org.projectlombok', name: 'lombok', version: '1.18.28')
 
-  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.1.2'
-  implementation("org.springframework.boot:spring-boot-starter-actuator:3.1.2")
+    implementation(group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0')
+    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.1.4')
+    implementation(group: "org.springframework.boot", name: "spring-boot-starter-actuator", version: "3.1.4")
 
-  implementation('io.opentelemetry:opentelemetry-sdk:1.31.0')
-  implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.31.0')
-  implementation('io.opentelemetry:opentelemetry-extension-incubator:1.31.0-alpha')
-  implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:1.30.0')
+    implementation(group: 'io.opentelemetry', name: 'opentelemetry-sdk', version: '1.31.0')
+    implementation(group: 'io.opentelemetry', name: 'opentelemetry-exporter-otlp', version: '1.31.0')
+    implementation(group: 'io.opentelemetry', name: 'opentelemetry-extension-incubator', version: '1.31.0-alpha')
+    implementation(group: 'io.opentelemetry.instrumentation', name: 'opentelemetry-instrumentation-annotations', version: '1.30.0')
 
-  implementation('io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.31.0');
-  implementation('io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:1.31.0');
+    implementation(group: 'io.opentelemetry', name: 'opentelemetry-sdk-extension-autoconfigure', version: '1.31.0')
+    implementation(group: 'io.opentelemetry', name: 'opentelemetry-sdk-extension-autoconfigure-spi', version: '1.31.0')
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.28'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
+  }
 
 }

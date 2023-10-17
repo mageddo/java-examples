@@ -15,7 +15,7 @@ public class CoffeeCheckoutDomainEventCheckMDB {
       topics = "coffee_maker_checkout_event_java_agent_app",
       groupId = "app_coffee_maker_checkout_event_java_agent_app"
   )
-  public void consume(String msg, @Header("traceparent") String traceParent){
+  public void consume(String msg, @Header(value = "traceparent", required = false) String traceParent){
     Span.current().setAttribute("x-h-traceParent", traceParent);
     log.info("consume checked: {}", msg);
   }

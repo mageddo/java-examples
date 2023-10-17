@@ -14,7 +14,7 @@ public class CoffeeCheckoutDomainEventSenderKafka implements CoffeeCheckoutDomai
 
   @WithSpan
   @Override
-  public void send(CoffeeCheckoutReq req) {
+  public void send(CoffeeCheckout req) {
     this.kafkaTemplate.send("coffee_maker_checkout_event_java_agent_app", req.toString());
   }
 }
