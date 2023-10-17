@@ -1,4 +1,9 @@
-App using Micrometer API and exporting metrics using OLTP Java Agent as exporters
+App using
+* Micrometer API for Metrics and exporting using OTLP Java Agent Exporter
+* Open Telemetry API for Tracing, exporting using OTLP Java Agent exporter
+  * Traces are more rich when using java agent, @WithSpan annotations are intercepted.
+  * HTTP, Kafka producing and consuming are also tracked.
+* No Spring additional config is necessary
 
 ## Build
 
