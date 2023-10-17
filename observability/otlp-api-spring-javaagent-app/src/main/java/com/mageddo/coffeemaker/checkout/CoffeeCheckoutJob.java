@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,6 +18,7 @@ public class CoffeeCheckoutJob {
 
   private final CoffeeCheckoutService coffeeCheckoutService;
 
+  @WithSpan
   @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
   public void checkout(){
     final var coffee = makeACoffeeRequest();
