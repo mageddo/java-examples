@@ -9,17 +9,15 @@ import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.metrics.DoubleHistogram;
 import io.opentelemetry.api.metrics.LongCounter;
 import io.opentelemetry.extension.incubator.metrics.ExtendedDoubleHistogramBuilder;
-import lombok.Getter;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 
 @Component
 public class CoffeeCheckoutMetrics {
 
   private final OpenTelemetry openTelemetry;
 
-  @Getter
   private final LongCounter timesRan;
 
-  @Getter
   private final DoubleHistogram timeToPrepare;
 
   @Autowired
@@ -41,4 +39,13 @@ public class CoffeeCheckoutMetrics {
         .build();
   }
 
+  @WithSpan
+  public LongCounter getTimesRan() {
+    return this.timesRan;
+  }
+
+  @WithSpan
+  public DoubleHistogram getTimeToPrepare() {
+    return this.timeToPrepare;
+  }
 }

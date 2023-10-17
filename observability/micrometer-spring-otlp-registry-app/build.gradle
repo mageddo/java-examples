@@ -21,18 +21,21 @@ dependencies {
   // https://github.com/spring-projects/spring-boot/pull/35191
   implementation('org.springframework.boot:spring-boot-starter-web:3.2.0-M3')
   implementation("org.springframework.boot:spring-boot-starter-actuator:3.2.0-M3")
+  implementation('org.springframework.kafka:spring-kafka:3.0.11')
 
   // export open telemetry metrics without open telemetry deps
   // https://github.com/micrometer-metrics/micrometer/pull/3129/files
   implementation('io.micrometer:micrometer-registry-otlp:1.11.5')
 
+
   // only needled for tracing
-  implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.31.0')
-  implementation('org.springframework.kafka:spring-kafka:3.0.11')
+  implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:1.31.0')
 
-  //  implementation('io.micrometer:micrometer-tracing:1.1.6')
+  // tag:trace-programmatic
+//  implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.31.0')
+//  implementation('io.micrometer:micrometer-tracing:1.1.6')
 //  implementation('io.micrometer:micrometer-tracing-bridge-otel:1.1.6')
-
+  // end:trace-programmatic
 
   testCompileOnly 'org.projectlombok:lombok:1.18.28'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'

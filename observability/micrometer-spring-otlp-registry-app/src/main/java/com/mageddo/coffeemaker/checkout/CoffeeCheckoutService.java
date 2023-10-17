@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.Metrics;
 import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +23,7 @@ public class CoffeeCheckoutService {
   private final AcquirerRepository acquirerRepository;
   private final CoffeeCheckoutDomainEventSender domainEventSender;
 
+  @WithSpan
   public void checkout(CoffeeCheckoutReq req) {
 
     final var stopWatch = StopWatch.createStarted();
