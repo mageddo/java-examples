@@ -13,6 +13,7 @@ public class CoffeeCheckoutMetrics {
   @Getter
   private final Counter timesRan;
 
+  @Getter(onMethod = @__({@WithSpan}))
   @Getter
   private final DistributionSummary timeToPrepare;
 

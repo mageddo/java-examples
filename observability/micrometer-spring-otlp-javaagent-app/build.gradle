@@ -17,7 +17,9 @@ dependencies {
   implementation('org.apache.commons:commons-lang3:3.13.0')
   implementation('org.springframework.boot:spring-boot-starter-web:3.1.2')
   implementation("org.springframework.boot:spring-boot-starter-actuator:3.1.2")
-  implementation('io.micrometer:micrometer-tracing:1.1.6')
+  implementation('org.springframework.kafka:spring-kafka:3.0.11')
+
+  implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:1.31.0')
 
   testCompileOnly 'org.projectlombok:lombok:1.18.28'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
