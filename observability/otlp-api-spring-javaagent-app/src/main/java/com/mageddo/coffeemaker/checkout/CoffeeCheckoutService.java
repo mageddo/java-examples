@@ -5,24 +5,21 @@ import java.util.Random;
 import com.mageddo.commons.Threads;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CoffeeCheckoutService {
 
   private final Random r = new Random();
   private final CoffeeCheckoutMetrics metrics;
-
-  @Autowired
-  public CoffeeCheckoutService(CoffeeCheckoutMetrics metrics) {
-    this.metrics = metrics;
-  }
+  private final CoffeeRepository coffeeRepository;
 
   @WithSpan
   public void checkout(CoffeeCheckoutReq req) {
@@ -44,5 +41,6 @@ public class CoffeeCheckoutService {
         "status=done, time={}, req={}, otel={}, provider={}",
         time, req, GlobalOpenTelemetry.get(), GlobalOpenTelemetry.get().getMeterProvider()
     );
+    this.coffeeRepository.save(req);
   }
 }
