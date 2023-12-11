@@ -9,6 +9,7 @@ services:
       - POSTGRES_DB=db
     volumes:
       - postgres-r1:/var/lib/postgresql/data
+      - ./docker/postgres/:/docker-entrypoint-initdb.d/
     ports:
       - "5441:5432"
     network_mode: bridge
@@ -21,6 +22,7 @@ services:
       - POSTGRES_DB=db
     volumes:
       - postgres-r2:/var/lib/postgresql/data
+      - ./docker/postgres/:/docker-entrypoint-initdb.d/
     ports:
       - "5442:5432"
     network_mode: bridge

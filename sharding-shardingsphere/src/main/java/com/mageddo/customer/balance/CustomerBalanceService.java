@@ -7,6 +7,7 @@ import com.mageddo.customer.balance.infrastructure.CustomerBalanceRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CustomerBalanceService {
@@ -33,6 +34,7 @@ public class CustomerBalanceService {
     this.customerBalanceRepository.create(customerBalance);
   }
 
+  @Transactional
   public void createAccount(UUID customerId) {
     this.createAccount(customerId, BigDecimal.ZERO);
   }

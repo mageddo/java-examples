@@ -10,6 +10,9 @@ import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 @ManagedResource
 public class CustomerBalanceJMX {
@@ -23,11 +26,19 @@ public class CustomerBalanceJMX {
 
   @ManagedOperation
   public void create(String customerId) {
-    this.customerBalanceService.createAccount(UUID.fromString(customerId));
+    try {
+      this.customerBalanceService.createAccount(UUID.fromString(customerId));
+    } catch (Exception e){
+      log.error("status=failed-to-create", e);
+    }
   }
 
   @ManagedOperation
   public void changeBalance(String customerId, String amount) {
-    this.customerBalanceService.changeBalance(UUID.fromString(customerId), new BigDecimal(amount));
+    try {
+      this.customerBalanceService.changeBalance(UUID.fromString(customerId), new BigDecimal(amount));
+    } catch (Exception e){
+      log.error("status=failed-to-change-balance", e);
+    }
   }
 }
