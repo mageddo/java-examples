@@ -1,15 +1,15 @@
 dataSources:
-  ds0:
-    url: jdbc:postgresql://localhost:5435/database1
-    username: user1
-    password: password1
+  r1:
+    url: jdbc:postgresql://localhost:5441/db
+    username: root
+    password: root
     driver-class-name: org.postgresql.Driver
     dataSourceClassName: com.mysql.cj.jdbc.MysqlDataSource
-  ds1:
-    url: jdbc:mysql://localhost:3307/database2?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+  r1:
+    url: jdbc:postgresql://localhost:5441/db
     username: root
-    password: rootpassword2
-    driverClassName: com.mysql.cj.jdbc.Driver
+    password: root
+    driver-class-name: org.postgresql.Driver
     dataSourceClassName: com.mysql.cj.jdbc.MysqlDataSource
 rules:
   - !SHARDING

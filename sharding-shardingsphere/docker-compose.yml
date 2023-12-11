@@ -8,7 +8,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_DB=db
     volumes:
-      - postgres-r2
+      - postgres-r1:/var/lib/postgresql/data
     ports:
       - "5441:5432"
     network_mode: bridge
@@ -20,7 +20,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_DB=db
     volumes:
-      - postgres-r2
+      - postgres-r2:/var/lib/postgresql/data
     ports:
       - "5442:5432"
     network_mode: bridge

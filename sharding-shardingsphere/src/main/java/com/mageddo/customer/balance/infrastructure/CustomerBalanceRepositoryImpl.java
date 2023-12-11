@@ -1,4 +1,6 @@
-package com.mageddo.customer.balance;
+package com.mageddo.customer.balance.infrastructure;
+
+import com.mageddo.customer.balance.CustomerBalance;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
