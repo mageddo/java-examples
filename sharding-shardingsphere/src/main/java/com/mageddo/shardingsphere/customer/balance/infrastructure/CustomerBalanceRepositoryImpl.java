@@ -36,10 +36,12 @@ public class CustomerBalanceRepositoryImpl implements CustomerBalanceRepository 
   public void debt(UUID customerId, BigDecimal amount) {
     final var updated = this.entityManager.createNativeQuery("""
             UPDATE CUSTOMER_BALANCE SET
-              NUM_AMOUNT = NUM_AMOUNT - :amount
+              NUM_BALANCE = NUM_BALANCE - :amount
             WHERE COD_CUSTOMER  = :customerId
-            AND NUM_AMOUNT - :amount >= 0
+            AND NUM_BALANCE - :amount >= 0
             """)
+        .setParameter("customerId", customerId)
+        .setParameter("amount", amount)
         .executeUpdate();
     Validate.isTrue(
         updated == 1,
@@ -52,9 +54,11 @@ public class CustomerBalanceRepositoryImpl implements CustomerBalanceRepository 
   public void credit(UUID customerId, BigDecimal amount) {
     final var updated = this.entityManager.createNativeQuery("""
             UPDATE CUSTOMER_BALANCE SET
-              NUM_AMOUNT = NUM_AMOUNT + :amount
+              NUM_BALANCE = NUM_BALANCE + :amount
             WHERE COD_CUSTOMER  = :customerId
             """)
+        .setParameter("customerId", customerId)
+        .setParameter("amount", amount)
         .executeUpdate();
     Validate.isTrue(
         updated == 1,

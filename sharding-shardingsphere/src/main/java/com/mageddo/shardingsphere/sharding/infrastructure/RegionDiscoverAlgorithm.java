@@ -36,18 +36,19 @@ public class RegionDiscoverAlgorithm implements StandardShardingAlgorithm<UUID> 
       final var regionName = service.findRegionNameByCustomerId(customerId);
       if (StringUtils.isNotBlank(regionName)) {
         log.debug(
-            "status=decidedDatabaseRecord, availableTargetNames={}, shardingValue={}",
-            availableTargetNames, shardingValue
+            "status=decidedByDatabaseRecord, region={}, availableTargetNames={}, shardingValue={}",
+            regionName, availableTargetNames, shardingValue
         );
         return regionName;
       }
 
       final var index = Math.abs(customerId.hashCode()) % availableTargetNames.size();
+      final var region = new ArrayList<>(availableTargetNames).get(index);
       log.debug(
-          "status=decidedByHash, availableTargetNames={}, shardingValue={}, index={}",
-          availableTargetNames, shardingValue, index
+          "status=decidedByHash, region={}, availableTargetNames={}, shardingValue={}, index={}",
+          region, availableTargetNames, shardingValue, index
       );
-      return new ArrayList<>(availableTargetNames).get(index);
+      return region;
     } catch (Exception e) {
       throw new IllegalStateException(
           "Não foi possível determinar o shard para o UUID: " + customerId, e

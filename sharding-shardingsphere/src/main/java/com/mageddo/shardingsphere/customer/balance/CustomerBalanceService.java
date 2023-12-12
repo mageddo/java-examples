@@ -21,14 +21,17 @@ public class CustomerBalanceService {
     this.customerBalanceRepository = customerBalanceRepository;
   }
 
+  @Transactional
   public void debt(UUID customerId, BigDecimal amount) {
     this.customerBalanceRepository.debt(customerId, amount);
   }
 
+  @Transactional
   public void credit(UUID customerId, BigDecimal amount) {
     this.customerBalanceRepository.credit(customerId, amount);
   }
 
+  @Transactional
   public void createAccount(UUID customerId, BigDecimal initialAmount) {
     final var customerBalance = CustomerBalanceFactory.buildForCreation(customerId, initialAmount);
     this.customerBalanceRepository.create(customerBalance);
@@ -39,6 +42,7 @@ public class CustomerBalanceService {
     this.createAccount(customerId, BigDecimal.ZERO);
   }
 
+  @Transactional
   public void changeBalance(UUID customerId, BigDecimal amount) {
     if (amount.signum() == POSITIVE) {
       this.credit(customerId, amount);
