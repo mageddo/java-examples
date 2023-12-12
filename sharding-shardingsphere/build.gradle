@@ -25,7 +25,8 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-actuator'
   implementation 'org.apache.shardingsphere:shardingsphere-jdbc-core:5.4.1'
   implementation 'com.google.guava:guava:32.1.2-jre'
-  implementation 'org.jolokia:jolokia-core:1.6.1'
+  implementation 'javax.xml.bind:jaxb-api:2.3.1'
+  implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
 
   runtimeOnly 'org.postgresql:postgresql'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'

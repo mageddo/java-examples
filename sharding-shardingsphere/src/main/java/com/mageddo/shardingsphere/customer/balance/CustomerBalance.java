@@ -1,8 +1,10 @@
-package com.mageddo.customer.balance;
+package com.mageddo.shardingsphere.customer.balance;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,4 +35,8 @@ public class CustomerBalance {
 
   @Column(name = "DAT_CREATED", nullable = false)
   private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  @Column(name = "DAT_UPDATED", nullable = false)
+  private LocalDateTime updatedAt;
 }

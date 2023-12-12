@@ -1,9 +1,9 @@
-package com.mageddo.customer.balance;
+package com.mageddo.shardingsphere.customer.balance;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.mageddo.customer.balance.infrastructure.CustomerBalanceRepository;
+import com.mageddo.shardingsphere.customer.balance.infrastructure.CustomerBalanceRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +22,11 @@ public class CustomerBalanceService {
   }
 
   public void debt(UUID customerId, BigDecimal amount) {
-    throw new UnsupportedOperationException();
+    this.customerBalanceRepository.debt(customerId, amount);
   }
 
   public void credit(UUID customerId, BigDecimal amount) {
-    throw new UnsupportedOperationException();
+    this.customerBalanceRepository.credit(customerId, amount);
   }
 
   public void createAccount(UUID customerId, BigDecimal initialAmount) {

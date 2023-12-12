@@ -1,9 +1,9 @@
-package com.mageddo.customer.balance.presentation;
+package com.mageddo.shardingsphere.customer.balance.presentation;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.mageddo.customer.balance.CustomerBalanceService;
+import com.mageddo.shardingsphere.customer.balance.CustomerBalanceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;

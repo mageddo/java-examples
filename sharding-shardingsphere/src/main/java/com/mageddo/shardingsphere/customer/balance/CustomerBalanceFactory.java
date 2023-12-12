@@ -1,4 +1,4 @@
-package com.mageddo.customer.balance;
+package com.mageddo.shardingsphere.customer.balance;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
