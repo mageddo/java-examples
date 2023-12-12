@@ -22,4 +22,9 @@ public class CustomerRegionService {
     }
     return region.getName();
   }
+
+  public void create(UUID customerId, String region) {
+    final var customerRegion = CustomerRegionFactory.buildForCreation(customerId, region);
+    this.customerRegionRepository.create(customerRegion);
+  }
 }

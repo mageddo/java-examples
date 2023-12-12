@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(catalog = "CUSTOMER_REGION")
 public class CustomerRegion {
+
   @Id
   @Column(name = "IDT_CUSTOMER_REGION", nullable = false, unique = true)
   private UUID id;
