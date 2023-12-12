@@ -1,0 +1,32 @@
+version: '3.1'
+services:
+  postgres-r1:
+    image: postgres:16.1
+    environment:
+      - TZ=UTC
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=db
+    volumes:
+      - postgres-r1:/var/lib/postgresql/data
+      - ./docker/postgres/:/docker-entrypoint-initdb.d/
+    ports:
+      - "5441:5432"
+    network_mode: bridge
+  postgres-r2:
+    image: postgres:16.1
+    environment:
+      - TZ=UTC
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=db
+    volumes:
+      - postgres-r2:/var/lib/postgresql/data
+      - ./docker/postgres/:/docker-entrypoint-initdb.d/
+    ports:
+      - "5442:5432"
+    network_mode: bridge
+
+volumes:
+  postgres-r1:
+  postgres-r2:

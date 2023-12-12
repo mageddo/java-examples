@@ -1,0 +1,72 @@
+mode:
+  type: Standalone
+  repository:
+    type: JDBC
+    props:
+#      path: demo
+
+dataSources:
+  r1:
+    url: jdbc:postgresql://localhost:5441/db?currentSchema=public
+    username: root
+    password: root
+    driverClassName: org.postgresql.Driver
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    maxPoolSize: 10
+  r2:
+    url: jdbc:postgresql://localhost:5442/db?currentSchema=public
+    username: root
+    password: root
+    driverClassName: org.postgresql.Driver
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+
+rules:
+  - !SHARDING
+    tables:
+
+      customer_balance:
+        actualDataNodes: r$->{1..2}.customer_balance
+        tableStrategy:
+          standard:
+            shardingColumn: cod_customer
+            shardingAlgorithmName: table-discover-algorithm
+
+      customer_balance_history:
+        actualDataNodes: r$->{1..2}.customer_balance_history
+        tableStrategy:
+          standard:
+            shardingColumn: cod_customer
+            shardingAlgorithmName: table-discover-algorithm
+
+      customer_region:
+        actualDataNodes:  r$->{1..2}.customer_region
+        tableStrategy:
+          standard:
+            shardingColumn: cod_customer
+            shardingAlgorithmName: table-discover-algorithm
+
+    bindingTables:
+      - customer_balance,customer_balance_history
+
+    defaultDatabaseStrategy:
+      standard:
+        shardingColumn: cod_customer
+        shardingAlgorithmName: region-discover-algorithm
+
+    defaultTableStrategy:
+      none:
+
+    shardingAlgorithms:
+      region-discover-algorithm:
+        type: CLASS_BASED
+        props:
+          strategy: standard
+          algorithmClassName: com.mageddo.shardingsphere.sharding.infrastructure.RegionDiscoverAlgorithm
+      table-discover-algorithm:
+        type: CLASS_BASED
+        props:
+          strategy: standard
+          algorithmClassName: com.mageddo.shardingsphere.sharding.infrastructure.TableDiscoverAlgorithm
+
+props:
+  sql-show: true
