@@ -23,18 +23,21 @@ dataSources:
 rules:
   - !SHARDING
     tables:
+
       customer_balance:
         actualDataNodes: r$->{1..2}.customer_balance
         tableStrategy:
           standard:
             shardingColumn: cod_customer
             shardingAlgorithmName: table-discover-algorithm
+
       customer_balance_history:
         actualDataNodes: r$->{1..2}.customer_balance_history
         tableStrategy:
           standard:
             shardingColumn: cod_customer
             shardingAlgorithmName: table-discover-algorithm
+
       customer_region:
         actualDataNodes:  r$->{1..2}.customer_region
         tableStrategy:
