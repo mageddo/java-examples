@@ -7,6 +7,10 @@ import org.apache.commons.lang3.CharUtils;
 
 public class UpperCaseWordsExtractor {
 
+  public static List<String> extractUppercaseWordsSentenceFromText(String text) {
+    return extractUppercaseWordsSentenceFromText(text, 3);
+  }
+
   public static List<String> extractUppercaseWordsSentenceFromText(String text, int minWordLength) {
     final var length = text.length();
     final var buff = new StringBuilder();

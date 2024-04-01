@@ -27,4 +27,23 @@ class UpperCaseWordsExtractorTest {
 
   }
 
+  @Test
+  void mustIgnoreWordsShorterThanMinSpecifiedLength(){
+
+    // arrange
+    final var str = """
+    The software development community widely acknowledges THAT domain MODELING is central to
+    SOFTWARE DESIGN.
+    """;
+
+    // act
+    final var words = extractUppercaseWordsSentenceFromText(str, 5);
+
+    // assert
+    assertNotNull(words);
+    assertEquals("""
+        [MODELING, SOFTWARE DESIGN]""", words.toString());
+
+  }
+
 }
