@@ -1,0 +1,28 @@
+plugins {
+  id "java-library"
+}
+
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+dependencies {
+  api("com.itextpdf:itextpdf:5.5.13.3")
+  api("org.apache.commons:commons-lang3:3.14.0")
+
+}
+
+dependencies {
+  testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+  testImplementation("org.mockito:mockito-junit-jupiter:5.11.0")
+}
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+}
