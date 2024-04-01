@@ -27,8 +27,7 @@ class UpperCaseWordsExtractorTest {
     // assert
     assertNotNull(words);
     assertEquals("""
-        [DOMAIN MODELING, SOFTWARE DESIGN]
-        """, words.toString());
+        [DOMAIN MODELING, SOFTWARE DESIGN]""", words.toString());
 
   }
 
