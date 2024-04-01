@@ -15,7 +15,7 @@ public class UpperCaseWordsExtractor {
       final var c = text.charAt(i);
       if (CharUtils.isAsciiAlphaUpper(c) || isNonTextAfterTheStartOfTheSentence(buff, c)) {
         buff.append(c);
-      } else if (!buff.isEmpty() && (!CharUtils.isAsciiAlpha(c) || Character.isWhitespace(buff.charAt(buff.length() - 1)) )) {
+      } else if (sentenceIsValidToBeConsidered(buff, c)) {
         sentences.add(buff.toString().trim());
         buff.delete(0, buff.length());
       } else if (!buff.isEmpty()) {
@@ -26,6 +26,11 @@ public class UpperCaseWordsExtractor {
       sentences.add(buff.toString().trim());
     }
     return sentences;
+  }
+
+  private static boolean sentenceIsValidToBeConsidered(StringBuilder buff, char c) {
+    return !buff.isEmpty() && (!CharUtils.isAsciiAlpha(c)
+        || Character.isWhitespace(buff.charAt(buff.length() - 1)));
   }
 
   private static boolean isNonTextAfterTheStartOfTheSentence(StringBuilder buff, char c) {
