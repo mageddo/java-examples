@@ -12,13 +12,9 @@ class UpperCaseWordsExtractorTest {
   void mustExtractUpperCaseWordSentence(){
 
     // arrange
-//    final var str = """
-//    The software development community widely acknowledges that DOMAIN MODELING is central to
-//    SOFTWARE DESIGN.
-//    """;
-
     final var str = """
-    The  DOMAIN MODELING x SOFTWARE DESIGN.
+    The software development community widely acknowledges that DOMAIN MODELING is central to
+    SOFTWARE DESIGN.
     """;
 
     // act
