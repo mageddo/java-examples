@@ -10,7 +10,9 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
-  api("com.itextpdf:itextpdf:5.5.13.3")
+//  api("com.itextpdf:itextpdf:5.5.13.3")
+  api("com.itextpdf:itext-core:8.0.3")
+
   api("org.apache.commons:commons-lang3:3.14.0")
 
 }

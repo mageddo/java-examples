@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
-import com.itextpdf.text.pdf.parser.SimpleTextExtractionStrategy;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.SimpleTextExtractionStrategy;
 
 import static com.mageddo.itext.pdftextextraction.UpperCaseWordsExtractor.extractUppercaseWordsSentenceFromText;
 
@@ -19,31 +20,32 @@ public class UppercasePhraseExtractorApp {
   }
 
   private static void extractUppercaseWordSequencesFromPdf(final String fileName) throws IOException {
-    final var reader = new PdfReader(fileName);
-    final var parser = new PdfReaderContentParser(reader);
-    final var strategy = new SimpleTextExtractionStrategy();
+
+    final var document = new PdfDocument(new PdfReader(fileName));
     try {
-      final var sentences = extractUppercaseWordSequencesFromPdf(reader, parser, strategy);
+      final var sentences = extractUppercaseWordSequencesFromPdf(document);
       System.out.println(sentences);
     } finally {
-      reader.close();
+      document.close();
     }
   }
 
   private static List<String> extractUppercaseWordSequencesFromPdf(
-      PdfReader reader,
-      PdfReaderContentParser parser,
-      SimpleTextExtractionStrategy strategy
-  ) throws IOException {
+      PdfDocument document
+  ) {
     final var sentences = new ArrayList<String>();
-    for (int i = 1; i <= reader.getNumberOfPages(); i++) {
-      if(i == 445) {
-        parser.processContent(i, strategy);
-//      sentences.addAll(extractUppercaseWordsSentenceFromText(strategy.getResultantText()));
-        final var s = extractUppercaseWordsSentenceFromText(strategy.getResultantText(), 2);
-        System.out.println(s);
-        System.out.println("page: " + i);
-      }
+    for (int i = 1; i <= document.getNumberOfPages(); i++) {
+      // se nao criar o strategy dentro da interação ele acumula as palavras de todas as páginas
+      // executadas no retorno do texto
+      final var strategy = new SimpleTextExtractionStrategy();
+      final var text = PdfTextExtractor.getTextFromPage(document.getPage(i), strategy);
+//      sentences.addAll(extractUppercaseWordsSentenceFromText(text));
+      final var s = extractUppercaseWordsSentenceFromText(text);
+      System.out.println("--------------------------------------");
+      System.out.println(s);
+      System.out.println("page: " + i);
+      System.out.println("=====================================");
+
     }
     return sentences;
   }

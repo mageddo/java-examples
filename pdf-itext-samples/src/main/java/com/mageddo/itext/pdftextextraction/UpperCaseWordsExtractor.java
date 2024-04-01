@@ -40,13 +40,14 @@ public class UpperCaseWordsExtractor {
       StringBuilder buff, int minWordLength, char c
   ) {
     return metMinLength(buff, minWordLength) && (!CharUtils.isAsciiAlpha(c)
-        || Character.isWhitespace(buff.charAt(buff.length() - 1)));
+                                                 || Character.isWhitespace(buff.charAt(buff.length() - 1)));
   }
 
   private static boolean isNonTextAfterTheStartOfTheSentence(StringBuilder buff, char c) {
-    return (
-        CharUtils.isAsciiNumeric(c) || Character.isWhitespace(c)
-            || c == '-' || c == '_'
-    ) && !buff.isEmpty();
+    return !(c == '\r' || c == '\n')
+           && (
+               CharUtils.isAsciiNumeric(c) || Character.isWhitespace(c)
+               || c == '-' || c == '_'
+           ) && !buff.isEmpty();
   }
 }

@@ -46,4 +46,23 @@ class UpperCaseWordsExtractorTest {
 
   }
 
+  @Test
+  void mustIgnoreWordsSeparatedByNewLines(){
+
+    // arrange
+    final var str = """
+    The SUN
+    IS yellow.
+    """;
+
+    // act
+    final var words = extractUppercaseWordsSentenceFromText(str, 2);
+
+    // assert
+    assertNotNull(words);
+    assertEquals("""
+        [SUN, IS]""", words.toString());
+
+  }
+
 }
