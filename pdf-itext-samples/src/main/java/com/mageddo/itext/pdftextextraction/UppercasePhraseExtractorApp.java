@@ -1,10 +1,14 @@
 package com.mageddo.itext.pdftextextraction;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
 import com.itextpdf.text.pdf.parser.SimpleTextExtractionStrategy;
+
+import static com.mageddo.itext.pdftextextraction.UpperCaseWordsExtractor.extractUppercaseWordsSentenceFromText;
 
 public class UppercasePhraseExtractorApp {
 
@@ -19,22 +23,29 @@ public class UppercasePhraseExtractorApp {
     final var parser = new PdfReaderContentParser(reader);
     final var strategy = new SimpleTextExtractionStrategy();
     try {
-      extractUppercaseWordSequencesFromPdf(reader, parser, strategy);
+      final var sentences = extractUppercaseWordSequencesFromPdf(reader, parser, strategy);
+      System.out.println(sentences);
     } finally {
       reader.close();
     }
   }
 
-  private static void extractUppercaseWordSequencesFromPdf(
+  private static List<String> extractUppercaseWordSequencesFromPdf(
       PdfReader reader,
       PdfReaderContentParser parser,
       SimpleTextExtractionStrategy strategy
   ) throws IOException {
+    final var sentences = new ArrayList<String>();
     for (int i = 1; i <= reader.getNumberOfPages(); i++) {
-      parser.processContent(i, strategy);
-      System.out.println(strategy.getResultantText());
-
+      if(i == 445) {
+        parser.processContent(i, strategy);
+//      sentences.addAll(extractUppercaseWordsSentenceFromText(strategy.getResultantText()));
+        final var s = extractUppercaseWordsSentenceFromText(strategy.getResultantText(), 2);
+        System.out.println(s);
+        System.out.println("page: " + i);
+      }
     }
+    return sentences;
   }
 
 }
