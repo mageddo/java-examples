@@ -1,35 +1,61 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    gradlePluginPortal()
+  }
+}
+
 plugins {
-  id "java"
-  id "com.github.johnrengelman.shadow" version "5.2.0"
-  id "org.mikeneck.graalvm-native-image" version "0.3.0"
-  id "io.freefair.aspectj.post-compile-weaving" version "3.1.4"
+  id "java-library"
+  id "com.github.johnrengelman.shadow" version "8.1.1"
+  id "org.graalvm.buildtools.native" version "0.10.2"
+  id "io.freefair.aspectj.post-compile-weaving" version "8.6"
 }
 
 repositories {
   mavenLocal()
-  jcenter()
+  mavenCentral()
 }
 
 dependencies {
-
-  implementation("org.aspectj:aspectjrt:1.9.5")
-  testImplementation('org.junit.jupiter:junit-jupiter:5.4.0')
-
+  implementation("org.aspectj:aspectjrt:1.9.22.1")
+  testImplementation('org.junit.jupiter:junit-jupiter:5.10.2')
 }
-sourceCompatibility = JavaVersion.VERSION_1_8
+
+sourceCompatibility = JavaVersion.VERSION_21
 
 def mainClassName = "com.huongdanjava.aspectj.Application"
 
-nativeImage {
-  graalVmHome = System.getProperty("java.home")
-  mainClass = mainClassName
-  executableName = rootProject.name
-  arguments(
-    "--no-fallback",
-    "--no-server",
-    "-Dfile.encoding=UTF-8",
-    "-J-Xmx7G"
-  )
+graalvmNative {
+  binaries {
+    test {
+      javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+//        requiredVersion = '22.3'
+        vendor = JvmVendorSpec.matching("GraalVM Community")
+      }
+    }
+    main {
+      javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+//        requiredVersion = '22.3'
+        vendor = JvmVendorSpec.matching("GraalVM Community")
+      }
+
+      // Main options
+      imageName = project.name
+      mainClass = mainClassName
+//      debug = true
+      verbose = true
+      fallback = false
+      sharedLibrary = false
+      buildArgs.add('-J-Xmx7G')
+      buildArgs.add('--no-server')
+      buildArgs.add('-Dfile.encoding=UTF-8')
+//      buildArgs.add('--link-at-build-time')
+    }
+  }
 }
 
 test {
