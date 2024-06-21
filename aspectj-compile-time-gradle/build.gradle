@@ -19,11 +19,11 @@ repositories {
 }
 
 dependencies {
-  implementation("org.aspectj:aspectjrt:1.9.5")
-  testImplementation('org.junit.jupiter:junit-jupiter:5.4.0')
+  implementation("org.aspectj:aspectjrt:1.9.22.1")
+  testImplementation('org.junit.jupiter:junit-jupiter:5.10.2')
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_21
 
 def mainClassName = "com.huongdanjava.aspectj.Application"
 
@@ -31,8 +31,8 @@ graalvmNative {
   binaries {
     main {
       javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(19)
-        requiredVersion = '22.3'
+        languageVersion = JavaLanguageVersion.of(21)
+//        requiredVersion = '22.3'
         vendor = JvmVendorSpec.matching("GraalVM Community")
       }
 
@@ -42,23 +42,12 @@ graalvmNative {
 //      debug = true
       verbose = true
       fallback = false
-      buildArgs.add('-J-Xmx5G')
+      buildArgs.add('-J-Xmx7G')
+      buildArgs.add('--no-server')
+      buildArgs.add('-Dfile.encoding=UTF-8')
 //      buildArgs.add('--link-at-build-time')
     }
   }
-}
-
-
-nativeImage {
-  graalVmHome = System.getProperty("java.home")
-  mainClass = mainClassName
-  executableName = rootProject.name
-  arguments(
-    "--no-fallback",
-    "--no-server",
-    "-Dfile.encoding=UTF-8",
-    "-J-Xmx7G"
-  )
 }
 
 test {
