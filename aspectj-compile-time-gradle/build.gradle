@@ -1,24 +1,53 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    gradlePluginPortal()
+  }
+}
+
 plugins {
-  id "java"
-  id "com.github.johnrengelman.shadow" version "5.2.0"
-  id "org.mikeneck.graalvm-native-image" version "0.3.0"
-  id "io.freefair.aspectj.post-compile-weaving" version "3.1.4"
+  id "java-library"
+  id "com.github.johnrengelman.shadow" version "8.1.1"
+  id "org.graalvm.buildtools.native" version "0.10.2"
+  id "io.freefair.aspectj.post-compile-weaving" version "8.6"
 }
 
 repositories {
   mavenLocal()
-  jcenter()
+  mavenCentral()
 }
 
 dependencies {
-
   implementation("org.aspectj:aspectjrt:1.9.5")
   testImplementation('org.junit.jupiter:junit-jupiter:5.4.0')
-
 }
-sourceCompatibility = JavaVersion.VERSION_1_8
+
+sourceCompatibility = JavaVersion.VERSION_11
 
 def mainClassName = "com.huongdanjava.aspectj.Application"
+
+graalvmNative {
+  binaries {
+    main {
+      javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(19)
+        requiredVersion = '22.3'
+        vendor = JvmVendorSpec.matching("GraalVM Community")
+      }
+
+      // Main options
+      imageName = project.name
+      mainClass = mainClassName
+//      debug = true
+      verbose = true
+      fallback = false
+      buildArgs.add('-J-Xmx5G')
+//      buildArgs.add('--link-at-build-time')
+    }
+  }
+}
+
 
 nativeImage {
   graalVmHome = System.getProperty("java.home")
