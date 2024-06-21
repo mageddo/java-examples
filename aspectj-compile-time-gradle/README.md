@@ -11,7 +11,7 @@ after
 
 Compiling to binary with graalvm
 ```
-$ ./gradlew nativeImage
+$ ./gradlew nativeCompile
 $ ./build/native-image/aspectj-compile-time-gradle
  
 before

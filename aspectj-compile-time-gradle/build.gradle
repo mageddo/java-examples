@@ -42,6 +42,7 @@ graalvmNative {
 //      debug = true
       verbose = true
       fallback = false
+      sharedLibrary = false
       buildArgs.add('-J-Xmx7G')
       buildArgs.add('--no-server')
       buildArgs.add('-Dfile.encoding=UTF-8')
