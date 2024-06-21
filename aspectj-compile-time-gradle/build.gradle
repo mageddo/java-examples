@@ -29,6 +29,13 @@ def mainClassName = "com.huongdanjava.aspectj.Application"
 
 graalvmNative {
   binaries {
+    test {
+      javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+//        requiredVersion = '22.3'
+        vendor = JvmVendorSpec.matching("GraalVM Community")
+      }
+    }
     main {
       javaLauncher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(21)
