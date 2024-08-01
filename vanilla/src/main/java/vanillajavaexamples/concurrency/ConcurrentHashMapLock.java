@@ -15,24 +15,44 @@ public class ConcurrentHashMapLock {
   private final ConcurrentHashMap<Long, Boolean> store = new ConcurrentHashMap<>();
 
   public static void main(String[] args) throws Exception {
-    new ConcurrentHashMapLock().lockScenario();
+    final var result = new ConcurrentHashMapLock().lockScenario();
+
+    if (result.allExecuted) {
+      throw new IllegalArgumentException("Deadlock not ocurred");
+    }
+    if(!result.threadDump.contains("Number of locked synchronizers = 1")){
+      throw new IllegalArgumentException("Deadlock not found at the thread dump");
+    }
 
   }
 
-  void lockScenario() throws Exception {
-    final var poolSize = 20;
+  Result lockScenario() throws Exception {
+
+    final var pid = ProcessHandle.current().pid();
+    log("pid=%s", pid);
+
+    final var poolSize = 5;
     final var pool = createPool(poolSize);
     try {
-      for (int i = 0; i < poolSize; i++) {
+      for (int i = 0; i < 20; i++) {
         pool.submit(this::doStuff);
       }
     } finally {
       pool.shutdown();
       final var allExecuted = pool.awaitTermination(20, TimeUnit.SECONDS);
+
+      final var threadDump = threadDump();
+      System.out.println("------------------------");
+      System.out.println(threadDump);
+      System.out.println("------------------------");
+
       log("status=done, allExecuted=%s", allExecuted);
+      final var result = new Result();
+      result.allExecuted = allExecuted;
+      result.threadDump = threadDump;
+      return result;
     }
-    System.out.println("------------------------");
-    System.out.println(threadDump());
+
   }
 
   static ExecutorService createPool(int poolSize) {
@@ -54,7 +74,7 @@ public class ConcurrentHashMapLock {
 
       log("status=computing, key=%s", key);
 
-      sleep(10_000);
+      sleep(1_000);
 
       if (r.nextBoolean()) {
         log("status=clearing, key=%s", key);
@@ -93,13 +113,19 @@ public class ConcurrentHashMapLock {
   private static String threadDump() {
     return threadDump(true, true);
   }
+
   private static String threadDump(boolean lockedMonitors, boolean lockedSynchronizers) {
     StringBuffer threadDump = new StringBuffer(System.lineSeparator());
     ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-    for(ThreadInfo threadInfo : threadMXBean.dumpAllThreads(lockedMonitors, lockedSynchronizers)) {
+    for (ThreadInfo threadInfo : threadMXBean.dumpAllThreads(lockedMonitors, lockedSynchronizers)) {
       threadDump.append(threadInfo.toString());
     }
     return threadDump.toString();
+  }
+
+  public static class Result {
+    String threadDump;
+    boolean allExecuted;
   }
 
 }

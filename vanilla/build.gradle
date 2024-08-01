@@ -13,11 +13,11 @@ targetCompatibility = JavaVersion.VERSION_11
 
 dependencies {
 
-  compileOnly 'org.projectlombok:lombok:1.18.24'
-  annotationProcessor 'org.projectlombok:lombok:1.18.24'
+  compileOnly 'org.projectlombok:lombok:1.18.+'
+  annotationProcessor 'org.projectlombok:lombok:1.18.+'
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.24'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+  testCompileOnly 'org.projectlombok:lombok:1.18.+'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.+'
 
   implementation 'com.github.mvallim:emv-qrcode:0.1.1'
   implementation "com.fasterxml.uuid:java-uuid-generator:4.0"
