@@ -20,7 +20,7 @@ public class ConcurrentHashMapLock {
     if (result.allExecuted) {
       throw new IllegalArgumentException("Deadlock not ocurred");
     }
-    if(!result.threadDump.contains("Number of locked synchronizers = 1")){
+    if (!result.threadDump.contains("Number of locked synchronizers = 1")) {
       throw new IllegalArgumentException("Deadlock not found at the thread dump");
     }
 
@@ -31,10 +31,10 @@ public class ConcurrentHashMapLock {
     final var pid = ProcessHandle.current().pid();
     log("pid=%s", pid);
 
-    final var poolSize = 5;
+    final var poolSize = 2;
     final var pool = createPool(poolSize);
     try {
-      for (int i = 0; i < 20; i++) {
+      for (int i = 0; i < 10; i++) {
         pool.submit(this::doStuff);
       }
     } finally {
