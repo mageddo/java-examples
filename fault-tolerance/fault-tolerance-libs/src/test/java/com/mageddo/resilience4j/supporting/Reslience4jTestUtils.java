@@ -8,7 +8,7 @@ import com.mageddo.failsafe.Result;
 
 import org.apache.commons.lang3.time.StopWatch;
 
-import dev.failsafe.CircuitBreakerOpenException;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -59,7 +59,7 @@ public class Reslience4jTestUtils {
       r.run();
       stats.success++;
       return Result.SUCCESS;
-    } catch (CircuitBreakerOpenException e) {
+    } catch (CallNotPermittedException e) {
       stats.openCircuit++;
       return Result.CIRCUIT_OPEN;
     } catch (UncheckedIOException e) {
