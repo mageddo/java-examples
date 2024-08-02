@@ -4,66 +4,31 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.LocalDateTime;
 
-import org.apache.commons.lang3.time.StopWatch;
+import com.mageddo.resilience4j.supporting.resilience4j.StateMapper;
 
-import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Resilience4jCircuitBreakerSandBox {
+public class Resilience4jCircuitBreakerSandBox extends AbstractCircuitBreakerSandBox {
 
-  public static void testCircuitOnError(
-      final Result expectedResult, final CircuitBreaker.State expectedState,
-      final CircuitBreaker circuit, final int times
-  ) {
-    testCircuitOn(expectedResult, expectedState, circuit, times, () -> runError(circuit));
+  private final CircuitBreaker circuitBreaker;
+
+  public Resilience4jCircuitBreakerSandBox(final CircuitBreaker circuitBreaker) {
+    this.circuitBreaker = circuitBreaker;
   }
 
-  public static void testCircuitOnSuccess(
-      final Result expectedResult, final CircuitBreaker.State expectedState,
-      final CircuitBreaker circuit, final int times
-  ) {
-    testCircuitOn(expectedResult, expectedState, circuit, times, () -> runSuccess(circuit));
+  @Override
+  protected State getCircuitBreakerState() {
+    return StateMapper.from(this.circuitBreaker.getState());
   }
 
-  public static void testCircuitOn(
-      final Result expectedResult, final CircuitBreaker.State expectedState,
-      final CircuitBreaker circuit, final int times, final Runnable runnable
-  ) {
-    final var stats = new Stats();
-    final var stopWatch = StopWatch.createStarted();
-    for (int i = 0; i < times; i++) {
-      assertEquals(expectedResult, calcStats(stats, runnable));
-      assertCircuitState(i, stopWatch, expectedState, circuit.getState());
-    }
+  @Override
+  public String runError() {
+    return runError(this.circuitBreaker);
   }
 
-  private static void assertCircuitState(int i, StopWatch stopWatch,
-      final CircuitBreaker.State expectedState,
-      final CircuitBreaker.State actualState) {
-    assertEquals(
-        expectedState,
-        actualState,
-        formatMessage(i, stopWatch)
-    );
-  }
-
-  private static String formatMessage(int i, StopWatch stopWatch) {
-    return String.format("try=%d, time=%d", i, stopWatch.getTime());
-  }
-
-  public static Result calcStats(Stats stats, Runnable r) {
-    try {
-      r.run();
-      stats.success++;
-      return Result.SUCCESS;
-    } catch (CallNotPermittedException e) {
-      stats.openCircuit++;
-      return Result.CIRCUIT_OPEN;
-    } catch (UncheckedIOException e) {
-      stats.error++;
-      return Result.ERROR;
-    }
+  @Override
+  public String runSuccess() {
+    return runSuccess(this.circuitBreaker);
   }
 
   public static String runError(CircuitBreaker breaker) {
