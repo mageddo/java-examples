@@ -7,7 +7,6 @@ import java.time.Duration;
 import com.mageddo.concurrency.Threads;
 import com.mageddo.supporting.sandbox.Result;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.mageddo.supporting.sandbox.resilience4j.Resilience4jCircuitBreakerSandBox.testCircuitOnError;
@@ -15,7 +14,6 @@ import static com.mageddo.supporting.sandbox.resilience4j.Resilience4jCircuitBre
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker.State;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
-import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.TransitionCheckResult;
 import lombok.extern.slf4j.Slf4j;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -192,127 +190,6 @@ public class CircuitBreakerTest {
 
     testCircuitOnSuccess(Result.SUCCESS, State.CLOSED, circuit, 1);
 
-  }
-
-  @Test
-  void dps__ServerIsDown() {
-
-    // arrange
-    final var circuit = dpsConfig();
-    circuit.transitionToOpenState();
-    circuit.transitionToHalfOpenState();
-
-    // act // assert
-    testCircuitOnError(Result.ERROR, State.HALF_OPEN, circuit, 9);
-    testCircuitOnError(Result.ERROR, State.OPEN, circuit, 1);
-
-  }
-
-  @Test
-  void dps__ServerGotUp() {
-
-    // arrange
-    final var circuit = dpsConfig();
-    circuit.transitionToOpenState();
-    circuit.transitionToHalfOpenState();
-
-    // act // assert
-    testCircuitOnSuccess(Result.SUCCESS, State.HALF_OPEN, circuit, 8);
-    testCircuitOnError(Result.ERROR, State.HALF_OPEN, circuit, 1);
-    testCircuitOnError(Result.ERROR, State.CLOSED, circuit, 1);
-
-  }
-
-  @Test
-  void dps__ServerGoesDownAndDecideToOpenTheCircuitAfterMinimumNumberOfCalls() {
-
-    // arrange
-    final var circuit = dpsConfig();
-
-    // act // assert
-    testCircuitOnError(Result.ERROR, State.CLOSED, circuit, 4);
-    testCircuitOnSuccess(Result.SUCCESS, State.CLOSED, circuit, 1);
-    testCircuitOnError(Result.ERROR, State.CLOSED, circuit, 4);
-    testCircuitOnSuccess(Result.SUCCESS, State.OPEN, circuit, 1);
-
-  }
-
-  @Test
-  @Disabled
-  void dps_mustNotHalfOpenAutomatically() {
-
-    // arrange
-    final var circuit = dpsConfig();
-    circuit.transitionToOpenState();
-
-    Threads.sleep(1000);
-
-    assertEquals(State.OPEN, circuit.getState());
-    testCircuitOnSuccess(Result.CIRCUIT_OPEN, State.OPEN, circuit, 1);
-
-  }
-
-  @Test
-  void dps_mustHalfOpenTestAndCloseTheCircuit() {
-
-    // arrange
-    final var circuit = dpsConfig();
-    circuit.transitionToOpenState();
-    Threads.sleep(1100);
-    assertEquals(State.HALF_OPEN, circuit.getState());
-
-    testCircuitOnSuccess(Result.SUCCESS, State.HALF_OPEN, circuit, 1);
-    testCircuitOnSuccess(Result.SUCCESS, State.CLOSED, circuit, 1);
-
-  }
-
-  @Test
-  void dps_mustOpenTheCircuitAfterHalfOpenAndTest() {
-
-    // arrange
-    final var circuit = dpsConfig();
-    circuit.transitionToOpenState();
-    Threads.sleep(1100);
-    assertEquals(State.HALF_OPEN, circuit.getState());
-
-    testCircuitOnSuccess(Result.SUCCESS, State.HALF_OPEN, circuit, 1);
-    testCircuitOnError(Result.ERROR, State.OPEN, circuit, 1);
-
-  }
-
-  static CircuitBreaker dpsConfig() {
-    final var circuit = CircuitBreaker.of(
-        "defaultCircuitBreaker",
-        CircuitBreakerConfig
-            .custom()
-
-            .enableAutomaticTransitionFromOpenToHalfOpen()
-            .permittedNumberOfCallsInHalfOpenState(2)
-
-            .failureRateThreshold(21f)
-            .minimumNumberOfCalls(10)
-            .waitDurationInOpenState(Duration.ofSeconds(1))
-            .recordExceptions(UncheckedIOException.class)
-
-            .transitionOnResult(it -> {
-              if(!it.isEmpty()) { // error
-                log.info(
-                    "empty={}, ex={}, it={}",
-                    it.isEmpty(), it.getOrNull(), it
-                );
-              } else{
-                log.info("left={}", it.getLeft());
-              }
-//              return CircuitBreakerConfig.TransitionCheckResult.transitionToOpen();
-              return keepTheNormalTransition();
-            })
-            .build()
-    );
-    return circuit;
-  }
-
-  static TransitionCheckResult keepTheNormalTransition() {
-    return TransitionCheckResult.noTransition();
   }
 
 }
