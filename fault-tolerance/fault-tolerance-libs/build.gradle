@@ -6,21 +6,21 @@ repositories {
   mavenCentral()
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 dependencies {
 
-  compileOnly 'org.projectlombok:lombok:1.18.28'
-  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+  compileOnly 'org.projectlombok:lombok:1.18.+'
+  annotationProcessor 'org.projectlombok:lombok:1.18.+'
 
   implementation("dev.failsafe:failsafe:3.3.2")
-  implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.7'
-  implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.7'
+  implementation("io.github.resilience4j:resilience4j-circuitbreaker:2.2.0")
+  implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.6'
   implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.28'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+  testCompileOnly 'org.projectlombok:lombok:1.18.+'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.+'
   testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
   testImplementation("org.mockito:mockito-junit-jupiter:4.2.0")
 

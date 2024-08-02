@@ -1,4 +1,4 @@
-package com.mageddo.failsafe;
+package com.mageddo.supporting.sandbox;
 
 public enum Result {
   SUCCESS,

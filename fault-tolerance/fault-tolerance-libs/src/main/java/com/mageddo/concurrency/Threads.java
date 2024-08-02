@@ -1,4 +1,4 @@
-package com.mageddo.failsafe;
+package com.mageddo.concurrency;
 
 public class Threads {
   public static void sleep(int millis) {
