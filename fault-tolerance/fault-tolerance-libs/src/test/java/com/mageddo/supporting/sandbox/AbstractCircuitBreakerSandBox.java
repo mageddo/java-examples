@@ -31,7 +31,7 @@ public abstract class AbstractCircuitBreakerSandBox implements CircuitBreakerSan
     final var stats = new Stats();
     final var stopWatch = StopWatch.createStarted();
     for (int i = 0; i < times; i++) {
-      assertEquals(expectedResult, calcStats(stats, runnable));
+      assertEquals(expectedResult, this.calcStats(stats, runnable));
       assertCircuitState(i, stopWatch, expectedState, this.getCircuitBreakerState());
     }
   }

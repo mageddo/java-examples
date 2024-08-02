@@ -1,4 +1,4 @@
-package com.mageddo.supporting.sandbox.resilience4j;
+package com.mageddo.supporting.sandbox.failsafe;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -9,13 +9,15 @@ import com.mageddo.supporting.sandbox.Result;
 import com.mageddo.supporting.sandbox.State;
 import com.mageddo.supporting.sandbox.Stats;
 
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import dev.failsafe.CircuitBreaker;
+import dev.failsafe.Failsafe;
 
-public class Resilience4jCircuitBreakerSandBox extends AbstractCircuitBreakerSandBox {
 
-  private final CircuitBreaker circuitBreaker;
+public class FailSafeCircuitBreakerSandBox extends AbstractCircuitBreakerSandBox {
 
-  public Resilience4jCircuitBreakerSandBox(final CircuitBreaker circuitBreaker) {
+  private final CircuitBreaker<String> circuitBreaker;
+
+  public FailSafeCircuitBreakerSandBox(final CircuitBreaker<String> circuitBreaker) {
     this.circuitBreaker = circuitBreaker;
   }
 
@@ -39,31 +41,33 @@ public class Resilience4jCircuitBreakerSandBox extends AbstractCircuitBreakerSan
     return runSuccess(this.circuitBreaker);
   }
 
-  public static String runError(CircuitBreaker breaker) {
-    return breaker.executeSupplier(() -> {
-      throw new UncheckedIOException(new IOException("an error"));
-    });
+  public static String runError(CircuitBreaker<String> breaker) {
+    return Failsafe.with(breaker)
+        .get(() -> {
+          throw new UncheckedIOException(new IOException("an error"));
+        });
   }
 
-  public static String runSuccess(CircuitBreaker breaker) {
-    return breaker.executeSupplier(() -> LocalDateTime.now().toString());
+  public static String runSuccess(CircuitBreaker<String> breaker) {
+    return Failsafe.with(breaker)
+        .get(() -> LocalDateTime.now().toString());
   }
 
   public static void testCircuitOnError(
       final Result expectedResult, final CircuitBreaker.State expectedState,
-      final CircuitBreaker circuit, final int times
+      final CircuitBreaker<String> circuit, final int times
   ) {
     of(circuit).testCircuitOnError(expectedResult, StateMapper.from(expectedState), times);
   }
 
   public static void testCircuitOnSuccess(
       final Result expectedResult, final CircuitBreaker.State expectedState,
-      final CircuitBreaker circuit, final int times
+      final CircuitBreaker<String> circuit, final int times
   ) {
     of(circuit).testCircuitOnSuccess(expectedResult, StateMapper.from(expectedState), times);
   }
 
-  public static Resilience4jCircuitBreakerSandBox of(CircuitBreaker circuitBreaker) {
-    return new Resilience4jCircuitBreakerSandBox(circuitBreaker);
+  public static FailSafeCircuitBreakerSandBox of(CircuitBreaker<String> circuitBreaker) {
+    return new FailSafeCircuitBreakerSandBox(circuitBreaker);
   }
 }
