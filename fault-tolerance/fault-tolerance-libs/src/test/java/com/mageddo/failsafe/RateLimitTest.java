@@ -1,5 +1,6 @@
 package com.mageddo.failsafe;
 
+import com.mageddo.concurrency.Threads;
 import dev.failsafe.Failsafe;
 import dev.failsafe.RateLimitExceededException;
 import dev.failsafe.RateLimiter;
