@@ -24,7 +24,7 @@ public abstract class AbstractCircuitBreakerSandBox implements CircuitBreakerSan
     testCircuitOn(expectedResult, expectedState, times, this::runSuccess);
   }
 
-  void testCircuitOn(
+  private void testCircuitOn(
       final Result expectedResult, final State expectedState,
       final int times, final Runnable runnable
   ) {
