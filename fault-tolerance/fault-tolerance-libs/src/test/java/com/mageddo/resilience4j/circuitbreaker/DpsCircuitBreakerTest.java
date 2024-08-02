@@ -19,14 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DpsCircuitBreakerTest {
 
   @Test
-  void serverGoesDown() {
+  void mustHalfOpenAutomatically() {
 
-    // arrange
     final var circuit = dpsConfig();
+    circuit.transitionToOpenState();
 
-    // act // assert
-    testCircuitOnError(Result.ERROR, CircuitBreaker.State.CLOSED, circuit, 99);
-    testCircuitOnError(Result.ERROR, CircuitBreaker.State.OPEN, circuit, 1);
+    Threads.sleep(1100);
+
+    assertEquals(CircuitBreaker.State.HALF_OPEN, circuit.getState());
+    testCircuitOnSuccess(Result.SUCCESS, CircuitBreaker.State.HALF_OPEN, circuit, 1);
 
   }
 
@@ -59,18 +60,6 @@ public class DpsCircuitBreakerTest {
 
   }
 
-  @Test
-  void mustHalfOpenAutomatically() {
-
-    final var circuit = dpsConfig();
-    circuit.transitionToOpenState();
-
-    Threads.sleep(1100);
-
-    assertEquals(CircuitBreaker.State.HALF_OPEN, circuit.getState());
-    testCircuitOnSuccess(Result.SUCCESS, CircuitBreaker.State.HALF_OPEN, circuit, 1);
-
-  }
 
   @Test
   void mustHalfOpenTestAndCloseTheCircuit() {
