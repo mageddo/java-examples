@@ -145,18 +145,44 @@ public class CircuitBreakerTest {
     assertEquals(2, stats.openCircuit);
   }
 
+  @Test
+  void mustReopenCircuitAfterTheThresholdBetMet() {
+
+    final var ignoredInThisUseCase = 100;
+    final var circuit = CircuitBreaker.<String>builder()
+        .handle(UncheckedIOException.class)
+        .withFailureRateThreshold(ignoredInThisUseCase, 100, Duration.ofMillis(30))
+        .withDelay(Duration.ofMillis(80))
+        .build();
+
+    circuit.halfOpen();
+
+
+    for (int i = 0; i < 3; i++) {
+
+      testCircuitOnError(Result.ERROR, State.HALF_OPEN, circuit, 99);
+      testCircuitOnError(Result.ERROR, State.OPEN, circuit, 1);
+      testCircuitOnError(Result.CIRCUIT_OPEN, State.OPEN, circuit, 35);
+
+      Threads.sleep(81);
+    }
+
+
+  }
 
   /**
+   * withSuccessThreshold sobrepoe o withFailureThreshold
+   *
    * O circuit fica aberto pelo wityDelay,
    * depois fica meio aberto pela quantidade  successThresholdingCapacity - successThreshold,
    * depois fica aberto denovo pelo withDelay
    */
   @Test
-  void halfOpenBehaviorWhenUsingFailureThresholdAndCapacity() {
+  void halfOpenBehaviorWhenUsingSuccessThresholdAndCapacity() {
 
     final var circuit = CircuitBreaker.<String>builder()
         .handle(UncheckedIOException.class)
-        .withFailureThreshold(2, 100)
+        .withFailureThreshold(2, 100) // is ignored as withSuccessThreshold is set
         .withSuccessThreshold(3, 100)
         .withDelay(Duration.ofMillis(80))
         .build();
