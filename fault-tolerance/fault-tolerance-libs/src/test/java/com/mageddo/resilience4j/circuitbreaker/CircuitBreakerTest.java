@@ -5,12 +5,12 @@ import java.io.UncheckedIOException;
 import java.time.Duration;
 
 import com.mageddo.concurrency.Threads;
-import com.mageddo.failsafe.Result;
+import com.mageddo.resilience4j.supporting.Result;
 
 import org.junit.jupiter.api.Test;
 
-import static com.mageddo.resilience4j.supporting.Reslience4jTestUtils.testCircuitOnError;
-import static com.mageddo.resilience4j.supporting.Reslience4jTestUtils.testCircuitOnSuccess;
+import static com.mageddo.resilience4j.supporting.Resilience4jCircuitBreakerSandBox.testCircuitOnError;
+import static com.mageddo.resilience4j.supporting.Resilience4jCircuitBreakerSandBox.testCircuitOnSuccess;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker.State;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
@@ -190,7 +190,4 @@ public class CircuitBreakerTest {
 
   }
 
-  private Object doSomething() {
-    return null;
-  }
 }

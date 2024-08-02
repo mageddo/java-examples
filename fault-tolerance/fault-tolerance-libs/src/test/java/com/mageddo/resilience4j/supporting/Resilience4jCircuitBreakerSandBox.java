@@ -4,15 +4,13 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.LocalDateTime;
 
-import com.mageddo.failsafe.Result;
-
 import org.apache.commons.lang3.time.StopWatch;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Reslience4jTestUtils {
+public class Resilience4jCircuitBreakerSandBox {
 
   public static void testCircuitOnError(
       final Result expectedResult, final CircuitBreaker.State expectedState,
@@ -78,9 +76,4 @@ public class Reslience4jTestUtils {
     return breaker.executeSupplier(() -> LocalDateTime.now().toString());
   }
 
-  public static class Stats {
-    int success;
-    int error;
-    int openCircuit;
-  }
 }

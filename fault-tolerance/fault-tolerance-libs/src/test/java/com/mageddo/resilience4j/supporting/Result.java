@@ -1,4 +1,4 @@
-package com.mageddo.failsafe;
+package com.mageddo.resilience4j.supporting;
 
 public enum Result {
   SUCCESS,
