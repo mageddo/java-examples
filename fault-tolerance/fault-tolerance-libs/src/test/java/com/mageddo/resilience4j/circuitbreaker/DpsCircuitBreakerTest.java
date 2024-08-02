@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DpsCircuitBreakerTest {
 
   @Test
-  void dps__ServerGoesDown() {
+  void serverGoesDown() {
 
     // arrange
     final var circuit = dpsConfig();
@@ -31,7 +31,7 @@ public class DpsCircuitBreakerTest {
   }
 
   @Test
-  void dps__ServerGotUp() {
+  void serverGotUp() {
 
     // arrange
     final var circuit = dpsConfig();
@@ -46,7 +46,7 @@ public class DpsCircuitBreakerTest {
 
 
   @Test
-  void dps__ServerGoesDownAndDecideToOpenTheCircuitAfterMinimumNumberOfCalls() {
+  void serverGoesDownAndDecideToOpenTheCircuitAfterMinimumNumberOfCalls() {
 
     // arrange
     final var circuit = dpsConfig();
@@ -60,7 +60,7 @@ public class DpsCircuitBreakerTest {
   }
 
   @Test
-  void dps_mustHalfOpenAutomatically() {
+  void mustHalfOpenAutomatically() {
 
     final var circuit = dpsConfig();
     circuit.transitionToOpenState();
@@ -106,19 +106,12 @@ public class DpsCircuitBreakerTest {
         "defaultCircuitBreaker",
         CircuitBreakerConfig
             .custom()
-
             .failureRateThreshold(21f)
             .minimumNumberOfCalls(100)
-
             .enableAutomaticTransitionFromOpenToHalfOpen()
             .permittedNumberOfCallsInHalfOpenState(2)
             .waitDurationInOpenState(Duration.ofSeconds(1))
-
-//            .maxWaitDurationInHalfOpenState()
-
-//            .waitDurationInOpenState(Duration.ofDays(365))
             .recordExceptions(UncheckedIOException.class)
-
             .transitionOnResult(it -> {
               if(!it.isEmpty()) { // error
                 log.info(
