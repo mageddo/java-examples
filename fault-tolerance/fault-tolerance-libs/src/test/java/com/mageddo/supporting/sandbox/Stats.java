@@ -1,4 +1,4 @@
-package com.mageddo.resilience4j.supporting;
+package com.mageddo.supporting.sandbox;
 
 public class Stats {
   int success;

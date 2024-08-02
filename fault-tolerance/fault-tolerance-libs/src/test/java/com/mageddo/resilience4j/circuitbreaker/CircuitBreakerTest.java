@@ -5,12 +5,12 @@ import java.io.UncheckedIOException;
 import java.time.Duration;
 
 import com.mageddo.concurrency.Threads;
-import com.mageddo.resilience4j.supporting.Result;
+import com.mageddo.supporting.sandbox.Result;
 
 import org.junit.jupiter.api.Test;
 
-import static com.mageddo.resilience4j.supporting.resilience4j.Resilience4jCircuitBreakerSandBox.testCircuitOnError;
-import static com.mageddo.resilience4j.supporting.resilience4j.Resilience4jCircuitBreakerSandBox.testCircuitOnSuccess;
+import static com.mageddo.supporting.sandbox.resilience4j.Resilience4jCircuitBreakerSandBox.testCircuitOnError;
+import static com.mageddo.supporting.sandbox.resilience4j.Resilience4jCircuitBreakerSandBox.testCircuitOnSuccess;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker.State;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;

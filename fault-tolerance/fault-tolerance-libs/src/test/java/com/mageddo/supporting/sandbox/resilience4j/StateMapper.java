@@ -1,6 +1,6 @@
-package com.mageddo.resilience4j.supporting.resilience4j;
+package com.mageddo.supporting.sandbox.resilience4j;
 
-import com.mageddo.resilience4j.supporting.State;
+import com.mageddo.supporting.sandbox.State;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 

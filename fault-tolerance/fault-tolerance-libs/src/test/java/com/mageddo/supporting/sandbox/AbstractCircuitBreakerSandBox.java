@@ -1,4 +1,4 @@
-package com.mageddo.resilience4j.supporting;
+package com.mageddo.supporting.sandbox;
 
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -31,7 +31,7 @@ public abstract class AbstractCircuitBreakerSandBox implements CircuitBreakerSan
     final var stats = new Stats();
     final var stopWatch = StopWatch.createStarted();
     for (int i = 0; i < times; i++) {
-      assertEquals(expectedResult, CircuitBreakerSandbox.calcStats(stats, runnable));
+      assertEquals(expectedResult, calcStats(stats, runnable));
       assertCircuitState(i, stopWatch, expectedState, this.getCircuitBreakerState());
     }
   }
