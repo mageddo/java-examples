@@ -9,6 +9,7 @@ import com.mageddo.failsafe.Result;
 
 import org.junit.jupiter.api.Test;
 
+import static com.mageddo.resilience4j.supporting.Reslience4jTestUtils.testCircuitOnError;
 import static com.mageddo.resilience4j.supporting.Reslience4jTestUtils.testCircuitOnSuccess;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker.State;
@@ -46,6 +47,61 @@ public class CircuitBreakerTest {
       assertThrows(UncheckedIOException.class, () -> circuit.executeSupplier(decoratedSupplier));
     }
     assertEquals(State.OPEN, circuit.getState());
+
+  }
+
+  @Test
+  void mustSwitchToHalfOpenStateAfterConfiguredTimeIn__waitDurationInOpenState() {
+
+    final var circuit = CircuitBreaker.of(
+        "defaultCircuitBreaker",
+        CircuitBreakerConfig
+            .custom()
+            .enableAutomaticTransitionFromOpenToHalfOpen()
+            .maxWaitDurationInHalfOpenState(Duration.ofMillis(50))
+            .waitDurationInOpenState(Duration.ofMillis(100))
+            .recordExceptions(UncheckedIOException.class)
+            .build()
+    );
+
+    circuit.transitionToOpenState();
+    assertEquals(State.OPEN, circuit.getState());
+
+    for (int i = 0; i < 3; i++) {
+
+      Threads.sleep(101);
+
+      assertEquals(State.HALF_OPEN, circuit.getState());
+
+      Threads.sleep(51);
+
+      assertEquals(State.OPEN, circuit.getState());
+    }
+  }
+
+  @Test
+  void mustCloseTheCircuitIfOccurredFailureRateThresholdIsLessThanConfigured() {
+
+    final var circuit = CircuitBreaker.of(
+        "defaultCircuitBreaker",
+        CircuitBreakerConfig
+            .custom()
+            .enableAutomaticTransitionFromOpenToHalfOpen()
+            .minimumNumberOfCalls(10)
+            .failureRateThreshold(31.0f)
+            .permittedNumberOfCallsInHalfOpenState(10)
+            .maxWaitDurationInHalfOpenState(Duration.ofMillis(100))
+            .waitDurationInOpenState(Duration.ofMillis(1000))
+            .recordExceptions(UncheckedIOException.class)
+            .build()
+    );
+
+    circuit.transitionToOpenState();
+    circuit.transitionToHalfOpenState();
+
+    testCircuitOnError(Result.ERROR, State.HALF_OPEN, circuit, 3);
+    testCircuitOnSuccess(Result.SUCCESS, State.HALF_OPEN, circuit, 6);
+    testCircuitOnSuccess(Result.SUCCESS, State.CLOSED, circuit, 1);
 
   }
 
