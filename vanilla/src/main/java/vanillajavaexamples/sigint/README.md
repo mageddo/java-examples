@@ -27,4 +27,8 @@ $ kill -1 <PID>
 
 ## Refs
 
+* [How to catch signals][1]
+* [Linux signals explained][2]
+
 [1]: https://kostenko.org/blog/2019/08/java-catch-os-signals.html
+[2]: https://prateeksrivastav598.medium.com/understanding-linux-signals-a-comprehensive-guide-339ecc2d16d4
