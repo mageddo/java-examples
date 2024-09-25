@@ -1,4 +1,4 @@
-package com.mageddo.polymorphictypes.byname;
+package com.mageddo.polymorphictypes.byname.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;

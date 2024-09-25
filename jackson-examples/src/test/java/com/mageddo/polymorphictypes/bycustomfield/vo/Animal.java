@@ -1,4 +1,4 @@
-package com.mageddo.polymorphictypes.bycustomfield;
+package com.mageddo.polymorphictypes.bycustomfield.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -14,16 +14,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = Dog.class, name = "Dog"),
     @JsonSubTypes.Type(value = Cat.class, name = "Cat")
 })
-public abstract class Animal {
+public interface Animal {
 
-  private String name;
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
+  String getName();
 
 }

@@ -1,4 +1,4 @@
-package com.mageddo.polymorphictypes.bycustomfield;
+package com.mageddo.polymorphictypes.byname.vo;
 
 public class Cat extends Animal {
 

@@ -3,11 +3,15 @@ package com.mageddo.polymorphictypes.bycustomfield;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import com.mageddo.polymorphictypes.bycustomfield.vo.Animal;
+import com.mageddo.polymorphictypes.bycustomfield.vo.Cat;
+import com.mageddo.polymorphictypes.bycustomfield.vo.Dog;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InheritanceTest {
+public class CustomFieldInterfaceTest {
 
   final ObjectMapper objectMapper = new ObjectMapper()
       .enable(SerializationFeature.INDENT_OUTPUT);

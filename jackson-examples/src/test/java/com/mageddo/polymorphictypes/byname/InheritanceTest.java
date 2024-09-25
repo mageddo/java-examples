@@ -3,6 +3,10 @@ package com.mageddo.polymorphictypes.byname;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import com.mageddo.polymorphictypes.byname.vo.Animal;
+import com.mageddo.polymorphictypes.byname.vo.Cat;
+import com.mageddo.polymorphictypes.byname.vo.Dog;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
