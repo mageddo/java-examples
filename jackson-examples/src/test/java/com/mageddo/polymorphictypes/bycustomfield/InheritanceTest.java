@@ -21,10 +21,9 @@ public class InheritanceTest {
   void mustSerializePolymorphicType() throws Exception {
     final var cat = new Cat("goya", "mice");
     final var json = objectMapper.writeValueAsString(cat);
-    assertEquals(
-            """
+    assertEquals("""
             {
-              "@type" : "Cat",
+              "__name" : "Cat",
               "name" : "goya",
               "favoriteToy" : "mice"
             }""",
