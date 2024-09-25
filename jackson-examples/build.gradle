@@ -1,12 +1,17 @@
 plugins {
   id "java"
 }
+
+repositories {
+  mavenCentral()
+}
+
 dependencies {
 
   implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
 
-  testCompile "org.junit.jupiter:junit-jupiter:5.11.2"
-  testCompile "org.mockito:mockito-junit-jupiter:5.13.0"
+  testImplementation("org.junit.jupiter:junit-jupiter:5.11.2")
+  testImplementation("org.mockito:mockito-junit-jupiter:5.13.0")
 }
 
 test {
