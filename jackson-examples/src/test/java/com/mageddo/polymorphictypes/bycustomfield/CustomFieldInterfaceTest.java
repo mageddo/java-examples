@@ -2,7 +2,6 @@ package com.mageddo.polymorphictypes.bycustomfield;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import com.mageddo.polymorphictypes.bycustomfield.vo.Animal;
 import com.mageddo.polymorphictypes.bycustomfield.vo.Cat;
 import com.mageddo.polymorphictypes.bycustomfield.vo.Dog;
@@ -55,5 +54,20 @@ public class CustomFieldInterfaceTest {
     }
 
 
+  }
+
+
+  @Test
+  void mustParseCatAsDefault() throws Exception {
+    final var json = """
+        {
+          "name" : "goya",
+          "favoriteToy" : "mice"
+        }""";
+    final var animal = objectMapper.readValue(json, Animal.class);
+    assertEquals(Cat.class, animal.getClass());
+
+    final var cat = (Cat) animal;
+    assertEquals("mice", cat.getFavoriteToy());
   }
 }

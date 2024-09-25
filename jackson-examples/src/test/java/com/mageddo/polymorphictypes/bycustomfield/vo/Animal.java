@@ -8,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY, property = "__name",
-    visible = true
+    visible = true,
+    defaultImpl = Cat.class
 )
 @JsonSubTypes({
     @JsonSubTypes.Type(value = Dog.class, name = "Dog"),
