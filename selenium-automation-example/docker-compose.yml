@@ -9,7 +9,7 @@ services:
     volumes:
       - /dev/shm:/dev/shm
     network_mode: bridge
-    privileged: true
+    privileged: true #for vnc
 
 # http://localhost:7900/?autoconnect=1&resize=scale&password=secret
 # http://localhost:4444
