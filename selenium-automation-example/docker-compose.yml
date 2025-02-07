@@ -9,7 +9,8 @@ services:
     volumes:
       - /dev/shm:/dev/shm
     network_mode: bridge
-    privileged: true #for vnc
+    privileged: true
+    #for vnc
 
-# http://localhost:7900/?autoconnect=1&resize=scale&password=secret
+# http://localhost:7900/?autoconnect=1&resize=scale&password=secret or http://standalone-chrome.docker:7900/?autoconnect=1&resize=scale&password=secret
 # http://localhost:4444
