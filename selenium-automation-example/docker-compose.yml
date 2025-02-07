@@ -1,10 +1,11 @@
 version: '2'
 services:
   standalone-chrome:
-    image: selenium/standalone-chrome-debug:3.141.59
+#    image: selenium/standalone-chrome-debug:3.141.59
+    image: selenium/standalone-chrome:97.0-chromedriver-97.0-20250202
     ports:
-      - 4444:4444
-      - 5900:5900
+      - "4444:4444"
+      - "5900:5900"
     volumes:
       - /dev/shm:/dev/shm
     network_mode: bridge
