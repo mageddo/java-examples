@@ -1,17 +1,12 @@
 package com.exame;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class LocalDriverCreator {
 
@@ -20,37 +15,26 @@ public class LocalDriverCreator {
   }
 
   public static WebDriver getInstance() {
-    return getInstance("chrome-profile");
-  }
-
-  public static WebDriver getInstance(String profile) {
-
-    WebDriverManager.chromedriver().setup();
 
     final var options = new ChromeOptions();
-    options.addArguments(
-        String.format("--user-data-dir=%s", createSeleniumUserDataDir(profile)),
-        "--lang=en_US"
-    );
-    final var driver = new ChromeDriver(options);
+    options.addArguments("--lang=en_US");
+//        String.format("--user-data-dir=%s", createSeleniumUserDataDir(profile)),
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
+
+    final var driver = new RemoteWebDriver(createUrl("http://localhost:4444"), options);
     driver.manage()
         .timeouts()
         .implicitlyWait(Duration.ofMillis(250));
     return driver;
   }
 
-  private static Path createSeleniumUserDataDir(String profile) {
+  private static URL createUrl(final String url) {
     try {
-      final var path = Paths.get(
-          System.getProperty("user.home"),
-          ".cache",
-          "selenium",
-          profile
-      );
-      Files.createDirectories(path);
-      return path;
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
+      return new URL(url);
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
     }
   }
+
 }

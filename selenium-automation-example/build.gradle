@@ -15,6 +15,7 @@ dependencies {
   implementation 'org.seleniumhq.selenium:selenium-java:4.28.1'
   implementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.28.1'
   implementation "io.github.bonigarcia:webdrivermanager:5.9.2"
+  implementation "ch.qos.logback:logback-classic:1.5.16"
   testImplementation "commons-io:commons-io:2.8.0"
   testImplementation "junit:junit:4.11"
 }
