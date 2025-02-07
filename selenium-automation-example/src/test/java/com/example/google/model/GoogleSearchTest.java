@@ -2,7 +2,7 @@ package com.example.google.model;
 
 import java.io.FileOutputStream;
 
-import com.exame.LocalDriverCreator;
+import com.exame.RemoteDriverCreator;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -23,7 +23,7 @@ public class GoogleSearchTest {
 
 	@Before
 	public void before() {
-		this.driver = LocalDriverCreator.getInstance();
+		this.driver = RemoteDriverCreator.getInstance();
 	}
 
   @After

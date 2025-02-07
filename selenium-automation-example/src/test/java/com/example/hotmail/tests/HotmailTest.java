@@ -1,6 +1,6 @@
 package com.example.hotmail.tests;
 
-import com.exame.LocalDriverCreator;
+import com.exame.RemoteDriverCreator;
 import com.example.hotmail.model.HomePage;
 import com.example.hotmail.model.LoginPage;
 import com.example.hotmail.model.ResetPasswordPage;
@@ -29,7 +29,7 @@ public class HotmailTest {
 
   @Before
   public void setUp() throws Exception {
-    driver = LocalDriverCreator.getInstance();
+    driver = RemoteDriverCreator.getInstance();
   }
 
   @After
