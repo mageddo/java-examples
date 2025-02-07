@@ -12,8 +12,9 @@ repositories {
 }
 
 dependencies {
-  implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.8.3'
-  implementation group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '4.8.3'
-  testCompile group: 'commons-io', name: 'commons-io', version: '2.8.0'
-  testCompile group: 'junit', name: 'junit', version: '4.11'
+  implementation 'org.seleniumhq.selenium:selenium-java:4.28.1'
+  implementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.28.1'
+  implementation "io.github.bonigarcia:webdrivermanager:5.9.2"
+  testImplementation "commons-io:commons-io:2.8.0"
+  testImplementation "junit:junit:4.11"
 }
