@@ -1,0 +1,16 @@
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <!-- ch.qos.logback.core.FileAppender -->
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-15.15thread] %3.-3level %-0.70logger{70}, m=%method, l=%line, %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+  </root>
+
+  <logger name="com.mageddo" level="DEBUG" />
+  <logger name="org.asynchttpclient.netty" level="INFO" />
+  <logger name="org.apache.kafka.clients" level="INFO" />
+
+</configuration>

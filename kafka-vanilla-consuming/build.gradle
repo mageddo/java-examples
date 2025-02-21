@@ -4,11 +4,12 @@ plugins {
 }
 
 repositories {
-  jcenter()
+  mavenCentral()
 }
 
 mainClassName = "com.mageddo.vanillakafka.VanillaKafkaApp"
 
 dependencies {
-  compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.3.0'
+  implementation group: 'org.apache.kafka', name: 'kafka-clients', version: '3.7.0'
+  implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.16'
 }

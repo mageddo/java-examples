@@ -14,9 +14,14 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VanillaKafkaApp {
-  public static void main(String[] args) {
+
+  public static final Logger log = LoggerFactory.getLogger(VanillaKafkaApp.class);
+
+  public static void main(String[] args) throws Exception {
 
     final var producerProps = new Properties();
     producerProps.setProperty("bootstrap.servers", "localhost:9092");
@@ -24,7 +29,8 @@ public class VanillaKafkaApp {
     producerProps.setProperty("value.serializer", StringSerializer.class.getName());
     producerProps.setProperty("request.timeout.ms", "1000");
     final var producer = new KafkaProducer<String, String>(producerProps);
-    producer.send(new ProducerRecord<>("stock_prices_changed", "PAGS", "30.80"));
+    producer.send(new ProducerRecord<>("stock_prices_changed", "PAGS", "30.80")).get();
+    log.info("posted");
 
     Properties props = new Properties();
     props.setProperty("bootstrap.servers", "localhost:9092");
