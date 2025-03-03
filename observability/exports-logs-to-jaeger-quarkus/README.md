@@ -6,6 +6,11 @@ Run observability stack on java-examples/observability/infra-stack
 
 * https://quarkus.io/guides/telemetry-micrometer-to-opentelemetry
 * https://quarkus.io/guides/telemetry-micrometer
+* https://quarkus.io/guides/opentelemetry-tracing
+* https://quarkus.io/guides/opentelemetry
+* https://quarkus.io/blog/quarkus-observability-3-3/
+* https://quarkus.io/guides/opentelemetry-metrics
+* https://docs.quarkiverse.io/quarkus-micrometer-registry/dev/micrometer-registry-otlp.html
 
 ```bash
 $ curl -i http://localhost:8282/q/metrics
@@ -20,7 +25,11 @@ process_files_max_files 1048576.0
 ```
 
 
-## [Exporting logs as tracing to Jaeger][1]
+## Exporting logs as tracing to Jaeger
+
+* https://github.com/mageddo/java-examples/blob/052ab28de3afb26a946258e00fa938d5164148ff/observability/exports-logs-to-jaeger-quarkus/src/main/resources/logback.xml.bkp
+* https://quarkus.io/guides/cdi-reference
+* [[2][1]]
 
 Generating Traces
 
@@ -28,6 +37,9 @@ Generating Traces
 $ curl -i -w '\n'  localhost:8282/hello
 ```
 
+## Other Researches
+* https://chatgpt.com/c/67c37d09-c020-800a-bb0b-8d734d2c9df0
+* https://chatgpt.com/c/67c5f9b8-e148-800a-961a-4c740dc43355
 
 [1]: https://chatgpt.com/c/67c37d09-c020-800a-bb0b-8d734d2c9df0
 
