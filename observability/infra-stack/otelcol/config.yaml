@@ -45,6 +45,11 @@ service:
   
   pipelines:
 
+    logs:
+      receivers: [otlp]  # Receive logs from applications
+      processors: [batch]
+      exporters: [otlp] # Send logs to Jaeger (as spans)
+
     traces:
       receivers: [ otlp ]
       processors: [ batch ]
