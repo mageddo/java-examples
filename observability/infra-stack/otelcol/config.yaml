@@ -34,8 +34,10 @@ exporters:
   #   default_service_name: unknown-service
 
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/otlpexporter
-  zipkin:
-    endpoint: "http://jaeger:9411/api/v2/spans"
+  otlp:
+    endpoint: "http://jaeger:4317"
+    tls:
+      insecure: true
 
 service:
   
@@ -44,7 +46,7 @@ service:
     traces:
       receivers: [ otlp ]
       processors: [ batch ]
-      exporters: [ debug, zipkin ]
+      exporters: [ debug, otlp ]
     
     metrics:
       receivers: [ otlp ]

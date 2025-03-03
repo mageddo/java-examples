@@ -14,11 +14,15 @@ dependencies {
   implementation 'io.quarkus:quarkus-arc'
 
   // Metrics
-  implementation 'io.quarkus:quarkus-micrometer-registry-prometheus'
+  implementation 'io.quarkus:quarkus-micrometer'
+//  implementation 'io.quarkiverse.micrometer.registry:quarkus-micrometer-registry-otlp'
+
+//  implementation 'io.quarkus:quarkus-micrometer-opentelemetry'
+//  implementation 'io.quarkus:quarkus-micrometer-registry-prometheus'
 
   // Tracing
   implementation 'io.quarkus:quarkus-opentelemetry'
-  implementation 'io.opentelemetry:opentelemetry-exporter-jaeger:1.34.1'
+//  implementation 'io.opentelemetry:opentelemetry-exporter-jaeger:1.34.1'
 
   testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'io.rest-assured:rest-assured'

@@ -7,9 +7,9 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
-  # https://www.jaegertracing.io/docs/1.6/getting-started/
+  # https://www.jaegertracing.io/docs/1.66/getting-started/
   jaeger:
-    image: jaegertracing/all-in-one:1.6.0
+    image: jaegertracing/all-in-one:1.66.0
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
       - COLLECTOR_OTLP_ENABLED=true
@@ -19,10 +19,10 @@ services:
       - "6832:6832/udp"
       - "5778:5778"
       - "16686:16686" # gui
-      - "14268:14268" # jaeger report port
-      - "4317:4317"   # OTLP gRPC receiver
-      - "4318:4318"   # OTLP HTTP receiver
       - "14250:14250" # Receive from external otel-collector, optional
+      - "14268:14268" # jaeger report port
+      # - "4317:4317"   # OTLP gRPC receiver
+      # - "4318:4318"   # OTLP HTTP receiver
 
   grafana:
     image: grafana/grafana:11.5.2

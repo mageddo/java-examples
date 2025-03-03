@@ -4,6 +4,7 @@ Run observability stack on java-examples/observability/infra-stack
 
 ## Enable Observability With Quarkus (Metrics + Tracing)
 
+* https://quarkus.io/guides/telemetry-micrometer-to-opentelemetry
 * https://quarkus.io/guides/telemetry-micrometer
 
 ```bash
