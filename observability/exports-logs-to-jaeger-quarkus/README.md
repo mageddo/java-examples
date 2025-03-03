@@ -1,6 +1,21 @@
 # exports-logs-to-jaeger-quarkus
 
-## How to Enable Observability With Quarkus
+## Enable Observability With Quarkus (Metrics + Tracing)
+
+* https://quarkus.io/guides/telemetry-micrometer
+
+```bash
+$ curl -i http://localhost:8282/q/metrics
+HTTP/1.1 200 OK
+Content-Type: application/openmetrics-text; version=1.0.0; charset=utf-8
+content-length: 15516
+
+# TYPE process_files_max_files gauge
+# HELP process_files_max_files The maximum file descriptor count
+process_files_max_files 1048576.0
+....
+```
+
 
 * [Exporting logs as tracing to Jaeger][1] 
 
