@@ -11,7 +11,7 @@ repositories {
 configurations {
   all {
 //    exclude group: 'io.quarkus', module: 'quarkus-jul' // tag:logfix
-    exclude module: 'jboss-logmanager'
+//    exclude module: 'jboss-logmanager'
   }
 }
 
@@ -37,19 +37,26 @@ dependencies {
   // Para as métricas serem enviadas para o OTLP collector
   implementation 'io.quarkus:quarkus-micrometer-opentelemetry'
   implementation 'io.micrometer:micrometer-registry-otlp'
+  implementation group: 'io.opentelemetry', name: 'opentelemetry-exporter-otlp', version: '1.44.1'
 
   // Para o report de tracing funcionar
   implementation 'io.quarkus:quarkus-opentelemetry'
+//  implementation 'io.opentelemetry:opentelemetry-exporter-logging'
 
 //  implementation 'ch.qos.logback:logback-classic:1.5.17'
 //  implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
-//  implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.13.3-alpha'
+  implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.13.3-alpha'
 //  implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:1.33.6-alpha'
 //  implementation 'io.quarkiverse.logging.logback:quarkus-logging-logback:1.1.2'
 
 //  implementation 'org.jboss.logmanager:jboss-logmanager' //:3.1.1.Final
 //  implementation 'org.jboss.slf4j:slf4j-jboss-logmanager' //:2.0.0.Final
 
+  compileOnly 'org.projectlombok:lombok:1.18.36'
+  annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.36'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
 
   testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'io.rest-assured:rest-assured'
