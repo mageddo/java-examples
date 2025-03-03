@@ -1,2 +1,0 @@
-ch.qos.logback.classic.spi.LogbackServiceProvider
-org.slf4j.impl.JBossSlf4jServiceProviderBkp

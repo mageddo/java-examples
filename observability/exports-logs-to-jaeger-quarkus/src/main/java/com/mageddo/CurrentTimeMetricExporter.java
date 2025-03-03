@@ -26,18 +26,6 @@ public class CurrentTimeMetricExporter {
     Thread.sleep(300);
   }
 
-  @Scheduled(every = "315360000s")
-  public void logs() throws InterruptedException {
-//    Thread.sleep(5000);
-//    new OpenTelemetryLogReportAsTraceConfigurer().configure();
-//    Thread.sleep(Long.MAX_VALUE);
-  }
-
-  public void installOpenTelemetryLogAppender(@Observes StartupEvent e) {
-//    OpenTelemetryAppender.install(GlobalOpenTelemetry.get());
-    log.info("status=loggerAppenderInstalledToOpenTelemetry");
-  }
-
 
   public void currentTimeMetricGaugeCollector(@Observes StartupEvent e) {
     Gauge
