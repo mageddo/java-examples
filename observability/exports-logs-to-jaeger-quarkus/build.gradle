@@ -8,10 +8,18 @@ repositories {
   mavenLocal()
 }
 
+//configurations {
+//  all {
+////    exclude group: 'io.quarkus', module: 'quarkus-jul' // tag:logfix
+//  }
+//}
+
 dependencies {
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+
   implementation 'io.quarkus:quarkus-rest'
   implementation 'io.quarkus:quarkus-arc'
+  implementation 'io.quarkus:quarkus-scheduler'
 
   // Micrometer
   implementation 'io.quarkus:quarkus-micrometer'
@@ -33,7 +41,9 @@ dependencies {
   implementation 'io.quarkus:quarkus-opentelemetry'
 //  implementation 'io.opentelemetry:opentelemetry-exporter-jaeger:1.34.1'
 
-  implementation 'io.quarkus:quarkus-scheduler'
+  implementation 'ch.qos.logback:logback-classic:1.5.17'
+  implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
+
 
   testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'io.rest-assured:rest-assured'
