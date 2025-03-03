@@ -14,8 +14,8 @@ processors:
 
 exporters:
 
-  logging:
-    verbosity: Detailed
+  debug:
+    verbosity: detailed
 
   prometheus:
     endpoint: ":9595"
@@ -34,23 +34,22 @@ exporters:
   #   default_service_name: unknown-service
 
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/otlpexporter
-  otlp:
-    endpoint: "http://jaeger:4317"
-    tls:
-      insecure: true
+  zipkin:
+    endpoint: "http://jaeger:9411/api/v2/spans"
 
 service:
   
   pipelines:
+
     traces:
       receivers: [ otlp ]
       processors: [ batch ]
-      exporters: [ logging, otlp ]
+      exporters: [ debug, zipkin ]
     
     metrics:
       receivers: [ otlp ]
       processors: [ batch ]
-      exporters: [ logging, prometheus ]
+      exporters: [ debug, prometheus ]
   
   telemetry:
     logs:
