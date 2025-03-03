@@ -2,8 +2,10 @@
 receivers:
   otlp:
     protocols:
-      grpc: ":4317"
-      http: ":4318"
+      grpc: 
+        endpoint: ":4317"
+      http: 
+        endpoint: ":4318"
 
 processors:
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/cumulativetodeltaprocessor
