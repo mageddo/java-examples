@@ -14,7 +14,8 @@ dependencies {
   implementation 'io.quarkus:quarkus-arc'
 
   // Metrics
-//  implementation 'io.quarkus:quarkus-micrometer'
+  implementation 'io.quarkus:quarkus-micrometer'
+  implementation 'io.quarkus:quarkus-scheduler'
 //  implementation 'io.quarkiverse.micrometer.registry:quarkus-micrometer-registry-otlp'
 //  implementation 'io.quarkus:quarkus-micrometer-opentelemetry'
 
