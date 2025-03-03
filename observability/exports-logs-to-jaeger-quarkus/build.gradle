@@ -8,11 +8,11 @@ repositories {
   mavenLocal()
 }
 
-//configurations {
-//  all {
-////    exclude group: 'io.quarkus', module: 'quarkus-jul' // tag:logfix
-//  }
-//}
+configurations {
+  all {
+//    exclude group: 'io.quarkus', module: 'quarkus-jul' // tag:logfix
+  }
+}
 
 dependencies {
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
@@ -43,7 +43,7 @@ dependencies {
 
   implementation 'ch.qos.logback:logback-classic:1.5.17'
   implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
-
+  implementation 'io.quarkiverse.logging.logback:quarkus-logging-logback:1.1.2'
 
   testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'io.rest-assured:rest-assured'
