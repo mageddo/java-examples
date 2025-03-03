@@ -14,10 +14,10 @@ dependencies {
   implementation 'io.quarkus:quarkus-arc'
 
   // Metrics
-  implementation 'io.quarkus:quarkus-micrometer'
+//  implementation 'io.quarkus:quarkus-micrometer'
 //  implementation 'io.quarkiverse.micrometer.registry:quarkus-micrometer-registry-otlp'
-
 //  implementation 'io.quarkus:quarkus-micrometer-opentelemetry'
+
 //  implementation 'io.quarkus:quarkus-micrometer-registry-prometheus'
 
   // Tracing
