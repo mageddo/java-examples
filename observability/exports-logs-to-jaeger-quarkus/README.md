@@ -1,4 +1,16 @@
-# exports-logs-to-jaeger
+# exports-logs-to-jaeger-quarkus
+
+## How to Enable Observability With Quarkus
+
+* [Exporting logs as tracing to Jaeger][1] 
+
+
+[1]: https://chatgpt.com/c/67c37d09-c020-800a-bb0b-8d734d2c9df0
+
+-------------------------------
+
+## Quarkus auto generated stuff Below
+
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
