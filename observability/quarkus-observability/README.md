@@ -1,4 +1,12 @@
-# exports-logs-to-jaeger-quarkus
+# quarkus-observability
+Configured Quarkus:
+
+* With Micrometer as API to code Metrics
+* With OTLP to report metrics and traces 
+* OTLP as API to code Traces
+* Custom Handler which reports WARN and ERROR logs as Tracings
+
+**Running**
 
 Run observability stack on java-examples/observability/infra-stack
 
