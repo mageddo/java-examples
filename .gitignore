@@ -16,3 +16,6 @@ ajcore*
 *.class
 *.jar
 *.hex
+
+*.zip
+*.gz
