@@ -1,7 +1,5 @@
 package com.mageddo;
 
-import java.time.LocalDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,14 +15,9 @@ public class CurrentTimeMetricExporter {
 
   private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-  @Timed("current_time")
-  public String currentTime(){
-    log.info("status=getting current time");
-    return String.valueOf(LocalDateTime.now());
-  }
-
   @WithSpan
   @Scheduled(every = "5s")
+  @Timed("job_process_time")
   public void currentJob(){
     log.info("status=jobRan");
     Gauge

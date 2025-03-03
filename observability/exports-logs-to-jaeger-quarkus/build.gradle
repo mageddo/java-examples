@@ -13,17 +13,27 @@ dependencies {
   implementation 'io.quarkus:quarkus-rest'
   implementation 'io.quarkus:quarkus-arc'
 
-  // Metrics
+  // Micrometer
   implementation 'io.quarkus:quarkus-micrometer'
-  implementation 'io.quarkus:quarkus-scheduler'
+
+  // para @Timed funcionar e expor métricas no /q/metrics
+  implementation 'io.quarkus:quarkus-micrometer-registry-prometheus'
+
 //  implementation 'io.quarkiverse.micrometer.registry:quarkus-micrometer-registry-otlp'
-//  implementation 'io.quarkus:quarkus-micrometer-opentelemetry'
 
-//  implementation 'io.quarkus:quarkus-micrometer-registry-prometheus'
+  // Para fazer trace programático com a api do micrometer
+  implementation 'io.micrometer:micrometer-tracing:1.4.3'
+  implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.3'
 
-  // Tracing
+  // Para as métricas serem enviadas para o OTLP collector
+  implementation 'io.quarkus:quarkus-micrometer-opentelemetry'
+  implementation 'io.micrometer:micrometer-registry-otlp'
+
+  // Para o report de tracing funcionar
   implementation 'io.quarkus:quarkus-opentelemetry'
 //  implementation 'io.opentelemetry:opentelemetry-exporter-jaeger:1.34.1'
+
+  implementation 'io.quarkus:quarkus-scheduler'
 
   testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'io.rest-assured:rest-assured'
