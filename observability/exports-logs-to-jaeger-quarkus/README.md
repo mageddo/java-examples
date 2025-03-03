@@ -1,5 +1,7 @@
 # exports-logs-to-jaeger-quarkus
 
+Run observability stack on java-examples/observability/infra-stack
+
 ## Enable Observability With Quarkus (Metrics + Tracing)
 
 * https://quarkus.io/guides/telemetry-micrometer
@@ -17,7 +19,13 @@ process_files_max_files 1048576.0
 ```
 
 
-* [Exporting logs as tracing to Jaeger][1] 
+## [Exporting logs as tracing to Jaeger][1]
+
+Generating Traces
+
+```bash
+$ curl -i -w '\n'  localhost:8282/hello
+```
 
 
 [1]: https://chatgpt.com/c/67c37d09-c020-800a-bb0b-8d734d2c9df0

@@ -35,7 +35,7 @@ exporters:
 
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/otlpexporter
   otlp:
-    endpoint: "http://jaeger.docker:4317"
+    endpoint: "http://jaeger:4317"
     tls:
       insecure: true
 

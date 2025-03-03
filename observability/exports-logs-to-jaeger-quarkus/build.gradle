@@ -12,8 +12,14 @@ dependencies {
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   implementation 'io.quarkus:quarkus-rest'
   implementation 'io.quarkus:quarkus-arc'
+
+  // Metrics
   implementation 'io.quarkus:quarkus-micrometer-registry-prometheus'
-//  implementation 'io.quarkus:quarkus-opentelemetry'
+
+  // Tracing
+  implementation 'io.quarkus:quarkus-opentelemetry'
+  implementation 'io.opentelemetry:opentelemetry-exporter-jaeger:1.34.1'
+
   testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'io.rest-assured:rest-assured'
 }
