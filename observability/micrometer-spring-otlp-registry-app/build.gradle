@@ -32,9 +32,9 @@ dependencies {
   implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.13.3')
 
   // tag:trace-programmatic
-//  implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.47.0')
-//  implementation('io.micrometer:micrometer-tracing:1.4.3')
-//  implementation('io.micrometer:micrometer-tracing-bridge-otel:1.4.3')
+  implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.43.0')
+  implementation('io.micrometer:micrometer-tracing:1.4.3')
+  implementation('io.micrometer:micrometer-tracing-bridge-otel:1.4.3')
   // end:trace-programmatic
 
   testCompileOnly 'org.projectlombok:lombok:1.18.36'
