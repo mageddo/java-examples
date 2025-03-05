@@ -36,6 +36,7 @@ services:
       - /data/databases/stg/grafana:/var/lib/grafana
 #      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
 
+  # https://opentelemetry.io/docs/collector/configuration/
   otel-collector:
     # image: otel/opentelemetry-collector-contrib:0.86.0
     # image: otel/opentelemetry-collector-contrib:0.102.0
