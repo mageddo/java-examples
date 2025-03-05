@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import io.quarkus.scheduler.Scheduled;
 
-public class RandomLogging {
+public class RandomLoggingApp {
 
   private final Logger log = LoggerFactory.getLogger(this.getClass());
 

@@ -18,7 +18,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class CurrentTimeMetricExporter {
+public class DollarQuoteMetricsApp {
 
   private static final SecureRandom r = new SecureRandom();
   private final Logger log = LoggerFactory.getLogger(this.getClass());
