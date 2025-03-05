@@ -8,4 +8,4 @@ pluginManagement {
         id "${quarkusPluginId}" version "${quarkusPluginVersion}"
     }
 }
-rootProject.name='exports-logs-to-jaeger'
+rootProject.name='quarkus-observability'

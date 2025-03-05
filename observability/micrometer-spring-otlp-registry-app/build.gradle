@@ -1,43 +1,44 @@
 plugins {
   id "java-library"
-  id "org.springframework.boot" version "3.1.2"
+  id 'org.springframework.boot' version '3.4.3'
+  id 'io.spring.dependency-management' version '1.1.7'
 }
 
 repositories {
   mavenCentral()
-  maven {url = "https://repo.spring.io/milestone/"}
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 dependencies {
-  compileOnly 'org.projectlombok:lombok:1.18.28'
-  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+  compileOnly 'org.projectlombok:lombok:1.18.36'
+  annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
   implementation('org.apache.commons:commons-lang3:3.13.0')
 
   // using the milestone because of this issue, scheduler tracing problem:
   // https://github.com/spring-projects/spring-boot/pull/35191
-  implementation('org.springframework.boot:spring-boot-starter-web:3.2.0-M3')
-  implementation("org.springframework.boot:spring-boot-starter-actuator:3.2.0-M3")
-  implementation('org.springframework.kafka:spring-kafka:3.0.11')
+  implementation('org.springframework.boot:spring-boot-starter-web')
+  implementation('org.springframework.boot:spring-boot-starter-actuator')
+  implementation("org.springframework.boot:spring-boot-autoconfigure")
+  implementation('org.springframework.kafka:spring-kafka')
 
   // export open telemetry metrics without open telemetry deps or agent
   // https://github.com/micrometer-metrics/micrometer/pull/3129/files
-  implementation('io.micrometer:micrometer-registry-otlp:1.11.5')
+  implementation('io.micrometer:micrometer-registry-otlp:1.14.4')
 
   // only needled for tracing
-  implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:1.31.0')
+  implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.13.3')
 
   // tag:trace-programmatic
-  implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.31.0')
-  implementation('io.micrometer:micrometer-tracing:1.1.6')
-  implementation('io.micrometer:micrometer-tracing-bridge-otel:1.1.6')
+  implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.43.0')
+  implementation('io.micrometer:micrometer-tracing:1.4.3')
+  implementation('io.micrometer:micrometer-tracing-bridge-otel:1.4.3')
   // end:trace-programmatic
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.28'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+  testCompileOnly 'org.projectlombok:lombok:1.18.36'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
 
 }
 

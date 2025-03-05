@@ -1,38 +1,51 @@
-version: '3'
 services:
+
   prometheus:
-    image: prom/prometheus:v2.46.0
+    image: prom/prometheus:v3.2.1
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
-  # https://www.jaegertracing.io/docs/1.6/getting-started/
+  # https://www.jaegertracing.io/docs/1.66/getting-started/
   jaeger:
-    image: jaegertracing/all-in-one:1.50
+    image: jaegertracing/all-in-one:1.66.0
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+      - COLLECTOR_OTLP_ENABLED=true
     ports:
-      - 5775:5775/udp
-      - 6831:6831/udp
-      - 6832:6832/udp
-      - 5778:5778
-      - 16686:16686
-      - 14268:14268
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686" # gui
+      - "14250:14250" # Receive from external otel-collector, optional
+      - "14268:14268" # jaeger report port
+      # - "4317:4317"   # OTLP gRPC receiver
+      # - "4318:4318"   # OTLP HTTP receiver
 
   grafana:
-    image: grafana/grafana:10.0.3-ubuntu
+    image: grafana/grafana:11.5.2
     ports:
       - "3000:3000"
     environment:
-      - GF_SERVER_DOMAIN=grafana.docker
+      - GF_SERVER_DOMAIN=localhost
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     volumes:
       - /data/databases/stg/grafana:/var/lib/grafana
 #      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.86.0
+    # image: otel/opentelemetry-collector-contrib:0.86.0
+    # image: otel/opentelemetry-collector-contrib:0.102.0
+    image: otel/opentelemetry-collector-contrib:0.120.0
     command: ["--config=/etc/otelcol/config.yaml", "${OTELCOL_ARGS}"]
     hostname: otel-prometheus-collector.docker
     volumes:
       - ./otelcol/config.yaml:/etc/otelcol/config.yaml
+    ports:
+      - "9595:9595"
+      - "9596:9596"
+      - "4317:4317"
+      - "4318:4318"
