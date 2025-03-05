@@ -4,7 +4,7 @@ Configured Quarkus:
 * With Micrometer as API to code Metrics
 * With OTLP to report metrics and traces 
 * OTLP as API to code Traces
-* Custom Handler which reports WARN and ERROR logs as Tracings
+* Custom Handler which reports WARN and ERROR logs as Tracings (RandomLogging)
 
 **Running**
 

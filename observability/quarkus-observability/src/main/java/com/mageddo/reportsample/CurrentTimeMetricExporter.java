@@ -34,8 +34,9 @@ public class CurrentTimeMetricExporter {
   public void currentTimeMetricGaugeCollector(@Observes StartupEvent e) {
     Gauge
         .builder("dollar_quote_micrometer_gauge", () -> {
-          log.info("status=calculating");
-          return this.checkDollarQuote();
+          final var amount = this.checkDollarQuote();
+          log.info("status=calculated, amount={}", amount);
+          return amount;
         })
         .baseUnit("number")
         .tag("version_tag", "v1")
@@ -44,9 +45,10 @@ public class CurrentTimeMetricExporter {
     log.info("status=gaugeRegistered");
   }
 
-  private double checkDollarQuote() {
-    return BigDecimal.valueOf(r.nextInt() + 5.0)
+  private  double checkDollarQuote() {
+    return BigDecimal.valueOf(r.nextDouble() + 5.0)
         .setScale(2, RoundingMode.HALF_UP)
         .doubleValue();
   }
+
 }

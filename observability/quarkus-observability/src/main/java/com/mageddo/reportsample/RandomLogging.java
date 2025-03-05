@@ -1,4 +1,4 @@
-package com.mageddo;
+package com.mageddo.reportsample;
 
 import java.util.UUID;
 
@@ -11,9 +11,12 @@ public class RandomLogging {
 
   private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+  /***
+   * Every log should be reported as tracing to Jaeger
+   */
   @Scheduled(every = "2s")
   public void randomLog() throws Exception {
-    log.info("status=ran, randomUuid={}", UUID.randomUUID().toString());
+    log.info("status=ran, randomUuid={}", UUID.randomUUID());
   }
 
 
