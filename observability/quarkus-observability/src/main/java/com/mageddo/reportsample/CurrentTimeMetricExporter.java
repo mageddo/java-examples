@@ -1,5 +1,9 @@
-package com.mageddo;
+package com.mageddo.reportsample;
 
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.security.SecureRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,27 +20,33 @@ import jakarta.inject.Singleton;
 @Singleton
 public class CurrentTimeMetricExporter {
 
+  private static final SecureRandom r = new SecureRandom();
   private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @WithSpan
   @Scheduled(every = "5s")
-  @Timed("job_process_time")
-  public void currentJob() throws Exception {
+  @Timed("dollar_quote_job_quarkus_scheduler")
+  public void dollarQuoteJob() throws Exception {
     log.info("status=jobRan");
     Thread.sleep(300);
   }
 
-
   public void currentTimeMetricGaugeCollector(@Observes StartupEvent e) {
     Gauge
-        .builder("current_time_job", () -> {
+        .builder("dollar_quote_micrometer_gauge", () -> {
           log.info("status=calculating");
-          return System.currentTimeMillis();
+          return this.checkDollarQuote();
         })
         .baseUnit("number")
         .tag("version_tag", "v1")
         .register(Metrics.globalRegistry)
     ;
-    log.info("status=currentTimeJobMetricRegistered");
+    log.info("status=gaugeRegistered");
+  }
+
+  private double checkDollarQuote() {
+    return BigDecimal.valueOf(r.nextInt() + 5.0)
+        .setScale(2, RoundingMode.HALF_UP)
+        .doubleValue();
   }
 }
