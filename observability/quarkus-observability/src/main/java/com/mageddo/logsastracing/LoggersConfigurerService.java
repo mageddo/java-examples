@@ -19,7 +19,7 @@ public class LoggersConfigurerService {
 
   public void configure() {
     final var configuredLoggers = this.loggerDAO.findConfiguredLoggersAsStringSet();
-    final var foundLoggers = this.loggerDAO.findAvailableMageddoLoggers();
+    final var foundLoggers = this.loggerDAO.findAvailableLoggers();
     foundLoggers.forEach(logger -> {
       final var key = logger.toString();
       if (configuredLoggers.contains(key)) {

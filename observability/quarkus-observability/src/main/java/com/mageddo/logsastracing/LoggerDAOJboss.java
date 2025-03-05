@@ -18,7 +18,7 @@ public class LoggerDAOJboss implements LoggerDAO {
   }
 
   @Override
-  public List<Logger> findAvailableMageddoLoggers() {
+  public List<Logger> findAvailableLoggers() {
     return JbossLogManager.findAllLoggers();
   }
 

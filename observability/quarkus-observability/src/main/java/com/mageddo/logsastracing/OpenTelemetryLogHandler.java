@@ -5,8 +5,6 @@ import java.util.logging.LogRecord;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.OpenTelemetry;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.StatusCode;
 
 public class OpenTelemetryLogHandler extends Handler {
 
@@ -19,33 +17,8 @@ public class OpenTelemetryLogHandler extends Handler {
   @Override
   public void publish(LogRecord record) {
     if (isLoggable(record)) {
-      final var spanBuilder = this.openTelemetry.getTracer(record.getSourceClassName())
-          .spanBuilder(record.getSourceClassName())
-          .startSpan()
-          .setAttribute("class", record.getSourceClassName())
-          .setAttribute("method", record.getSourceMethodName())
-          .setAttribute("level", record.getLevel().getName())
-          .setAttribute("threadId", record.getLongThreadID())
-          .setAttribute("log", record.getMessage());
-
-      this.setStatus(spanBuilder, record);
-
-      spanBuilder.end();
-
-
+      OpenTelemetryTraceMapper.of(this.openTelemetry, record);
     }
-  }
-
-  private void setStatus(Span spanBuilder, LogRecord record) {
-    if (record.getThrown() == null) {
-      spanBuilder.setStatus(StatusCode.OK);
-    } else {
-      spanBuilder
-          .recordException(record.getThrown())
-          .setStatus(StatusCode.ERROR, record.getMessage())
-      ;
-    }
-
   }
 
   @Override

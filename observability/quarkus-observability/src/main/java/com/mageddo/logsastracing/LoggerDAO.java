@@ -5,9 +5,10 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public interface LoggerDAO {
+
   void addLogger(Logger logger);
 
-  List<Logger> findAvailableMageddoLoggers();
+  List<Logger> findAvailableLoggers();
 
   Set<String> findConfiguredLoggersAsStringSet();
 }
