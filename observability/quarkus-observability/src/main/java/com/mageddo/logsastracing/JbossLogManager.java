@@ -2,9 +2,9 @@ package com.mageddo.logsastracing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.jboss.logmanager.LogContext;
-import org.jboss.logmanager.Logger;
 
 public class JbossLogManager {
 
