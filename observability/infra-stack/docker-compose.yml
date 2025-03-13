@@ -1,5 +1,4 @@
 services:
-
   prometheus:
     image: prom/prometheus:v3.2.1
     ports:
@@ -14,8 +13,8 @@ services:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
       - COLLECTOR_OTLP_ENABLED=true
       - SPAN_STORAGE_TYPE=badger
-        # quando seta isso para false ele vai usar o dir BADGER_DIRECTORY_KEY e BADGER_DIRECTORY_VALUE porém precisa garantir que o diretório existe e tem permissão, usando o volume, por exemplo
-      - BADGER_EPHEMERAL=true
+        # quando seta isso para false ele vai usar o dir BADGER_DIRECTORY_KEY e BADGER_DIRECTORY_VALUE porém precisa garantir que o diretório existe e tem permissão (owner=10001, group=10001), usando o volume, por exemplo
+      - BADGER_EPHEMERAL=false
       - BADGER_DIRECTORY_KEY=/tmp/data
       - BADGER_DIRECTORY_VALUE=/tmp/data
     ports:
@@ -28,8 +27,8 @@ services:
       - "14268:14268" # jaeger report port
       # - "4317:4317"   # OTLP gRPC receiver
       # - "4318:4318"   # OTLP HTTP receiver
-#    volumes:
-#      - /tmp/datax:/tmp/data
+    volumes:
+      - /data/databases/prod/badger/jaeger/:/tmp/data
 
   grafana:
     image: grafana/grafana:11.5.2
