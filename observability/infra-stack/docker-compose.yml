@@ -14,7 +14,7 @@ services:
       - COLLECTOR_OTLP_ENABLED=true
       - SPAN_STORAGE_TYPE=badger
         # quando seta isso para false ele vai usar o dir BADGER_DIRECTORY_KEY e BADGER_DIRECTORY_VALUE porém precisa garantir que o diretório existe e tem permissão (owner=10001, group=10001), usando o volume, por exemplo
-      - BADGER_EPHEMERAL=false
+      - BADGER_EPHEMERAL=true
       - BADGER_DIRECTORY_KEY=/tmp/data
       - BADGER_DIRECTORY_VALUE=/tmp/data
     ports:
