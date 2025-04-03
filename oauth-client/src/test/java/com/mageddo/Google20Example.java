@@ -1,16 +1,12 @@
 package com.mageddo;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
-import com.github.scribejava.apis.GoogleApi20;
-import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.builder.ScopeBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
-import com.github.scribejava.core.oauth.OAuth20Service;
 
 public class Google20Example {
 
@@ -22,15 +18,11 @@ public class Google20Example {
   }
 
   public static void main(String... args) throws Exception {
-    // Replace these with your client id and secret
-    final String clientId = System.getenv("GOOGLE_CLIENT_ID");
-    final String clientSecret = System.getenv("GOOGLE_CLIENT_SECRET");
     final String secretState = "secret333";
-    final OAuth20Service service = new ServiceBuilder(clientId)
-        .apiSecret(clientSecret)
-        .defaultScope("profile") // replace with desired scope
-        .callback("http://localhost:7071/oauth/callback")
-        .build(GoogleApi20.instance());
+    final var scope = new ScopeBuilder()
+        .withScope("profile")
+        .build();
+    final var service = ServiceBuilder.build(scope);
     final Scanner in = new Scanner(System.in, "UTF-8");
 
     System.out.println("=== " + NETWORK_NAME + "'s OAuth Workflow ===");
@@ -40,15 +32,7 @@ public class Google20Example {
     System.out.println("Fetching the Authorization URL...");
     //pass access_type=offline to get refresh token
     //https://developers.google.com/identity/protocols/OAuth2WebServer#preparing-to-start-the-oauth-20-flow
-    final Map<String, String> additionalParams = new HashMap<>();
-    additionalParams.put("access_type", "offline");
-    //force to reget refresh token (if user are asked not the first time)
-    additionalParams.put("prompt", "consent");
-    final String authorizationUrl = service
-        .createAuthorizationUrlBuilder()
-        .state(secretState)
-        .additionalParams(additionalParams)
-        .build();
+    final var authorizationUrl = OauthMapper.toAuthorizationUrl(service, secretState);
     System.out.println("Got the Authorization URL!");
     System.out.println("Now go and authorize ScribeJava here:");
     System.out.println(authorizationUrl);
@@ -108,4 +92,5 @@ public class Google20Example {
       System.out.println();
     }
   }
+
 }
