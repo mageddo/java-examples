@@ -6,12 +6,10 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.Value;
-import lombok.experimental.Accessors;
 
 @Value
 @Builder
 @ToString(onlyExplicitlyIncluded = true)
-@Accessors(fluent = true)
 public class AccessToken {
 
   @NonNull

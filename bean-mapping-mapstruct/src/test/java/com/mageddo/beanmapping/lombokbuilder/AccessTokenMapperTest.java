@@ -19,6 +19,6 @@ class AccessTokenMapperTest {
     final var accessToken = AccessTokenMapper.INSTANCE.of(vo);
 
     assertNotNull(accessToken);
-    assertNotNull(accessToken.accessToken());
+    assertNotNull(accessToken.getAccessToken());
   }
 }
