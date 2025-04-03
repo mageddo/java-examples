@@ -9,8 +9,8 @@ repositories {
 sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
-  implementation("com.github.scribejava:scribejava-httpclient-apache:8.1.0")
-  implementation("com.github.scribejava:scribejava-apis:8.1.0")
+  implementation("com.github.scribejava:scribejava-httpclient-apache:8.3.3")
+  implementation("com.github.scribejava:scribejava-apis:8.3.3")
   testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
   testImplementation("org.mockito:mockito-junit-jupiter:3.7.7")
 }
