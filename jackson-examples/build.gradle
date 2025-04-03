@@ -11,7 +11,13 @@ targetCompatibility = JavaVersion.VERSION_21
 
 dependencies {
 
+  compileOnly("org.projectlombok:lombok:1.18.38")
+  annotationProcessor("org.projectlombok:lombok:1.18.38")
+
   implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+
+  testCompileOnly("org.projectlombok:lombok:1.18.38")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 
   testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
   testImplementation("org.mockito:mockito-junit-jupiter:5.13.0")
@@ -19,4 +25,11 @@ dependencies {
 
 test {
   useJUnitPlatform()
+}
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+
 }

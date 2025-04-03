@@ -1,4 +1,4 @@
-package com.mageddo;
+package com.mageddo.app;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,19 +14,19 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
 
-public class Google20Example {
+public class Google20Example2 {
 
     private static final String NETWORK_NAME = "Google";
     private static final String PROTECTED_RESOURCE_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
 
-    private Google20Example() {
+    private Google20Example2() {
     }
 
     public static void main(String... args) throws IOException, InterruptedException, ExecutionException {
         // Replace these with your client id and secret
         final String clientId = "";
         final String clientSecret = "";
-        final String secretState = "secret333";
+        final String secretState = "secret333" ;
         final OAuth20Service service = new ServiceBuilder(clientId)
                 .apiSecret(clientSecret)
                 .defaultScope("profile") // replace with desired scope
@@ -34,43 +34,20 @@ public class Google20Example {
                 .build(GoogleApi20.instance());
         final Scanner in = new Scanner(System.in, "UTF-8");
 
+      final Map<String, String> additionalParams = new HashMap<>();
+      additionalParams.put("access_type", "offline");
+      //force to reget refresh token (if user are asked not the first time)
+      additionalParams.put("prompt", "consent");
+      final String authorizationUrl = service.createAuthorizationUrlBuilder()
+          .state(secretState)
+          .additionalParams(additionalParams)
+          .build();
+
         System.out.println("=== " + NETWORK_NAME + "'s OAuth Workflow ===");
         System.out.println();
 
-        // Obtain the Authorization URL
-        System.out.println("Fetching the Authorization URL...");
-        //pass access_type=offline to get refresh token
-        //https://developers.google.com/identity/protocols/OAuth2WebServer#preparing-to-start-the-oauth-20-flow
-        final Map<String, String> additionalParams = new HashMap<>();
-        additionalParams.put("access_type", "offline");
-        //force to reget refresh token (if user are asked not the first time)
-        additionalParams.put("prompt", "consent");
-        final String authorizationUrl = service.createAuthorizationUrlBuilder()
-                .state(secretState)
-                .additionalParams(additionalParams)
-                .build();
-        System.out.println("Got the Authorization URL!");
-        System.out.println("Now go and authorize ScribeJava here:");
-        System.out.println(authorizationUrl);
-        System.out.println("And paste the authorization code here");
-        System.out.print(">>");
-        final String code = in.nextLine();
-        System.out.println();
-
-        System.out.println("And paste the state from server here. We have set 'secretState'='" + secretState + "'.");
-        System.out.print(">>");
-        final String value = in.nextLine();
-        if (secretState.equals(value)) {
-            System.out.println("State value does match!");
-        } else {
-            System.out.println("Ooops, state value does not match!");
-            System.out.println("Expected = " + secretState);
-            System.out.println("Got      = " + value);
-            System.out.println();
-        }
-
         System.out.println("Trading the Authorization Code for an Access Token...");
-        OAuth2AccessToken accessToken = service.getAccessToken(code);
+        OAuth2AccessToken accessToken = service.getAccessToken("4/0AY0e-g6PrEDnWnx8U3e-xIuhRZlRq9PMQflGMxX4ww--idI2QWAvUpm8pf8VuRGeQTSahg");
         System.out.println("Got the Access Token!");
         System.out.println("(The raw response looks like this: " + accessToken.getRawResponse() + "')");
 
