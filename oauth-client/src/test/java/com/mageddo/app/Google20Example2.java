@@ -1,4 +1,4 @@
-package com.mageddo;
+package com.mageddo.app;
 
 import java.io.IOException;
 import java.util.HashMap;

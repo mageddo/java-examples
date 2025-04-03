@@ -1,4 +1,4 @@
-package com.mageddo;
+package com.mageddo.app;
 
 import java.util.Scanner;
 
@@ -7,6 +7,8 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
+import com.mageddo.OauthMapper;
+import com.mageddo.ServiceBuilder;
 
 public class Google20Example {
 

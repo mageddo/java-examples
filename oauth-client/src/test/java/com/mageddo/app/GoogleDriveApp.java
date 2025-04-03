@@ -1,6 +1,8 @@
-package com.mageddo;
+package com.mageddo.app;
 
 import com.github.scribejava.core.builder.ScopeBuilder;
+import com.mageddo.OAuthAuthenticator;
+import com.mageddo.ServiceBuilder;
 
 public class GoogleDriveApp {
 
