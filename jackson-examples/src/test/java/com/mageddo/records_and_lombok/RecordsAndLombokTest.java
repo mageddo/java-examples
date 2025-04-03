@@ -22,8 +22,7 @@ public class RecordsAndLombokTest {
         """;
 
     final var fruit = this.objectMapper.readValue(json, Fruit.class);
-
-    assertEquals("Fruit[name=Orange, weight=1]", fruit.toString());
+    assertEquals("Fruit[name=Orange, weight=1, weightInKg=0.0]", fruit.toString());
 
   }
 
@@ -31,7 +30,7 @@ public class RecordsAndLombokTest {
   @SneakyThrows
   void mustValidateNameWhenDeserializing() {
     final var json = """
-        {"name":null,"weight":1}
+        {"name":null,"weight":1,"weight_in_kg":1}
         """;
 
     final var ex = assertThrows(
@@ -48,12 +47,12 @@ public class RecordsAndLombokTest {
   @Test
   @SneakyThrows
   void mustSerialize() {
-    final var fruit = new Fruit("Orange", 1);
+    final var fruit = new Fruit("Orange", 1500, 1.5);
 
     final var json = this.objectMapper.writeValueAsString(fruit);
 
     assertEquals("""
-            {"name":"Orange","weight":1}
+            {"name":"Orange","weight":1500,"weight_in_kg":1.5}
             """.trim(),
         json
     );
