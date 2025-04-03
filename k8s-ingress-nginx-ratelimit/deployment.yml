@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-ingress-rate-limit
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-ingress-rate-limit
+  template:
+    metadata:
+      labels:
+        app: nginx-ingress-rate-limit
+    spec:
+      containers:
+        - name: nginx-ingress-rate-limit
+          image: nginx:1.23.3
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: 50Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 10
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-ingress-rate-limit
+  namespace: default
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: https
+      port: 443
+      targetPort: 443
+  selector:
+    app: nginx-ingress-rate-limit
+  type: ClusterIP
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress-rate-limit-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/limit-rpm: "100"
+    nginx.ingress.kubernetes.io/limit-burst: "10"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: nginx-ingress-rate-limit.app.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-ingress-rate-limit
+                port:
+                  number: 80
