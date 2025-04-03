@@ -8,7 +8,9 @@ public class GoogleDriveApp {
 
   public static void main(String[] args) {
     final var scope = new ScopeBuilder()
-        .withScopes("https://www.googleapis.com/auth/drive.file")
+          // ler, escrever e deletar arquivos criados pela propria app
+//        .withScopes("https://www.googleapis.com/auth/drive.file")
+        .withScopes("https://www.googleapis.com/auth/drive")
         .build();
     final var service = ServiceBuilder.build(scope);
 
