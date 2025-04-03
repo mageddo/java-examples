@@ -5,8 +5,8 @@ repositories {
   mavenCentral()
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
 
@@ -14,7 +14,7 @@ dependencies {
   compileOnly("org.projectlombok:lombok:1.18.36")
 
   implementation 'org.mapstruct:mapstruct:1.6.3'
-  implementation("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+//  implementation("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
   testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
   testCompileOnly("org.projectlombok:lombok:1.18.36")

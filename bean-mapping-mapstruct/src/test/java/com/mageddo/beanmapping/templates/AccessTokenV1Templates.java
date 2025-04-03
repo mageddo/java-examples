@@ -2,12 +2,12 @@ package com.mageddo.beanmapping.templates;
 
 import java.time.LocalDateTime;
 
-import com.mageddo.beanmapping.AccessToken;
-import com.mageddo.beanmapping.vo.AccessTokenV1;
+import com.mageddo.beanmapping.lombokbuilder.AccessToken;
+import com.mageddo.beanmapping.lombokbuilder.AccessTokenVO;
 
 public class AccessTokenV1Templates {
-  public static AccessTokenV1 build() {
-    return AccessTokenV1
+  public static AccessTokenVO build() {
+    return AccessTokenVO
         .builder()
         .accessToken("access_token")
         .refreshToken("refresh_token")

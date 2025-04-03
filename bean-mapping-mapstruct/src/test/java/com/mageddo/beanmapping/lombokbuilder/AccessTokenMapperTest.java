@@ -1,4 +1,4 @@
-package com.mageddo.beanmapping;
+package com.mageddo.beanmapping.lombokbuilder;
 
 import com.mageddo.beanmapping.templates.AccessTokenV1Templates;
 

@@ -1,9 +1,7 @@
-package com.mageddo.beanmapping.vo;
+package com.mageddo.beanmapping.lombokbuilder;
 
 
 import java.time.LocalDateTime;
-
-import com.mageddo.beanmapping.AccessToken;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,7 +16,7 @@ import lombok.Value;
 @ToString
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class AccessTokenV1 {
+public class AccessTokenVO {
 
   @NonNull
   String accessToken;

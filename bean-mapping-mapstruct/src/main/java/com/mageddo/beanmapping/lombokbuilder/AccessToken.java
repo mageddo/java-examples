@@ -1,4 +1,4 @@
-package com.mageddo.beanmapping;
+package com.mageddo.beanmapping.lombokbuilder;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +9,7 @@ import lombok.Value;
 import lombok.experimental.Accessors;
 
 @Value
-@Builder(toBuilder = true)
+@Builder
 @ToString(onlyExplicitlyIncluded = true)
 @Accessors(fluent = true)
 public class AccessToken {
@@ -25,9 +25,6 @@ public class AccessToken {
 
   @NonNull
   AccessToken.TokenType tokenType;
-
-//  @NonNull
-//  String scope;
 
   public boolean isNotExpired() {
     throw new UnsupportedOperationException();

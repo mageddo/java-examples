@@ -1,6 +1,4 @@
-package com.mageddo.beanmapping;
-
-import com.mageddo.beanmapping.vo.AccessTokenV1;
+package com.mageddo.beanmapping.lombokbuilder;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -9,5 +7,5 @@ import org.mapstruct.factory.Mappers;
 public interface AccessTokenMapper {
   AccessTokenMapper INSTANCE = Mappers.getMapper(AccessTokenMapper.class);
 
-  AccessToken of(AccessTokenV1 accessToken);
+  AccessToken of(AccessTokenVO accessToken);
 }
