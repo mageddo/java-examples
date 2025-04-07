@@ -7,8 +7,9 @@ import lombok.NonNull;
 import lombok.Value;
 
 @Value
-@Builder
+@Builder(builderClassName = "AssetBuilder")
 public class Asset {
+
   @NonNull
   String code;
 
@@ -17,4 +18,8 @@ public class Asset {
 
   @NonNull
   BigDecimal netAmount;
+
+  public static class AssetBuilder {
+
+  }
 }
