@@ -2,21 +2,25 @@ plugins {
   id 'java'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_9
-targetCompatibility = JavaVersion.VERSION_1_9
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 dependencies {
 
-  compile 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
-  compileOnly 'org.projectlombok:lombok:1.18.10'
-  annotationProcessor 'org.projectlombok:lombok:1.18.10'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
+  compileOnly 'org.projectlombok:lombok:1.18.38'
+  annotationProcessor 'org.projectlombok:lombok:1.18.38'
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.10'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
+  testCompileOnly 'org.projectlombok:lombok:1.18.38'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.38'
 
-  testCompile 'org.apache.commons:commons-lang3:3.9'
-  testCompile 'commons-io:commons-io:2.6'
-  testCompile 'junit:junit:4.12'
-  testCompile group: 'org.mockito', name: 'mockito-core', version: '3.1.0'
+  testImplementation 'org.apache.commons:commons-lang3:3.9'
+  testImplementation 'commons-io:commons-io:2.6'
+  testImplementation 'junit:junit:4.12'
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.1.0'
 
 }
