@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class StringUtils {
-	public boolean equals(String a, String b){
-		return (a == null) || (a.equals(b));
-	}
+  public boolean equals(String a, String b) {
+    return (a == null) || (a.equals(b));
+  }
 }

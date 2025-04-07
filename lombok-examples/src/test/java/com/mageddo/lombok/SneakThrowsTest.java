@@ -29,7 +29,9 @@ public class SneakThrowsTest {
   public void mustCatchGenericExceptionWhenCheckedExceptionFail() throws Exception {
     // arrange
     val mockPrintStream = mock(PrintStream.class);
-    doThrow(new IOException("can't print hi")).when(mockPrintStream).write(any(byte[].class));
+    doThrow(new IOException("can't print hi"))
+        .when(mockPrintStream)
+        .write(any(byte[].class));
     val lastOut = System.out;
 
     // act

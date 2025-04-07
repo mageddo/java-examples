@@ -6,5 +6,5 @@ import lombok.Data;
 @Builder
 @Data
 public class Fruit {
-	private String name;
+  private String name;
 }
