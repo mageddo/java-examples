@@ -1,4 +1,6 @@
-package com.mageddo.beanmapping.javarecords;
+package com.mageddo.beanmapping.javarecords.mapstruct;
+
+import com.mageddo.beanmapping.javarecords.FruitVO;
 
 import org.junit.jupiter.api.Test;
 
