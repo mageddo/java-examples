@@ -7,9 +7,50 @@ receivers:
       http: 
         endpoint: ":4318"
 
+connectors:
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.120.0/connector/spanmetricsconnector/README.md#more-examples
+  spanmetrics:
+    dimensions:
+      - name: http.method
+        default: GET
+      - name: http.response.status_code 
+      - name: http.status_code
+      - name: http.route
+      - name: code.function 
+      - name: code.namespace
+    exemplars:
+      enabled: true
+    exclude_dimensions: 
+      - 'status.code'
+      - 'telemetry.sdk.language'
+      - 'telemetry.sdk.name'
+      - 'webengine.name'
+    dimensions_cache_size: 1000
+    aggregation_temporality: "AGGREGATION_TEMPORALITY_CUMULATIVE"    
+    metrics_flush_interval: 15s
+    metrics_expiration: 5m
+    events:
+      enabled: true
+      dimensions:
+        - name: exception.type
+        - name: exception.message
+    resource_metrics_key_attributes:
+      - host.name 
+      - service.name
+      - telemetry.sdk.version
+      - service.version
+      - webengine.version 
+
 processors:
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/cdd2c16a95b49e4b11e3dee8a5d92ae8ba80e6d0/processor/filterprocessor
+  filter/traces: # soh lentos ou com erros (se a condicao abaixo der true, eh ignorado)
+    error_mode: ignore
+    traces:
+      span:
+        - status.code < 2 and (end_time - start_time) <= Duration("500ms")
+
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/cumulativetodeltaprocessor
-  cumulativetodelta:
+  # cumulativetodelta:
 
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
   batch:
@@ -50,13 +91,18 @@ service:
       processors: [batch]
       exporters: [debug] # Send logs to Jaeger (as spans)
 
-    traces:
+    traces/metrics:
       receivers: [ otlp ]
       processors: [ batch ]
+      exporters: [ spanmetrics ]
+
+    traces/filtered:
+      receivers: [ otlp ]
+      processors: [ filter/traces, batch ]
       exporters: [ debug, otlp ]
     
     metrics:
-      receivers: [ otlp ]
+      receivers: [ otlp, spanmetrics ]
       processors: [ batch ]
       exporters: [ debug, prometheus ]
   
