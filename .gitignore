@@ -19,3 +19,6 @@ ajcore*
 
 *.zip
 *.gz
+
+*.bat text eol=crlf
+
