@@ -1,4 +1,5 @@
 .DS_Store
+* text=auto
 .idea
 *.iml
 target/
@@ -19,3 +20,6 @@ ajcore*
 
 *.zip
 *.gz
+
+*.bat text eol=crlf
+
