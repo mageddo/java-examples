@@ -6,11 +6,13 @@ import com.mageddo.ServiceBuilder;
 
 public class GoogleDriveApp {
 
+  public static final String ALL_DRIVE_FILES_READ_AND_WRITE = "https://www.googleapis.com/auth/drive";
+  public static final String ALL_DRIVE_FILES_READ = "https://www.googleapis.com/auth/drive.readonly";
+  public static final String APP_FILES_ONLY_READ_AND_WRITE = "https://www.googleapis.com/auth/drive.file";
+
   public static void main(String[] args) {
     final var scope = new ScopeBuilder()
-          // ler, escrever e deletar arquivos criados pela propria app
-//        .withScopes("https://www.googleapis.com/auth/drive.file")
-        .withScopes("https://www.googleapis.com/auth/drive")
+        .withScopes(ALL_DRIVE_FILES_READ_AND_WRITE, ALL_DRIVE_FILES_READ)
         .build();
     final var service = ServiceBuilder.build(scope);
 
