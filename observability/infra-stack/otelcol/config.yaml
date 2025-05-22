@@ -106,7 +106,7 @@ service:
     metrics:
       receivers: [ otlp, spanmetrics ]
       processors: [ batch ]
-      exporters: [ debug, prometheus ]
+      exporters: [ prometheus ]
   
   telemetry:
     logs:
