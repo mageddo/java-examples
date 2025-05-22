@@ -98,8 +98,10 @@ service:
 
     traces/filtered:
       receivers: [ otlp ]
-      processors: [ filter/traces, batch ]
-      exporters: [ debug, otlp ]
+      processors: [ batch ]
+      exporters: [ otlp ]
+      #processors: [ filter/traces, batch ]
+      #exporters: [ debug, otlp ]
     
     metrics:
       receivers: [ otlp, spanmetrics ]
