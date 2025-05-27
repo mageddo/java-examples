@@ -22,4 +22,5 @@ ajcore*
 *.gz
 
 *.bat text eol=crlf
-
+*.db.*
+*.db
