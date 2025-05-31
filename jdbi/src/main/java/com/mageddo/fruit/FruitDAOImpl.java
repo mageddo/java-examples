@@ -7,7 +7,7 @@ import org.jdbi.v3.core.Jdbi;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class FruitDAOPg implements FruitDAO {
+public class FruitDAOImpl implements FruitDAO {
 
   private final Jdbi jdbi;
 

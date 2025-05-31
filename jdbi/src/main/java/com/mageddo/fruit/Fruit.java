@@ -9,13 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.Value;
 
-@Value
-@Builder
+@Data
+//@Builder
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @Entity
@@ -25,12 +24,15 @@ public class Fruit {
   @Id
   @Column(name = "IDT_FRUIT")
   @NonNull
+//  @Getter(onMethod_ = {@ColumnName("IDT_FRUIT")})
   UUID id;
 
   @NonNull
   @Column(name = "NAM_FRUIT")
+//  @Getter(onMethod_ = {@ColumnName("NAM_FRUIT")})
   String name;
 
   @Column(name = "DAT_CREATED")
+//  @Getter(onMethod_ = {@ColumnName("DAT_CREATED")})
   LocalDateTime createdAt;
 }
