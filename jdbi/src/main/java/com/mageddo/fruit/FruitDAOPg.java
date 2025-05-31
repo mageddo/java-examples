@@ -4,10 +4,8 @@ import java.util.List;
 
 import org.jdbi.v3.core.Jdbi;
 
-import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 
-@Singleton
 @RequiredArgsConstructor
 public class FruitDAOPg implements FruitDAO {
 
