@@ -17,6 +17,7 @@ dependencies {
   implementation 'org.postgresql:postgresql:42.7.3'
   implementation 'com.zaxxer:HikariCP:5.1.0'
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
+  implementation 'ch.qos.logback:logback-classic:1.5.18'
 
   testCompileOnly("org.projectlombok:lombok:1.18.38")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.38")

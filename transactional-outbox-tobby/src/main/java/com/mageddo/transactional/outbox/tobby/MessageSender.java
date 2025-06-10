@@ -7,12 +7,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @RequiredArgsConstructor
 public class MessageSender {
 
@@ -37,6 +40,7 @@ public class MessageSender {
   public void sendSync(ProducerRecord<String, byte[]> record) {
     try {
       this.producer.send(record).get();
+      log.info("status=primarySent");
     } catch (InterruptedException | ExecutionException e) {
       this.sendSyncUsingFallback(record);
       throw new RuntimeException(e);
@@ -46,5 +50,6 @@ public class MessageSender {
   @SneakyThrows
   private void sendSyncUsingFallback(ProducerRecord<String, byte[]> record) {
     this.fallbackProducer.send(record).get();
+    log.info("status=fallbackSent");
   }
 }
