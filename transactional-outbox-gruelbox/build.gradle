@@ -1,6 +1,5 @@
 plugins {
   id 'java'
-  id 'io.quarkus'
 }
 
 repositories {
@@ -9,9 +8,17 @@ repositories {
 }
 
 dependencies {
-  implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
-  implementation 'io.quarkus:quarkus-messaging-kafka'
-  implementation 'io.quarkus:quarkus-arc'
+  compileOnly("org.projectlombok:lombok:1.18.38")
+  annotationProcessor("org.projectlombok:lombok:1.18.38")
+
+  implementation 'org.postgresql:postgresql:42.7.3'
+  implementation 'com.zaxxer:HikariCP:5.1.0'
+  implementation 'com.gruelbox:transactionoutbox-core:6.0.609'
+  implementation 'org.apache.kafka:kafka-clients:4.0.0'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
+
+  testCompileOnly("org.projectlombok:lombok:1.18.38")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
   testImplementation 'io.quarkus:quarkus-junit5'
 }
 
@@ -23,9 +30,6 @@ java {
   targetCompatibility = JavaVersion.VERSION_21
 }
 
-test {
-  systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
-}
 compileJava {
   options.encoding = 'UTF-8'
   options.compilerArgs << '-parameters'

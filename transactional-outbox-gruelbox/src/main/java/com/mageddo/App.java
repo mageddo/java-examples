@@ -1,47 +1,82 @@
 package com.mageddo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gruelbox.transactionoutbox.Dialect;
+import com.gruelbox.transactionoutbox.Instantiator;
+import com.gruelbox.transactionoutbox.Persistor;
+import com.gruelbox.transactionoutbox.TransactionManager;
+import com.gruelbox.transactionoutbox.TransactionOutbox;
+
+import com.mageddo.templates.Fruits;
+import com.zaxxer.hikari.HikariConfig;
+
+import com.zaxxer.hikari.HikariDataSource;
+
 import io.quarkus.runtime.StartupEvent;
 
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.eclipse.microprofile.reactive.messaging.*;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 
+import javax.sql.DataSource;
+
+import java.util.Properties;
 import java.util.stream.Stream;
 
-@ApplicationScoped
 public class App {
 
-  @Inject
-  @Channel("words-out")
-  Emitter<String> emitter;
-
-  /**
-   * Sends message to the "words-out" channel, can be used from a JAX-RS resource or any bean of
-   * your application.
-   * Messages are sent to the broker.
-   **/
-  void onStart(@Observes StartupEvent ev) {
-    Stream.of("Hello", "with", "Quarkus", "Messaging", "message").forEach(string -> emitter.send(string));
+  public DataSource createDataSource() {
+    final var config = new HikariConfig();
+    config.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
+    config.setUsername("elfreitas");
+    config.setPassword("postgres");
+    config.setMaximumPoolSize(5);
+    config.setMinimumIdle(2);
+    config.setConnectionTimeout(3000);
+    return new HikariDataSource(config);
   }
 
-  /**
-   * Consume the message from the "words-in" channel, uppercase it and send it to the uppercase
-   * channel.
-   * Messages come from the broker.
-   **/
-  @Incoming("words-in")
-  @Outgoing("uppercase")
-  public Message<String> toUpperCase(Message<String> message) {
-    return message.withPayload(message.getPayload().toUpperCase());
+  public TransactionOutbox transactionOutbox() {
+    final var messageSender = createMessageSender();
+    return this.transactionOutbox(this.createDataSource(), messageSender);
   }
 
-  /**
-   * Consume the uppercase channel (in-memory) and print the messages.
-   **/
-  @Incoming("uppercase")
-  public void sink(String word) {
-    System.out.println(">> " + word);
+  private MessageSender createMessageSender() {
+    final var producer = createKafkaProducer();
+    return new MessageSender(producer, new ObjectMapper());
+  }
+
+  private static KafkaProducer<String, byte[]> createKafkaProducer() {
+    final var props = new Properties();
+    props.put("bootstrap.servers", "localhost:9092");
+    props.put("key.serializer", StringSerializer.class.getName());
+    props.put("value.serializer", ByteArraySerializer.class.getName());
+    final var producer = new KafkaProducer<String, byte[]>(props);
+    return producer;
+  }
+
+
+  public TransactionOutbox transactionOutbox(DataSource dataSource, MessageSender messageSender) {
+    return TransactionOutbox.builder()
+        .transactionManager(TransactionManager.fromDataSource(dataSource))
+        .persistor(Persistor.forDialect(Dialect.POSTGRESQL_9))
+        .submitter((entry, localExecutor) -> {
+          loca
+        })
+        .instantiator(Instantiator.using(clazz -> messageSender))
+        .build();
+  }
+
+  public static void main(String[] args) {
+    final var app = new App();
+    final var transactionOutbox = app.transactionOutbox();
+    transactionOutbox.schedule(MessageSender.class).send(Fruits);
+
+
   }
 }
