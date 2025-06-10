@@ -1,23 +1,13 @@
 package com.mageddo;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-
-import java.util.concurrent.ExecutionException;
-
+@Slf4j
 @RequiredArgsConstructor
 public class ProducerRecordDelegate {
 
-  private final KafkaProducer<String, byte[]> producer;
-
-  public void sendSync(ProducerRecord<String, byte[]> record) {
-    try {
-      record.headers().add("version", "1".getBytes());
-      this.producer.send(record).get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new RuntimeException(e);
-    }
+  public void sendSync(RecordVO record) {
+   log.debug("status=fallbackWorked, record={}", record);
   }
 }

@@ -11,10 +11,13 @@ dependencies {
   compileOnly("org.projectlombok:lombok:1.18.38")
   annotationProcessor("org.projectlombok:lombok:1.18.38")
 
+  implementation 'org.apache.commons:commons-lang3:3.17.0'
+  implementation 'org.apache.kafka:kafka-clients:4.0.0'
+  implementation 'com.gruelbox:transactionoutbox-core:6.0.609'
+  implementation 'ch.qos.logback:logback-classic:1.5.18'
+
   implementation 'org.postgresql:postgresql:42.7.3'
   implementation 'com.zaxxer:HikariCP:5.1.0'
-  implementation 'com.gruelbox:transactionoutbox-core:6.0.609'
-  implementation 'org.apache.kafka:kafka-clients:4.0.0'
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
 
   testCompileOnly("org.projectlombok:lombok:1.18.38")
