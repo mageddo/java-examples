@@ -1,0 +1,24 @@
+plugins {
+  id "java"
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}
+
+dependencies {
+  compileOnly("org.projectlombok:lombok:1.18.38")
+  annotationProcessor("org.projectlombok:lombok:1.18.38")
+
+  implementation 'com.mageddo.tobby-transactional-outbox:tobby-transactional-outbox:2.1.6-alpha'
+  implementation 'org.apache.kafka:kafka-clients:4.0.0'
+
+  implementation 'org.postgresql:postgresql:42.7.3'
+  implementation 'com.zaxxer:HikariCP:5.1.0'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
+
+  testCompileOnly("org.projectlombok:lombok:1.18.38")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
+  testImplementation 'io.quarkus:quarkus-junit5'
+}
