@@ -1,6 +1,6 @@
 plugins {
   id 'java'
-  id 'io.quarkus' version '3.15.1'
+  id 'io.quarkus'
 }
 
 repositories {
@@ -9,10 +9,11 @@ repositories {
 }
 
 dependencies {
-  implementation enforcedPlatform('io.quarkus.platform:quarkus-bom:3.15.1')
+  implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 
   implementation 'io.quarkus:quarkus-arc'
-  implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
+  implementation 'io.quarkus:quarkus-rest'
+  implementation 'io.quarkus:quarkus-rest-jackson'
   implementation 'io.quarkus:quarkus-websockets'
   implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
@@ -35,7 +36,9 @@ java {
 
 compileJava {
   options.encoding = 'UTF-8'
+  options.compilerArgs << '-parameters'
 }
+
 
 compileTestJava {
   options.encoding = 'UTF-8'

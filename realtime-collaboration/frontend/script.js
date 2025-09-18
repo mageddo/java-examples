@@ -1,30 +1,36 @@
-import * as Y from "https://esm.sh/yjs@13.6.15?target=es2022&pin=v135";
-import { EditorState } from "https://esm.sh/@codemirror/state@6.4.1?target=es2022&pin=v135";
+import * as Y from "yjs";
+import { WebsocketProvider } from "y-websocket";
+import { EditorState } from "@codemirror/state";
 import {
     EditorView,
     keymap,
     drawSelection,
     highlightActiveLine,
     lineNumbers
-} from "https://esm.sh/@codemirror/view@6.28.5?target=es2022&pin=v135";
+} from "@codemirror/view";
 import {
     history,
     historyKeymap,
     defaultKeymap
-} from "https://esm.sh/@codemirror/commands@6.5.0?target=es2022&pin=v135";
-import { defaultHighlightStyle, syntaxHighlighting } from "https://esm.sh/@codemirror/language@6.10.2?target=es2022&pin=v135";
-import { yCollab } from "https://esm.sh/y-codemirror.next@0.3.1?target=es2022&pin=v135&deps=yjs@13.6.15,@codemirror/state@6.4.1,@codemirror/view@6.28.5";
-import {
-    Awareness,
-    applyAwarenessUpdate,
-    encodeAwarenessUpdate
-} from "https://esm.sh/y-protocols@1.0.6/awareness?target=es2022&pin=v135&deps=yjs@13.6.15";
-
+} from "@codemirror/commands";
+import { defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { yCollab } from "y-codemirror.next";
 
 const changelog = document.getElementById('changelog');
 const participantsContainer = document.getElementById('participants');
 const titleInput = document.getElementById('note-title');
 const tagsInput = document.getElementById('note-tags');
+
+function safeRandomUUID() {
+  if (crypto?.randomUUID) {
+    return crypto.randomUUID();
+  }
+   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 const log = (message) => {
     const timestamp = new Date().toLocaleTimeString();
@@ -37,7 +43,7 @@ const resolveNoteId = () => {
     if (raw.length > 0) {
         return raw;
     }
-    const generated = crypto.randomUUID();
+    const generated = safeRandomUUID();
     window.history.replaceState(null, '', `${window.location.pathname}#${generated}`);
     return generated;
 };
@@ -47,142 +53,13 @@ document.title = `Live Note ${noteId}`;
 log(`Editor iniciado para a nota ${noteId}.`);
 
 const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-const websocketUrl = `${protocol}://${window.location.host}/notes/ws/${encodeURIComponent(noteId)}`;
+const websocketUrl = `${protocol}://${window.location.host}/notes/ws`;
 
 const doc = new Y.Doc();
-const awareness = new Awareness(doc);
+const provider = new WebsocketProvider(websocketUrl, noteId, doc);
+const awareness = provider.awareness;
 
-const SYNC_MESSAGE_TYPE = 0;
-const AWARENESS_MESSAGE_TYPE = 1;
-const AWARENESS_QUERY_MESSAGE_TYPE = 2;
-
-let websocket = null;
-const pendingMessages = [];
-let reconnectDelay = 1000;
-let reconnectHandle = null;
-
-const queueMessage = (message) => {
-    pendingMessages.push(message);
-};
-
-const flushPendingMessages = () => {
-    if (!websocket || websocket.readyState !== WebSocket.OPEN) {
-        return;
-    }
-    while (pendingMessages.length) {
-        const message = pendingMessages.shift();
-        websocket.send(message);
-    }
-};
-
-const scheduleReconnect = () => {
-    if (reconnectHandle !== null) {
-        return;
-    }
-    reconnectHandle = window.setTimeout(() => {
-        reconnectHandle = null;
-        reconnectDelay = Math.min(reconnectDelay * 2, 10000);
-        log('Tentando reconectar ao servidor de edição...');
-        connectWebsocket();
-    }, reconnectDelay);
-};
-
-const sendBinaryMessage = (type, payload = new Uint8Array(0)) => {
-    const envelope = new Uint8Array(payload.length + 1);
-    envelope[0] = type;
-    envelope.set(payload, 1);
-    if (websocket && websocket.readyState === WebSocket.OPEN) {
-        websocket.send(envelope);
-        return;
-    }
-    queueMessage(envelope);
-};
-
-const broadcastLocalAwarenessState = () => {
-    const update = encodeAwarenessUpdate(awareness, [doc.clientID]);
-    sendBinaryMessage(AWARENESS_MESSAGE_TYPE, update);
-};
-
-const sendAwarenessUpdate = (clients) => {
-    if (!clients.length) {
-        return;
-    }
-    const update = encodeAwarenessUpdate(awareness, clients);
-    sendBinaryMessage(AWARENESS_MESSAGE_TYPE, update);
-};
-
-const handleBinaryMessage = (data) => {
-    if (!data.length) {
-        return;
-    }
-    const type = data[0];
-    const payload = data.slice(1);
-    switch (type) {
-        case SYNC_MESSAGE_TYPE:
-            Y.applyUpdate(doc, payload, 'remote');
-            break;
-        case AWARENESS_MESSAGE_TYPE:
-            applyAwarenessUpdate(awareness, payload, 'remote');
-            break;
-        case AWARENESS_QUERY_MESSAGE_TYPE:
-            broadcastLocalAwarenessState();
-            break;
-        default:
-            log(`Tipo de mensagem desconhecido recebido: ${type}.`);
-            break;
-    }
-};
-
-const handleWebsocketMessage = (event) => {
-    if (typeof event.data === 'string') {
-        if (event.data === 'pong') {
-            log('Servidor respondeu ao ping.');
-            return;
-        }
-        log(`Mensagem de texto ignorada: ${event.data}.`);
-        return;
-    }
-    const data = new Uint8Array(event.data);
-    handleBinaryMessage(data);
-};
-
-const onWebsocketOpen = () => {
-    reconnectDelay = 1000;
-    log('WebSocket conectado.');
-    flushPendingMessages();
-    broadcastLocalAwarenessState();
-};
-
-const handleWebsocketClose = (event) => {
-    log(`Conexão encerrada: ${event?.code ?? 'n/d'}. Tentando reconectar...`);
-    scheduleReconnect();
-};
-
-const handleWebsocketError = (event) => {
-    log(`Erro de conexão: ${event?.message ?? 'desconhecido'}. Tentando reconectar em background.`);
-    if (websocket) {
-        websocket.close();
-    }
-};
-
-const connectWebsocket = () => {
-    if (websocket) {
-        websocket.removeEventListener('open', onWebsocketOpen);
-        websocket.removeEventListener('close', handleWebsocketClose);
-        websocket.removeEventListener('message', handleWebsocketMessage);
-        websocket.removeEventListener('error', handleWebsocketError);
-    }
-    websocket = new WebSocket(websocketUrl);
-    websocket.binaryType = 'arraybuffer';
-    websocket.addEventListener('open', onWebsocketOpen);
-    websocket.addEventListener('close', handleWebsocketClose);
-    websocket.addEventListener('message', handleWebsocketMessage);
-    websocket.addEventListener('error', handleWebsocketError);
-};
-
-connectWebsocket();
-
-const userName = sessionStorage.getItem('live-user') ?? `Usuário ${crypto.randomUUID().slice(0, 4)}`;
+const userName = sessionStorage.getItem('live-user') ?? `Usuário ${safeRandomUUID().slice(0, 4)}`;
 sessionStorage.setItem('live-user', userName);
 const palette = ['#0d6efd', '#6610f2', '#6f42c1', '#198754', '#20c997', '#ffc107', '#fd7e14', '#dc3545'];
 const userColor = sessionStorage.getItem('live-user-color') ?? palette[Math.floor(Math.random() * palette.length)];
@@ -243,27 +120,12 @@ const editorView = new EditorView({
     parent: editorParent
 });
 
-const sendDocumentUpdate = (update, origin) => {
-    if (origin === 'remote') {
-        return;
-    }
-    sendBinaryMessage(SYNC_MESSAGE_TYPE, update);
-};
-
-doc.on('update', sendDocumentUpdate);
+void editorView;
 
 yContent.observe(event => {
     if (!event.transaction.local) {
         log('Descrição atualizada por outro colaborador (conflito resolvido automaticamente).');
     }
-});
-
-awareness.on('update', ({ added, updated, removed }, origin) => {
-    if (origin === 'remote') {
-        return;
-    }
-    const changed = [...added, ...updated, ...removed];
-    sendAwarenessUpdate(changed);
 });
 
 const renderParticipants = () => {
@@ -359,12 +221,30 @@ awareness.on('change', () => {
     evaluateLeadership();
 });
 
+provider.on('status', ({ status }) => {
+    log(`WebSocket ${status}.`);
+});
+
+provider.on('sync', (isSynced) => {
+    log(`Documento sincronizado: ${isSynced ? 'sim' : 'não'}.`);
+    if (isSynced) {
+        titleInput.value = yTitle.toString();
+        tagsInput.value = yTags.toString();
+    }
+});
+
+provider.on('connection-close', (event) => {
+    log(`Conexão encerrada: ${event?.code ?? 'n/d'}. Tentando reconectar...`);
+});
+
+provider.on('connection-error', (event) => {
+    log(`Erro de conexão: ${event?.message ?? 'desconhecido'}. Tentando reconectar em background.`);
+});
+
 window.addEventListener('beforeunload', () => {
     stopLeaderSync();
-    awareness.setLocalState(null);
     log('Encerrando sessão local.');
 });
 
 renderParticipants();
 evaluateLeadership();
-
