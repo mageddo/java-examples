@@ -7,10 +7,10 @@ var copy = (m) => {
   });
   return r;
 };
-var setIfUndefined = (map3, key, createT) => {
-  let set = map3.get(key);
+var setIfUndefined = (map2, key, createT) => {
+  let set = map2.get(key);
   if (set === void 0) {
-    map3.set(key, set = createT());
+    map2.set(key, set = createT());
   }
   return set;
 };
@@ -179,7 +179,6 @@ var abs = Math.abs;
 var min = (a, b) => a < b ? a : b;
 var max = (a, b) => a > b ? a : b;
 var isNaN2 = Number.isNaN;
-var pow = Math.pow;
 var isNegativeZero = (n) => n !== 0 ? n < 0 : 1 / n < 0;
 
 // node_modules/lib0/binary.js
@@ -876,16 +875,6 @@ try {
 } catch (e) {
 }
 var varStorage = _localStorage;
-var onChange = (eventHandler) => usePolyfill || addEventListener(
-  "storage",
-  /** @type {any} */
-  eventHandler
-);
-var offChange = (eventHandler) => usePolyfill || removeEventListener(
-  "storage",
-  /** @type {any} */
-  eventHandler
-);
 
 // node_modules/lib0/object.js
 var assign = Object.assign;
@@ -894,13 +883,6 @@ var forEach = (obj, f) => {
   for (const key in obj) {
     f(obj[key], key);
   }
-};
-var map2 = (obj, f) => {
-  const results = [];
-  for (const key in obj) {
-    results.push(f(obj[key], key));
-  }
-  return results;
 };
 var length2 = (obj) => keys(obj).length;
 var size = (obj) => keys(obj).length;
@@ -946,7 +928,6 @@ var callAll = (fs, args2, i = 0) => {
     }
   }
 };
-var id = (a) => a;
 var equalityDeep = (a, b) => {
   if (a === b) {
     return true;
@@ -1023,7 +1004,6 @@ var isOneOf = (value, options) => options.includes(value);
 
 // node_modules/lib0/environment.js
 var isNode = typeof process !== "undefined" && process.release && /node|io\.js/.test(process.release.name) && Object.prototype.toString.call(typeof process !== "undefined" ? process : 0) === "[object process]";
-var isBrowser = typeof window !== "undefined" && typeof document !== "undefined" && !isNode;
 var isMac = typeof navigator !== "undefined" ? /Mac/.test(navigator.platform) : false;
 var params;
 var args = [];
@@ -1077,30 +1057,6 @@ var supportsColor = forceColor || !hasParam("--no-colors") && // @todo deprecate
 
 // node_modules/lib0/buffer.js
 var createUint8ArrayFromLen = (len) => new Uint8Array(len);
-var createUint8ArrayViewFromArrayBuffer = (buffer, byteOffset, length3) => new Uint8Array(buffer, byteOffset, length3);
-var createUint8ArrayFromArrayBuffer = (buffer) => new Uint8Array(buffer);
-var toBase64Browser = (bytes) => {
-  let s = "";
-  for (let i = 0; i < bytes.byteLength; i++) {
-    s += fromCharCode(bytes[i]);
-  }
-  return btoa(s);
-};
-var toBase64Node = (bytes) => Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength).toString("base64");
-var fromBase64Browser = (s) => {
-  const a = atob(s);
-  const bytes = createUint8ArrayFromLen(a.length);
-  for (let i = 0; i < a.length; i++) {
-    bytes[i] = a.charCodeAt(i);
-  }
-  return bytes;
-};
-var fromBase64Node = (s) => {
-  const buf = Buffer.from(s, "base64");
-  return createUint8ArrayViewFromArrayBuffer(buf.buffer, buf.byteOffset, buf.byteLength);
-};
-var toBase64 = isBrowser ? toBase64Browser : toBase64Node;
-var fromBase64 = isBrowser ? fromBase64Browser : fromBase64Node;
 var copyUint8Array = (uint8Array) => {
   const newBuf = createUint8ArrayFromLen(uint8Array.byteLength);
   newBuf.set(uint8Array);
@@ -1399,29 +1355,6 @@ var addToDeleteSet = (ds, client, clock, length3) => {
   )).push(new DeleteItem(clock, length3));
 };
 var createDeleteSet = () => new DeleteSet();
-var createDeleteSetFromStructStore = (ss) => {
-  const ds = createDeleteSet();
-  ss.clients.forEach((structs, client) => {
-    const dsitems = [];
-    for (let i = 0; i < structs.length; i++) {
-      const struct = structs[i];
-      if (struct.deleted) {
-        const clock = struct.id.clock;
-        let len = struct.length;
-        if (i + 1 < structs.length) {
-          for (let next = structs[i + 1]; i + 1 < structs.length && next.deleted; next = structs[++i + 1]) {
-            len += next.length;
-          }
-        }
-        dsitems.push(new DeleteItem(clock, len));
-      }
-    }
-    if (dsitems.length > 0) {
-      ds.clients.set(client, dsitems);
-    }
-  });
-  return ds;
-};
 var writeDeleteSet = (encoder, ds) => {
   writeVarUint(encoder.restEncoder, ds.clients.size);
   from(ds.clients.entries()).sort((a, b) => b[0] - a[0]).forEach(([client, dsitems]) => {
@@ -2520,59 +2453,6 @@ var applyUpdateV2 = (ydoc, update, transactionOrigin, YDecoder = UpdateDecoderV2
   readUpdateV2(decoder, ydoc, transactionOrigin, new YDecoder(decoder));
 };
 var applyUpdate = (ydoc, update, transactionOrigin) => applyUpdateV2(ydoc, update, transactionOrigin, UpdateDecoderV1);
-var writeStateAsUpdate = (encoder, doc4, targetStateVector = /* @__PURE__ */ new Map()) => {
-  writeClientsStructs(encoder, doc4.store, targetStateVector);
-  writeDeleteSet(encoder, createDeleteSetFromStructStore(doc4.store));
-};
-var encodeStateAsUpdateV2 = (doc4, encodedTargetStateVector = new Uint8Array([0]), encoder = new UpdateEncoderV2()) => {
-  const targetStateVector = decodeStateVector(encodedTargetStateVector);
-  writeStateAsUpdate(encoder, doc4, targetStateVector);
-  const updates = [encoder.toUint8Array()];
-  if (doc4.store.pendingDs) {
-    updates.push(doc4.store.pendingDs);
-  }
-  if (doc4.store.pendingStructs) {
-    updates.push(diffUpdateV2(doc4.store.pendingStructs.update, encodedTargetStateVector));
-  }
-  if (updates.length > 1) {
-    if (encoder.constructor === UpdateEncoderV1) {
-      return mergeUpdates(updates.map((update, i) => i === 0 ? update : convertUpdateFormatV2ToV1(update)));
-    } else if (encoder.constructor === UpdateEncoderV2) {
-      return mergeUpdatesV2(updates);
-    }
-  }
-  return updates[0];
-};
-var encodeStateAsUpdate = (doc4, encodedTargetStateVector) => encodeStateAsUpdateV2(doc4, encodedTargetStateVector, new UpdateEncoderV1());
-var readStateVector = (decoder) => {
-  const ss = /* @__PURE__ */ new Map();
-  const ssLength = readVarUint(decoder.restDecoder);
-  for (let i = 0; i < ssLength; i++) {
-    const client = readVarUint(decoder.restDecoder);
-    const clock = readVarUint(decoder.restDecoder);
-    ss.set(client, clock);
-  }
-  return ss;
-};
-var decodeStateVector = (decodedState) => readStateVector(new DSDecoderV1(createDecoder(decodedState)));
-var writeStateVector = (encoder, sv) => {
-  writeVarUint(encoder.restEncoder, sv.size);
-  from(sv.entries()).sort((a, b) => b[0] - a[0]).forEach(([client, clock]) => {
-    writeVarUint(encoder.restEncoder, client);
-    writeVarUint(encoder.restEncoder, clock);
-  });
-  return encoder;
-};
-var writeDocumentStateVector = (encoder, doc4) => writeStateVector(encoder, getStateVector(doc4.store));
-var encodeStateVectorV2 = (doc4, encoder = new DSEncoderV2()) => {
-  if (doc4 instanceof Map) {
-    writeStateVector(encoder, doc4);
-  } else {
-    writeDocumentStateVector(encoder, doc4);
-  }
-  return encoder.toUint8Array();
-};
-var encodeStateVector = (doc4) => encodeStateVectorV2(doc4, new DSEncoderV1());
 var EventHandler = class {
   constructor() {
     this.l = [];
@@ -3519,7 +3399,6 @@ var LazyStructWriter = class {
     this.clientStructs = [];
   }
 };
-var mergeUpdates = (updates) => mergeUpdatesV2(updates, UpdateDecoderV1, UpdateEncoderV1);
 var sliceStruct = (left, diff) => {
   if (left.constructor === GC) {
     const { client, clock } = left.id;
@@ -3649,38 +3528,6 @@ var mergeUpdatesV2 = (updates, YDecoder = UpdateDecoderV2, YEncoder = UpdateEnco
   writeDeleteSet(updateEncoder, ds);
   return updateEncoder.toUint8Array();
 };
-var diffUpdateV2 = (update, sv, YDecoder = UpdateDecoderV2, YEncoder = UpdateEncoderV2) => {
-  const state = decodeStateVector(sv);
-  const encoder = new YEncoder();
-  const lazyStructWriter = new LazyStructWriter(encoder);
-  const decoder = new YDecoder(createDecoder(update));
-  const reader = new LazyStructReader(decoder, false);
-  while (reader.curr) {
-    const curr = reader.curr;
-    const currClient = curr.id.client;
-    const svClock = state.get(currClient) || 0;
-    if (reader.curr.constructor === Skip) {
-      reader.next();
-      continue;
-    }
-    if (curr.id.clock + curr.length > svClock) {
-      writeStructToLazyStructWriter(lazyStructWriter, curr, max(svClock - curr.id.clock, 0));
-      reader.next();
-      while (reader.curr && reader.curr.id.client === currClient) {
-        writeStructToLazyStructWriter(lazyStructWriter, reader.curr, 0);
-        reader.next();
-      }
-    } else {
-      while (reader.curr && reader.curr.id.client === currClient && reader.curr.id.clock + reader.curr.length <= svClock) {
-        reader.next();
-      }
-    }
-  }
-  finishLazyStructWriting(lazyStructWriter);
-  const ds = readDeleteSet(decoder);
-  writeDeleteSet(encoder, ds);
-  return encoder.toUint8Array();
-};
 var flushLazyStructWriter = (lazyWriter) => {
   if (lazyWriter.written > 0) {
     lazyWriter.clientStructs.push({ written: lazyWriter.written, restEncoder: toUint8Array(lazyWriter.encoder.restEncoder) });
@@ -3710,20 +3557,6 @@ var finishLazyStructWriting = (lazyWriter) => {
     writeUint8Array(restEncoder, partStructs.restEncoder);
   }
 };
-var convertUpdateFormat = (update, blockTransformer, YDecoder, YEncoder) => {
-  const updateDecoder = new YDecoder(createDecoder(update));
-  const lazyDecoder = new LazyStructReader(updateDecoder, false);
-  const updateEncoder = new YEncoder();
-  const lazyWriter = new LazyStructWriter(updateEncoder);
-  for (let curr = lazyDecoder.curr; curr !== null; curr = lazyDecoder.next()) {
-    writeStructToLazyStructWriter(lazyWriter, blockTransformer(curr), 0);
-  }
-  finishLazyStructWriting(lazyWriter);
-  const ds = readDeleteSet(updateDecoder);
-  writeDeleteSet(updateEncoder, ds);
-  return updateEncoder.toUint8Array();
-};
-var convertUpdateFormatV2ToV1 = (update) => convertUpdateFormat(update, id, UpdateDecoderV2, UpdateEncoderV1);
 var errorComputeChanges = "You must not compute changes after the event-handler fired.";
 var YEvent = class {
   /**
@@ -4808,14 +4641,14 @@ var YMap = class _YMap extends AbstractType {
    * @return {YMap<MapType>}
    */
   clone() {
-    const map3 = new _YMap();
+    const map2 = new _YMap();
     this.forEach((value, key) => {
-      map3.set(key, value instanceof AbstractType ? (
+      map2.set(key, value instanceof AbstractType ? (
         /** @type {typeof value} */
         value.clone()
       ) : value);
     });
-    return map3;
+    return map2;
   }
   /**
    * Creates YMapEvent and calls observers.
@@ -4833,14 +4666,14 @@ var YMap = class _YMap extends AbstractType {
    */
   toJSON() {
     this.doc ?? warnPrematureAccess();
-    const map3 = {};
+    const map2 = {};
     this._map.forEach((item, key) => {
       if (!item.deleted) {
         const v = item.content.getContent()[item.length - 1];
-        map3[key] = v instanceof AbstractType ? v.toJSON() : v;
+        map2[key] = v instanceof AbstractType ? v.toJSON() : v;
       }
     });
-    return map3;
+    return map2;
   }
   /**
    * Returns the size of the YMap (count of key/value pairs)
@@ -4975,8 +4808,8 @@ var YMap = class _YMap extends AbstractType {
   clear() {
     if (this.doc !== null) {
       transact(this.doc, (transaction) => {
-        this.forEach(function(_value, key, map3) {
-          typeMapDelete(transaction, map3, key);
+        this.forEach(function(_value, key, map2) {
+          typeMapDelete(transaction, map2, key);
         });
       });
     } else {
@@ -8306,659 +8139,6 @@ if (glo[importIdentifier] === true) {
 }
 glo[importIdentifier] = true;
 
-// node_modules/lib0/broadcastchannel.js
-var channels = /* @__PURE__ */ new Map();
-var LocalStoragePolyfill = class {
-  /**
-   * @param {string} room
-   */
-  constructor(room) {
-    this.room = room;
-    this.onmessage = null;
-    this._onChange = (e) => e.key === room && this.onmessage !== null && this.onmessage({ data: fromBase64(e.newValue || "") });
-    onChange(this._onChange);
-  }
-  /**
-   * @param {ArrayBuffer} buf
-   */
-  postMessage(buf) {
-    varStorage.setItem(this.room, toBase64(createUint8ArrayFromArrayBuffer(buf)));
-  }
-  close() {
-    offChange(this._onChange);
-  }
-};
-var BC = typeof BroadcastChannel === "undefined" ? LocalStoragePolyfill : BroadcastChannel;
-var getChannel = (room) => setIfUndefined(channels, room, () => {
-  const subs = create2();
-  const bc = new BC(room);
-  bc.onmessage = (e) => subs.forEach((sub) => sub(e.data, "broadcastchannel"));
-  return {
-    bc,
-    subs
-  };
-});
-var subscribe = (room, f) => {
-  getChannel(room).subs.add(f);
-  return f;
-};
-var unsubscribe = (room, f) => {
-  const channel = getChannel(room);
-  const unsubscribed = channel.subs.delete(f);
-  if (unsubscribed && channel.subs.size === 0) {
-    channel.bc.close();
-    channels.delete(room);
-  }
-  return unsubscribed;
-};
-var publish = (room, data, origin = null) => {
-  const c = getChannel(room);
-  c.bc.postMessage(data);
-  c.subs.forEach((sub) => sub(data, origin));
-};
-
-// node_modules/y-protocols/sync.js
-var messageYjsSyncStep1 = 0;
-var messageYjsSyncStep2 = 1;
-var messageYjsUpdate = 2;
-var writeSyncStep1 = (encoder, doc4) => {
-  writeVarUint(encoder, messageYjsSyncStep1);
-  const sv = encodeStateVector(doc4);
-  writeVarUint8Array(encoder, sv);
-};
-var writeSyncStep2 = (encoder, doc4, encodedStateVector) => {
-  writeVarUint(encoder, messageYjsSyncStep2);
-  writeVarUint8Array(encoder, encodeStateAsUpdate(doc4, encodedStateVector));
-};
-var readSyncStep1 = (decoder, encoder, doc4) => writeSyncStep2(encoder, doc4, readVarUint8Array(decoder));
-var readSyncStep2 = (decoder, doc4, transactionOrigin) => {
-  try {
-    applyUpdate(doc4, readVarUint8Array(decoder), transactionOrigin);
-  } catch (error) {
-    console.error("Caught error while handling a Yjs update", error);
-  }
-};
-var writeUpdate = (encoder, update) => {
-  writeVarUint(encoder, messageYjsUpdate);
-  writeVarUint8Array(encoder, update);
-};
-var readUpdate = readSyncStep2;
-var readSyncMessage = (decoder, encoder, doc4, transactionOrigin) => {
-  const messageType = readVarUint(decoder);
-  switch (messageType) {
-    case messageYjsSyncStep1:
-      readSyncStep1(decoder, encoder, doc4);
-      break;
-    case messageYjsSyncStep2:
-      readSyncStep2(decoder, doc4, transactionOrigin);
-      break;
-    case messageYjsUpdate:
-      readUpdate(decoder, doc4, transactionOrigin);
-      break;
-    default:
-      throw new Error("Unknown message type");
-  }
-  return messageType;
-};
-
-// node_modules/y-protocols/auth.js
-var messagePermissionDenied = 0;
-var readAuthMessage = (decoder, y, permissionDeniedHandler2) => {
-  switch (readVarUint(decoder)) {
-    case messagePermissionDenied:
-      permissionDeniedHandler2(y, readVarString(decoder));
-  }
-};
-
-// node_modules/y-protocols/awareness.js
-var outdatedTimeout = 3e4;
-var Awareness = class extends Observable {
-  /**
-   * @param {Y.Doc} doc
-   */
-  constructor(doc4) {
-    super();
-    this.doc = doc4;
-    this.clientID = doc4.clientID;
-    this.states = /* @__PURE__ */ new Map();
-    this.meta = /* @__PURE__ */ new Map();
-    this._checkInterval = /** @type {any} */
-    setInterval(() => {
-      const now = getUnixTime();
-      if (this.getLocalState() !== null && outdatedTimeout / 2 <= now - /** @type {{lastUpdated:number}} */
-      this.meta.get(this.clientID).lastUpdated) {
-        this.setLocalState(this.getLocalState());
-      }
-      const remove2 = [];
-      this.meta.forEach((meta2, clientid) => {
-        if (clientid !== this.clientID && outdatedTimeout <= now - meta2.lastUpdated && this.states.has(clientid)) {
-          remove2.push(clientid);
-        }
-      });
-      if (remove2.length > 0) {
-        removeAwarenessStates(this, remove2, "timeout");
-      }
-    }, floor(outdatedTimeout / 10));
-    doc4.on("destroy", () => {
-      this.destroy();
-    });
-    this.setLocalState({});
-  }
-  destroy() {
-    this.emit("destroy", [this]);
-    this.setLocalState(null);
-    super.destroy();
-    clearInterval(this._checkInterval);
-  }
-  /**
-   * @return {Object<string,any>|null}
-   */
-  getLocalState() {
-    return this.states.get(this.clientID) || null;
-  }
-  /**
-   * @param {Object<string,any>|null} state
-   */
-  setLocalState(state) {
-    const clientID = this.clientID;
-    const currLocalMeta = this.meta.get(clientID);
-    const clock = currLocalMeta === void 0 ? 0 : currLocalMeta.clock + 1;
-    const prevState = this.states.get(clientID);
-    if (state === null) {
-      this.states.delete(clientID);
-    } else {
-      this.states.set(clientID, state);
-    }
-    this.meta.set(clientID, {
-      clock,
-      lastUpdated: getUnixTime()
-    });
-    const added = [];
-    const updated = [];
-    const filteredUpdated = [];
-    const removed = [];
-    if (state === null) {
-      removed.push(clientID);
-    } else if (prevState == null) {
-      if (state != null) {
-        added.push(clientID);
-      }
-    } else {
-      updated.push(clientID);
-      if (!equalityDeep(prevState, state)) {
-        filteredUpdated.push(clientID);
-      }
-    }
-    if (added.length > 0 || filteredUpdated.length > 0 || removed.length > 0) {
-      this.emit("change", [{ added, updated: filteredUpdated, removed }, "local"]);
-    }
-    this.emit("update", [{ added, updated, removed }, "local"]);
-  }
-  /**
-   * @param {string} field
-   * @param {any} value
-   */
-  setLocalStateField(field, value) {
-    const state = this.getLocalState();
-    if (state !== null) {
-      this.setLocalState({
-        ...state,
-        [field]: value
-      });
-    }
-  }
-  /**
-   * @return {Map<number,Object<string,any>>}
-   */
-  getStates() {
-    return this.states;
-  }
-};
-var removeAwarenessStates = (awareness2, clients, origin) => {
-  const removed = [];
-  for (let i = 0; i < clients.length; i++) {
-    const clientID = clients[i];
-    if (awareness2.states.has(clientID)) {
-      awareness2.states.delete(clientID);
-      if (clientID === awareness2.clientID) {
-        const curMeta = (
-          /** @type {MetaClientState} */
-          awareness2.meta.get(clientID)
-        );
-        awareness2.meta.set(clientID, {
-          clock: curMeta.clock + 1,
-          lastUpdated: getUnixTime()
-        });
-      }
-      removed.push(clientID);
-    }
-  }
-  if (removed.length > 0) {
-    awareness2.emit("change", [{ added: [], updated: [], removed }, origin]);
-    awareness2.emit("update", [{ added: [], updated: [], removed }, origin]);
-  }
-};
-var encodeAwarenessUpdate = (awareness2, clients, states = awareness2.states) => {
-  const len = clients.length;
-  const encoder = createEncoder();
-  writeVarUint(encoder, len);
-  for (let i = 0; i < len; i++) {
-    const clientID = clients[i];
-    const state = states.get(clientID) || null;
-    const clock = (
-      /** @type {MetaClientState} */
-      awareness2.meta.get(clientID).clock
-    );
-    writeVarUint(encoder, clientID);
-    writeVarUint(encoder, clock);
-    writeVarString(encoder, JSON.stringify(state));
-  }
-  return toUint8Array(encoder);
-};
-var applyAwarenessUpdate = (awareness2, update, origin) => {
-  const decoder = createDecoder(update);
-  const timestamp = getUnixTime();
-  const added = [];
-  const updated = [];
-  const filteredUpdated = [];
-  const removed = [];
-  const len = readVarUint(decoder);
-  for (let i = 0; i < len; i++) {
-    const clientID = readVarUint(decoder);
-    let clock = readVarUint(decoder);
-    const state = JSON.parse(readVarString(decoder));
-    const clientMeta = awareness2.meta.get(clientID);
-    const prevState = awareness2.states.get(clientID);
-    const currClock = clientMeta === void 0 ? 0 : clientMeta.clock;
-    if (currClock < clock || currClock === clock && state === null && awareness2.states.has(clientID)) {
-      if (state === null) {
-        if (clientID === awareness2.clientID && awareness2.getLocalState() != null) {
-          clock++;
-        } else {
-          awareness2.states.delete(clientID);
-        }
-      } else {
-        awareness2.states.set(clientID, state);
-      }
-      awareness2.meta.set(clientID, {
-        clock,
-        lastUpdated: timestamp
-      });
-      if (clientMeta === void 0 && state !== null) {
-        added.push(clientID);
-      } else if (clientMeta !== void 0 && state === null) {
-        removed.push(clientID);
-      } else if (state !== null) {
-        if (!equalityDeep(state, prevState)) {
-          filteredUpdated.push(clientID);
-        }
-        updated.push(clientID);
-      }
-    }
-  }
-  if (added.length > 0 || filteredUpdated.length > 0 || removed.length > 0) {
-    awareness2.emit("change", [{
-      added,
-      updated: filteredUpdated,
-      removed
-    }, origin]);
-  }
-  if (added.length > 0 || updated.length > 0 || removed.length > 0) {
-    awareness2.emit("update", [{
-      added,
-      updated,
-      removed
-    }, origin]);
-  }
-};
-
-// node_modules/lib0/url.js
-var encodeQueryParams = (params2) => map2(params2, (val, key) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`).join("&");
-
-// node_modules/y-websocket/src/y-websocket.js
-var messageSync = 0;
-var messageQueryAwareness = 3;
-var messageAwareness = 1;
-var messageAuth = 2;
-var messageHandlers = [];
-messageHandlers[messageSync] = (encoder, decoder, provider2, emitSynced, _messageType) => {
-  writeVarUint(encoder, messageSync);
-  const syncMessageType = readSyncMessage(
-    decoder,
-    encoder,
-    provider2.doc,
-    provider2
-  );
-  if (emitSynced && syncMessageType === messageYjsSyncStep2 && !provider2.synced) {
-    provider2.synced = true;
-  }
-};
-messageHandlers[messageQueryAwareness] = (encoder, _decoder, provider2, _emitSynced, _messageType) => {
-  writeVarUint(encoder, messageAwareness);
-  writeVarUint8Array(
-    encoder,
-    encodeAwarenessUpdate(
-      provider2.awareness,
-      Array.from(provider2.awareness.getStates().keys())
-    )
-  );
-};
-messageHandlers[messageAwareness] = (_encoder, decoder, provider2, _emitSynced, _messageType) => {
-  applyAwarenessUpdate(
-    provider2.awareness,
-    readVarUint8Array(decoder),
-    provider2
-  );
-};
-messageHandlers[messageAuth] = (_encoder, decoder, provider2, _emitSynced, _messageType) => {
-  readAuthMessage(
-    decoder,
-    provider2.doc,
-    (_ydoc, reason) => permissionDeniedHandler(provider2, reason)
-  );
-};
-var messageReconnectTimeout = 3e4;
-var permissionDeniedHandler = (provider2, reason) => console.warn(`Permission denied to access ${provider2.url}.
-${reason}`);
-var readMessage = (provider2, buf, emitSynced) => {
-  const decoder = createDecoder(buf);
-  const encoder = createEncoder();
-  const messageType = readVarUint(decoder);
-  const messageHandler = provider2.messageHandlers[messageType];
-  if (
-    /** @type {any} */
-    messageHandler
-  ) {
-    messageHandler(encoder, decoder, provider2, emitSynced, messageType);
-  } else {
-    console.error("Unable to compute message");
-  }
-  return encoder;
-};
-var setupWS = (provider2) => {
-  if (provider2.shouldConnect && provider2.ws === null) {
-    const websocket = new provider2._WS(provider2.url);
-    websocket.binaryType = "arraybuffer";
-    provider2.ws = websocket;
-    provider2.wsconnecting = true;
-    provider2.wsconnected = false;
-    provider2.synced = false;
-    websocket.onmessage = (event) => {
-      provider2.wsLastMessageReceived = getUnixTime();
-      const encoder = readMessage(provider2, new Uint8Array(event.data), true);
-      if (length(encoder) > 1) {
-        websocket.send(toUint8Array(encoder));
-      }
-    };
-    websocket.onerror = (event) => {
-      provider2.emit("connection-error", [event, provider2]);
-    };
-    websocket.onclose = (event) => {
-      provider2.emit("connection-close", [event, provider2]);
-      provider2.ws = null;
-      provider2.wsconnecting = false;
-      if (provider2.wsconnected) {
-        provider2.wsconnected = false;
-        provider2.synced = false;
-        removeAwarenessStates(
-          provider2.awareness,
-          Array.from(provider2.awareness.getStates().keys()).filter(
-            (client) => client !== provider2.doc.clientID
-          ),
-          provider2
-        );
-        provider2.emit("status", [{
-          status: "disconnected"
-        }]);
-      } else {
-        provider2.wsUnsuccessfulReconnects++;
-      }
-      setTimeout(
-        setupWS,
-        min(
-          pow(2, provider2.wsUnsuccessfulReconnects) * 100,
-          provider2.maxBackoffTime
-        ),
-        provider2
-      );
-    };
-    websocket.onopen = () => {
-      provider2.wsLastMessageReceived = getUnixTime();
-      provider2.wsconnecting = false;
-      provider2.wsconnected = true;
-      provider2.wsUnsuccessfulReconnects = 0;
-      provider2.emit("status", [{
-        status: "connected"
-      }]);
-      const encoder = createEncoder();
-      writeVarUint(encoder, messageSync);
-      writeSyncStep1(encoder, provider2.doc);
-      websocket.send(toUint8Array(encoder));
-      if (provider2.awareness.getLocalState() !== null) {
-        const encoderAwarenessState = createEncoder();
-        writeVarUint(encoderAwarenessState, messageAwareness);
-        writeVarUint8Array(
-          encoderAwarenessState,
-          encodeAwarenessUpdate(provider2.awareness, [
-            provider2.doc.clientID
-          ])
-        );
-        websocket.send(toUint8Array(encoderAwarenessState));
-      }
-    };
-    provider2.emit("status", [{
-      status: "connecting"
-    }]);
-  }
-};
-var broadcastMessage = (provider2, buf) => {
-  const ws = provider2.ws;
-  if (provider2.wsconnected && ws && ws.readyState === ws.OPEN) {
-    ws.send(buf);
-  }
-  if (provider2.bcconnected) {
-    publish(provider2.bcChannel, buf, provider2);
-  }
-};
-var WebsocketProvider = class extends Observable {
-  /**
-   * @param {string} serverUrl
-   * @param {string} roomname
-   * @param {Y.Doc} doc
-   * @param {object} opts
-   * @param {boolean} [opts.connect]
-   * @param {awarenessProtocol.Awareness} [opts.awareness]
-   * @param {Object<string,string>} [opts.params]
-   * @param {typeof WebSocket} [opts.WebSocketPolyfill] Optionall provide a WebSocket polyfill
-   * @param {number} [opts.resyncInterval] Request server state every `resyncInterval` milliseconds
-   * @param {number} [opts.maxBackoffTime] Maximum amount of time to wait before trying to reconnect (we try to reconnect using exponential backoff)
-   * @param {boolean} [opts.disableBc] Disable cross-tab BroadcastChannel communication
-   */
-  constructor(serverUrl, roomname, doc4, {
-    connect = true,
-    awareness: awareness2 = new Awareness(doc4),
-    params: params2 = {},
-    WebSocketPolyfill = WebSocket,
-    resyncInterval = -1,
-    maxBackoffTime = 2500,
-    disableBc = false
-  } = {}) {
-    super();
-    while (serverUrl[serverUrl.length - 1] === "/") {
-      serverUrl = serverUrl.slice(0, serverUrl.length - 1);
-    }
-    const encodedParams = encodeQueryParams(params2);
-    this.maxBackoffTime = maxBackoffTime;
-    this.bcChannel = serverUrl + "/" + roomname;
-    this.url = serverUrl + "/" + roomname + (encodedParams.length === 0 ? "" : "?" + encodedParams);
-    this.roomname = roomname;
-    this.doc = doc4;
-    this._WS = WebSocketPolyfill;
-    this.awareness = awareness2;
-    this.wsconnected = false;
-    this.wsconnecting = false;
-    this.bcconnected = false;
-    this.disableBc = disableBc;
-    this.wsUnsuccessfulReconnects = 0;
-    this.messageHandlers = messageHandlers.slice();
-    this._synced = false;
-    this.ws = null;
-    this.wsLastMessageReceived = 0;
-    this.shouldConnect = connect;
-    this._resyncInterval = 0;
-    if (resyncInterval > 0) {
-      this._resyncInterval = /** @type {any} */
-      setInterval(() => {
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-          const encoder = createEncoder();
-          writeVarUint(encoder, messageSync);
-          writeSyncStep1(encoder, doc4);
-          this.ws.send(toUint8Array(encoder));
-        }
-      }, resyncInterval);
-    }
-    this._bcSubscriber = (data, origin) => {
-      if (origin !== this) {
-        const encoder = readMessage(this, new Uint8Array(data), false);
-        if (length(encoder) > 1) {
-          publish(this.bcChannel, toUint8Array(encoder), this);
-        }
-      }
-    };
-    this._updateHandler = (update, origin) => {
-      if (origin !== this) {
-        const encoder = createEncoder();
-        writeVarUint(encoder, messageSync);
-        writeUpdate(encoder, update);
-        broadcastMessage(this, toUint8Array(encoder));
-      }
-    };
-    this.doc.on("update", this._updateHandler);
-    this._awarenessUpdateHandler = ({ added, updated, removed }, _origin) => {
-      const changedClients = added.concat(updated).concat(removed);
-      const encoder = createEncoder();
-      writeVarUint(encoder, messageAwareness);
-      writeVarUint8Array(
-        encoder,
-        encodeAwarenessUpdate(awareness2, changedClients)
-      );
-      broadcastMessage(this, toUint8Array(encoder));
-    };
-    this._exitHandler = () => {
-      removeAwarenessStates(
-        this.awareness,
-        [doc4.clientID],
-        "app closed"
-      );
-    };
-    if (isNode && typeof process !== "undefined") {
-      process.on("exit", this._exitHandler);
-    }
-    awareness2.on("update", this._awarenessUpdateHandler);
-    this._checkInterval = /** @type {any} */
-    setInterval(() => {
-      if (this.wsconnected && messageReconnectTimeout < getUnixTime() - this.wsLastMessageReceived) {
-        this.ws.close();
-      }
-    }, messageReconnectTimeout / 10);
-    if (connect) {
-      this.connect();
-    }
-  }
-  /**
-   * @type {boolean}
-   */
-  get synced() {
-    return this._synced;
-  }
-  set synced(state) {
-    if (this._synced !== state) {
-      this._synced = state;
-      this.emit("synced", [state]);
-      this.emit("sync", [state]);
-    }
-  }
-  destroy() {
-    if (this._resyncInterval !== 0) {
-      clearInterval(this._resyncInterval);
-    }
-    clearInterval(this._checkInterval);
-    this.disconnect();
-    if (isNode && typeof process !== "undefined") {
-      process.off("exit", this._exitHandler);
-    }
-    this.awareness.off("update", this._awarenessUpdateHandler);
-    this.doc.off("update", this._updateHandler);
-    super.destroy();
-  }
-  connectBc() {
-    if (this.disableBc) {
-      return;
-    }
-    if (!this.bcconnected) {
-      subscribe(this.bcChannel, this._bcSubscriber);
-      this.bcconnected = true;
-    }
-    const encoderSync = createEncoder();
-    writeVarUint(encoderSync, messageSync);
-    writeSyncStep1(encoderSync, this.doc);
-    publish(this.bcChannel, toUint8Array(encoderSync), this);
-    const encoderState = createEncoder();
-    writeVarUint(encoderState, messageSync);
-    writeSyncStep2(encoderState, this.doc);
-    publish(this.bcChannel, toUint8Array(encoderState), this);
-    const encoderAwarenessQuery = createEncoder();
-    writeVarUint(encoderAwarenessQuery, messageQueryAwareness);
-    publish(
-      this.bcChannel,
-      toUint8Array(encoderAwarenessQuery),
-      this
-    );
-    const encoderAwarenessState = createEncoder();
-    writeVarUint(encoderAwarenessState, messageAwareness);
-    writeVarUint8Array(
-      encoderAwarenessState,
-      encodeAwarenessUpdate(this.awareness, [
-        this.doc.clientID
-      ])
-    );
-    publish(
-      this.bcChannel,
-      toUint8Array(encoderAwarenessState),
-      this
-    );
-  }
-  disconnectBc() {
-    const encoder = createEncoder();
-    writeVarUint(encoder, messageAwareness);
-    writeVarUint8Array(
-      encoder,
-      encodeAwarenessUpdate(this.awareness, [
-        this.doc.clientID
-      ], /* @__PURE__ */ new Map())
-    );
-    broadcastMessage(this, toUint8Array(encoder));
-    if (this.bcconnected) {
-      unsubscribe(this.bcChannel, this._bcSubscriber);
-      this.bcconnected = false;
-    }
-  }
-  disconnect() {
-    this.shouldConnect = false;
-    this.disconnectBc();
-    if (this.ws !== null) {
-      this.ws.close();
-    }
-  }
-  connect() {
-    this.shouldConnect = true;
-    if (!this.wsconnected && this.ws === null) {
-      setupWS(this);
-      this.connectBc();
-    }
-  }
-};
-
 // node_modules/@marijn/find-cluster-break/src/index.js
 var rangeFrom = [];
 var rangeTo = [];
@@ -10925,8 +10105,8 @@ var StateEffectType = class {
   /**
   @internal
   */
-  constructor(map3) {
-    this.map = map3;
+  constructor(map2) {
+    this.map = map2;
   }
   /**
   Create a [state effect](https://codemirror.net/6/docs/ref/#state.StateEffect) instance of this
@@ -11464,9 +10644,9 @@ var EditorState = class _EditorState {
   literal dollar sign.
   */
   phrase(phrase, ...insert2) {
-    for (let map3 of this.facet(_EditorState.phrases))
-      if (Object.prototype.hasOwnProperty.call(map3, phrase)) {
-        phrase = map3[phrase];
+    for (let map2 of this.facet(_EditorState.phrases))
+      if (Object.prototype.hasOwnProperty.call(map2, phrase)) {
+        phrase = map2[phrase];
         break;
       }
     if (insert2.length)
@@ -11496,8 +10676,8 @@ var EditorState = class _EditorState {
   */
   languageDataAt(name2, pos, side = -1) {
     let values = [];
-    for (let provider2 of this.facet(languageData)) {
-      for (let result of provider2(this, pos, side)) {
+    for (let provider of this.facet(languageData)) {
+      for (let result of provider(this, pos, side)) {
         if (Object.prototype.hasOwnProperty.call(result, name2))
           values.push(result[name2]);
       }
@@ -18169,21 +17349,21 @@ var ViewState = class {
   }
   getViewport(bias, scrollTarget) {
     let marginTop = 0.5 - Math.max(-0.5, Math.min(0.5, bias / 1e3 / 2));
-    let map3 = this.heightMap, oracle = this.heightOracle;
+    let map2 = this.heightMap, oracle = this.heightOracle;
     let { visibleTop, visibleBottom } = this;
-    let viewport = new Viewport(map3.lineAt(visibleTop - marginTop * 1e3, QueryType.ByHeight, oracle, 0, 0).from, map3.lineAt(visibleBottom + (1 - marginTop) * 1e3, QueryType.ByHeight, oracle, 0, 0).to);
+    let viewport = new Viewport(map2.lineAt(visibleTop - marginTop * 1e3, QueryType.ByHeight, oracle, 0, 0).from, map2.lineAt(visibleBottom + (1 - marginTop) * 1e3, QueryType.ByHeight, oracle, 0, 0).to);
     if (scrollTarget) {
       let { head } = scrollTarget.range;
       if (head < viewport.from || head > viewport.to) {
         let viewHeight = Math.min(this.editorHeight, this.pixelViewport.bottom - this.pixelViewport.top);
-        let block = map3.lineAt(head, QueryType.ByPos, oracle, 0, 0), topPos;
+        let block = map2.lineAt(head, QueryType.ByPos, oracle, 0, 0), topPos;
         if (scrollTarget.y == "center")
           topPos = (block.top + block.bottom) / 2 - viewHeight / 2;
         else if (scrollTarget.y == "start" || scrollTarget.y == "nearest" && head < viewport.from)
           topPos = block.top;
         else
           topPos = block.bottom - viewHeight;
-        viewport = new Viewport(map3.lineAt(topPos - 1e3 / 2, QueryType.ByHeight, oracle, 0, 0).from, map3.lineAt(topPos + viewHeight + 1e3 / 2, QueryType.ByHeight, oracle, 0, 0).to);
+        viewport = new Viewport(map2.lineAt(topPos - 1e3 / 2, QueryType.ByHeight, oracle, 0, 0).from, map2.lineAt(topPos + viewHeight + 1e3 / 2, QueryType.ByHeight, oracle, 0, 0).to);
       }
     }
     return viewport;
@@ -20449,10 +19629,10 @@ var keymap = /* @__PURE__ */ Facet.define({ enables: handleKeyEvents });
 var Keymaps = /* @__PURE__ */ new WeakMap();
 function getKeymap(state) {
   let bindings = state.facet(keymap);
-  let map3 = Keymaps.get(bindings);
-  if (!map3)
-    Keymaps.set(bindings, map3 = buildKeymap(bindings.reduce((a, b) => a.concat(b), [])));
-  return map3;
+  let map2 = Keymaps.get(bindings);
+  if (!map2)
+    Keymaps.set(bindings, map2 = buildKeymap(bindings.reduce((a, b) => a.concat(b), [])));
+  return map2;
 }
 var storedPrefix = null;
 var PrefixTimeout = 4e3;
@@ -20524,7 +19704,7 @@ function buildKeymap(bindings, platform = currentPlatform) {
   return bound;
 }
 var currentKeyEvent = null;
-function runHandlers(map3, event, view, scope) {
+function runHandlers(map2, event, view, scope) {
   currentKeyEvent = event;
   let name2 = keyName(event);
   let charCode = codePointAt2(name2, 0), isChar = codePointSize2(charCode) == name2.length && name2 != " ";
@@ -20556,7 +19736,7 @@ function runHandlers(map3, event, view, scope) {
     }
     return false;
   };
-  let scopeObj = map3[scope], baseName, shiftName;
+  let scopeObj = map2[scope], baseName, shiftName;
   if (scopeObj) {
     if (runFor(scopeObj[prefix + modifiers(name2, event, !isChar)])) {
       handled = true;
@@ -21569,11 +20749,11 @@ var NodeType = class _NodeType {
   names, separated by spaces, in a single property name to map
   multiple node names to a single value.
   */
-  static match(map3) {
+  static match(map2) {
     let direct = /* @__PURE__ */ Object.create(null);
-    for (let prop in map3)
+    for (let prop in map2)
       for (let name2 of prop.split(" "))
-        direct[name2] = map3[prop];
+        direct[name2] = map2[prop];
     return (node) => {
       for (let groups = node.prop(NodeProp.group), i = -1; i < (groups ? groups.length : 0); i++) {
         let found = direct[i < 0 ? node.name : groups[i]];
@@ -23158,13 +22338,13 @@ var Rule = class {
 };
 Rule.empty = new Rule([], 2, null);
 function tagHighlighter(tags2, options) {
-  let map3 = /* @__PURE__ */ Object.create(null);
+  let map2 = /* @__PURE__ */ Object.create(null);
   for (let style of tags2) {
     if (!Array.isArray(style.tag))
-      map3[style.tag.id] = style.class;
+      map2[style.tag.id] = style.class;
     else
       for (let tag of style.tag)
-        map3[tag.id] = style.class;
+        map2[tag.id] = style.class;
   }
   let { scope, all: all2 = null } = options || {};
   return {
@@ -23172,7 +22352,7 @@ function tagHighlighter(tags2, options) {
       let cls = all2;
       for (let tag of tags3) {
         for (let sub of tag.set) {
-          let tagClass = map3[sub.id];
+          let tagClass = map2[sub.id];
           if (tagClass) {
             cls = cls ? cls + " " + tagClass : tagClass;
             break;
@@ -26355,6 +25535,208 @@ var yCollab = (ytext, awareness2, { undoManager = new UndoManager(ytext) } = {})
   return plugins;
 };
 
+// node_modules/y-protocols/awareness.js
+var outdatedTimeout = 3e4;
+var Awareness = class extends Observable {
+  /**
+   * @param {Y.Doc} doc
+   */
+  constructor(doc4) {
+    super();
+    this.doc = doc4;
+    this.clientID = doc4.clientID;
+    this.states = /* @__PURE__ */ new Map();
+    this.meta = /* @__PURE__ */ new Map();
+    this._checkInterval = /** @type {any} */
+    setInterval(() => {
+      const now = getUnixTime();
+      if (this.getLocalState() !== null && outdatedTimeout / 2 <= now - /** @type {{lastUpdated:number}} */
+      this.meta.get(this.clientID).lastUpdated) {
+        this.setLocalState(this.getLocalState());
+      }
+      const remove2 = [];
+      this.meta.forEach((meta2, clientid) => {
+        if (clientid !== this.clientID && outdatedTimeout <= now - meta2.lastUpdated && this.states.has(clientid)) {
+          remove2.push(clientid);
+        }
+      });
+      if (remove2.length > 0) {
+        removeAwarenessStates(this, remove2, "timeout");
+      }
+    }, floor(outdatedTimeout / 10));
+    doc4.on("destroy", () => {
+      this.destroy();
+    });
+    this.setLocalState({});
+  }
+  destroy() {
+    this.emit("destroy", [this]);
+    this.setLocalState(null);
+    super.destroy();
+    clearInterval(this._checkInterval);
+  }
+  /**
+   * @return {Object<string,any>|null}
+   */
+  getLocalState() {
+    return this.states.get(this.clientID) || null;
+  }
+  /**
+   * @param {Object<string,any>|null} state
+   */
+  setLocalState(state) {
+    const clientID = this.clientID;
+    const currLocalMeta = this.meta.get(clientID);
+    const clock = currLocalMeta === void 0 ? 0 : currLocalMeta.clock + 1;
+    const prevState = this.states.get(clientID);
+    if (state === null) {
+      this.states.delete(clientID);
+    } else {
+      this.states.set(clientID, state);
+    }
+    this.meta.set(clientID, {
+      clock,
+      lastUpdated: getUnixTime()
+    });
+    const added = [];
+    const updated = [];
+    const filteredUpdated = [];
+    const removed = [];
+    if (state === null) {
+      removed.push(clientID);
+    } else if (prevState == null) {
+      if (state != null) {
+        added.push(clientID);
+      }
+    } else {
+      updated.push(clientID);
+      if (!equalityDeep(prevState, state)) {
+        filteredUpdated.push(clientID);
+      }
+    }
+    if (added.length > 0 || filteredUpdated.length > 0 || removed.length > 0) {
+      this.emit("change", [{ added, updated: filteredUpdated, removed }, "local"]);
+    }
+    this.emit("update", [{ added, updated, removed }, "local"]);
+  }
+  /**
+   * @param {string} field
+   * @param {any} value
+   */
+  setLocalStateField(field, value) {
+    const state = this.getLocalState();
+    if (state !== null) {
+      this.setLocalState({
+        ...state,
+        [field]: value
+      });
+    }
+  }
+  /**
+   * @return {Map<number,Object<string,any>>}
+   */
+  getStates() {
+    return this.states;
+  }
+};
+var removeAwarenessStates = (awareness2, clients, origin) => {
+  const removed = [];
+  for (let i = 0; i < clients.length; i++) {
+    const clientID = clients[i];
+    if (awareness2.states.has(clientID)) {
+      awareness2.states.delete(clientID);
+      if (clientID === awareness2.clientID) {
+        const curMeta = (
+          /** @type {MetaClientState} */
+          awareness2.meta.get(clientID)
+        );
+        awareness2.meta.set(clientID, {
+          clock: curMeta.clock + 1,
+          lastUpdated: getUnixTime()
+        });
+      }
+      removed.push(clientID);
+    }
+  }
+  if (removed.length > 0) {
+    awareness2.emit("change", [{ added: [], updated: [], removed }, origin]);
+    awareness2.emit("update", [{ added: [], updated: [], removed }, origin]);
+  }
+};
+var encodeAwarenessUpdate = (awareness2, clients, states = awareness2.states) => {
+  const len = clients.length;
+  const encoder = createEncoder();
+  writeVarUint(encoder, len);
+  for (let i = 0; i < len; i++) {
+    const clientID = clients[i];
+    const state = states.get(clientID) || null;
+    const clock = (
+      /** @type {MetaClientState} */
+      awareness2.meta.get(clientID).clock
+    );
+    writeVarUint(encoder, clientID);
+    writeVarUint(encoder, clock);
+    writeVarString(encoder, JSON.stringify(state));
+  }
+  return toUint8Array(encoder);
+};
+var applyAwarenessUpdate = (awareness2, update, origin) => {
+  const decoder = createDecoder(update);
+  const timestamp = getUnixTime();
+  const added = [];
+  const updated = [];
+  const filteredUpdated = [];
+  const removed = [];
+  const len = readVarUint(decoder);
+  for (let i = 0; i < len; i++) {
+    const clientID = readVarUint(decoder);
+    let clock = readVarUint(decoder);
+    const state = JSON.parse(readVarString(decoder));
+    const clientMeta = awareness2.meta.get(clientID);
+    const prevState = awareness2.states.get(clientID);
+    const currClock = clientMeta === void 0 ? 0 : clientMeta.clock;
+    if (currClock < clock || currClock === clock && state === null && awareness2.states.has(clientID)) {
+      if (state === null) {
+        if (clientID === awareness2.clientID && awareness2.getLocalState() != null) {
+          clock++;
+        } else {
+          awareness2.states.delete(clientID);
+        }
+      } else {
+        awareness2.states.set(clientID, state);
+      }
+      awareness2.meta.set(clientID, {
+        clock,
+        lastUpdated: timestamp
+      });
+      if (clientMeta === void 0 && state !== null) {
+        added.push(clientID);
+      } else if (clientMeta !== void 0 && state === null) {
+        removed.push(clientID);
+      } else if (state !== null) {
+        if (!equalityDeep(state, prevState)) {
+          filteredUpdated.push(clientID);
+        }
+        updated.push(clientID);
+      }
+    }
+  }
+  if (added.length > 0 || filteredUpdated.length > 0 || removed.length > 0) {
+    awareness2.emit("change", [{
+      added,
+      updated: filteredUpdated,
+      removed
+    }, origin]);
+  }
+  if (added.length > 0 || updated.length > 0 || removed.length > 0) {
+    awareness2.emit("update", [{
+      added,
+      updated,
+      removed
+    }, origin]);
+  }
+};
+
 // script.js
 var changelog = document.getElementById("changelog");
 var participantsContainer = document.getElementById("participants");
@@ -26389,10 +25771,124 @@ var noteId = resolveNoteId();
 document.title = `Live Note ${noteId}`;
 log(`Editor iniciado para a nota ${noteId}.`);
 var protocol = window.location.protocol === "https:" ? "wss" : "ws";
-var websocketUrl = `${protocol}://${window.location.host}/notes/ws`;
+var websocketUrl = `${protocol}://${window.location.host}/notes/ws/${encodeURIComponent(noteId)}`;
 var doc3 = new Doc();
-var provider = new WebsocketProvider(websocketUrl, noteId, doc3);
-var awareness = provider.awareness;
+var awareness = new Awareness(doc3);
+var SYNC_MESSAGE_TYPE = 0;
+var AWARENESS_MESSAGE_TYPE = 1;
+var AWARENESS_QUERY_MESSAGE_TYPE = 2;
+var websocket = null;
+var pendingMessages = [];
+var reconnectDelay = 1e3;
+var reconnectHandle = null;
+var queueMessage = (message) => {
+  pendingMessages.push(message);
+};
+var flushPendingMessages = () => {
+  if (!websocket || websocket.readyState !== WebSocket.OPEN) {
+    return;
+  }
+  while (pendingMessages.length) {
+    const message = pendingMessages.shift();
+    websocket.send(message);
+  }
+};
+var scheduleReconnect = () => {
+  if (reconnectHandle !== null) {
+    return;
+  }
+  reconnectHandle = window.setTimeout(() => {
+    reconnectHandle = null;
+    reconnectDelay = Math.min(reconnectDelay * 2, 1e4);
+    log("Tentando reconectar ao servidor de edi\xE7\xE3o...");
+    connectWebsocket();
+  }, reconnectDelay);
+};
+var sendBinaryMessage = (type, payload = new Uint8Array(0)) => {
+  const envelope = new Uint8Array(payload.length + 1);
+  envelope[0] = type;
+  envelope.set(payload, 1);
+  if (websocket && websocket.readyState === WebSocket.OPEN) {
+    websocket.send(envelope);
+    return;
+  }
+  queueMessage(envelope);
+};
+var broadcastLocalAwarenessState = () => {
+  const update = encodeAwarenessUpdate(awareness, [doc3.clientID]);
+  sendBinaryMessage(AWARENESS_MESSAGE_TYPE, update);
+};
+var sendAwarenessUpdate = (clients) => {
+  if (!clients.length) {
+    return;
+  }
+  const update = encodeAwarenessUpdate(awareness, clients);
+  sendBinaryMessage(AWARENESS_MESSAGE_TYPE, update);
+};
+var handleBinaryMessage = (data) => {
+  if (!data.length) {
+    return;
+  }
+  const type = data[0];
+  const payload = data.slice(1);
+  switch (type) {
+    case SYNC_MESSAGE_TYPE:
+      applyUpdate(doc3, payload, "remote");
+      break;
+    case AWARENESS_MESSAGE_TYPE:
+      applyAwarenessUpdate(awareness, payload, "remote");
+      break;
+    case AWARENESS_QUERY_MESSAGE_TYPE:
+      broadcastLocalAwarenessState();
+      break;
+    default:
+      log(`Tipo de mensagem desconhecido recebido: ${type}.`);
+      break;
+  }
+};
+var handleWebsocketMessage = (event) => {
+  if (typeof event.data === "string") {
+    if (event.data === "pong") {
+      log("Servidor respondeu ao ping.");
+      return;
+    }
+    log(`Mensagem de texto ignorada: ${event.data}.`);
+    return;
+  }
+  const data = new Uint8Array(event.data);
+  handleBinaryMessage(data);
+};
+var onWebsocketOpen = () => {
+  reconnectDelay = 1e3;
+  log("WebSocket conectado.");
+  flushPendingMessages();
+  broadcastLocalAwarenessState();
+};
+var handleWebsocketClose = (event) => {
+  log(`Conex\xE3o encerrada: ${event?.code ?? "n/d"}. Tentando reconectar...`);
+  scheduleReconnect();
+};
+var handleWebsocketError = (event) => {
+  log(`Erro de conex\xE3o: ${event?.message ?? "desconhecido"}. Tentando reconectar em background.`);
+  if (websocket) {
+    websocket.close();
+  }
+};
+var connectWebsocket = () => {
+  if (websocket) {
+    websocket.removeEventListener("open", onWebsocketOpen);
+    websocket.removeEventListener("close", handleWebsocketClose);
+    websocket.removeEventListener("message", handleWebsocketMessage);
+    websocket.removeEventListener("error", handleWebsocketError);
+  }
+  websocket = new WebSocket(websocketUrl);
+  websocket.binaryType = "arraybuffer";
+  websocket.addEventListener("open", onWebsocketOpen);
+  websocket.addEventListener("close", handleWebsocketClose);
+  websocket.addEventListener("message", handleWebsocketMessage);
+  websocket.addEventListener("error", handleWebsocketError);
+};
+connectWebsocket();
 var userName = sessionStorage.getItem("live-user") ?? `Usu\xE1rio ${safeRandomUUID().slice(0, 4)}`;
 sessionStorage.setItem("live-user", userName);
 var palette = ["#0d6efd", "#6610f2", "#6f42c1", "#198754", "#20c997", "#ffc107", "#fd7e14", "#dc3545"];
@@ -26447,10 +25943,24 @@ var editorView = new EditorView({
   state: editorState,
   parent: editorParent
 });
+var sendDocumentUpdate = (update, origin) => {
+  if (origin === "remote") {
+    return;
+  }
+  sendBinaryMessage(SYNC_MESSAGE_TYPE, update);
+};
+doc3.on("update", sendDocumentUpdate);
 yContent.observe((event) => {
   if (!event.transaction.local) {
     log("Descri\xE7\xE3o atualizada por outro colaborador (conflito resolvido automaticamente).");
   }
+});
+awareness.on("update", ({ added, updated, removed }, origin) => {
+  if (origin === "remote") {
+    return;
+  }
+  const changed = [...added, ...updated, ...removed];
+  sendAwarenessUpdate(changed);
 });
 var renderParticipants = () => {
   participantsContainer.innerHTML = "";
@@ -26536,24 +26046,9 @@ awareness.on("change", () => {
   renderParticipants();
   evaluateLeadership();
 });
-provider.on("status", ({ status }) => {
-  log(`WebSocket ${status}.`);
-});
-provider.on("sync", (isSynced) => {
-  log(`Documento sincronizado: ${isSynced ? "sim" : "n\xE3o"}.`);
-  if (isSynced) {
-    titleInput.value = yTitle.toString();
-    tagsInput.value = yTags.toString();
-  }
-});
-provider.on("connection-close", (event) => {
-  log(`Conex\xE3o encerrada: ${event?.code ?? "n/d"}. Tentando reconectar...`);
-});
-provider.on("connection-error", (event) => {
-  log(`Erro de conex\xE3o: ${event?.message ?? "desconhecido"}. Tentando reconectar em background.`);
-});
 window.addEventListener("beforeunload", () => {
   stopLeaderSync();
+  awareness.setLocalState(null);
   log("Encerrando sess\xE3o local.");
 });
 renderParticipants();
