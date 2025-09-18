@@ -24,5 +24,6 @@ Acesse http://localhost:8585
 Se quiser recompilar o frontend
 
 ```bash
+npm install
 npm run build
 ```
