@@ -1,0 +1,21 @@
+{
+  "name": "realtime-collaboration-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild script.js --bundle --format=esm --target=es2022 --outfile=../src/main/resources/META-INF/resources/dist.js"
+  },
+  "dependencies": {
+    "@codemirror/commands": "^6.5.0",
+    "@codemirror/language": "^6.10.2",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.28.5",
+    "y-codemirror.next": "^0.3.1",
+    "y-websocket": "^1.5.0",
+    "yjs": "^13.6.15"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.4"
+  }
+}

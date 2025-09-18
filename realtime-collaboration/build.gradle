@@ -1,0 +1,59 @@
+plugins {
+  id 'java'
+  id 'io.quarkus'
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+
+  implementation 'io.quarkus:quarkus-arc'
+  implementation 'io.quarkus:quarkus-rest'
+  implementation 'io.quarkus:quarkus-rest-jackson'
+  implementation 'io.quarkus:quarkus-websockets'
+  implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
+  compileOnly 'org.projectlombok:lombok:1.18.34'
+  annotationProcessor 'org.projectlombok:lombok:1.18.34'
+  annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+  testCompileOnly 'org.projectlombok:lombok:1.18.34'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+  testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+  testImplementation 'io.quarkus:quarkus-junit5'
+  testImplementation 'io.rest-assured:rest-assured'
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+compileJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs << '-parameters'
+}
+
+
+compileTestJava {
+  options.encoding = 'UTF-8'
+}
+
+processResources {
+  def version = java.util.Optional
+    .ofNullable(System.getenv("BUILD_NUMBER"))
+    .orElse(String.valueOf(project.version))
+
+  filesMatching("**/application.properties") {
+    filter([tokens: [version: version], beginToken: '##', endToken: '##'], org.apache.tools.ant.filters.ReplaceTokens)
+  }
+
+  filesMatching("**/resources/**/*.html") {
+    filter([tokens: [version: version], beginToken: '##', endToken: '##'], org.apache.tools.ant.filters.ReplaceTokens)
+  }
+}

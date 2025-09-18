@@ -1,0 +1,21 @@
+body {
+    background-color: #0b172a;
+    color: #f8f9fa;
+    min-height: 100vh;
+}
+.cm-editor {
+    background-color: #0f223d;
+    color: #f8f9fa;
+}
+.cm-scroller {
+    min-height: 300px;
+}
+#editor {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    min-height: 150px;
+}
+pre#changelog {
+    background-color: #08111f;
+}
