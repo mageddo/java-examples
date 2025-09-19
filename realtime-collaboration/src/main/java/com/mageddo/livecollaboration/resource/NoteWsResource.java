@@ -23,6 +23,12 @@ import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * To make it work in a distributed system with multiple instances, you have to:
+ * 1. Replace NOTE_UPDATES by a centralized Database
+ * 2. Every time a new message is needled to be sent to other sessions, a event must be published
+ * to the other instances do the same.
+ */
 @Slf4j
 @Singleton
 @ServerEndpoint("/notes/ws/{noteId}")
