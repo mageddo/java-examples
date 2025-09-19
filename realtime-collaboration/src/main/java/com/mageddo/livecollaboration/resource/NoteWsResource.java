@@ -1,14 +1,12 @@
 package com.mageddo.livecollaboration.resource;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Deque;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import jakarta.inject.Singleton;
@@ -23,110 +21,173 @@ import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * To make it work in a distributed system with multiple instances, you have to:
+ * 1. Replace NOTE_UPDATES by a centralized Database
+ * 2. Every time a new message is needled to be sent to other sessions, a event must be published
+ * to the other instances do the same.
+ */
+
 @Slf4j
 @Singleton
 @ServerEndpoint("/notes/ws/{noteId}")
 public class NoteWsResource {
 
+  /**
+   * Primeiro byte da mensagem indicando "sync/update" (Yjs usa frame type no byte 0).
+   */
+  private static final byte SYNC_MESSAGE_TYPE = 0;
+
+  /**
+   * Retenção máxima de updates por nota (proteção contra crescimento infinito de memória).
+   */
+  private static final int MAX_STORED_UPDATES = 10_000;
+
   private static final Map<String, Set<Session>> NOTE_SESSIONS = new ConcurrentHashMap<>();
-  private static final Map<String, List<byte[]>> NOTE_UPDATES = new ConcurrentHashMap<>();
-  private static final int SYNC_MESSAGE_TYPE = 0;
+
+  private static final Map<String, Deque<byte[]>> NOTE_UPDATES = new ConcurrentHashMap<>();
 
   @OnOpen
-  public void onOpen(
-      final Session session,
-      @PathParam("noteId") final String noteId
-  ) throws IOException {
-    final var sessions = NOTE_SESSIONS.computeIfAbsent(noteId, k -> new CopyOnWriteArraySet<>());
+  public void onOpen(Session session, @PathParam("noteId") String noteId) {
+
+    this.addSession(session, noteId);
+    this.replayUpdatesTo(session, noteId);
+
+    log.info("ws=opened, noteId={}, session={}", noteId, session.getId());
+  }
+
+  private void addSession(Session session, String noteId) {
+    final var sessions = this.findSessions(noteId);
     sessions.add(session);
-
-    final var updates = NOTE_UPDATES.get(noteId);
-    if (updates != null) {
-      for (final var update : updates) {
-        session
-            .getAsyncRemote()
-            .sendBinary(ByteBuffer.wrap(update), this::handleDataSend);
-      }
-    }
-    log.info("Session {} joined note {}", session.getId(), noteId);
   }
 
   @OnMessage
-  public void onBinary(
-      final Session session,
-      final byte[] message,
-      @PathParam("noteId") final String noteId
-  ) {
+  public void onBinary(Session session, byte[] message, @PathParam("noteId") String noteId) {
     if (this.isSyncMessage(message)) {
-      NOTE_UPDATES
-          .computeIfAbsent(noteId, k -> Collections.synchronizedList(new ArrayList<>()))
-          .add(message.clone());
-      log.debug("status=newMessage, session={}", session.getId());
+      this.saveMessage(noteId, message);
+      log.debug("ws=receivedSync, noteId={}, session={}", noteId, session.getId());
+    } else {
+      log.debug("ws=receivedBinaryNonSync, noteId={}, session={}, len={}",
+          noteId, session.getId(), message != null ? message.length : 0);
     }
-
-    final var sessions = NOTE_SESSIONS.getOrDefault(noteId, Set.of());
-    for (final var current : sessions) {
-      if (!Objects.equals(current.getId(), session.getId()) && current.isOpen()) {
-        log.debug("status=sendToClient, session={}", current.getId());
-        current
-            .getAsyncRemote()
-            .sendBinary(ByteBuffer.wrap(message), this::handleDataSend);
-      }
-    }
-  }
-
-  private void handleDataSend(SendResult sendResult) {
-    if (!sendResult.isOK()) {
-      final var ex = sendResult.getException();
-      log.warn("status=failedToSendData, msg={}", ex.getMessage(), ex);
-    }
+    this.broadcastToOthers(noteId, session.getId(), message);
   }
 
   @OnMessage
-  public void onText(
-      final Session session,
-      final String text,
-      @PathParam("noteId") final String noteId
-  ) throws IOException {
-    if ("ping".equalsIgnoreCase(text)) {
-      session
-          .getAsyncRemote()
-          .sendText("pong", this::handleDataSend);
-    } else {
-      log.debug("Ignoring text message {} for note {}", text, noteId);
+  public void onText(Session session, String text, @PathParam("noteId") String noteId) {
+    if (text == null) {
+      return;
     }
+
+    if ("ping".equalsIgnoreCase(text)) {
+      this.sendTextAsync(session, "pong");
+      return;
+    }
+    log.debug("ws=ignoredText, noteId={}, session={}, text='{}'", noteId, session.getId(), text);
   }
 
   @OnClose
-  public void onClose(
-      final Session session,
-      @PathParam("noteId") final String noteId,
-      final CloseReason reason
-  ) {
-    final var sessions = NOTE_SESSIONS.get(noteId);
+  public void onClose(Session session, @PathParam("noteId") String noteId, CloseReason reason) {
+    final var sessions = this.findSessions(noteId);
     if (sessions != null) {
       sessions.remove(session);
       if (sessions.isEmpty()) {
-        log.info("Closing last session for note {}", noteId);
+        NOTE_UPDATES.remove(noteId);
+        log.info("ws=lastSessionClosed, noteId={}", noteId);
       }
     }
-    log.info("Session {} closed for note {}. Reason: {}", session.getId(), noteId, reason);
+    log.info("ws=closed, noteId={}, session={}, reason={}", noteId, session.getId(), reason);
   }
 
   @OnError
-  public void onError(
-      final Session session,
-      final Throwable e,
-      @PathParam("noteId") final String noteId
-  ) {
-    log.error("WebSocket error on note {} for session {}", noteId, session != null ?
-        session.getId() : "n/a", e);
+  public void onError(Session session, Throwable e, @PathParam("noteId") String noteId) {
+    final var sessionId = session != null ? session.getId() : "n/a";
+    log.error("ws=error, noteId={}, session={}, msg={}", noteId, sessionId, e.getMessage(), e);
   }
 
-  private boolean isSyncMessage(final byte[] message) {
+  private Set<Session> findSessions(String noteId) {
+    NOTE_SESSIONS.computeIfAbsent(noteId, __ -> new CopyOnWriteArraySet<>());
+    return NOTE_SESSIONS.get(noteId);
+  }
+
+  private Deque<byte[]> findUpdates(String noteId) {
+    return NOTE_UPDATES.computeIfAbsent(noteId, __ -> new ConcurrentLinkedDeque<>());
+  }
+
+  private void replayUpdatesTo(Session session, String noteId) {
+    final var updates = NOTE_UPDATES.get(noteId);
+    if (updates == null || updates.isEmpty()) {
+      return;
+    }
+
+    for (final var update : updates) {
+      this.sendBinaryAsync(session, update);
+    }
+  }
+
+  private void saveMessage(String noteId, byte[] message) {
+    if (message == null || message.length == 0) {
+      return;
+    }
+
+    final var deque = this.findUpdates(noteId);
+    deque.addLast(message.clone());
+
+    while (deque.size() > MAX_STORED_UPDATES) {
+      deque.pollFirst();
+    }
+  }
+
+  private void broadcastToOthers(String noteId, String senderSessionId, byte[] message) {
+    final var sessions = this.findSessions(noteId);
+    if (sessions.isEmpty()) {
+      return;
+    }
+
+    for (final var current : sessions) {
+      if (!current.isOpen()) {
+        continue;
+      }
+      if (Objects.equals(current.getId(), senderSessionId)) {
+        continue;
+      }
+
+      this.sendBinaryAsync(current, message);
+      log.debug("ws=sentToClient, noteId={}, toSession={}", noteId, current.getId());
+    }
+  }
+
+  private boolean isSyncMessage(byte[] message) {
     if (message == null || message.length == 0) {
       return false;
     }
-    return (message[0] & 0xFF) == SYNC_MESSAGE_TYPE;
+    // compara como unsigned para evitar problemas de sinal
+    return Byte.toUnsignedInt(message[0]) == SYNC_MESSAGE_TYPE;
+  }
+
+  private void sendBinaryAsync(Session session, byte[] payload) {
+    if (session == null || payload == null) {
+      return;
+    }
+    session
+        .getAsyncRemote()
+        .sendBinary(ByteBuffer.wrap(payload), this::logSendOutcome);
+  }
+
+  private void sendTextAsync(Session session, String text) {
+    if (session == null || text == null) {
+      return;
+    }
+    session
+        .getAsyncRemote()
+        .sendText(text, this::logSendOutcome);
+  }
+
+  private void logSendOutcome(SendResult result) {
+    if (result.isOK()) {
+      return;
+    }
+    final var ex = result.getException();
+    log.warn("ws=sendFailed, msg={}", ex != null ? ex.getMessage() : "unknown", ex);
   }
 }
