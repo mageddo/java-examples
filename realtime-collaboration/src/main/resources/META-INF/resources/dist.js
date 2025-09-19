@@ -26356,174 +26356,189 @@ var yCollab = (ytext, awareness2, { undoManager = new UndoManager(ytext) } = {})
 };
 
 // script.js
-var changelog = document.getElementById("changelog");
-var participantsContainer = document.getElementById("participants");
-var titleInput = document.getElementById("note-title");
-var tagsInput = document.getElementById("note-tags");
+function mustGet(id2) {
+  const el = document.getElementById(id2);
+  if (!el) {
+    throw new Error(`Elemento "${id2}" n\xE3o encontrado no DOM`);
+  }
+  return el;
+}
+var changelog = mustGet("changelog");
+var participantsEl = mustGet("participants");
+var titleInput = mustGet("note-title");
+var tagsInput = mustGet("note-tags");
+var editorParent = mustGet("editor");
+var WS_PATH = "/notes/ws";
+var SNAPSHOT_MS = 18e4;
+var AWARENESS_FIELD = "user";
+var USER_COLOR_PALETTE = [
+  "#0d6efd",
+  "#6610f2",
+  "#6f42c1",
+  "#198754",
+  "#20c997",
+  "#ffc107",
+  "#fd7e14",
+  "#dc3545"
+];
 function safeRandomUUID() {
-  if (crypto?.randomUUID) {
+  if (globalThis.crypto?.randomUUID) {
     return crypto.randomUUID();
   }
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
     const r = Math.random() * 16 | 0;
     const v = c === "x" ? r : r & 3 | 8;
     return v.toString(16);
   });
 }
-var log = (message) => {
-  const timestamp = (/* @__PURE__ */ new Date()).toLocaleTimeString();
-  changelog.textContent += `[${timestamp}] ${message}
+function log(message) {
+  const ts = (/* @__PURE__ */ new Date()).toLocaleTimeString();
+  changelog.textContent += `[${ts}] ${message}
 `;
   changelog.scrollTop = changelog.scrollHeight;
-};
-var resolveNoteId = () => {
-  const raw = window.location.hash.replace("#", "").trim();
-  if (raw.length > 0) {
-    return raw;
-  }
+}
+function resolveNoteId() {
+  const raw = location.hash.replace("#", "").trim();
+  if (raw) return raw;
   const generated = safeRandomUUID();
-  window.history.replaceState(null, "", `${window.location.pathname}#${generated}`);
+  history.replaceState(null, "", `${location.pathname}#${generated}`);
   return generated;
-};
+}
+function websocketBaseUrl() {
+  const scheme = location.protocol === "https:" ? "wss" : "ws";
+  return `${scheme}://${location.host}${WS_PATH}`;
+}
+function getOrSetSession(key, compute) {
+  const existing = sessionStorage.getItem(key);
+  if (existing != null) return existing;
+  const val = compute();
+  sessionStorage.setItem(key, val);
+  return val;
+}
+function parseTags(raw) {
+  return raw.split(",").map((t2) => t2.trim()).filter(Boolean);
+}
+function bindYTextToInput(yText, inputEl, label, doc4) {
+  const current = yText.toString();
+  if (inputEl.value !== current) inputEl.value = current;
+  yText.observe((event) => {
+    if (event.transaction?.local) return;
+    const value = yText.toString();
+    if (inputEl.value !== value) {
+      inputEl.value = value;
+      log(`${label} atualizado por outro colaborador (merge autom\xE1tico).`);
+    }
+  });
+  inputEl.addEventListener("input", () => {
+    const newValue = inputEl.value;
+    if (newValue === yText.toString()) return;
+    doc4.transact(() => {
+      yText.delete(0, yText.length);
+      yText.insert(0, newValue);
+    }, label);
+  });
+}
 var noteId = resolveNoteId();
 document.title = `Live Note ${noteId}`;
 log(`Editor iniciado para a nota ${noteId}.`);
-var protocol = window.location.protocol === "https:" ? "wss" : "ws";
-var websocketUrl = `${protocol}://${window.location.host}/notes/ws`;
 var doc3 = new Doc();
-var provider = new WebsocketProvider(websocketUrl, noteId, doc3);
+var provider = new WebsocketProvider(websocketBaseUrl(), noteId, doc3);
 var awareness = provider.awareness;
-var userName = sessionStorage.getItem("live-user") ?? `Usu\xE1rio ${safeRandomUUID().slice(0, 4)}`;
-sessionStorage.setItem("live-user", userName);
-var palette = ["#0d6efd", "#6610f2", "#6f42c1", "#198754", "#20c997", "#ffc107", "#fd7e14", "#dc3545"];
-var userColor = sessionStorage.getItem("live-user-color") ?? palette[Math.floor(Math.random() * palette.length)];
-sessionStorage.setItem("live-user-color", userColor);
-awareness.setLocalStateField("user", { name: userName, color: userColor });
+var userName = getOrSetSession("live-user", () => `Usu\xE1rio ${safeRandomUUID().slice(0, 4)}`);
+var userColor = getOrSetSession(
+  "live-user-color",
+  () => USER_COLOR_PALETTE[Math.floor(Math.random() * USER_COLOR_PALETTE.length)]
+);
+awareness.setLocalStateField(AWARENESS_FIELD, { name: userName, color: userColor });
 var yTitle = doc3.getText("title");
 var yTags = doc3.getText("tags");
 var yContent = doc3.getText("content");
-var applyTextToInput = (yText, input, description) => {
-  const currentValue = yText.toString();
-  if (input.value !== currentValue) {
-    input.value = currentValue;
-  }
-  yText.observe((event) => {
-    if (!event.transaction.local) {
-      const value = yText.toString();
-      if (input.value !== value) {
-        input.value = value;
-      }
-      log(`${description} atualizado por outro colaborador (conflito resolvido automaticamente).`);
-    }
-  });
-  input.addEventListener("input", () => {
-    const newValue = input.value;
-    if (newValue === yText.toString()) {
-      return;
-    }
-    doc3.transact(() => {
-      yText.delete(0, yText.length);
-      yText.insert(0, newValue);
-    }, description);
-  });
-};
-applyTextToInput(yTitle, titleInput, "T\xEDtulo");
-applyTextToInput(yTags, tagsInput, "Tags");
-var editorParent = document.getElementById("editor");
-var editorExtensions = [
-  lineNumbers(),
-  highlightActiveLine(),
-  drawSelection(),
-  history(),
-  syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-  keymap.of([...defaultKeymap, ...historyKeymap]),
-  yCollab(yContent, awareness, { awarenessField: "user" })
-];
+bindYTextToInput(yTitle, titleInput, "T\xEDtulo", doc3);
+bindYTextToInput(yTags, tagsInput, "Tags", doc3);
 var editorState = EditorState.create({
   doc: yContent.toString(),
-  extensions: editorExtensions
+  extensions: [
+    lineNumbers(),
+    highlightActiveLine(),
+    drawSelection(),
+    history(),
+    syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+    keymap.of([...defaultKeymap, ...historyKeymap]),
+    yCollab(yContent, awareness, { awarenessField: AWARENESS_FIELD })
+  ]
 });
-var editorView = new EditorView({
-  state: editorState,
-  parent: editorParent
-});
-yContent.observe((event) => {
-  if (!event.transaction.local) {
-    log("Descri\xE7\xE3o atualizada por outro colaborador (conflito resolvido automaticamente).");
+var editorView = new EditorView({ state: editorState, parent: editorParent });
+yContent.observe((evt) => {
+  if (!evt.transaction?.local) {
+    log("Descri\xE7\xE3o atualizada por outro colaborador (merge autom\xE1tico).");
   }
 });
-var renderParticipants = () => {
-  participantsContainer.innerHTML = "";
+function renderParticipants() {
+  participantsEl.innerHTML = "";
   const states = Array.from(awareness.getStates().values());
-  if (!states.length) {
+  if (states.length === 0) {
     const span = document.createElement("span");
     span.className = "text-secondary";
     span.textContent = "Nenhum participante ativo.";
-    participantsContainer.appendChild(span);
+    participantsEl.appendChild(span);
     return;
   }
-  states.forEach((state) => {
-    const user = state.user;
-    if (!user) {
-      return;
-    }
+  for (const state of states) {
+    const user = state[AWARENESS_FIELD];
+    if (!user) continue;
     const badge = document.createElement("span");
     badge.className = "badge rounded-pill";
     badge.style.backgroundColor = user.color;
-    badge.textContent = `${user.name}${state === awareness.getLocalState() ? " (Voc\xEA)" : ""}`;
-    participantsContainer.appendChild(badge);
-  });
-};
-var parseTags = (raw) => raw.split(",").map((tag) => tag.trim()).filter((tag) => tag.length > 0);
-var buildPayload = () => ({
-  id: noteId,
-  title: yTitle.toString(),
-  content: yContent.toString(),
-  tags: parseTags(yTags.toString())
-});
-var leaderClientId = null;
-var syncIntervalId = null;
-var stopLeaderSync = () => {
-  if (syncIntervalId !== null) {
-    clearInterval(syncIntervalId);
-    syncIntervalId = null;
+    const isMe = state === awareness.getLocalState();
+    badge.textContent = `${user.name}${isMe ? " (Voc\xEA)" : ""}`;
+    participantsEl.appendChild(badge);
   }
-};
-var sendSnapshot = async () => {
-  const payload = buildPayload();
+}
+var leaderClientId = null;
+var snapshotTimer = null;
+function buildSnapshotPayload() {
+  return {
+    id: noteId,
+    title: yTitle.toString(),
+    content: yContent.toString(),
+    tags: parseTags(yTags.toString())
+  };
+}
+async function sendSnapshot() {
+  const payload = buildSnapshotPayload();
   try {
-    const response = await fetch(`/notes/${encodeURIComponent(noteId)}`, {
+    const res = await fetch(`/notes/${encodeURIComponent(noteId)}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     log("Snapshot sincronizado com o servidor.");
-  } catch (error) {
-    log(`Falha ao sincronizar snapshot: ${error.message}`);
+  } catch (err) {
+    log(`Falha ao sincronizar snapshot: ${/** @type {Error} */
+    err.message}`);
   }
-};
-var startLeaderSync = () => {
-  if (syncIntervalId !== null) {
-    return;
-  }
+}
+function startLeaderSync() {
+  if (snapshotTimer != null) return;
   log("Voc\xEA \xE9 o l\xEDder da edi\xE7\xE3o. Enviando snapshots a cada 3 minutos.");
-  syncIntervalId = setInterval(sendSnapshot, 18e4);
+  snapshotTimer = setInterval(sendSnapshot, SNAPSHOT_MS);
   void sendSnapshot();
-};
-var evaluateLeadership = () => {
-  const clients = Array.from(awareness.getStates().keys());
-  if (!clients.length) {
+}
+function stopLeaderSync() {
+  if (snapshotTimer == null) return;
+  clearInterval(snapshotTimer);
+  snapshotTimer = null;
+}
+function evaluateLeadership() {
+  const clientIds = Array.from(awareness.getStates().keys());
+  if (clientIds.length === 0) {
     stopLeaderSync();
     leaderClientId = null;
     return;
   }
-  const nextLeader = Math.min(...clients);
-  if (leaderClientId === nextLeader) {
-    return;
-  }
+  const nextLeader = Math.min(...clientIds);
+  if (leaderClientId === nextLeader) return;
   leaderClientId = nextLeader;
   if (leaderClientId === doc3.clientID) {
     startLeaderSync();
@@ -26531,7 +26546,7 @@ var evaluateLeadership = () => {
     stopLeaderSync();
     log("Outro colaborador assumiu a lideran\xE7a da edi\xE7\xE3o.");
   }
-};
+}
 awareness.on("change", () => {
   renderParticipants();
   evaluateLeadership();
@@ -26552,7 +26567,7 @@ provider.on("connection-close", (event) => {
 provider.on("connection-error", (event) => {
   log(`Erro de conex\xE3o: ${event?.message ?? "desconhecido"}. Tentando reconectar em background.`);
 });
-window.addEventListener("beforeunload", () => {
+addEventListener("beforeunload", () => {
   stopLeaderSync();
   log("Encerrando sess\xE3o local.");
 });
