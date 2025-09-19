@@ -26401,7 +26401,11 @@ function resolveNoteId() {
   const raw = location.hash.replace("#", "").trim();
   if (raw) return raw;
   const generated = safeRandomUUID();
-  history.replaceState(null, "", `${location.pathname}#${generated}`);
+  if (typeof window !== "undefined" && window.history?.replaceState) {
+    window.history.replaceState(null, "", `${location.pathname}#${generated}`);
+  } else {
+    location.hash = generated;
+  }
   return generated;
 }
 function websocketBaseUrl() {
