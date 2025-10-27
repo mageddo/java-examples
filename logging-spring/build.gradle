@@ -1,16 +1,30 @@
 plugins {
+  id 'org.springframework.boot' version '2.7.18'
+  id 'io.spring.dependency-management' version '1.0.15.RELEASE'
   id 'java'
+
 }
+
+sourceCompatibility = JavaVersion.VERSION_17
+
 
 repositories {
   mavenCentral()
 }
 
 dependencies {
-  implementation 'ch.qos.logback:logback-classic:1.5.20'
+
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
   compileOnly("org.projectlombok:lombok:1.18.42")
   annotationProcessor("org.projectlombok:lombok:1.18.42")
 
   testCompileOnly("org.projectlombok:lombok:1.18.42")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
 }
