@@ -4,7 +4,7 @@
 
 ```bash
 ./gradlew bootRun --args='--spring.profiles.active=dev'
-2025-10-27 19:18:49.218 app=RECEIVABLE-UNIT-LISTENER - INFO 50849 --- [           main] com.pagbank.logging.App                                      : M=afterPropertiesSet action=helloWorld
+2025-10-27 19:18:49.218 app=xpto - INFO 50849 --- [           main] com.pagbank.logging.App                                      : M=afterPropertiesSet action=helloWorld
 ```
 
 ### Prod
