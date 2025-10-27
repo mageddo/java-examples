@@ -1,0 +1,19 @@
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <property
+      name="qa_prod"
+      value="%d{yyyy-MM-dd HH:mm:ss.SSS} l=%3.-3level t=%0.15thread l=%-0.50logger{50} m=%method %mdc %msg%n"
+    />
+    <property
+      name="dev"
+      value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} app=RECEIVABLE-UNIT-LISTENER %clr(\${LOG_LEVEL_PATTERN:-%5p}) %clr(\${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-60.60logger{60}){cyan} %clr(:){faint} M=%M %m%n}"
+    />
+    <encoder>
+      <pattern>${dev}</pattern>
+    </encoder>
+  </appender>
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+
