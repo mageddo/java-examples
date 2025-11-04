@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import io.confluent.parallelconsumer.ParallelConsumerOptions;
 import io.confluent.parallelconsumer.ParallelConsumerOptions.ProcessingOrder;
 import io.confluent.parallelconsumer.ParallelStreamProcessor;
+import io.confluent.parallelconsumer.RecordContext;
 
 public class Main {
 
@@ -33,7 +34,7 @@ public class Main {
     parallelConsumer.poll(context -> {
 
       final var records = context.stream()
-          .map(it -> it.getConsumerRecord())
+          .map(RecordContext::getConsumerRecord)
           .toList();
 
 //      final var records = context.streamConsumerRecords().toList();
@@ -52,9 +53,6 @@ public class Main {
           map.keySet()
       ));
     });
-    Thread
-        .currentThread()
-        .sleep(10000);
   }
 
   private static ParallelConsumerOptions<String, byte[]> createOptions(
