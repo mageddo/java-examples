@@ -1,0 +1,16 @@
+plugins {
+  id "java"
+}
+repositories {
+  mavenCentral()
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+  implementation 'io.confluent.parallelconsumer:parallel-consumer-core:0.5.3.3'
+  implementation("ch.qos.logback:logback-classic:1.5.20")
+}
