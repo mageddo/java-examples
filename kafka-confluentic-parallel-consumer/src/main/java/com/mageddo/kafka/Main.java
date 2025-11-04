@@ -1,5 +1,6 @@
 package com.mageddo.kafka;
 
+import java.security.SecureRandom;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +31,21 @@ public class Main {
     );
     parallelConsumer.subscribe(List.of("testing-topic"));
     parallelConsumer.poll(context -> {
-      final var records = context.streamConsumerRecords().toList();
+
+      final var records = context.stream()
+          .map(it -> it.getConsumerRecord())
+          .toList();
+
+//      final var records = context.streamConsumerRecords().toList();
       final var stream = records.stream();
       final var map = stream.collect(Collectors.groupingBy(
           ConsumerRecord::key, LinkedHashMap::new, Collectors.toList())
       );
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
       log.info(String.format(
           "status=batchProcessed, size=%d, keys=%s",
           records.size(),
@@ -54,15 +65,16 @@ public class Main {
         .consumer(createConsumer())
         .producer(producer)
         .ordering(ProcessingOrder.KEY)
-        .maxConcurrency(2)
+        .maxConcurrency(5)
         .batchSize(5)
         .build();
   }
 
   private static void produceRandomMessages(KafkaProducer<String, byte[]> producer) {
-    for (int i = 0; i < 100; i++) {
+    final var r = new SecureRandom();
+    for (int i = 0; i < 10000; i++) {
       producer.send(new ProducerRecord<>(
-          "testing-topic", String.valueOf(i % 2), (i + "").getBytes()
+          "testing-topic", String.valueOf(r.nextInt(3)), (i + "").getBytes()
       ));
     }
     producer.flush();
