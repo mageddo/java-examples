@@ -223,10 +223,14 @@ func createPublication(conn *pgconn.PgConn, slotName string, tableName string) {
 	//if err != nil {
 	//  log.Fatalln("drop publication if exists error", err)
 	//}
-	result = conn.Exec(context.Background(), fmt.Sprintf("CREATE PUBLICATION %s FOR TABLE %s;", slotName, tableName))
+	sql := `
+CREATE PUBLICATION %s FOR TABLE %s WITH (publish_via_partition_root = true); 
+`
+	result = conn.Exec(context.Background(), fmt.Sprintf(sql, slotName, tableName))
 	_, err = result.ReadAll()
 	if err != nil {
 		if strings.Contains(err.Error(), "already exists") {
+			log.Printf("publicationAlreadyExists, msg=%s", err.Error())
 			return
 		}
 		log.Fatalln("create publication error", err)
