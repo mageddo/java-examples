@@ -19,24 +19,21 @@ import (
 https://github.com/jackc/pglogrepl/blob/a9884f6bd75abf16ec97c50ca0acf4766319f4e8/example/pglogrepl_demo/main.go
 */
 func main() {
+
 	const outputPlugin = "pgoutput"
 	const slotName = "pglogrepl_demo"
 	const tableName = "TTO_RECORD"
-	conn, err := pgx.Connect(context.Background(), os.Getenv("PGLOGREPL_DEMO_CONN_STRING"))
-
-	if err != nil {
-		log.Fatalln("failed to connect to PostgreSQL server:", err)
-	}
+	//PGLOGREPL_DEMO_CONN_STRING=postgres://kconnect:kconect@127.0.0.1:5436/db?replication=database
+	conn := openReplicationConn().PgConn()
 	defer conn.Close(context.Background())
 
-	createPublication(conn.PgConn(), slotName, tableName)
+	createPublication(conn, slotName, tableName)
 	lsn := createReplicationSlot(conn, slotName, outputPlugin)
-	listenEvents(conn.PgConn(), lsn)
+	listenEvents(conn, lsn)
 }
 
 func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 
-	var err error
 	typeMap := pgtype.NewMap()
 	relations := map[uint32]*pglogrepl.RelationMessageV2{}
 	standbyMessageTimeout := time.Second * 10
@@ -48,7 +45,7 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 
 	for {
 		if time.Now().After(nextStandbyMessageDeadline) {
-			err = pglogrepl.SendStandbyStatusUpdate(context.Background(), conn, pglogrepl.StandbyStatusUpdate{
+			err := pglogrepl.SendStandbyStatusUpdate(context.Background(), conn, pglogrepl.StandbyStatusUpdate{
 				WALWritePosition: lsn,
 				WALFlushPosition: lsn,
 				WALApplyPosition: lsn,
@@ -56,7 +53,7 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 			if err != nil {
 				log.Fatalln("SendStandbyStatusUpdate failed:", err)
 			}
-			log.Printf("Sent Standby status message at %s\n", lsn.String())
+			log.Printf("status=sentStandby, lsn=%s\n", lsn.String())
 			nextStandbyMessageDeadline = time.Now().Add(standbyMessageTimeout)
 		}
 
@@ -87,8 +84,8 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 				log.Fatalln("ParsePrimaryKeepaliveMessage failed:", err)
 			}
 			log.Printf(
-				"Primary Keepalive Message: ServerWALEnd=%s, ServerTime=%s, ReplyRequested=%s",
-				pkm.ServerWALEnd, pkm.ServerTime, pkm.ReplyRequested, lsn,
+				"status=PrimaryKeepaliveMessage lsn=%s, ServerWALEnd=%s, ServerTime=%s, ReplyRequested=%t",
+				lsn, pkm.ServerWALEnd, pkm.ServerTime, pkm.ReplyRequested,
 			)
 			if pkm.ReplyRequested {
 				nextStandbyMessageDeadline = time.Time{}
@@ -99,8 +96,10 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 			if err != nil {
 				log.Fatalln("ParseXLogData failed:", err)
 			}
-
-			log.Printf("XLogData => WALStart %s ServerWALEnd %s ServerTime %s WALData:\n", xld.WALStart, xld.ServerWALEnd, xld.ServerTime)
+			log.Printf(
+				"type=XLogData, WALStart=%s ServerWALEnd=%s ServerTime=%s\n",
+				xld.WALStart, xld.ServerWALEnd, xld.ServerTime,
+			)
 			processV2(xld.WALData, relations, typeMap, &inStream, func(commitLSN pglogrepl.LSN) {
 				lsn = commitLSN
 			})
@@ -109,7 +108,27 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 	}
 }
 
-func createReplicationSlot(conn *pgx.Conn, slotName string, outputPlugin string) pglogrepl.LSN {
+func openRegularConn() *pgx.Conn {
+	return connect(os.Getenv("PGLOGREPL_DEMO_CONN_STRING"))
+}
+
+func openReplicationConn() *pgx.Conn {
+	return connect(buildReplConnUrl())
+}
+
+func connect(connUrl string) *pgx.Conn {
+	conn, err := pgx.Connect(context.Background(), connUrl)
+	if err != nil {
+		log.Fatalln("failed to connect to PostgreSQL server:", err)
+	}
+	return conn
+}
+
+func buildReplConnUrl() string {
+	return fmt.Sprintf("%s?replication=database", os.Getenv("PGLOGREPL_DEMO_CONN_STRING"))
+}
+
+func createReplicationSlot(conn *pgconn.PgConn, slotName string, outputPlugin string) pglogrepl.LSN {
 	//sysident, err := pglogrepl.IdentifySystem(context.Background(), conn)
 	//if err != nil {
 	//	log.Fatalln("IdentifySystem failed:", err)
@@ -117,7 +136,7 @@ func createReplicationSlot(conn *pgx.Conn, slotName string, outputPlugin string)
 	//log.Println("SystemID:", sysident.SystemID, "Timeline:", sysident.Timeline, "XLogPos:", sysident.XLogPos, "DBName:", sysident.DBName)
 
 	_, err := pglogrepl.CreateReplicationSlot(
-		context.Background(), conn.PgConn(), slotName, outputPlugin, pglogrepl.CreateReplicationSlotOptions{Temporary: false},
+		context.Background(), conn, slotName, outputPlugin, pglogrepl.CreateReplicationSlotOptions{Temporary: false},
 	)
 	if err != nil {
 		if !strings.Contains(err.Error(), "already exists") {
@@ -133,11 +152,11 @@ func createReplicationSlot(conn *pgx.Conn, slotName string, outputPlugin string)
 		"streaming 'true'",
 	}
 
-	pos := findPos(conn, slotName)
+	pos := findPos(slotName)
 
 	err = pglogrepl.StartReplication(
 		context.Background(),
-		conn.PgConn(), slotName, pos, pglogrepl.StartReplicationOptions{PluginArgs: pluginArguments},
+		conn, slotName, pos, pglogrepl.StartReplicationOptions{PluginArgs: pluginArguments},
 	)
 	if err != nil {
 		log.Fatalln("StartReplication failed:", err)
@@ -146,7 +165,10 @@ func createReplicationSlot(conn *pgx.Conn, slotName string, outputPlugin string)
 	return pos
 }
 
-func findPos(conn *pgx.Conn, slotName string) pglogrepl.LSN {
+func findPos(slotName string) pglogrepl.LSN {
+	conn := openRegularConn()
+	defer conn.Close(context.Background())
+
 	var confirmedFlushLSNStr string
 	err := conn.QueryRow(
 		context.Background(),
@@ -154,7 +176,7 @@ func findPos(conn *pgx.Conn, slotName string) pglogrepl.LSN {
 		slotName,
 	).Scan(&confirmedFlushLSNStr)
 	if err != nil {
-		log.Fatalf("query failed: %v", err)
+		log.Fatalf("could not find pos: %v", err)
 	}
 
 	confirmedLSN, err := pglogrepl.ParseLSN(confirmedFlushLSNStr)
@@ -180,7 +202,7 @@ func createPublication(conn *pgconn.PgConn, slotName string, tableName string) {
 		}
 		log.Fatalln("create publication error", err)
 	}
-	log.Printf("create publication %s\n", slotName)
+	log.Printf("create publication %s", slotName)
 }
 
 func processV2(
@@ -191,7 +213,8 @@ func processV2(
 	if err != nil {
 		log.Fatalf("Parse logical replication message: %s", err)
 	}
-	log.Printf("Receive a logical replication message: %s", logicalMsg.Type())
+
+	log.Printf("status=LogicalMsgReceived, type=%s", logicalMsg.Type())
 
 	switch logicalMsg := logicalMsg.(type) {
 
