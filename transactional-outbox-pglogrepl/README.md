@@ -3,7 +3,7 @@ docker-compose up
 ```
 
 ```bash
-curl -i -X POST http://localhost:8083/connectors \
-  -H "Content-Type: application/json" \
-  --data @src/main/docker/kconnect/connector-tto-record.json
+export CONN_STRING="postgres://kconnect:kconect@127.0.0.1:5436/db?sslmode=disable"
+export RELATION_NAME="public.OUTBOX_RECORD"
+go run main.go
 ```
