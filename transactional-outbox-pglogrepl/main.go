@@ -247,9 +247,6 @@ func processV2(
 
 	case *pglogrepl.CommitMessage:
 		onCommit(logicalMsg.CommitLSN)
-
-	default:
-		log.Printf("event: %T", logicalMsg)
 	}
 }
 
