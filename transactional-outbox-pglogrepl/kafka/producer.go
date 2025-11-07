@@ -45,35 +45,13 @@ func (p *Producer) Close() {
 
 // Send publica 1 mensagem com key string, value []byte e headers.
 // headers é opcional (pode ser nil). Usa delivery report com timeout.
-func (p *Producer) Send(topic string, key string, value []byte, headers map[string][]byte) error {
+func (p *Producer) Send(msg *kafka.Message) error {
 	if p == nil || p.kp == nil {
 		return errors.New("producer not initialized")
 	}
 
-	// Converte headers map -> []kafka.Header
-	var hs []kafka.Header
-	if len(headers) > 0 {
-		hs = make([]kafka.Header, 0, len(headers))
-		for k, v := range headers {
-			hs = append(hs, kafka.Header{Key: k, Value: v})
-		}
-	}
-
 	// Canal de delivery para essa mensagem
 	dlv := make(chan kafka.Event, 1)
-
-	msg := &kafka.Message{
-		TopicPartition: kafka.TopicPartition{
-			Topic:     &topic,
-			Partition: kafka.PartitionAny,
-		},
-		Key:     []byte(key),
-		Value:   value,
-		Headers: hs,
-		// Timestamp opcional; se não setar, broker define
-		Timestamp:     time.Now(),
-		TimestampType: kafka.TimestampCreateTime,
-	}
 
 	if err := p.kp.Produce(msg, dlv); err != nil {
 		close(dlv)

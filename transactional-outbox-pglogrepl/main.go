@@ -14,6 +14,7 @@ import (
 	"github.com/jackc/pgx/v5/pgproto3"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/mageddo/java-examples/transactional-outbox-pglogrepl/kafka"
+	producer_record "github.com/mageddo/java-examples/transactional-outbox-pglogrepl/producer-record"
 )
 
 /*
@@ -241,48 +242,12 @@ func process(producer *kafka.Producer, walData []byte, relations map[uint32]*pgl
 		relations[logicalMsg.RelationID] = logicalMsg
 
 	case *pglogrepl.InsertMessageV2:
-		rel, ok := relations[logicalMsg.RelationID]
-		if !ok {
-			log.Fatalf("unknown relation ID %d", logicalMsg.RelationID)
-		}
-		values := map[string]interface{}{}
-		for idx, col := range logicalMsg.Tuple.Columns {
-			colName := rel.Columns[idx].Name
-			switch col.DataType {
-			case 'n': // null
-				values[colName] = nil
-			case 'u': // unchanged toast
-				// This TOAST value was not changed. TOAST values are not stored in the tuple, and logical replication doesn't want to spend a disk read to fetch its value for you.
-			case 't': //text
-				val, err := decodeTextColumnData(typeMap, col.Data, rel.Columns[idx].DataType)
-				if err != nil {
-					log.Fatalln("error decoding column data:", err)
-				}
-				values[colName] = val
-			}
-		}
-		log.Printf("insert for xid %d\n", logicalMsg.Xid)
-		log.Printf("INSERT INTO %s.%s: %v", rel.Namespace, rel.RelationName, values)
-		topic := values["nam_topic"]
-		key := values["txt_key"]
-		value := values["txt_value"]
-		headers := map[string][]byte{
-			"content-type": []byte("application/octet-stream"),
-			"trace-id":     []byte("abc-123"),
-		}
-		err := producer.Send(topic.(string), key.(string), value.([]byte), headers)
+		err := producer.Send(producer_record.MapFromInsertMessage(logicalMsg, &relations, typeMap))
 		if err != nil {
-			log.Fatalln(fmt.Sprintf("status=produceFailed, values=%v", values), err)
+			log.Println("status=FailedToSend", err)
 		}
 
 	case *pglogrepl.CommitMessage:
 		onCommit(logicalMsg.TransactionEndLSN)
 	}
-}
-
-func decodeTextColumnData(mi *pgtype.Map, data []byte, dataType uint32) (interface{}, error) {
-	if dt, ok := mi.TypeForOID(dataType); ok {
-		return dt.Codec.DecodeValue(mi, dataType, pgtype.TextFormatCode, data)
-	}
-	return string(data), nil
 }
