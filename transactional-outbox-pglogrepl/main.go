@@ -28,10 +28,12 @@ func main() {
   defer conn.Close(context.Background())
 
   createPublication(conn, slotName, tableName)
+  clientXLogPos := createReplicationSlot(conn, slotName, outputPlugin)
 
-  err, clientXLogPos, standbyMessageTimeout, nextStandbyMessageDeadline := createReplicationSlot(conn, slotName, outputPlugin)
   typeMap := pgtype.NewMap()
   relations := map[uint32]*pglogrepl.RelationMessageV2{}
+  standbyMessageTimeout := time.Second * 10
+  nextStandbyMessageDeadline := time.Now().Add(standbyMessageTimeout)
 
   // whenever we get StreamStartMessage we set inStream to true and then pass it to DecodeV2 function
   // on StreamStopMessage we set it back to false
@@ -96,7 +98,7 @@ func main() {
   }
 }
 
-func createReplicationSlot(conn *pgconn.PgConn, slotName string, outputPlugin string) (error, pglogrepl.LSN, time.Duration, time.Time) {
+func createReplicationSlot(conn *pgconn.PgConn, slotName string, outputPlugin string) pglogrepl.LSN {
   sysident, err := pglogrepl.IdentifySystem(context.Background(), conn)
   if err != nil {
     log.Fatalln("IdentifySystem failed:", err)
@@ -125,11 +127,8 @@ func createReplicationSlot(conn *pgconn.PgConn, slotName string, outputPlugin st
     log.Fatalln("StartReplication failed:", err)
   }
   log.Println("Logical replication started on slot", slotName)
-
   clientXLogPos := sysident.XLogPos
-  standbyMessageTimeout := time.Second * 10
-  nextStandbyMessageDeadline := time.Now().Add(standbyMessageTimeout)
-  return err, clientXLogPos, standbyMessageTimeout, nextStandbyMessageDeadline
+  return clientXLogPos
 }
 
 func createPublication(conn *pgconn.PgConn, slotName string, tableName string) {
