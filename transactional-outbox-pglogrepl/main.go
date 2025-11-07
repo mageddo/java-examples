@@ -23,15 +23,15 @@ https://github.com/jackc/pglogrepl/blob/a9884f6bd75abf16ec97c50ca0acf4766319f4e8
 func main() {
 
 	const outputPlugin = "pgoutput"
-	const slotName = "pglogrepl_demo"
-	const tableName = "TTO_RECORD"
+	const jobName = "outbox_cdc"
+	var tableName = os.Getenv("RELATION_NAME")
 
-	//PGLOGREPL_DEMO_CONN_STRING=postgres://kconnect:kconect@127.0.0.1:5436/db?replication=database
+	//CONN_STRING=postgres://kconnect:kconect@127.0.0.1:5436/db?replication=database
 	conn := openReplicationConn().PgConn()
 	defer conn.Close(context.Background())
 
-	createPublication(conn, slotName, tableName)
-	lsn := createReplicationSlot(conn, slotName, outputPlugin)
+	createPublication(conn, jobName, tableName)
+	lsn := createReplicationSlot(conn, jobName, outputPlugin)
 	listenEvents(conn, lsn)
 }
 
@@ -132,7 +132,7 @@ func createProducer() *kafka.Producer {
 }
 
 func openRegularConn() *pgx.Conn {
-	return connect(os.Getenv("PGLOGREPL_DEMO_CONN_STRING"))
+	return connect(os.Getenv("CONN_STRING"))
 }
 
 func openReplicationConn() *pgx.Conn {
@@ -148,7 +148,11 @@ func connect(connUrl string) *pgx.Conn {
 }
 
 func buildReplConnUrl() string {
-	return fmt.Sprintf("%s?replication=database", os.Getenv("PGLOGREPL_DEMO_CONN_STRING"))
+	url := os.Getenv("CONN_STRING")
+	if i := strings.Index(url, "?"); i > 0 {
+		url = url[0 : i+1]
+	}
+	return fmt.Sprintf("%sreplication=database", url)
 }
 
 func createReplicationSlot(conn *pgconn.PgConn, slotName string, outputPlugin string) pglogrepl.LSN {
