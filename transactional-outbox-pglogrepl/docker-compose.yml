@@ -1,7 +1,6 @@
 services:
   postgres:
     image: postgres:17
-    container_name: pg
     environment:
       POSTGRES_USER: kconnect
       POSTGRES_PASSWORD: kconect
@@ -24,7 +23,7 @@ services:
 
   tbox-kafka:
     image: apache/kafka:3.7.2
-    container_name: tbox-kafka
+#    container_name: tbox-kafka
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
