@@ -13,6 +13,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgproto3"
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/mageddo/java-examples/transactional-outbox-pglogrepl/kafka"
 )
 
 /*
@@ -23,6 +24,7 @@ func main() {
 	const outputPlugin = "pgoutput"
 	const slotName = "pglogrepl_demo"
 	const tableName = "TTO_RECORD"
+
 	//PGLOGREPL_DEMO_CONN_STRING=postgres://kconnect:kconect@127.0.0.1:5436/db?replication=database
 	conn := openReplicationConn().PgConn()
 	defer conn.Close(context.Background())
@@ -38,6 +40,8 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 	relations := map[uint32]*pglogrepl.RelationMessageV2{}
 	standbyMessageTimeout := time.Second * 10
 	nextStandbyMessageDeadline := time.Now().Add(standbyMessageTimeout)
+	producer := createProducer()
+	defer producer.Close()
 
 	// whenever we get StreamStartMessage we set inStream to true and then pass it to DecodeV2 function
 	// on StreamStopMessage we set it back to false
@@ -100,12 +104,20 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 				"type=XLogData, WALStart=%s ServerWALEnd=%s ServerTime=%s\n",
 				xld.WALStart, xld.ServerWALEnd, xld.ServerTime,
 			)
-			processV2(xld.WALData, relations, typeMap, &inStream, func(commitLSN pglogrepl.LSN) {
+			process(producer, xld.WALData, relations, typeMap, &inStream, func(commitLSN pglogrepl.LSN) {
 				lsn = commitLSN
 			})
 
 		}
 	}
+}
+
+func createProducer() *kafka.Producer {
+	producer, err := kafka.New("localhost:9092", nil)
+	if err != nil {
+		log.Fatalln("status=kafkaConnectionFailed", err)
+	}
+	return producer
 }
 
 func openRegularConn() *pgx.Conn {
@@ -205,10 +217,7 @@ func createPublication(conn *pgconn.PgConn, slotName string, tableName string) {
 	log.Printf("create publication %s", slotName)
 }
 
-func processV2(
-	walData []byte, relations map[uint32]*pglogrepl.RelationMessageV2, typeMap *pgtype.Map, inStream *bool,
-	onCommit func(lsn pglogrepl.LSN),
-) {
+func process(producer *kafka.Producer, walData []byte, relations map[uint32]*pglogrepl.RelationMessageV2, typeMap *pgtype.Map, inStream *bool, onCommit func(lsn pglogrepl.LSN)) {
 	logicalMsg, err := pglogrepl.ParseV2(walData, *inStream)
 	if err != nil {
 		log.Fatalf("Parse logical replication message: %s", err)
@@ -244,6 +253,17 @@ func processV2(
 		}
 		log.Printf("insert for xid %d\n", logicalMsg.Xid)
 		log.Printf("INSERT INTO %s.%s: %v", rel.Namespace, rel.RelationName, values)
+		topic := values["nam_topic"]
+		key := values["txt_key"]
+		value := values["txt_value"]
+		headers := map[string][]byte{
+			"content-type": []byte("application/octet-stream"),
+			"trace-id":     []byte("abc-123"),
+		}
+		err := producer.Send(topic.(string), key.(string), value.([]byte), headers)
+		if err != nil {
+			log.Fatalln(fmt.Sprintf("status=produceFailed, values=%v", values), err)
+		}
 
 	case *pglogrepl.CommitMessage:
 		onCommit(logicalMsg.TransactionEndLSN)
