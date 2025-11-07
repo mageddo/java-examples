@@ -5,7 +5,7 @@
     "database.hostname": "postgres",
     "database.port": "5432",
     "database.user": "kconnect",
-    "database.password": "kconnect",
+    "database.password": "kconect",
     "database.dbname": "db",
     "plugin.name": "pgoutput",
     "slot.name": "pg_tto_record_slot",
