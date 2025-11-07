@@ -149,8 +149,10 @@ func connect(connUrl string) *pgx.Conn {
 
 func buildReplConnUrl() string {
 	url := os.Getenv("CONN_STRING")
-	if i := strings.Index(url, "?"); i > 0 {
-		url = url[0 : i+1]
+	if i := strings.Index(url, "?"); i >= 0 {
+		url += "&"
+	} else {
+		url += "?"
 	}
 	return fmt.Sprintf("%sreplication=database", url)
 }

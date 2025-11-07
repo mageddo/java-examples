@@ -40,7 +40,7 @@ func MapFromInsertMessage(
 	key := values["txt_key"]
 	value := values["txt_value"]
 
-	headers := mapHeaders(values["txt_headers"])
+	headers := values["txt_headers"]
 	msg := &kafka.Message{
 		TopicPartition: kafka.TopicPartition{
 			Topic:     &topic,
@@ -66,8 +66,8 @@ func mapHeaders(rawHeaders interface{}) []kafka.Header {
 	}
 	byteHeaders := DecodeHeadersFromBase64(rawHeaders.(string))
 	// Converte headers map -> []kafka.Header
-	if len(headers) > 0 {
-		headers = make([]kafka.Header, 0, len(headers))
+	if len(byteHeaders) > 0 {
+		headers = make([]kafka.Header, 0, len(byteHeaders))
 		for k, v := range byteHeaders {
 			headers = append(headers, kafka.Header{Key: k, Value: v})
 		}
