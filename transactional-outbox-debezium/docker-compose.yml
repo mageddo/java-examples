@@ -4,9 +4,9 @@ services:
     image: postgres:17
     container_name: pg
     environment:
-      POSTGRES_USER: debezium
-      POSTGRES_PASSWORD: debezium
-      POSTGRES_DB: appdb
+      POSTGRES_USER: kconnect
+      POSTGRES_PASSWORD: kconect
+      POSTGRES_DB: db
     command:
       - postgres
       - -c
@@ -46,27 +46,32 @@ services:
       - postgres
 
   connect:
-    image: quay.io/debezium/connect:2.7
-    container_name: debezium-connect
+#    image: quay.io/debezium/connect:2.7
+    image: confluentinc/cp-kafka-connect:7.7.0
+    container_name: kconnect-connect
     environment:
-      BOOTSTRAP_SERVERS: tbox-kafka:9092
-      GROUP_ID: debezium-connect
-      CONFIG_STORAGE_TOPIC: DEBEZIUM_CONNECT_CONFIG
-      OFFSET_STORAGE_TOPIC: DEBEZIUM_CONNECT_OFFSETS
-      STATUS_STORAGE_TOPIC: DEBEZIUM_CONNECT_STATUS
-      CONFIG_STORAGE_REPLICATION_FACTOR: "1"
-      OFFSET_STORAGE_REPLICATION_FACTOR: "1"
-      STATUS_STORAGE_REPLICATION_FACTOR: "1"
-      KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      VALUE_CONVERTER: org.apache.kafka.connect.storage.ByteArrayConverter
+      CONNECT_BOOTSTRAP_SERVERS: tbox-kafka:9092
+      CONNECT_GROUP_ID: kconnect-connect
+      CONNECT_CONFIG_STORAGE_TOPIC: KCONNECT_CONFIG
+      CONNECT_OFFSET_STORAGE_TOPIC: KCONNECT_OFFSETS
+      CONNECT_STATUS_STORAGE_TOPIC: KCONNECT_STATUS
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.storage.ByteArrayConverter
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/kafka/connect/plugins
+      CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       # Habilita SMTs do Debezium (outbox router etc.)
-      ENABLE_DEBEZIUM_SCRIPTING: "true"
-      LOG_LEVEL: INFO
+#      ENABLE_DEBEZIUM_SCRIPTING: "true"
+#      LOG_LEVEL: INFO
     ports:
       - "8083:8083"
     depends_on:
       - tbox-kafka
       - postgres
+    volumes:
+      - ./src/main/docker/kconnect/plugins:/kafka/connect/plugins
 
 volumes:
   pgdata: {}
