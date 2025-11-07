@@ -30,11 +30,12 @@ func main() {
 	defer conn.Close(context.Background())
 
 	createPublication(conn.PgConn(), slotName, tableName)
-	clientXLogPos := createReplicationSlot(conn, slotName, outputPlugin)
-	listenEvents(conn.PgConn(), clientXLogPos)
+	lsn := createReplicationSlot(conn, slotName, outputPlugin)
+	listenEvents(conn.PgConn(), lsn)
 }
 
-func listenEvents(conn *pgconn.PgConn, clientXLogPos pglogrepl.LSN) {
+func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
+
 	var err error
 	typeMap := pgtype.NewMap()
 	relations := map[uint32]*pglogrepl.RelationMessageV2{}
@@ -47,11 +48,15 @@ func listenEvents(conn *pgconn.PgConn, clientXLogPos pglogrepl.LSN) {
 
 	for {
 		if time.Now().After(nextStandbyMessageDeadline) {
-			err = pglogrepl.SendStandbyStatusUpdate(context.Background(), conn, pglogrepl.StandbyStatusUpdate{WALWritePosition: clientXLogPos})
+			err = pglogrepl.SendStandbyStatusUpdate(context.Background(), conn, pglogrepl.StandbyStatusUpdate{
+				WALWritePosition: lsn,
+				WALFlushPosition: lsn,
+				WALApplyPosition: lsn,
+			})
 			if err != nil {
 				log.Fatalln("SendStandbyStatusUpdate failed:", err)
 			}
-			log.Printf("Sent Standby status message at %s\n", clientXLogPos.String())
+			log.Printf("Sent Standby status message at %s\n", lsn.String())
 			nextStandbyMessageDeadline = time.Now().Add(standbyMessageTimeout)
 		}
 
@@ -81,10 +86,10 @@ func listenEvents(conn *pgconn.PgConn, clientXLogPos pglogrepl.LSN) {
 			if err != nil {
 				log.Fatalln("ParsePrimaryKeepaliveMessage failed:", err)
 			}
-			log.Println("Primary Keepalive Message =>", "ServerWALEnd:", pkm.ServerWALEnd, "ServerTime:", pkm.ServerTime, "ReplyRequested:", pkm.ReplyRequested)
-			if pkm.ServerWALEnd > clientXLogPos {
-				clientXLogPos = pkm.ServerWALEnd
-			}
+			log.Printf(
+				"Primary Keepalive Message: ServerWALEnd=%s, ServerTime=%s, ReplyRequested=%s",
+				pkm.ServerWALEnd, pkm.ServerTime, pkm.ReplyRequested, lsn,
+			)
 			if pkm.ReplyRequested {
 				nextStandbyMessageDeadline = time.Time{}
 			}
@@ -96,10 +101,10 @@ func listenEvents(conn *pgconn.PgConn, clientXLogPos pglogrepl.LSN) {
 			}
 
 			log.Printf("XLogData => WALStart %s ServerWALEnd %s ServerTime %s WALData:\n", xld.WALStart, xld.ServerWALEnd, xld.ServerTime)
-			processV2(xld.WALData, relations, typeMap, &inStream)
-			if xld.WALStart > clientXLogPos {
-				clientXLogPos = xld.WALStart
-			}
+			processV2(xld.WALData, relations, typeMap, &inStream, func(commitLSN pglogrepl.LSN) {
+				lsn = commitLSN
+			})
+
 		}
 	}
 }
@@ -178,7 +183,10 @@ func createPublication(conn *pgconn.PgConn, slotName string, tableName string) {
 	log.Printf("create publication %s\n", slotName)
 }
 
-func processV2(walData []byte, relations map[uint32]*pglogrepl.RelationMessageV2, typeMap *pgtype.Map, inStream *bool) {
+func processV2(
+	walData []byte, relations map[uint32]*pglogrepl.RelationMessageV2, typeMap *pgtype.Map, inStream *bool,
+	onCommit func(lsn pglogrepl.LSN),
+) {
 	logicalMsg, err := pglogrepl.ParseV2(walData, *inStream)
 	if err != nil {
 		log.Fatalf("Parse logical replication message: %s", err)
@@ -213,6 +221,9 @@ func processV2(walData []byte, relations map[uint32]*pglogrepl.RelationMessageV2
 		}
 		log.Printf("insert for xid %d\n", logicalMsg.Xid)
 		log.Printf("INSERT INTO %s.%s: %v", rel.Namespace, rel.RelationName, values)
+
+	case *pglogrepl.CommitMessage:
+		onCommit(logicalMsg.CommitLSN)
 
 	default:
 		log.Printf("event: %T", logicalMsg)
