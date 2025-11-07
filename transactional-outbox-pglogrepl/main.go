@@ -77,10 +77,10 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 			if err != nil {
 				log.Fatalln("ParsePrimaryKeepaliveMessage failed:", err)
 			}
-			log.Printf(
-				"status=PrimaryKeepaliveMessage lsn=%s, ServerWALEnd=%s, ServerTime=%s, ReplyRequested=%t",
-				lsn, pkm.ServerWALEnd, pkm.ServerTime, pkm.ReplyRequested,
-			)
+			//log.Printf(
+			//	"status=PrimaryKeepaliveMessage lsn=%s, ServerWALEnd=%s, ServerTime=%s, ReplyRequested=%t",
+			//	lsn, pkm.ServerWALEnd, pkm.ServerTime, pkm.ReplyRequested,
+			//)
 			if pkm.ReplyRequested {
 				nextStandbyMessageDeadline = time.Time{}
 			}
@@ -90,10 +90,10 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 			if err != nil {
 				log.Fatalln("ParseXLogData failed:", err)
 			}
-			log.Printf(
-				"type=XLogData, WALStart=%s ServerWALEnd=%s ServerTime=%s\n",
-				xld.WALStart, xld.ServerWALEnd, xld.ServerTime,
-			)
+			//log.Printf(
+			//	"type=XLogData, WALStart=%s ServerWALEnd=%s ServerTime=%s\n",
+			//	xld.WALStart, xld.ServerWALEnd, xld.ServerTime,
+			//)
 			process(producer, xld.WALData, relations, typeMap, &inStream, func(commitLSN pglogrepl.LSN) {
 				lsn = commitLSN
 			})
@@ -240,7 +240,7 @@ func process(producer *kafka.Producer, walData []byte, relations map[uint32]*pgl
 		log.Fatalf("Parse logical replication message: %s", err)
 	}
 
-	log.Printf("status=LogicalMsgReceived, type=%s", logicalMsg.Type())
+	//log.Printf("status=LogicalMsgReceived, type=%s", logicalMsg.Type())
 
 	switch logicalMsg := logicalMsg.(type) {
 

@@ -34,8 +34,8 @@ func MapFromInsertMessage(
 			values[colName] = val
 		}
 	}
-	log.Printf("insert for xid %d\n", logicalMsg.Xid)
-	log.Printf("INSERT INTO %s.%s: %v", rel.Namespace, rel.RelationName, values)
+	//log.Printf("insert for xid %d\n", logicalMsg.Xid)
+	//log.Printf("INSERT INTO %s.%s: %v", rel.Namespace, rel.RelationName, values)
 	topic := values["nam_topic"].(string)
 	key := values["txt_key"]
 	value := values["txt_value"]
