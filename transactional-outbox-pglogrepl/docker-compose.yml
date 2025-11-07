@@ -44,43 +44,6 @@ services:
     depends_on:
       - postgres
 
-  connect:
-#    image: quay.io/debezium/connect:2.7
-    build:
-      context: src/main/docker/kconnect
-    image: confluentinc/cp-kafka-connect:7.7.0
-    container_name: kconnect
-    environment:
-      CONNECT_REST_PORT: "8083"
-      CONNECT_LISTENERS: http://0.0.0.0:8083
-      CONNECT_REST_ADVERTISED_HOST_NAME: kconnect
-      CONNECT_REST_ADVERTISED_PORT: "8083"
-      #
-      CONNECT_BOOTSTRAP_SERVERS: tbox-kafka:9092
-      CONNECT_GROUP_ID: kconnect-connect
-      CONNECT_CONFIG_STORAGE_TOPIC: KCONNECT_CONFIG
-      CONNECT_OFFSET_STORAGE_TOPIC: KCONNECT_OFFSETS
-      CONNECT_STATUS_STORAGE_TOPIC: KCONNECT_STATUS
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/kafka/connect/plugins
-      CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.converters.ByteArrayConverter
-      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
-
-      # Habilita SMTs do Debezium (outbox router etc.)
-#      ENABLE_DEBEZIUM_SCRIPTING: "true"
-#      LOG_LEVEL: INFO
-    ports:
-      - "8083:8083"
-    depends_on:
-      - tbox-kafka
-      - postgres
-    volumes:
-      - ./src/main/docker/kconnect/plugins:/kafka/connect/plugins
-
 volumes:
   pgdata: {}
   kafkadata: {}
