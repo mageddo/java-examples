@@ -29,7 +29,11 @@ func main() {
 
   createPublication(conn, slotName, tableName)
   clientXLogPos := createReplicationSlot(conn, slotName, outputPlugin)
+  listenEvents(conn, clientXLogPos)
+}
 
+func listenEvents(conn *pgconn.PgConn, clientXLogPos pglogrepl.LSN) {
+  var err error
   typeMap := pgtype.NewMap()
   relations := map[uint32]*pglogrepl.RelationMessageV2{}
   standbyMessageTimeout := time.Second * 10
