@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/jackc/pglogrepl"
@@ -113,7 +114,9 @@ func createReplicationSlot(conn *pgconn.PgConn, slotName string, outputPlugin st
 		context.Background(), conn, slotName, outputPlugin, pglogrepl.CreateReplicationSlotOptions{Temporary: false},
 	)
 	if err != nil {
-		log.Fatalln("CreateReplicationSlot failed:", err)
+		if !strings.Contains(err.Error(), "already exists") {
+			log.Fatalln("CreateReplicationSlot failed:", err)
+		}
 	}
 	log.Println("Created replication slot:", slotName)
 
@@ -146,6 +149,9 @@ func createPublication(conn *pgconn.PgConn, slotName string, tableName string) {
 	result = conn.Exec(context.Background(), fmt.Sprintf("CREATE PUBLICATION %s FOR TABLE %s;", slotName, tableName))
 	_, err = result.ReadAll()
 	if err != nil {
+		if strings.Contains(err.Error(), "already exists") {
+			return
+		}
 		log.Fatalln("create publication error", err)
 	}
 	log.Printf("create publication %s\n", slotName)
@@ -157,14 +163,11 @@ func processV2(walData []byte, relations map[uint32]*pglogrepl.RelationMessageV2
 		log.Fatalf("Parse logical replication message: %s", err)
 	}
 	log.Printf("Receive a logical replication message: %s", logicalMsg.Type())
+
 	switch logicalMsg := logicalMsg.(type) {
+
 	case *pglogrepl.RelationMessageV2:
 		relations[logicalMsg.RelationID] = logicalMsg
-
-	case *pglogrepl.BeginMessage:
-		// Indicates the beginning of a group of changes in a transaction. This is only sent for committed transactions. You won't get any events from rolled back transactions.
-
-	case *pglogrepl.CommitMessage:
 
 	case *pglogrepl.InsertMessageV2:
 		rel, ok := relations[logicalMsg.RelationID]
@@ -190,34 +193,8 @@ func processV2(walData []byte, relations map[uint32]*pglogrepl.RelationMessageV2
 		log.Printf("insert for xid %d\n", logicalMsg.Xid)
 		log.Printf("INSERT INTO %s.%s: %v", rel.Namespace, rel.RelationName, values)
 
-	case *pglogrepl.UpdateMessageV2:
-		log.Printf("update for xid %d\n", logicalMsg.Xid)
-		// ...
-	case *pglogrepl.DeleteMessageV2:
-		log.Printf("delete for xid %d\n", logicalMsg.Xid)
-		// ...
-	case *pglogrepl.TruncateMessageV2:
-		log.Printf("truncate for xid %d\n", logicalMsg.Xid)
-		// ...
-
-	case *pglogrepl.TypeMessageV2:
-	case *pglogrepl.OriginMessage:
-
-	case *pglogrepl.LogicalDecodingMessageV2:
-		log.Printf("Logical decoding message: %q, %q, %d", logicalMsg.Prefix, logicalMsg.Content, logicalMsg.Xid)
-
-	case *pglogrepl.StreamStartMessageV2:
-		*inStream = true
-		log.Printf("Stream start message: xid %d, first segment? %d", logicalMsg.Xid, logicalMsg.FirstSegment)
-	case *pglogrepl.StreamStopMessageV2:
-		*inStream = false
-		log.Printf("Stream stop message")
-	case *pglogrepl.StreamCommitMessageV2:
-		log.Printf("Stream commit message: xid %d", logicalMsg.Xid)
-	case *pglogrepl.StreamAbortMessageV2:
-		log.Printf("Stream abort message: xid %d", logicalMsg.Xid)
 	default:
-		log.Printf("Unknown message type in pgoutput stream: %T", logicalMsg)
+		log.Printf("event: %T", logicalMsg)
 	}
 }
 
