@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/jackc/pglogrepl"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgproto3"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -21,16 +22,16 @@ func main() {
 	const outputPlugin = "pgoutput"
 	const slotName = "pglogrepl_demo"
 	const tableName = "TTO_RECORD"
+	conn, err := pgx.Connect(context.Background(), os.Getenv("PGLOGREPL_DEMO_CONN_STRING"))
 
-	conn, err := pgconn.Connect(context.Background(), os.Getenv("PGLOGREPL_DEMO_CONN_STRING"))
 	if err != nil {
 		log.Fatalln("failed to connect to PostgreSQL server:", err)
 	}
 	defer conn.Close(context.Background())
 
-	createPublication(conn, slotName, tableName)
+	createPublication(conn.PgConn(), slotName, tableName)
 	clientXLogPos := createReplicationSlot(conn, slotName, outputPlugin)
-	listenEvents(conn, clientXLogPos)
+	listenEvents(conn.PgConn(), clientXLogPos)
 }
 
 func listenEvents(conn *pgconn.PgConn, clientXLogPos pglogrepl.LSN) {
@@ -103,15 +104,15 @@ func listenEvents(conn *pgconn.PgConn, clientXLogPos pglogrepl.LSN) {
 	}
 }
 
-func createReplicationSlot(conn *pgconn.PgConn, slotName string, outputPlugin string) pglogrepl.LSN {
-	sysident, err := pglogrepl.IdentifySystem(context.Background(), conn)
-	if err != nil {
-		log.Fatalln("IdentifySystem failed:", err)
-	}
-	log.Println("SystemID:", sysident.SystemID, "Timeline:", sysident.Timeline, "XLogPos:", sysident.XLogPos, "DBName:", sysident.DBName)
+func createReplicationSlot(conn *pgx.Conn, slotName string, outputPlugin string) pglogrepl.LSN {
+	//sysident, err := pglogrepl.IdentifySystem(context.Background(), conn)
+	//if err != nil {
+	//	log.Fatalln("IdentifySystem failed:", err)
+	//}
+	//log.Println("SystemID:", sysident.SystemID, "Timeline:", sysident.Timeline, "XLogPos:", sysident.XLogPos, "DBName:", sysident.DBName)
 
-	_, err = pglogrepl.CreateReplicationSlot(
-		context.Background(), conn, slotName, outputPlugin, pglogrepl.CreateReplicationSlotOptions{Temporary: false},
+	_, err := pglogrepl.CreateReplicationSlot(
+		context.Background(), conn.PgConn(), slotName, outputPlugin, pglogrepl.CreateReplicationSlotOptions{Temporary: false},
 	)
 	if err != nil {
 		if !strings.Contains(err.Error(), "already exists") {
@@ -126,16 +127,36 @@ func createReplicationSlot(conn *pgconn.PgConn, slotName string, outputPlugin st
 		"messages 'true'",
 		"streaming 'true'",
 	}
+
+	pos := findPos(conn, slotName)
+
 	err = pglogrepl.StartReplication(
 		context.Background(),
-		conn, slotName, sysident.XLogPos, pglogrepl.StartReplicationOptions{PluginArgs: pluginArguments},
+		conn.PgConn(), slotName, pos, pglogrepl.StartReplicationOptions{PluginArgs: pluginArguments},
 	)
 	if err != nil {
 		log.Fatalln("StartReplication failed:", err)
 	}
 	log.Println("Logical replication started on slot", slotName)
-	clientXLogPos := sysident.XLogPos
-	return clientXLogPos
+	return pos
+}
+
+func findPos(conn *pgx.Conn, slotName string) pglogrepl.LSN {
+	var confirmedFlushLSNStr string
+	err := conn.QueryRow(
+		context.Background(),
+		`SELECT confirmed_flush_lsn FROM pg_replication_slots WHERE slot_name = $1`,
+		slotName,
+	).Scan(&confirmedFlushLSNStr)
+	if err != nil {
+		log.Fatalf("query failed: %v", err)
+	}
+
+	confirmedLSN, err := pglogrepl.ParseLSN(confirmedFlushLSNStr)
+	if err != nil {
+		log.Fatalf("invalid LSN: %v", err)
+	}
+	return confirmedLSN
 }
 
 func createPublication(conn *pgconn.PgConn, slotName string, tableName string) {
