@@ -246,7 +246,7 @@ func processV2(
 		log.Printf("INSERT INTO %s.%s: %v", rel.Namespace, rel.RelationName, values)
 
 	case *pglogrepl.CommitMessage:
-		onCommit(logicalMsg.CommitLSN)
+		onCommit(logicalMsg.TransactionEndLSN)
 	}
 }
 
