@@ -48,18 +48,7 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 	inStream := false
 
 	for {
-		if time.Now().After(nextStandbyMessageDeadline) {
-			err := pglogrepl.SendStandbyStatusUpdate(context.Background(), conn, pglogrepl.StandbyStatusUpdate{
-				WALWritePosition: lsn,
-				WALFlushPosition: lsn,
-				WALApplyPosition: lsn,
-			})
-			if err != nil {
-				log.Fatalln("SendStandbyStatusUpdate failed:", err)
-			}
-			log.Printf("status=sentStandby, lsn=%s\n", lsn.String())
-			nextStandbyMessageDeadline = time.Now().Add(standbyMessageTimeout)
-		}
+		nextStandbyMessageDeadline = sendOffsetUpdateWhenNeedled(conn, lsn, nextStandbyMessageDeadline, standbyMessageTimeout)
 
 		ctx, cancel := context.WithDeadline(context.Background(), nextStandbyMessageDeadline)
 		rawMsg, err := conn.ReceiveMessage(ctx)
@@ -110,6 +99,27 @@ func listenEvents(conn *pgconn.PgConn, lsn pglogrepl.LSN) {
 
 		}
 	}
+}
+
+func sendOffsetUpdateWhenNeedled(
+	conn *pgconn.PgConn,
+	lsn pglogrepl.LSN,
+	nextStandbyMessageDeadline time.Time,
+	standbyMessageTimeout time.Duration,
+) time.Time {
+	if time.Now().After(nextStandbyMessageDeadline) {
+		err := pglogrepl.SendStandbyStatusUpdate(context.Background(), conn, pglogrepl.StandbyStatusUpdate{
+			WALWritePosition: lsn,
+			WALFlushPosition: lsn,
+			WALApplyPosition: lsn,
+		})
+		if err != nil {
+			log.Fatalln("SendStandbyStatusUpdate failed:", err)
+		}
+		log.Printf("status=sentStandby, lsn=%s\n", lsn.String())
+		nextStandbyMessageDeadline = time.Now().Add(standbyMessageTimeout)
+	}
+	return nextStandbyMessageDeadline
 }
 
 func createProducer() *kafka.Producer {
