@@ -47,7 +47,7 @@ services:
   connect:
 #    image: quay.io/debezium/connect:2.7
     build:
-      context: src/main/docker
+      context: src/main/docker/kconnect
     image: confluentinc/cp-kafka-connect:7.7.0
     container_name: kconnect
     environment:
@@ -67,7 +67,7 @@ services:
       CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/kafka/connect/plugins
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.storage.ByteArrayConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.converters.ByteArrayConverter
       CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
 
       # Habilita SMTs do Debezium (outbox router etc.)

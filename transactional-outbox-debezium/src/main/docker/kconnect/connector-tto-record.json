@@ -27,6 +27,8 @@
     "transforms.outbox.table.event.id": "idt_tto_record",
     "transforms.outbox.table.event.timestamp": "dat_created",
     "transforms.extract.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
-    "transforms.extract.field": "txt_value"
+    "transforms.extract.field": "txt_value",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.converters.ByteArrayConverter"
   }
 }

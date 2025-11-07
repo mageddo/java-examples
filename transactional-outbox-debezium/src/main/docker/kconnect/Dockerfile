@@ -1,6 +1,6 @@
 FROM confluentinc/cp-kafka-connect:7.7.0
 
-RUN confluent-hub install --no-prompt debezium/debezium-connector-postgresql:2.7.0
+RUN confluent-hub install --no-prompt debezium/debezium-connector-postgresql:3.1.2
 
 # Copia plugins custom (seu SMT "HeadersExpandFromEncoded")
 # Estrutura esperada:
