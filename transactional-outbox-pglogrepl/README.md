@@ -7,3 +7,6 @@ export CONN_STRING="postgres://kconnect:kconect@127.0.0.1:5436/db?sslmode=disabl
 export RELATION_NAME="public.OUTBOX_RECORD"
 go run main.go
 ```
+
+```
+```
