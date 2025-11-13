@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UUIDV7Test {
 
+  public static final ZoneId ZONE_ID = ZoneId.of("America/Sao_Paulo");
+
   @Test
   void mustParse(){
 
@@ -39,20 +41,20 @@ class UUIDV7Test {
         .toList();
 
     final var sortedIds = new ArrayList<>(ids);
-    Collections.sort(sortedIds, Comparator.comparing(UuidV7Utils::extractEpochMillis));
+    sortedIds.sort(Comparator.comparing(UuidV7Utils::extractEpochMillis));
 
     assertEquals(ids, sortedIds);
   }
 
   @Test
-  void mustExtractTimestampFromUuidEqualsToNow(){
+  void mustExtractTimestampFromUuidCloseToNow(){
 
     final var uuid = Generators.timeBasedEpochRandomGenerator().generate();
 
-    final var ref = UuidV7Utils.toLocalDateTime(uuid, ZoneId.of("America/Sao_Paulo"));
+    final var ref = UuidV7Utils.toLocalDateTime(uuid, ZONE_ID);
 
     assertThat(ref)
-        .isCloseTo(LocalDateTime.now(), within(Duration.ofSeconds(5)));
+        .isCloseTo(LocalDateTime.now(ZONE_ID), within(Duration.ofSeconds(5)));
 
   }
 }
