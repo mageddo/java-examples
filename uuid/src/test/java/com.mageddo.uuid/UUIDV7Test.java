@@ -1,0 +1,58 @@
+package com.mageddo.uuid;
+
+import com.fasterxml.uuid.Generators;
+
+import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.IntStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.assertj.core.api.InstanceOfAssertFactories.DURATION;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class UUIDV7Test {
+
+  @Test
+  void mustParse(){
+
+    final var id = Generators.timeBasedEpochRandomGenerator().generate();
+
+    assertEquals(7, id.version());
+  }
+
+  @Test
+  void mustBeNaturallySortedByTimestamp(){
+
+    final var ids = IntStream.range(0, 100)
+        .boxed()
+        .map(it -> Generators.timeBasedEpochRandomGenerator().generate())
+        .toList();
+
+    final var sortedIds = new ArrayList<>(ids);
+    Collections.sort(sortedIds, Comparator.comparing(UuidV7Utils::extractEpochMillis));
+
+    assertEquals(ids, sortedIds);
+  }
+
+  @Test
+  void mustExtractTimestampFromUuidEqualsToNow(){
+
+    final var uuid = Generators.timeBasedEpochRandomGenerator().generate();
+
+    final var ref = UuidV7Utils.toLocalDateTime(uuid, ZoneId.of("America/Sao_Paulo"));
+
+    assertThat(ref)
+        .isCloseTo(LocalDateTime.now(), within(Duration.ofSeconds(5)));
+
+  }
+}
