@@ -1,8 +1,14 @@
+plugins {
+  id "java"
+}
+
 repositories {
+  mavenCentral()
   maven {
     url "https://raw.github.com/AcaiSoftware/chatgpt-java/repository/"
   }
 }
+
 
 dependencies {
   implementation 'gg.acai:chatgpt-java:1.0.2'
