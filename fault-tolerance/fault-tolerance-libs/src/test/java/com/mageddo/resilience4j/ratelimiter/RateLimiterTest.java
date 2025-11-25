@@ -18,6 +18,9 @@ import io.github.resilience4j.retry.RetryConfig;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+/**
+ * https://chatgpt.com/c/6925d410-b908-8330-b0c9-894747024555
+ */
 class RateLimiterTest {
   @Test
   void mustLimitCalls() {
