@@ -2,6 +2,7 @@ package com.mageddo.resilience4j.ratelimiter;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.mageddo.RetryableException;
 
@@ -99,12 +100,17 @@ class RateLimiterTest {
         .custom()
         .maxAttempts(3)
         .waitDuration(Duration.ofSeconds(6))
+        .consumeResultBeforeRetryAttempt((integer, o) -> {
+          System.out.println("tentando.....");
+        })
         .retryExceptions(RetryableException.class)
         .build();
     final var retry = Retry.of("external-api", retryConfig);
 
+    final var tries = new AtomicInteger();
     final var supplier = Decorators
         .ofSupplier(() -> {
+          tries.getAndIncrement();
           throw new RetryableException("limite excedido");
         })
         .withRateLimiter(rateLimiter)
@@ -118,11 +124,15 @@ class RateLimiterTest {
         .decorate();
 
     final var stopWatch = StopWatch.createStarted();
-    supplier.get();
-    supplier.get();
+
     assertThatThrownBy(supplier::get)
         .isInstanceOf(RetryableException.class);
-    assertThat(stopWatch.getTime()).isGreaterThanOrEqualTo(5000);
+
+    assertThat(stopWatch.getTime()).isGreaterThanOrEqualTo(10_000);
+    assertThat(stopWatch.getTime()).isLessThan(13_000);
+
+    assertThat(tries.get()).isEqualTo(3);
+
 
   }
 
