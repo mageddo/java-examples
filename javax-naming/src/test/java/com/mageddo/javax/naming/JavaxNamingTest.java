@@ -1,8 +1,10 @@
 package com.mageddo.javax.naming;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,6 +12,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class JavaxNamingTest {
 
   static final String JNDI_NAME = "java:global/my/MyService";
+
+  @BeforeAll
+  static void beforeAll(){
+    System.setProperty(
+        Context.INITIAL_CONTEXT_FACTORY,
+        InMemoryContextFactory.class.getName()
+    );
+  }
 
   @Test
   void mustRegisterAndLookup() throws Exception {
