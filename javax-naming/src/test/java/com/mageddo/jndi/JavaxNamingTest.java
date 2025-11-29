@@ -1,4 +1,4 @@
-package com.mageddo.javax.naming;
+package com.mageddo.jndi;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;

@@ -1,4 +1,4 @@
-package com.mageddo.javax.naming;
+package com.mageddo.jndi;
 
 import java.util.Hashtable;
 import java.util.Map;
