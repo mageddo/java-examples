@@ -1,0 +1,23 @@
+plugins {
+  id "java"
+}
+
+java {
+  sourceCompatibility  = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+  testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+  testImplementation("org.mockito:mockito-junit-jupiter:5.19.0")
+}
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+  testLogging {
+    showStandardStreams = true // logar quando rodar ./gradlew test
+  }
+}
