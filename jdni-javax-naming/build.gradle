@@ -1,0 +1,33 @@
+plugins {
+  id "java"
+}
+
+repositories {
+  mavenCentral()
+}
+
+java {
+  sourceCompatibility  = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+  compileOnly("org.projectlombok:lombok:1.18.42")
+  annotationProcessor("org.projectlombok:lombok:1.18.42")
+
+  testCompileOnly("org.projectlombok:lombok:1.18.42")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
+  testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+  testImplementation("org.mockito:mockito-junit-jupiter:5.11.0")
+  testImplementation 'org.assertj:assertj-core:3.27.6'
+}
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+  testLogging {
+    showStandardStreams = true // logar quando rodar ./gradlew test
+  }
+}
