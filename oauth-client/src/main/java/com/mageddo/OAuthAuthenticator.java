@@ -4,14 +4,18 @@ import java.util.Scanner;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import com.mageddo.server.CallbackServer;
 
-public class OAuthAuthenticator {
+public class OAuthAuthenticator implements AutoCloseable {
 
   public static final String SECRET_STATE = OAuthAuthenticator.class.getSimpleName();
+
   private final OAuth20Service service;
+  private final CallbackServer server;
 
   public OAuthAuthenticator(OAuth20Service service) {
     this.service = service;
+    this.server = CallbackServer.create();
   }
 
   public void auth() {
@@ -60,5 +64,17 @@ public class OAuthAuthenticator {
     System.out.println("(The raw response looks like this: " + accessToken.getRawResponse() + "')");
     System.out.println();
 
+  }
+
+  @Override
+  public void close() {
+    try {
+      this.server.close();
+    } catch (Exception ignored) {
+    }
+    try {
+      this.service.close();
+    } catch (Exception ignored) {
+    }
   }
 }

@@ -1,5 +1,6 @@
 package com.mageddo.app;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import com.github.scribejava.core.builder.ScopeBuilder;
@@ -16,16 +17,13 @@ public class Google20Example {
   private static final String PROTECTED_RESOURCE_URL = "https://www.googleapis" +
           ".com/oauth2/v3/userinfo";
 
-  private Google20Example() {
-  }
-
   public static void main(String... args) throws Exception {
     final String secretState = "secret333";
     final var scope = new ScopeBuilder()
         .withScope("profile")
         .build();
     final var service = ServiceBuilder.build(scope);
-    final Scanner in = new Scanner(System.in, "UTF-8");
+    final Scanner in = new Scanner(System.in, StandardCharsets.UTF_8);
 
     System.out.println("=== " + NETWORK_NAME + "'s OAuth Workflow ===");
     System.out.println();
