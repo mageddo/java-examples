@@ -7,7 +7,7 @@ import java.util.Set;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 
-public class CurrenciesMain {
+public class DuplicatedCurrenciesSymbolsMain {
 
   public static void main(String[] args) {
 
