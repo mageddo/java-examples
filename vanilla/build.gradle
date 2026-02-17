@@ -1,16 +1,19 @@
 plugins {
   id "java-library"
-  id "com.github.johnrengelman.shadow" version "7.1.2"
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 repositories {
+  mavenLocal()
   mavenCentral()
   maven { url  "https://jitpack.io" }
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+java {
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
 
+}
 dependencies {
 
   compileOnly 'org.projectlombok:lombok:1.18.+'
@@ -26,6 +29,7 @@ dependencies {
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.5'
   implementation 'com.google.guava:guava:31.1-jre'
   implementation 'com.github.philburk:jsyn:v17.1.0'
+  implementation("org.apache.commons:commons-collections4:4.5.0")
 
   testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
   testImplementation("org.mockito:mockito-junit-jupiter:3.9.0")
