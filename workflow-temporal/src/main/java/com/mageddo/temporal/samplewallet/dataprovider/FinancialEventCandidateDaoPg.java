@@ -30,12 +30,12 @@ public class FinancialEventCandidateDaoPg implements FinancialEventCandidateDAO 
   public List<FinancialEventCandidate> findByWalletId(String walletId) {
     return this.entityManager.createNativeQuery(
         """
-          SELECT candidate.*
-          FROM FINANCIAL_EVENT_CANDIDATE candidate
-          INNER JOIN INVESTMENT investment
-            ON investment.IDT_INVESTMENT = candidate.IDT_INVESTMENT
-          WHERE investment.IDT_WALLET = :walletId
-          ORDER BY candidate.IDT_FINANCIAL_EVENT_CANDIDATE
+          SELECT FEC.*
+          FROM FINANCIAL_EVENT_CANDIDATE FEC
+          INNER JOIN INVESTMENT I
+            ON I.IDT_INVESTMENT = FEC.IDT_INVESTMENT
+          WHERE I.IDT_WALLET = :walletId
+          ORDER BY FEC.IDT_FINANCIAL_EVENT_CANDIDATE
           """,
         FinancialEventCandidate.class)
       .setParameter("walletId", walletId)
