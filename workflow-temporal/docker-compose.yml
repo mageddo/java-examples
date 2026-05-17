@@ -11,7 +11,6 @@ services:
       - ./infra/postgres/initdb:/docker-entrypoint-initdb.d
     ports:
       - "5443:5432"
-    network_mode: bridge
     mem_limit: 1024m
     memswap_limit: 0
     cpu_count: 2
@@ -25,15 +24,19 @@ services:
       - DB_PORT=5432
       - DBNAME=db
       - POSTGRES_SEEDS=postgres-17
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
+      - POSTGRES_USER=root
+      - POSTGRES_PWD=root
       - VISIBILITY_DBNAME=db
-      - VISIBILITY_POSTGRES_USER=temporal_visibility
-      - VISIBILITY_POSTGRES_PWD=temporal_visibility
+      - VISIBILITY_POSTGRES_USER=root
+      - VISIBILITY_POSTGRES_PWD=root
+#      - POSTGRES_USER=temporal
+#      - POSTGRES_PWD=temporal
+#      - VISIBILITY_DBNAME=db
+#      - VISIBILITY_POSTGRES_USER=temporal_visibility
+#      - VISIBILITY_POSTGRES_PWD=temporal_visibility
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
     ports:
       - "7233:7233"
-    network_mode: bridge
 
   temporal-ui:
     image: temporalio/ui:2.39.0
@@ -44,7 +47,6 @@ services:
       - TEMPORAL_UI_PORT=8080
     ports:
       - "8233:8080"
-    network_mode: bridge
 
 volumes:
   postgres:
