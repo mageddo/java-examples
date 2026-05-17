@@ -46,6 +46,7 @@ O projeto usa:
 - Gradle Wrapper
 - Temporal Java SDK
 - Quarkus + Hibernate ORM com PostgreSQL
+- Flyway para schema versionado
 - PostgreSQL embedded com Zonky nos testes
 
 Execute:
@@ -60,6 +61,7 @@ Execute:
 - `activity`: contracts e implementação das activities
 - `domain`: entidades e enums do onboarding
 - `dataprovider`: interfaces `DAO` e implementações `DaoPg` com Quarkus/Hibernate
+- `src/main/resources/db/migration`: migrations versionadas do schema
 - `src/test`: testes automatizados com `TestWorkflowEnvironment`
 
 ## Evolução para produção
@@ -68,7 +70,7 @@ Em produção, a evolução natural seria:
 
 - trocar o dispatcher local por filas/consumidores reais
 - expor workers Temporal em processos separados
-- usar migrations versionadas com Flyway ou Liquibase
+- evoluir o conjunto de migrations Flyway conforme o domínio crescer
 - publicar métricas e tracing por etapa
 - refinar políticas de retry por tipo de falha
 - separar entidades JPA das entidades de domínio se a complexidade crescer
