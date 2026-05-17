@@ -20,30 +20,30 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-@Table(name = "wallet")
+@Table(name = "WALLET")
 public class Wallet {
 
   @Id
   @NonNull
-  @Column(name = "id", nullable = false)
+  @Column(name = "IDT_WALLET", nullable = false)
   String id;
 
   @NonNull
-  @Column(name = "investor_id", nullable = false)
+  @Column(name = "IDT_INVESTOR", nullable = false)
   String investorId;
 
   @NonNull
   @Enumerated(EnumType.STRING)
-  @Column(name = "status", nullable = false)
+  @Column(name = "IND_STATUS", nullable = false)
   WalletStatus status;
 
   @NonNull
-  @Column(name = "created_at", nullable = false)
+  @Column(name = "DAT_CREATED", nullable = false)
   Instant createdAt;
 
-  @Column(name = "ready_at")
+  @Column(name = "DAT_READY")
   Instant readyAt;
 
-  @Column(name = "aborted_at")
+  @Column(name = "DAT_ABORTED")
   Instant abortedAt;
 }

@@ -19,16 +19,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-@Table(name = "investor")
+@Table(name = "INVESTOR")
 public class Investor {
 
   @Id
   @NonNull
-  @Column(name = "id", nullable = false)
+  @Column(name = "IDT_INVESTOR", nullable = false)
   String id;
 
   @NonNull
   @Enumerated(EnumType.STRING)
-  @Column(name = "profile", nullable = false)
+  @Column(name = "IND_PROFILE", nullable = false)
   InvestorProfile profile;
 }

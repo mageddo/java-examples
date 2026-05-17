@@ -31,9 +31,9 @@ public class InvestmentDaoPg implements InvestmentDAO {
     return this.entityManager.createNativeQuery(
         """
           select *
-          from investment
-          where wallet_id = :walletId
-          order by id
+          from INVESTMENT
+          where IDT_WALLET = :walletId
+          order by IDT_INVESTMENT
           """,
         Investment.class)
       .setParameter("walletId", walletId)

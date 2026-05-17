@@ -20,29 +20,29 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-@Table(name = "financial_event_candidate")
+@Table(name = "FINANCIAL_EVENT_CANDIDATE")
 public class FinancialEventCandidate {
 
   @Id
   @NonNull
-  @Column(name = "id", nullable = false)
+  @Column(name = "IDT_FINANCIAL_EVENT_CANDIDATE", nullable = false)
   String id;
 
   @NonNull
-  @Column(name = "investment_id", nullable = false)
+  @Column(name = "IDT_INVESTMENT", nullable = false)
   String investmentId;
 
   @NonNull
   @Enumerated(EnumType.STRING)
-  @Column(name = "status", nullable = false)
+  @Column(name = "IND_STATUS", nullable = false)
   CandidateStatus status;
 
-  @Column(name = "processed", nullable = false)
+  @Column(name = "FLG_PROCESSED", nullable = false)
   boolean processed;
 
-  @Column(name = "attempts", nullable = false)
+  @Column(name = "NUM_ATTEMPTS", nullable = false)
   int attempts;
 
-  @Column(name = "processed_at")
+  @Column(name = "DAT_PROCESSED")
   Instant processedAt;
 }

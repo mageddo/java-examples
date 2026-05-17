@@ -31,10 +31,10 @@ public class FinancialEventCandidateDaoPg implements FinancialEventCandidateDAO 
     return this.entityManager.createNativeQuery(
         """
           select candidate.*
-          from financial_event_candidate candidate
-          join investment investment on investment.id = candidate.investment_id
-          where investment.wallet_id = :walletId
-          order by candidate.id
+          from FINANCIAL_EVENT_CANDIDATE candidate
+          join INVESTMENT investment on investment.IDT_INVESTMENT = candidate.IDT_INVESTMENT
+          where investment.IDT_WALLET = :walletId
+          order by candidate.IDT_FINANCIAL_EVENT_CANDIDATE
           """,
         FinancialEventCandidate.class)
       .setParameter("walletId", walletId)

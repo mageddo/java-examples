@@ -1,54 +1,77 @@
-create table investor (
-  id varchar(100) not null,
-  profile varchar(30) not null,
-  constraint pk_investor primary key (id)
+create table INVESTOR (
+  IDT_INVESTOR varchar(100) not null,
+  IND_PROFILE varchar(30) not null,
+  DAT_CREATED timestamp not null default timezone('UTC', clock_timestamp()),
+  DAT_UPDATED timestamp,
+  constraint INVESTOR_PK primary key (IDT_INVESTOR)
 );
 
-create table wallet (
-  id varchar(100) not null,
-  investor_id varchar(100) not null,
-  status varchar(30) not null,
-  created_at timestamptz not null,
-  ready_at timestamptz,
-  aborted_at timestamptz,
-  constraint pk_wallet primary key (id),
-  constraint fk_wallet__investor_id__investor foreign key (investor_id) references investor (id)
+create table WALLET (
+  IDT_WALLET varchar(100) not null,
+  IDT_INVESTOR varchar(100) not null,
+  IND_STATUS varchar(30) not null,
+  DAT_READY timestamp,
+  DAT_ABORTED timestamp,
+  DAT_CREATED timestamp not null default timezone('UTC', clock_timestamp()),
+  DAT_UPDATED timestamp,
+  constraint WALLET_PK primary key (IDT_WALLET)
 );
 
-create index ix_wallet__investor_id__created_at
-  on wallet (investor_id, created_at);
+create index WALLET_IDX1
+  on WALLET (IDT_INVESTOR, DAT_CREATED);
 
-create table investment (
-  id varchar(100) not null,
-  wallet_id varchar(100) not null,
-  investor_id varchar(100) not null,
-  base_investment_id varchar(100) not null,
-  profile varchar(30) not null,
-  created boolean not null,
-  constraint pk_investment primary key (id),
-  constraint fk_investment__wallet_id__wallet foreign key (wallet_id) references wallet (id),
-  constraint fk_investment__investor_id__investor foreign key (investor_id) references investor (id)
+create table INVESTMENT (
+  IDT_INVESTMENT varchar(100) not null,
+  IDT_WALLET varchar(100) not null,
+  IDT_INVESTOR varchar(100) not null,
+  IDT_BASE_INVESTMENT varchar(100) not null,
+  IND_PROFILE varchar(30) not null,
+  FLG_CREATED boolean not null,
+  DAT_CREATED timestamp not null default timezone('UTC', clock_timestamp()),
+  DAT_UPDATED timestamp,
+  constraint INVESTMENT_PK primary key (IDT_INVESTMENT)
 );
 
-create index ix_investment__wallet_id
-  on investment (wallet_id);
+create index INVESTMENT_IDX1
+  on INVESTMENT (IDT_WALLET);
 
-create index ix_investment__investor_id__profile
-  on investment (investor_id, profile);
+create index INVESTMENT_IDX2
+  on INVESTMENT (IDT_INVESTOR, IND_PROFILE);
 
-create table financial_event_candidate (
-  id varchar(100) not null,
-  investment_id varchar(100) not null,
-  status varchar(30) not null,
-  processed boolean not null,
-  attempts integer not null,
-  processed_at timestamptz,
-  constraint pk_financial_event_candidate primary key (id),
-  constraint fk_financial_event_candidate__investment_id__investment foreign key (investment_id) references investment (id)
+create table FINANCIAL_EVENT_CANDIDATE (
+  IDT_FINANCIAL_EVENT_CANDIDATE varchar(100) not null,
+  IDT_INVESTMENT varchar(100) not null,
+  IND_STATUS varchar(30) not null,
+  FLG_PROCESSED boolean not null,
+  NUM_ATTEMPTS integer not null,
+  DAT_PROCESSED timestamp,
+  DAT_CREATED timestamp not null default timezone('UTC', clock_timestamp()),
+  DAT_UPDATED timestamp,
+  constraint FINANCIAL_EVENT_CANDIDATE_PK primary key (IDT_FINANCIAL_EVENT_CANDIDATE)
 );
 
-create index ix_financial_event_candidate__investment_id
-  on financial_event_candidate (investment_id);
+create index FINANCIAL_EVENT_CANDIDATE_IDX1
+  on FINANCIAL_EVENT_CANDIDATE (IDT_INVESTMENT);
 
-create index ix_financial_event_candidate__status__processed
-  on financial_event_candidate (status, processed);
+create index FINANCIAL_EVENT_CANDIDATE_IDX2
+  on FINANCIAL_EVENT_CANDIDATE (IND_STATUS, FLG_PROCESSED);
+
+alter table WALLET
+  add constraint WALLET_FK1
+  foreign key (IDT_INVESTOR)
+  references INVESTOR (IDT_INVESTOR);
+
+alter table INVESTMENT
+  add constraint INVESTMENT_FK1
+  foreign key (IDT_WALLET)
+  references WALLET (IDT_WALLET);
+
+alter table INVESTMENT
+  add constraint INVESTMENT_FK2
+  foreign key (IDT_INVESTOR)
+  references INVESTOR (IDT_INVESTOR);
+
+alter table FINANCIAL_EVENT_CANDIDATE
+  add constraint FINANCIAL_EVENT_CANDIDATE_FK1
+  foreign key (IDT_INVESTMENT)
+  references INVESTMENT (IDT_INVESTMENT);

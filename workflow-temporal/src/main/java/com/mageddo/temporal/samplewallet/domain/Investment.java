@@ -19,31 +19,31 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-@Table(name = "investment")
+@Table(name = "INVESTMENT")
 public class Investment {
 
   @Id
   @NonNull
-  @Column(name = "id", nullable = false)
+  @Column(name = "IDT_INVESTMENT", nullable = false)
   String id;
 
   @NonNull
-  @Column(name = "wallet_id", nullable = false)
+  @Column(name = "IDT_WALLET", nullable = false)
   String walletId;
 
   @NonNull
-  @Column(name = "investor_id", nullable = false)
+  @Column(name = "IDT_INVESTOR", nullable = false)
   String investorId;
 
   @NonNull
-  @Column(name = "base_investment_id", nullable = false)
+  @Column(name = "IDT_BASE_INVESTMENT", nullable = false)
   String baseInvestmentId;
 
   @NonNull
   @Enumerated(EnumType.STRING)
-  @Column(name = "profile", nullable = false)
+  @Column(name = "IND_PROFILE", nullable = false)
   InvestorProfile profile;
 
-  @Column(name = "created", nullable = false)
+  @Column(name = "FLG_CREATED", nullable = false)
   boolean created;
 }

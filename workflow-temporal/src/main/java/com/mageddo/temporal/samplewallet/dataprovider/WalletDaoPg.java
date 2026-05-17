@@ -31,9 +31,9 @@ public class WalletDaoPg implements WalletDAO {
     return this.entityManager.createNativeQuery(
         """
           select *
-          from wallet
-          where investor_id = :investorId
-          order by created_at
+          from WALLET
+          where IDT_INVESTOR = :investorId
+          order by DAT_CREATED
           """,
         Wallet.class)
       .setParameter("investorId", investorId)
