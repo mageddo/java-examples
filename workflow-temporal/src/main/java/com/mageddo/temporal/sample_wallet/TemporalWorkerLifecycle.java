@@ -9,6 +9,7 @@ import com.mageddo.temporal.sample_wallet.workflow.SampleWalletCreationWorkflowI
 import io.quarkus.arc.properties.IfBuildProperty;
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
+import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.WorkerFactory;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
