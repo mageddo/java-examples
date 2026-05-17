@@ -15,28 +15,47 @@ services:
     memswap_limit: 0
     cpu_count: 2
 
+  temporal-db-bootstrap:
+    image: postgres:17.6
+    depends_on:
+      - postgres-17
+    environment:
+      - PGPASSWORD=root
+    volumes:
+      - ./infra/postgres/bootstrap:/bootstrap
+    command:
+      - bash
+      - -lc
+      - |
+        until pg_isready -h postgres-17 -p 5432 -U root -d db; do
+          echo 'Waiting for PostgreSQL bootstrap target...'
+          sleep 1
+        done
+        psql -h postgres-17 -p 5432 -U root -d db -f /bootstrap/001-bootstrap-temporal.sql
+
   temporal:
     image: temporalio/auto-setup:1.29.1
     depends_on:
-      - postgres-17
+      - temporal-db-bootstrap
+    volumes:
+      - ./infra/temporal/custom-auto-setup.sh:/etc/temporal/custom-auto-setup.sh
     environment:
       - DB=postgres12
       - DB_PORT=5432
       - DBNAME=db
       - POSTGRES_SEEDS=postgres-17
-      - POSTGRES_USER=root
-      - POSTGRES_PWD=root
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
       - VISIBILITY_DBNAME=db
-      - VISIBILITY_POSTGRES_USER=root
-      - VISIBILITY_POSTGRES_PWD=root
-#      - POSTGRES_USER=temporal
-#      - POSTGRES_PWD=temporal
-#      - VISIBILITY_DBNAME=db
-#      - VISIBILITY_POSTGRES_USER=temporal_visibility
-#      - VISIBILITY_POSTGRES_PWD=temporal_visibility
-#      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - VISIBILITY_POSTGRES_USER=temporal_visibility
+      - VISIBILITY_POSTGRES_PWD=temporal_visibility
+      - SKIP_DB_CREATE=true
+      - SKIP_SCHEMA_SETUP=true
     ports:
       - "7233:7233"
+    command:
+      - bash
+      - /etc/temporal/custom-auto-setup.sh
 
   temporal-ui:
     image: temporalio/ui:2.39.0
