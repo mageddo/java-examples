@@ -1,6 +1,5 @@
-package com.mageddo.temporal.samplewallet.service;
+package com.mageddo.investment_product.investment;
 
-import com.mageddo.investment_product.investment.Investment;
 import com.mageddo.investment_product.investment.dataprovider.InvestmentDAO;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -12,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class InvestmentService {
 
-  final InvestmentDAO investmentDAO;
+  private final InvestmentDAO investmentDAO;
 
   @Transactional
   public void save(Investment investment) {

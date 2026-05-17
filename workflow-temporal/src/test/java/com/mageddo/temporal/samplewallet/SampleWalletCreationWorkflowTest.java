@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.mageddo.investment_product.investment.Investment;
 import com.mageddo.temporal.samplewallet.activity.SampleWalletCreationActivitiesImpl;
 import com.mageddo.temporal.samplewallet.service.FinancialEventCandidateService;
-import com.mageddo.temporal.samplewallet.service.InvestmentService;
+import com.mageddo.investment_product.investment.InvestmentService;
 import com.mageddo.temporal.samplewallet.service.InvestorService;
 import com.mageddo.temporal.samplewallet.service.WalletService;
 import com.mageddo.temporal.samplewallet.domain.WalletStatus;
