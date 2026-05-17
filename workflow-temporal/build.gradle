@@ -1,0 +1,38 @@
+plugins {
+  id 'java'
+}
+
+group = 'com.mageddo.temporal'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(25)
+  }
+}
+
+dependencies {
+  implementation 'io.temporal:temporal-sdk:1.35.0'
+  implementation 'org.hibernate.orm:hibernate-core:7.1.27.Final'
+  implementation 'org.postgresql:postgresql:42.7.11'
+  implementation 'org.projectlombok:lombok:1.18.46'
+  implementation 'org.slf4j:slf4j-simple:2.0.17'
+  annotationProcessor 'org.projectlombok:lombok:1.18.46'
+
+  testImplementation platform('org.junit:junit-bom:5.13.1')
+  testImplementation 'org.junit.jupiter:junit-jupiter'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+  testImplementation 'org.assertj:assertj-core:3.27.7'
+  testImplementation 'io.temporal:temporal-testing:1.35.0'
+  testImplementation 'io.zonky.test:embedded-postgres:2.2.2'
+  testImplementation 'org.projectlombok:lombok:1.18.46'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
+}
+
+tasks.withType(Test).configureEach {
+  useJUnitPlatform()
+}
