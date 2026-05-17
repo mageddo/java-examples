@@ -20,7 +20,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-@Table(name = "WALLET")
+@Table(name = "WALLET", schema = "INV")
 public class Wallet {
 
   @Id

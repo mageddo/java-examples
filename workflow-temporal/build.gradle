@@ -22,6 +22,8 @@ dependencies {
   implementation 'io.quarkus:quarkus-flyway'
   implementation 'io.quarkus:quarkus-hibernate-orm'
   implementation 'io.quarkus:quarkus-jdbc-postgresql'
+  implementation 'io.quarkus:quarkus-rest'
+  implementation 'io.quarkus:quarkus-smallrye-openapi'
   implementation 'io.temporal:temporal-sdk:1.35.0'
   implementation 'org.projectlombok:lombok:1.18.46'
   annotationProcessor 'org.projectlombok:lombok:1.18.46'

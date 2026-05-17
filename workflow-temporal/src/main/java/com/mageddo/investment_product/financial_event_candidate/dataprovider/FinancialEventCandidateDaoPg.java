@@ -28,8 +28,8 @@ public class FinancialEventCandidateDaoPg implements FinancialEventCandidateDAO 
     return this.entityManager.createNativeQuery(
         """
           SELECT FEC.*
-          FROM FINANCIAL_EVENT_CANDIDATE FEC
-          INNER JOIN INVESTMENT I
+          FROM INV.FINANCIAL_EVENT_CANDIDATE FEC
+          INNER JOIN INV.INVESTMENT I
             ON I.IDT_INVESTMENT = FEC.IDT_INVESTMENT
           WHERE I.IDT_WALLET = :walletId
           ORDER BY FEC.IDT_FINANCIAL_EVENT_CANDIDATE

@@ -1,0 +1,28 @@
+CREATE SCHEMA IF NOT EXISTS INV;
+CREATE SCHEMA IF NOT EXISTS TEMPORAL;
+CREATE SCHEMA IF NOT EXISTS TEMPORAL_VISIBILITY;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'temporal') THEN
+    CREATE ROLE temporal LOGIN PASSWORD 'temporal';
+  END IF;
+END
+$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'temporal_visibility') THEN
+    CREATE ROLE temporal_visibility LOGIN PASSWORD 'temporal_visibility';
+  END IF;
+END
+$$;
+
+GRANT CONNECT ON DATABASE db TO temporal;
+GRANT CONNECT ON DATABASE db TO temporal_visibility;
+
+GRANT USAGE, CREATE ON SCHEMA TEMPORAL TO temporal;
+GRANT USAGE, CREATE ON SCHEMA TEMPORAL_VISIBILITY TO temporal_visibility;
+
+ALTER ROLE temporal IN DATABASE db SET search_path TO TEMPORAL;
+ALTER ROLE temporal_visibility IN DATABASE db SET search_path TO TEMPORAL_VISIBILITY;

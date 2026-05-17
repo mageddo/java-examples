@@ -14,9 +14,9 @@ public class TestDatabaseControl {
 
   @Transactional
   public void clear() {
-    this.entityManager.createNativeQuery("DELETE FROM FINANCIAL_EVENT_CANDIDATE").executeUpdate();
-    this.entityManager.createNativeQuery("DELETE FROM INVESTMENT").executeUpdate();
-    this.entityManager.createNativeQuery("DELETE FROM WALLET").executeUpdate();
-    this.entityManager.createNativeQuery("DELETE FROM INVESTOR").executeUpdate();
+    this.entityManager.createNativeQuery("DELETE FROM INV.FINANCIAL_EVENT_CANDIDATE").executeUpdate();
+    this.entityManager.createNativeQuery("DELETE FROM INV.INVESTMENT").executeUpdate();
+    this.entityManager.createNativeQuery("DELETE FROM INV.WALLET").executeUpdate();
+    this.entityManager.createNativeQuery("DELETE FROM INV.INVESTOR").executeUpdate();
   }
 }
