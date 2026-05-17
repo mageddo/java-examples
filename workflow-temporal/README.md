@@ -60,7 +60,8 @@ Execute:
 Suba a infraestrutura local:
 
 ```bash
-docker compose up -d
+docker compose up postgres-17 temporal-db-bootstrap
+docker compose up temporal temporal-ui
 ./gradlew quarkusDev
 ```
 
