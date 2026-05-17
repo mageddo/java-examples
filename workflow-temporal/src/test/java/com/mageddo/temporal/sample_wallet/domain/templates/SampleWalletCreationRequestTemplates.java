@@ -1,6 +1,6 @@
-package com.mageddo.temporal.samplewallet.domain.templates;
+package com.mageddo.temporal.sample_wallet.domain.templates;
 
-import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationRequest;
+import com.mageddo.temporal.sample_wallet.domain.SampleWalletCreationRequest;
 import java.time.Duration;
 
 public class SampleWalletCreationRequestTemplates {

@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet.domain;
+package com.mageddo.temporal.sample_wallet.domain;
 
 import com.mageddo.investment_product.financial_event_candidate.CandidateStatus;
 

@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet;
+package com.mageddo.temporal.sample_wallet;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

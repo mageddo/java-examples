@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet.activity;
+package com.mageddo.temporal.sample_wallet.activity;
 
 import com.mageddo.investment_product.financial_event_candidate.CandidateStatus;
 import com.mageddo.investment_product.financial_event_candidate.FinancialEventCandidate;
@@ -10,9 +10,9 @@ import com.mageddo.investment_product.investor.InvestorService;
 import com.mageddo.investment_product.wallet.Wallet;
 import com.mageddo.investment_product.wallet.WalletService;
 import com.mageddo.investment_product.investor.InvestorProfile;
-import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationResult;
+import com.mageddo.temporal.sample_wallet.domain.SampleWalletCreationResult;
 import com.mageddo.investment_product.wallet.WalletStatus;
-import com.mageddo.temporal.samplewallet.workflow.SampleWalletCreationWorkflow;
+import com.mageddo.temporal.sample_wallet.workflow.SampleWalletCreationWorkflow;
 import io.temporal.client.WorkflowClient;
 import java.time.Instant;
 import java.util.LinkedHashMap;

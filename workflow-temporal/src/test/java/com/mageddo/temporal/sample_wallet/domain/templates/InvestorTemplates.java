@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet.domain.templates;
+package com.mageddo.temporal.sample_wallet.domain.templates;
 
 import com.mageddo.investment_product.investor.Investor;
 import com.mageddo.investment_product.investor.InvestorProfile;

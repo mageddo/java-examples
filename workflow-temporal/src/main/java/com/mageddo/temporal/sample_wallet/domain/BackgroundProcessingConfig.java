@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet.domain;
+package com.mageddo.temporal.sample_wallet.domain;
 
 import java.time.Duration;
 import java.util.Set;

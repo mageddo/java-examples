@@ -1,8 +1,8 @@
-package com.mageddo.temporal.samplewallet.workflow;
+package com.mageddo.temporal.sample_wallet.workflow;
 
 import com.mageddo.investment_product.financial_event_candidate.CandidateStatus;
-import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationRequest;
-import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationResult;
+import com.mageddo.temporal.sample_wallet.domain.SampleWalletCreationRequest;
+import com.mageddo.temporal.sample_wallet.domain.SampleWalletCreationResult;
 import io.temporal.workflow.QueryMethod;
 import io.temporal.workflow.SignalMethod;
 import io.temporal.workflow.WorkflowInterface;

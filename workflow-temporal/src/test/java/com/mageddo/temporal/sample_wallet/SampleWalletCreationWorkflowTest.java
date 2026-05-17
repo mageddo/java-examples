@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet;
+package com.mageddo.temporal.sample_wallet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,15 +6,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.mageddo.investment_product.financial_event_candidate.FinancialEventCandidate;
 import com.mageddo.investment_product.financial_event_candidate.FinancialEventCandidateService;
 import com.mageddo.investment_product.investment.Investment;
-import com.mageddo.temporal.samplewallet.activity.SampleWalletCreationActivitiesImpl;
+import com.mageddo.temporal.sample_wallet.activity.SampleWalletCreationActivitiesImpl;
 import com.mageddo.investment_product.investment.InvestmentService;
 import com.mageddo.investment_product.investor.InvestorService;
 import com.mageddo.investment_product.wallet.WalletService;
 import com.mageddo.investment_product.wallet.WalletStatus;
-import com.mageddo.temporal.samplewallet.domain.templates.InvestorTemplates;
-import com.mageddo.temporal.samplewallet.domain.templates.SampleWalletCreationRequestTemplates;
-import com.mageddo.temporal.samplewallet.workflow.SampleWalletCreationWorkflow;
-import com.mageddo.temporal.samplewallet.workflow.SampleWalletCreationWorkflowImpl;
+import com.mageddo.temporal.sample_wallet.domain.templates.InvestorTemplates;
+import com.mageddo.temporal.sample_wallet.domain.templates.SampleWalletCreationRequestTemplates;
+import com.mageddo.temporal.sample_wallet.workflow.SampleWalletCreationWorkflow;
+import com.mageddo.temporal.sample_wallet.workflow.SampleWalletCreationWorkflowImpl;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.temporal.client.WorkflowOptions;

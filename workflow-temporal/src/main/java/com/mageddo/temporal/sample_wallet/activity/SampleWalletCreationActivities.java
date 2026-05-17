@@ -1,6 +1,6 @@
-package com.mageddo.temporal.samplewallet.activity;
+package com.mageddo.temporal.sample_wallet.activity;
 
-import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationResult;
+import com.mageddo.temporal.sample_wallet.domain.SampleWalletCreationResult;
 import java.util.List;
 import java.util.Map;
 import io.temporal.activity.ActivityInterface;

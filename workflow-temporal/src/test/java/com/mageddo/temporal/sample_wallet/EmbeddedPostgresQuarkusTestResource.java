@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet;
+package com.mageddo.temporal.sample_wallet;
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
