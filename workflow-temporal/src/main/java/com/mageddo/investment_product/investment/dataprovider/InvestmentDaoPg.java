@@ -1,6 +1,6 @@
-package com.mageddo.temporal.samplewallet.dataprovider;
+package com.mageddo.investment_product.investment.dataprovider;
 
-import com.mageddo.temporal.samplewallet.domain.Investment;
+import com.mageddo.investment_product.investment.Investment;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;

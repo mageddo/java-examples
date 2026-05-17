@@ -1,12 +1,12 @@
 package com.mageddo.temporal.samplewallet.activity;
 
-import com.mageddo.temporal.samplewallet.dataprovider.FinancialEventCandidateDAO;
-import com.mageddo.temporal.samplewallet.dataprovider.InvestmentDAO;
+import com.mageddo.investment_product.financial_event_candidate.dataprovider.FinancialEventCandidateDAO;
+import com.mageddo.investment_product.investment.dataprovider.InvestmentDAO;
 import com.mageddo.temporal.samplewallet.dataprovider.InvestorDAO;
 import com.mageddo.temporal.samplewallet.dataprovider.WalletDAO;
 import com.mageddo.temporal.samplewallet.domain.CandidateStatus;
 import com.mageddo.temporal.samplewallet.domain.FinancialEventCandidate;
-import com.mageddo.temporal.samplewallet.domain.Investment;
+import com.mageddo.investment_product.investment.Investment;
 import com.mageddo.temporal.samplewallet.domain.Investor;
 import com.mageddo.temporal.samplewallet.domain.InvestorProfile;
 import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationResult;

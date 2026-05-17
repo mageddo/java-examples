@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet.dataprovider;
+package com.mageddo.investment_product.financial_event_candidate.dataprovider;
 
 import com.mageddo.temporal.samplewallet.domain.FinancialEventCandidate;
 import java.util.List;

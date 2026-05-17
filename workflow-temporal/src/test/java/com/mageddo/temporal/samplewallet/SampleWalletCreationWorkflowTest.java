@@ -3,9 +3,10 @@ package com.mageddo.temporal.samplewallet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.mageddo.investment_product.investment.Investment;
 import com.mageddo.temporal.samplewallet.activity.SampleWalletCreationActivitiesImpl;
-import com.mageddo.temporal.samplewallet.dataprovider.FinancialEventCandidateDAO;
-import com.mageddo.temporal.samplewallet.dataprovider.InvestmentDAO;
+import com.mageddo.investment_product.financial_event_candidate.dataprovider.FinancialEventCandidateDAO;
+import com.mageddo.investment_product.investment.dataprovider.InvestmentDAO;
 import com.mageddo.temporal.samplewallet.dataprovider.InvestorDAO;
 import com.mageddo.temporal.samplewallet.dataprovider.WalletDAO;
 import com.mageddo.temporal.samplewallet.domain.WalletStatus;
@@ -85,7 +86,7 @@ class SampleWalletCreationWorkflowTest {
     var candidates = this.candidateDAO.findByWalletId(result.walletId());
 
     assertThat(wallet.getStatus()).isEqualTo(WalletStatus.READY);
-    assertThat(investments).hasSize(3).allMatch(com.mageddo.temporal.samplewallet.domain.Investment::isCreated);
+    assertThat(investments).hasSize(3).allMatch(Investment::isCreated);
     assertThat(candidates).hasSize(3).allMatch(com.mageddo.temporal.samplewallet.domain.FinancialEventCandidate::isProcessed);
   }
 

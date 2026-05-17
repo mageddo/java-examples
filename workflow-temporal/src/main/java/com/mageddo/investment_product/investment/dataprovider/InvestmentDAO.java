@@ -1,6 +1,6 @@
-package com.mageddo.temporal.samplewallet.dataprovider;
+package com.mageddo.investment_product.investment.dataprovider;
 
-import com.mageddo.temporal.samplewallet.domain.Investment;
+import com.mageddo.investment_product.investment.Investment;
 import java.util.List;
 
 public interface InvestmentDAO {
