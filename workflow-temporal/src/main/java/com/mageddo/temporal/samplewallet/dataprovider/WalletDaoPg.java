@@ -30,10 +30,10 @@ public class WalletDaoPg implements WalletDAO {
   public List<Wallet> findByInvestorId(String investorId) {
     return this.entityManager.createNativeQuery(
         """
-          select *
-          from WALLET
-          where IDT_INVESTOR = :investorId
-          order by DAT_CREATED
+          SELECT *
+          FROM WALLET
+          WHERE IDT_INVESTOR = :investorId
+          ORDER BY DAT_CREATED
           """,
         Wallet.class)
       .setParameter("investorId", investorId)
