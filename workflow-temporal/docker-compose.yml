@@ -37,6 +37,9 @@ services:
     image: temporalio/auto-setup:1.29.1
     depends_on:
       - temporal-db-bootstrap
+    entrypoint:
+      - /bin/bash
+      - /etc/temporal/custom-auto-setup.sh
     volumes:
       - ./infra/temporal/custom-auto-setup.sh:/etc/temporal/custom-auto-setup.sh
     environment:
@@ -53,9 +56,6 @@ services:
       - SKIP_SCHEMA_SETUP=true
     ports:
       - "7233:7233"
-    command:
-      - bash
-      - /etc/temporal/custom-auto-setup.sh
 
   temporal-ui:
     image: temporalio/ui:2.39.0
