@@ -105,3 +105,33 @@ Em produção, a evolução natural seria:
 - publicar métricas e tracing por etapa
 - refinar políticas de retry por tipo de falha
 - separar entidades JPA das entidades de domínio se a complexidade crescer
+
+
+## Namespace
+
+No projeto atual, o namespace do client está vindo de sample-wallet.temporal.namespace em src/main/resources/application.properties:1 e é aplicado em src/main/java/com/mageddo/temporal/
+sample_wallet/TemporalClientProvider.java:1.
+
+Basta trocar:
+
+sample-wallet.temporal.namespace=default
+
+por:
+
+sample-wallet.temporal.namespace=investment_product
+
+Mas isso sozinho não basta. O namespace também precisa existir no servidor Temporal. Registre assim:
+
+docker-compose exec temporal temporal operator namespace create \
+--namespace investment_product \
+--retention 24h \
+--description "Investment Product namespace"
+
+Depois reinicie a app Quarkus para o WorkflowClient pegar o novo valor.
+
+Se quiser validar:
+
+docker-compose exec temporal temporal operator namespace describe --namespace investment_product
+
+Se preferir, eu também posso ajustar o docker-compose para já criar esse namespace automaticamente no bootstrap, em vez de depender de comando manual.
+
