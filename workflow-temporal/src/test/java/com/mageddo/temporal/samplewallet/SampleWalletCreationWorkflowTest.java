@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.mageddo.investment_product.investment.Investment;
 import com.mageddo.temporal.samplewallet.activity.SampleWalletCreationActivitiesImpl;
-import com.mageddo.investment_product.financial_event_candidate.dataprovider.FinancialEventCandidateDAO;
-import com.mageddo.investment_product.investment.dataprovider.InvestmentDAO;
-import com.mageddo.temporal.samplewallet.dataprovider.InvestorDAO;
-import com.mageddo.temporal.samplewallet.dataprovider.WalletDAO;
+import com.mageddo.temporal.samplewallet.service.FinancialEventCandidateService;
+import com.mageddo.temporal.samplewallet.service.InvestmentService;
+import com.mageddo.temporal.samplewallet.service.InvestorService;
+import com.mageddo.temporal.samplewallet.service.WalletService;
 import com.mageddo.temporal.samplewallet.domain.WalletStatus;
 import com.mageddo.temporal.samplewallet.domain.templates.InvestorTemplates;
 import com.mageddo.temporal.samplewallet.domain.templates.SampleWalletCreationRequestTemplates;
@@ -37,16 +37,16 @@ class SampleWalletCreationWorkflowTest {
   static final String TASK_QUEUE = "sample-wallet-task-queue";
 
   @Inject
-  InvestorDAO investorDAO;
+  InvestorService investorService;
 
   @Inject
-  WalletDAO walletDAO;
+  WalletService walletService;
 
   @Inject
-  InvestmentDAO investmentDAO;
+  InvestmentService investmentService;
 
   @Inject
-  FinancialEventCandidateDAO candidateDAO;
+  FinancialEventCandidateService financialEventCandidateService;
 
   @Inject
   TestDatabaseControl testDatabaseControl;
@@ -73,17 +73,17 @@ class SampleWalletCreationWorkflowTest {
 
   @Test
   void shouldCreateReadyWalletAndProcessCandidates() {
-    var investor = InvestorTemplates.moderado("investor-success");
-    this.investorDAO.save(investor);
+    final var investor = InvestorTemplates.moderado("investor-success");
+    this.investorService.save(investor);
     this.startTemporalEnvironment(Set.of(), Set.of(), 100);
 
-    var workflow = this.newWorkflow("investor-success-workflow");
+    final var workflow = this.newWorkflow("investor-success-workflow");
 
-    var result = workflow.create(SampleWalletCreationRequestTemplates.defaultRequest(investor.getId()));
+    final var result = workflow.create(SampleWalletCreationRequestTemplates.defaultRequest(investor.getId()));
 
-    var wallet = this.walletDAO.findById(result.walletId());
-    var investments = this.investmentDAO.findByWalletId(result.walletId());
-    var candidates = this.candidateDAO.findByWalletId(result.walletId());
+    final var wallet = this.walletService.findById(result.walletId());
+    final var investments = this.investmentService.findByWalletId(result.walletId());
+    final var candidates = this.financialEventCandidateService.findByWalletId(result.walletId());
 
     assertThat(wallet.getStatus()).isEqualTo(WalletStatus.READY);
     assertThat(investments).hasSize(3).allMatch(Investment::isCreated);
@@ -92,37 +92,37 @@ class SampleWalletCreationWorkflowTest {
 
   @Test
   void shouldRetryCandidateProcessingAndStillFinishWallet() {
-    var investor = InvestorTemplates.arrojado("investor-retry");
-    this.investorDAO.save(investor);
+    final var investor = InvestorTemplates.arrojado("investor-retry");
+    this.investorService.save(investor);
     this.startTemporalEnvironment(Set.of("candidate-1"), Set.of(), 50);
 
-    var workflow = this.newWorkflow("investor-retry-workflow");
+    final var workflow = this.newWorkflow("investor-retry-workflow");
 
-    var result = workflow.create(SampleWalletCreationRequestTemplates.defaultRequest(investor.getId()));
+    final var result = workflow.create(SampleWalletCreationRequestTemplates.defaultRequest(investor.getId()));
 
-    var candidates = this.candidateDAO.findByWalletId(result.walletId());
+    final var candidates = this.financialEventCandidateService.findByWalletId(result.walletId());
 
     assertThat(candidates).hasSize(3);
     assertThat(candidates)
       .filteredOn(candidate -> candidate.getAttempts() > 1)
       .hasSize(1);
-    assertThat(this.walletDAO.findById(result.walletId()).getStatus()).isEqualTo(WalletStatus.READY);
+    assertThat(this.walletService.findById(result.walletId()).getStatus()).isEqualTo(WalletStatus.READY);
   }
 
   @Test
   void shouldAbortWalletWhenCandidateProcessingTimesOut() {
-    var investor = InvestorTemplates.moderado("investor-timeout");
-    this.investorDAO.save(investor);
+    final var investor = InvestorTemplates.moderado("investor-timeout");
+    this.investorService.save(investor);
     this.startTemporalEnvironment(Set.of(), Set.of("candidate-1"), 1_000);
 
-    var workflow = this.newWorkflow("investor-timeout-workflow");
+    final var workflow = this.newWorkflow("investor-timeout-workflow");
 
     assertThatThrownBy(() -> workflow.create(SampleWalletCreationRequestTemplates.timeoutRequest(investor.getId())))
       .cause()
       .isInstanceOf(ApplicationFailure.class)
       .hasMessageContaining("SAMPLE_WALLET_TIMEOUT");
 
-    var wallet = this.walletDAO.findByInvestorId(investor.getId()).getFirst();
+    final var wallet = this.walletService.findByInvestorId(investor.getId()).getFirst();
 
     assertThat(wallet.getStatus()).isEqualTo(WalletStatus.ABORTED);
   }
@@ -133,10 +133,10 @@ class SampleWalletCreationWorkflowTest {
         .setUseTimeskipping(false)
         .build()
     );
-    var workflowClient = this.testWorkflowEnvironment.getWorkflowClient();
-    var dispatcher = new SampleWalletCreationActivitiesImpl.BackgroundJobDispatcher(
-      this.investmentDAO,
-      this.candidateDAO,
+    final var workflowClient = this.testWorkflowEnvironment.getWorkflowClient();
+    final var dispatcher = new SampleWalletCreationActivitiesImpl.BackgroundJobDispatcher(
+      this.investmentService,
+      this.financialEventCandidateService,
       workflowClient,
       this.backgroundExecutor,
       new SampleWalletCreationActivitiesImpl.BackgroundJobPolicy(
@@ -147,11 +147,11 @@ class SampleWalletCreationWorkflowTest {
         2
       )
     );
-    var activities = new SampleWalletCreationActivitiesImpl(
-      this.investorDAO,
-      this.walletDAO,
-      this.investmentDAO,
-      this.candidateDAO,
+    final var activities = new SampleWalletCreationActivitiesImpl(
+      this.investorService,
+      this.walletService,
+      this.investmentService,
+      this.financialEventCandidateService,
       workflowClient,
       dispatcher
     );

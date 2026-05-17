@@ -1,32 +1,29 @@
 package com.mageddo.investment_product.investment.dataprovider;
 
 import com.mageddo.investment_product.investment.Investment;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
-@ApplicationScoped
+@Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class InvestmentDaoPg implements InvestmentDAO {
 
-  @Inject
-  EntityManager entityManager;
+  final EntityManager entityManager;
 
   @Override
-  @Transactional
   public void save(Investment investment) {
     this.entityManager.merge(investment);
   }
 
   @Override
-  @Transactional
   public Investment findById(String investmentId) {
     return this.entityManager.find(Investment.class, investmentId);
   }
 
   @Override
-  @Transactional
   public List<Investment> findByWalletId(String walletId) {
     return this.entityManager.createNativeQuery(
         """

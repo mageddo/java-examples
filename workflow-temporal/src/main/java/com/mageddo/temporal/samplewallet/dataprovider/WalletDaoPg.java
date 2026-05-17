@@ -1,32 +1,29 @@
 package com.mageddo.temporal.samplewallet.dataprovider;
 
 import com.mageddo.temporal.samplewallet.domain.Wallet;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
-@ApplicationScoped
+@Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class WalletDaoPg implements WalletDAO {
 
-  @Inject
-  EntityManager entityManager;
+  final EntityManager entityManager;
 
   @Override
-  @Transactional
   public void save(Wallet wallet) {
     this.entityManager.merge(wallet);
   }
 
   @Override
-  @Transactional
   public Wallet findById(String walletId) {
     return this.entityManager.find(Wallet.class, walletId);
   }
 
   @Override
-  @Transactional
   public List<Wallet> findByInvestorId(String investorId) {
     return this.entityManager.createNativeQuery(
         """

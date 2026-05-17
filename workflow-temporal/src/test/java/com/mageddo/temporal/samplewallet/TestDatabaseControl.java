@@ -1,21 +1,22 @@
 package com.mageddo.temporal.samplewallet;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
-@ApplicationScoped
+@Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class TestDatabaseControl {
 
-  @Inject
-  EntityManager entityManager;
+  final EntityManager entityManager;
 
   @Transactional
   public void clear() {
-    this.entityManager.createNativeQuery("delete from financial_event_candidate").executeUpdate();
-    this.entityManager.createNativeQuery("delete from investment").executeUpdate();
-    this.entityManager.createNativeQuery("delete from wallet").executeUpdate();
-    this.entityManager.createNativeQuery("delete from investor").executeUpdate();
+    this.entityManager.createNativeQuery("DELETE FROM FINANCIAL_EVENT_CANDIDATE").executeUpdate();
+    this.entityManager.createNativeQuery("DELETE FROM INVESTMENT").executeUpdate();
+    this.entityManager.createNativeQuery("DELETE FROM WALLET").executeUpdate();
+    this.entityManager.createNativeQuery("DELETE FROM INVESTOR").executeUpdate();
   }
 }

@@ -2,8 +2,6 @@ package com.mageddo.temporal.samplewallet.activity;
 
 import com.mageddo.investment_product.financial_event_candidate.dataprovider.FinancialEventCandidateDAO;
 import com.mageddo.investment_product.investment.dataprovider.InvestmentDAO;
-import com.mageddo.temporal.samplewallet.dataprovider.InvestorDAO;
-import com.mageddo.temporal.samplewallet.dataprovider.WalletDAO;
 import com.mageddo.temporal.samplewallet.domain.CandidateStatus;
 import com.mageddo.temporal.samplewallet.domain.FinancialEventCandidate;
 import com.mageddo.investment_product.investment.Investment;
@@ -12,6 +10,10 @@ import com.mageddo.temporal.samplewallet.domain.InvestorProfile;
 import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationResult;
 import com.mageddo.temporal.samplewallet.domain.Wallet;
 import com.mageddo.temporal.samplewallet.domain.WalletStatus;
+import com.mageddo.temporal.samplewallet.service.FinancialEventCandidateService;
+import com.mageddo.temporal.samplewallet.service.InvestmentService;
+import com.mageddo.temporal.samplewallet.service.InvestorService;
+import com.mageddo.temporal.samplewallet.service.WalletService;
 import com.mageddo.temporal.samplewallet.workflow.SampleWalletCreationWorkflow;
 import io.temporal.client.WorkflowClient;
 import java.time.Instant;
@@ -23,7 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationActivities {
 
   private static final Map<InvestorProfile, List<String>> BASE_INVESTMENTS_BY_PROFILE = Map.of(
@@ -32,36 +36,20 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
     InvestorProfile.CONSERVADOR, List.of("TREASURY-SELIC", "CDB-DI", "LCI-2027")
   );
 
-  private final InvestorDAO investorDAO;
-  private final WalletDAO walletDAO;
-  private final InvestmentDAO investmentDAO;
-  private final FinancialEventCandidateDAO candidateDAO;
+  private final InvestorService investorService;
+  private final WalletService walletService;
+  private final InvestmentService investmentService;
+  private final FinancialEventCandidateService financialEventCandidateService;
   private final WorkflowClient workflowClient;
   private final BackgroundJobDispatcher backgroundJobDispatcher;
   private final AtomicInteger walletSequence = new AtomicInteger();
   private final AtomicInteger investmentSequence = new AtomicInteger();
   private final AtomicInteger candidateSequence = new AtomicInteger();
 
-  public SampleWalletCreationActivitiesImpl(
-    InvestorDAO investorDAO,
-    WalletDAO walletDAO,
-    InvestmentDAO investmentDAO,
-    FinancialEventCandidateDAO candidateDAO,
-    WorkflowClient workflowClient,
-    BackgroundJobDispatcher backgroundJobDispatcher
-  ) {
-    this.investorDAO = investorDAO;
-    this.walletDAO = walletDAO;
-    this.investmentDAO = investmentDAO;
-    this.candidateDAO = candidateDAO;
-    this.workflowClient = workflowClient;
-    this.backgroundJobDispatcher = backgroundJobDispatcher;
-  }
-
   @Override
   public String createWallet(String investorId) {
-    var walletId = "wallet-" + this.walletSequence.incrementAndGet();
-    this.walletDAO.save(Wallet.builder()
+    final var walletId = "wallet-" + this.walletSequence.incrementAndGet();
+    this.walletService.save(Wallet.builder()
       .id(walletId)
       .investorId(investorId)
       .status(WalletStatus.CREATING)
@@ -72,9 +60,9 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
 
   @Override
   public List<String> createInvestments(String investorId, String walletId) {
-    var investor = this.requireInvestor(investorId);
-    var baseInvestmentIds = BASE_INVESTMENTS_BY_PROFILE.get(investor.getProfile());
-    var investmentIds = baseInvestmentIds.stream()
+    final var investor = this.requireInvestor(investorId);
+    final var baseInvestmentIds = BASE_INVESTMENTS_BY_PROFILE.get(investor.getProfile());
+    final var investmentIds = baseInvestmentIds.stream()
       .map(baseInvestmentId -> this.createInvestment(walletId, investor, baseInvestmentId))
       .toList();
     investmentIds.forEach(this.backgroundJobDispatcher::scheduleInvestmentCreation);
@@ -85,7 +73,7 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
 
   @Override
   public List<String> createFinancialEventCandidates(String workflowId, String walletId, List<String> investmentIds) {
-    var candidateIds = investmentIds.stream()
+    final var candidateIds = investmentIds.stream()
       .map(this::createCandidate)
       .toList();
     candidateIds.forEach(candidateId -> this.backgroundJobDispatcher.scheduleCandidateProcessing(workflowId, walletId, candidateId));
@@ -94,8 +82,8 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
 
   @Override
   public Map<String, Boolean> fanOutCandidates(List<String> candidateIds) {
-    var fanOut = new LinkedHashMap<String, Boolean>();
-    for (var candidateId : candidateIds) {
+    final var fanOut = new LinkedHashMap<String, Boolean>();
+    for (final var candidateId : candidateIds) {
       fanOut.put(candidateId, Boolean.TRUE);
     }
     return fanOut;
@@ -103,8 +91,8 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
 
   @Override
   public SampleWalletCreationResult finishSampleWalletCreation(String walletId, List<String> investmentIds, List<String> candidateIds) {
-    var wallet = this.walletDAO.findById(walletId);
-    this.walletDAO.save(wallet.toBuilder()
+    final var wallet = this.walletService.findById(walletId);
+    this.walletService.save(wallet.toBuilder()
       .status(WalletStatus.READY)
       .readyAt(Instant.now())
       .build());
@@ -117,18 +105,18 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
 
   @Override
   public void abortSampleWalletCreation(String walletId) {
-    var wallet = this.walletDAO.findById(walletId);
+    final var wallet = this.walletService.findById(walletId);
     if (wallet == null || wallet.getStatus() == WalletStatus.READY) {
       return;
     }
-    this.walletDAO.save(wallet.toBuilder()
+    this.walletService.save(wallet.toBuilder()
       .status(WalletStatus.ABORTED)
       .abortedAt(Instant.now())
       .build());
   }
 
   private Investor requireInvestor(String investorId) {
-    var investor = this.investorDAO.findById(investorId);
+    final var investor = this.investorService.findById(investorId);
     if (investor == null) {
       throw new IllegalArgumentException("Investor not found: " + investorId);
     }
@@ -136,7 +124,7 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
   }
 
   private Investment createInvestment(String walletId, Investor investor, String baseInvestmentId) {
-    var investment = Investment.builder()
+    final var investment = Investment.builder()
       .id("investment-" + this.investmentSequence.incrementAndGet())
       .walletId(walletId)
       .investorId(investor.getId())
@@ -144,50 +132,37 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
       .profile(investor.getProfile())
       .created(false)
       .build();
-    this.investmentDAO.save(investment);
+    this.investmentService.save(investment);
     return investment;
   }
 
   private String createCandidate(String investmentId) {
-    var candidate = FinancialEventCandidate.builder()
+    final var candidate = FinancialEventCandidate.builder()
       .id("candidate-" + this.candidateSequence.incrementAndGet())
       .investmentId(investmentId)
       .status(CandidateStatus.PENDING)
       .processed(false)
       .attempts(0)
       .build();
-    this.candidateDAO.save(candidate);
+    this.financialEventCandidateService.save(candidate);
     return candidate.getId();
   }
 
+  @RequiredArgsConstructor
   public static class BackgroundJobDispatcher {
 
-    private final InvestmentDAO investmentDAO;
-    private final FinancialEventCandidateDAO candidateDAO;
+    private final InvestmentService investmentService;
+    private final FinancialEventCandidateService financialEventCandidateService;
     private final WorkflowClient workflowClient;
     private final ExecutorService executorService;
     private final BackgroundJobPolicy policy;
     private final Set<String> failedOnceCandidateIds = ConcurrentHashMap.newKeySet();
 
-    public BackgroundJobDispatcher(
-      InvestmentDAO investmentDAO,
-      FinancialEventCandidateDAO candidateDAO,
-      WorkflowClient workflowClient,
-      ExecutorService executorService,
-      BackgroundJobPolicy policy
-    ) {
-      this.investmentDAO = investmentDAO;
-      this.candidateDAO = candidateDAO;
-      this.workflowClient = workflowClient;
-      this.executorService = executorService;
-      this.policy = policy;
-    }
-
     public void scheduleInvestmentCreation(Investment investment) {
       this.executorService.submit(() -> {
         this.sleep(this.policy.investmentCreationDelayMillis());
-        var persisted = this.investmentDAO.findById(investment.getId());
-        this.investmentDAO.save(persisted.toBuilder()
+        final var persisted = this.investmentService.findById(investment.getId());
+        this.investmentService.save(persisted.toBuilder()
           .created(true)
           .build());
       });
@@ -206,43 +181,43 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
         }
         if (this.policy.failFirstAttemptCandidateIds().contains(candidateId)
             && this.failedOnceCandidateIds.add(candidateId)) {
-          var candidate = this.candidateDAO.findById(candidateId);
-          this.candidateDAO.save(candidate.toBuilder()
+          final var candidate = this.financialEventCandidateService.findById(candidateId);
+          this.financialEventCandidateService.save(candidate.toBuilder()
             .attempts(attempts)
             .build());
           continue;
         }
-        var candidate = this.candidateDAO.findById(candidateId);
-        var processedCandidate = candidate.toBuilder()
+        final var candidate = this.financialEventCandidateService.findById(candidateId);
+        final var processedCandidate = candidate.toBuilder()
           .status(CandidateStatus.MATCHED)
           .processed(true)
           .processedAt(Instant.now())
           .attempts(attempts)
           .build();
-        this.candidateDAO.save(processedCandidate);
+        this.financialEventCandidateService.save(processedCandidate);
         this.signalProcessed(workflowId, processedCandidate);
         return;
       }
-      var candidate = this.candidateDAO.findById(candidateId);
-      var rejectedCandidate = candidate.toBuilder()
+      final var candidate = this.financialEventCandidateService.findById(candidateId);
+      final var rejectedCandidate = candidate.toBuilder()
         .status(CandidateStatus.REJECTED)
         .processed(true)
         .processedAt(Instant.now())
         .attempts(this.policy.maxCandidateAttempts())
         .build();
-      this.candidateDAO.save(rejectedCandidate);
+      this.financialEventCandidateService.save(rejectedCandidate);
       this.signalProcessed(workflowId, rejectedCandidate);
     }
 
     private void signalProcessed(String workflowId, FinancialEventCandidate candidate) {
-      var workflow = this.workflowClient.newWorkflowStub(SampleWalletCreationWorkflow.class, workflowId);
+      final var workflow = this.workflowClient.newWorkflowStub(SampleWalletCreationWorkflow.class, workflowId);
       workflow.candidateProcessed(candidate.getId(), candidate.getStatus(), candidate.isProcessed());
     }
 
     private void waitUntilInvestmentIsCreated(String candidateId) {
       while (true) {
-        var candidate = this.candidateDAO.findById(candidateId);
-        var investment = this.investmentDAO.findById(candidate.getInvestmentId());
+        final var candidate = this.financialEventCandidateService.findById(candidateId);
+        final var investment = this.investmentService.findById(candidate.getInvestmentId());
         if (investment.isCreated()) {
           return;
         }
