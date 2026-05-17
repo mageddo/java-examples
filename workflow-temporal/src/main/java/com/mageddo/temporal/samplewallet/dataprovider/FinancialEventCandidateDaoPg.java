@@ -1,27 +1,34 @@
 package com.mageddo.temporal.samplewallet.dataprovider;
 
 import com.mageddo.temporal.samplewallet.domain.FinancialEventCandidate;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
-import org.hibernate.SessionFactory;
 
-public class FinancialEventCandidateRepo {
+@ApplicationScoped
+public class FinancialEventCandidateDaoPg implements FinancialEventCandidateDAO {
 
-  private final TransactionRunner transactionRunner;
+  @Inject
+  EntityManager entityManager;
 
-  public FinancialEventCandidateRepo(SessionFactory sessionFactory) {
-    this.transactionRunner = new TransactionRunner(sessionFactory);
-  }
-
+  @Override
+  @Transactional
   public void save(FinancialEventCandidate candidate) {
-    this.transactionRunner.requiredVoid(session -> session.merge(candidate));
+    this.entityManager.merge(candidate);
   }
 
+  @Override
+  @Transactional
   public FinancialEventCandidate findById(String candidateId) {
-    return this.transactionRunner.required(session -> session.find(FinancialEventCandidate.class, candidateId));
+    return this.entityManager.find(FinancialEventCandidate.class, candidateId);
   }
 
+  @Override
+  @Transactional
   public List<FinancialEventCandidate> findByWalletId(String walletId) {
-    return this.transactionRunner.required(session -> session.createNativeQuery(
+    return this.entityManager.createNativeQuery(
         """
           select candidate.*
           from financial_event_candidate candidate
@@ -31,6 +38,6 @@ public class FinancialEventCandidateRepo {
           """,
         FinancialEventCandidate.class)
       .setParameter("walletId", walletId)
-      .getResultList());
+      .getResultList();
   }
 }

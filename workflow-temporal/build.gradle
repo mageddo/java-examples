@@ -1,5 +1,6 @@
 plugins {
   id 'java'
+  id 'io.quarkus' version '3.35.3'
 }
 
 group = 'com.mageddo.temporal'
@@ -16,11 +17,12 @@ java {
 }
 
 dependencies {
+  implementation enforcedPlatform('io.quarkus.platform:quarkus-bom:3.35.3')
+  implementation 'io.quarkus:quarkus-arc'
+  implementation 'io.quarkus:quarkus-hibernate-orm'
+  implementation 'io.quarkus:quarkus-jdbc-postgresql'
   implementation 'io.temporal:temporal-sdk:1.35.0'
-  implementation 'org.hibernate.orm:hibernate-core:7.1.27.Final'
-  implementation 'org.postgresql:postgresql:42.7.11'
   implementation 'org.projectlombok:lombok:1.18.46'
-  implementation 'org.slf4j:slf4j-simple:2.0.17'
   annotationProcessor 'org.projectlombok:lombok:1.18.46'
 
   testImplementation platform('org.junit:junit-bom:5.13.1')
@@ -29,6 +31,7 @@ dependencies {
   testImplementation 'org.assertj:assertj-core:3.27.7'
   testImplementation 'io.temporal:temporal-testing:1.35.0'
   testImplementation 'io.zonky.test:embedded-postgres:2.2.2'
+  testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'org.projectlombok:lombok:1.18.46'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
 }

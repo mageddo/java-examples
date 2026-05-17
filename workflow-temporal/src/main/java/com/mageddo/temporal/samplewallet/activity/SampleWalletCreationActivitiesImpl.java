@@ -1,9 +1,9 @@
 package com.mageddo.temporal.samplewallet.activity;
 
-import com.mageddo.temporal.samplewallet.dataprovider.FinancialEventCandidateRepo;
-import com.mageddo.temporal.samplewallet.dataprovider.InvestmentRepo;
-import com.mageddo.temporal.samplewallet.dataprovider.InvestorRepo;
-import com.mageddo.temporal.samplewallet.dataprovider.WalletRepo;
+import com.mageddo.temporal.samplewallet.dataprovider.FinancialEventCandidateDAO;
+import com.mageddo.temporal.samplewallet.dataprovider.InvestmentDAO;
+import com.mageddo.temporal.samplewallet.dataprovider.InvestorDAO;
+import com.mageddo.temporal.samplewallet.dataprovider.WalletDAO;
 import com.mageddo.temporal.samplewallet.domain.CandidateStatus;
 import com.mageddo.temporal.samplewallet.domain.FinancialEventCandidate;
 import com.mageddo.temporal.samplewallet.domain.Investment;
@@ -15,7 +15,6 @@ import com.mageddo.temporal.samplewallet.domain.WalletStatus;
 import com.mageddo.temporal.samplewallet.workflow.SampleWalletCreationWorkflow;
 import io.temporal.client.WorkflowClient;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,10 +32,10 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
     InvestorProfile.CONSERVADOR, List.of("TREASURY-SELIC", "CDB-DI", "LCI-2027")
   );
 
-  private final InvestorRepo investorRepo;
-  private final WalletRepo walletRepo;
-  private final InvestmentRepo investmentRepo;
-  private final FinancialEventCandidateRepo candidateRepo;
+  private final InvestorDAO investorDAO;
+  private final WalletDAO walletDAO;
+  private final InvestmentDAO investmentDAO;
+  private final FinancialEventCandidateDAO candidateDAO;
   private final WorkflowClient workflowClient;
   private final BackgroundJobDispatcher backgroundJobDispatcher;
   private final AtomicInteger walletSequence = new AtomicInteger();
@@ -44,17 +43,17 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
   private final AtomicInteger candidateSequence = new AtomicInteger();
 
   public SampleWalletCreationActivitiesImpl(
-    InvestorRepo investorRepo,
-    WalletRepo walletRepo,
-    InvestmentRepo investmentRepo,
-    FinancialEventCandidateRepo candidateRepo,
+    InvestorDAO investorDAO,
+    WalletDAO walletDAO,
+    InvestmentDAO investmentDAO,
+    FinancialEventCandidateDAO candidateDAO,
     WorkflowClient workflowClient,
     BackgroundJobDispatcher backgroundJobDispatcher
   ) {
-    this.investorRepo = investorRepo;
-    this.walletRepo = walletRepo;
-    this.investmentRepo = investmentRepo;
-    this.candidateRepo = candidateRepo;
+    this.investorDAO = investorDAO;
+    this.walletDAO = walletDAO;
+    this.investmentDAO = investmentDAO;
+    this.candidateDAO = candidateDAO;
     this.workflowClient = workflowClient;
     this.backgroundJobDispatcher = backgroundJobDispatcher;
   }
@@ -62,7 +61,7 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
   @Override
   public String createWallet(String investorId) {
     var walletId = "wallet-" + this.walletSequence.incrementAndGet();
-    this.walletRepo.save(Wallet.builder()
+    this.walletDAO.save(Wallet.builder()
       .id(walletId)
       .investorId(investorId)
       .status(WalletStatus.CREATING)
@@ -104,8 +103,8 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
 
   @Override
   public SampleWalletCreationResult finishSampleWalletCreation(String walletId, List<String> investmentIds, List<String> candidateIds) {
-    var wallet = this.walletRepo.findById(walletId);
-    this.walletRepo.save(wallet.toBuilder()
+    var wallet = this.walletDAO.findById(walletId);
+    this.walletDAO.save(wallet.toBuilder()
       .status(WalletStatus.READY)
       .readyAt(Instant.now())
       .build());
@@ -118,18 +117,18 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
 
   @Override
   public void abortSampleWalletCreation(String walletId) {
-    var wallet = this.walletRepo.findById(walletId);
+    var wallet = this.walletDAO.findById(walletId);
     if (wallet == null || wallet.getStatus() == WalletStatus.READY) {
       return;
     }
-    this.walletRepo.save(wallet.toBuilder()
+    this.walletDAO.save(wallet.toBuilder()
       .status(WalletStatus.ABORTED)
       .abortedAt(Instant.now())
       .build());
   }
 
   private Investor requireInvestor(String investorId) {
-    var investor = this.investorRepo.findById(investorId);
+    var investor = this.investorDAO.findById(investorId);
     if (investor == null) {
       throw new IllegalArgumentException("Investor not found: " + investorId);
     }
@@ -145,7 +144,7 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
       .profile(investor.getProfile())
       .created(false)
       .build();
-    this.investmentRepo.save(investment);
+    this.investmentDAO.save(investment);
     return investment;
   }
 
@@ -157,28 +156,28 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
       .processed(false)
       .attempts(0)
       .build();
-    this.candidateRepo.save(candidate);
+    this.candidateDAO.save(candidate);
     return candidate.getId();
   }
 
   public static class BackgroundJobDispatcher {
 
-    private final InvestmentRepo investmentRepo;
-    private final FinancialEventCandidateRepo candidateRepo;
+    private final InvestmentDAO investmentDAO;
+    private final FinancialEventCandidateDAO candidateDAO;
     private final WorkflowClient workflowClient;
     private final ExecutorService executorService;
     private final BackgroundJobPolicy policy;
     private final Set<String> failedOnceCandidateIds = ConcurrentHashMap.newKeySet();
 
     public BackgroundJobDispatcher(
-      InvestmentRepo investmentRepo,
-      FinancialEventCandidateRepo candidateRepo,
+      InvestmentDAO investmentDAO,
+      FinancialEventCandidateDAO candidateDAO,
       WorkflowClient workflowClient,
       ExecutorService executorService,
       BackgroundJobPolicy policy
     ) {
-      this.investmentRepo = investmentRepo;
-      this.candidateRepo = candidateRepo;
+      this.investmentDAO = investmentDAO;
+      this.candidateDAO = candidateDAO;
       this.workflowClient = workflowClient;
       this.executorService = executorService;
       this.policy = policy;
@@ -187,8 +186,8 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
     public void scheduleInvestmentCreation(Investment investment) {
       this.executorService.submit(() -> {
         this.sleep(this.policy.investmentCreationDelayMillis());
-        var persisted = this.investmentRepo.findById(investment.getId());
-        this.investmentRepo.save(persisted.toBuilder()
+        var persisted = this.investmentDAO.findById(investment.getId());
+        this.investmentDAO.save(persisted.toBuilder()
           .created(true)
           .build());
       });
@@ -207,31 +206,31 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
         }
         if (this.policy.failFirstAttemptCandidateIds().contains(candidateId)
             && this.failedOnceCandidateIds.add(candidateId)) {
-          var candidate = this.candidateRepo.findById(candidateId);
-          this.candidateRepo.save(candidate.toBuilder()
+          var candidate = this.candidateDAO.findById(candidateId);
+          this.candidateDAO.save(candidate.toBuilder()
             .attempts(attempts)
             .build());
           continue;
         }
-        var candidate = this.candidateRepo.findById(candidateId);
+        var candidate = this.candidateDAO.findById(candidateId);
         var processedCandidate = candidate.toBuilder()
           .status(CandidateStatus.MATCHED)
           .processed(true)
           .processedAt(Instant.now())
           .attempts(attempts)
           .build();
-        this.candidateRepo.save(processedCandidate);
+        this.candidateDAO.save(processedCandidate);
         this.signalProcessed(workflowId, processedCandidate);
         return;
       }
-      var candidate = this.candidateRepo.findById(candidateId);
+      var candidate = this.candidateDAO.findById(candidateId);
       var rejectedCandidate = candidate.toBuilder()
         .status(CandidateStatus.REJECTED)
         .processed(true)
         .processedAt(Instant.now())
         .attempts(this.policy.maxCandidateAttempts())
         .build();
-      this.candidateRepo.save(rejectedCandidate);
+      this.candidateDAO.save(rejectedCandidate);
       this.signalProcessed(workflowId, rejectedCandidate);
     }
 
@@ -242,8 +241,8 @@ public class SampleWalletCreationActivitiesImpl implements SampleWalletCreationA
 
     private void waitUntilInvestmentIsCreated(String candidateId) {
       while (true) {
-        var candidate = this.candidateRepo.findById(candidateId);
-        var investment = this.investmentRepo.findById(candidate.getInvestmentId());
+        var candidate = this.candidateDAO.findById(candidateId);
+        var investment = this.investmentDAO.findById(candidate.getInvestmentId());
         if (investment.isCreated()) {
           return;
         }

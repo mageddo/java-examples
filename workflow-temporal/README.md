@@ -45,7 +45,7 @@ O projeto usa:
 - Java 25 via Gradle toolchain
 - Gradle Wrapper
 - Temporal Java SDK
-- Hibernate com PostgreSQL
+- Quarkus + Hibernate ORM com PostgreSQL
 - PostgreSQL embedded com Zonky nos testes
 
 Execute:
@@ -59,7 +59,7 @@ Execute:
 - `workflow`: interface e implementação do workflow Temporal
 - `activity`: contracts e implementação das activities
 - `domain`: entidades e enums do onboarding
-- `dataprovider`: Hibernate, transações e repositórios
+- `dataprovider`: interfaces `DAO` e implementações `DaoPg` com Quarkus/Hibernate
 - `src/test`: testes automatizados com `TestWorkflowEnvironment`
 
 ## Evolução para produção
