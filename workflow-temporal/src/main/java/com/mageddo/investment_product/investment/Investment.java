@@ -1,6 +1,6 @@
 package com.mageddo.investment_product.investment;
 
-import com.mageddo.temporal.samplewallet.domain.InvestorProfile;
+import com.mageddo.investment_product.investor.InvestorProfile;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

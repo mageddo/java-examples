@@ -1,6 +1,6 @@
 package com.mageddo.investment_product.financial_event_candidate.dataprovider;
 
-import com.mageddo.temporal.samplewallet.domain.FinancialEventCandidate;
+import com.mageddo.investment_product.financial_event_candidate.FinancialEventCandidate;
 import java.util.List;
 
 public interface FinancialEventCandidateDAO {

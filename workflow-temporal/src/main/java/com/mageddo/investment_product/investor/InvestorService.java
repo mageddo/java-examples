@@ -1,7 +1,6 @@
-package com.mageddo.temporal.samplewallet.service;
+package com.mageddo.investment_product.investor;
 
-import com.mageddo.temporal.samplewallet.dataprovider.InvestorDAO;
-import com.mageddo.temporal.samplewallet.domain.Investor;
+import com.mageddo.investment_product.investor.dataprovider.InvestorDAO;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;

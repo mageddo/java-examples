@@ -1,17 +1,17 @@
 package com.mageddo.temporal.samplewallet.activity;
 
-import com.mageddo.temporal.samplewallet.domain.CandidateStatus;
-import com.mageddo.temporal.samplewallet.domain.FinancialEventCandidate;
+import com.mageddo.investment_product.financial_event_candidate.CandidateStatus;
+import com.mageddo.investment_product.financial_event_candidate.FinancialEventCandidate;
+import com.mageddo.investment_product.financial_event_candidate.FinancialEventCandidateService;
 import com.mageddo.investment_product.investment.Investment;
-import com.mageddo.temporal.samplewallet.domain.Investor;
-import com.mageddo.temporal.samplewallet.domain.InvestorProfile;
-import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationResult;
-import com.mageddo.temporal.samplewallet.domain.Wallet;
-import com.mageddo.temporal.samplewallet.domain.WalletStatus;
-import com.mageddo.temporal.samplewallet.service.FinancialEventCandidateService;
 import com.mageddo.investment_product.investment.InvestmentService;
-import com.mageddo.temporal.samplewallet.service.InvestorService;
-import com.mageddo.temporal.samplewallet.service.WalletService;
+import com.mageddo.investment_product.investor.Investor;
+import com.mageddo.investment_product.investor.InvestorService;
+import com.mageddo.investment_product.wallet.Wallet;
+import com.mageddo.investment_product.wallet.WalletService;
+import com.mageddo.investment_product.investor.InvestorProfile;
+import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationResult;
+import com.mageddo.investment_product.wallet.WalletStatus;
 import com.mageddo.temporal.samplewallet.workflow.SampleWalletCreationWorkflow;
 import io.temporal.client.WorkflowClient;
 import java.time.Instant;

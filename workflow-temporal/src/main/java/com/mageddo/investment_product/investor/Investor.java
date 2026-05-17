@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet.domain;
+package com.mageddo.investment_product.investor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,7 +6,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,30 +19,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-@Table(name = "WALLET")
-public class Wallet {
+@Table(name = "INVESTOR")
+public class Investor {
 
   @Id
   @NonNull
-  @Column(name = "IDT_WALLET", nullable = false)
+  @Column(name = "IDT_INVESTOR", nullable = false)
   String id;
 
   @NonNull
-  @Column(name = "IDT_INVESTOR", nullable = false)
-  String investorId;
-
-  @NonNull
   @Enumerated(EnumType.STRING)
-  @Column(name = "IND_STATUS", nullable = false)
-  WalletStatus status;
-
-  @NonNull
-  @Column(name = "DAT_CREATED", nullable = false)
-  Instant createdAt;
-
-  @Column(name = "DAT_READY")
-  Instant readyAt;
-
-  @Column(name = "DAT_ABORTED")
-  Instant abortedAt;
+  @Column(name = "IND_PROFILE", nullable = false)
+  InvestorProfile profile;
 }

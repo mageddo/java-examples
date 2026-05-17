@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet.domain;
+package com.mageddo.investment_product.financial_event_candidate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

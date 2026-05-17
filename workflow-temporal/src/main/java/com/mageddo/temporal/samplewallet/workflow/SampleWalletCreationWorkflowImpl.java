@@ -1,7 +1,7 @@
 package com.mageddo.temporal.samplewallet.workflow;
 
 import com.mageddo.temporal.samplewallet.activity.SampleWalletCreationActivities;
-import com.mageddo.temporal.samplewallet.domain.CandidateStatus;
+import com.mageddo.investment_product.financial_event_candidate.CandidateStatus;
 import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationRequest;
 import com.mageddo.temporal.samplewallet.domain.SampleWalletCreationResult;
 import io.temporal.activity.ActivityOptions;

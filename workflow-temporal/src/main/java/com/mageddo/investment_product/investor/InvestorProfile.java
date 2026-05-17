@@ -1,4 +1,4 @@
-package com.mageddo.temporal.samplewallet.domain;
+package com.mageddo.investment_product.investor;
 
 public enum InvestorProfile {
   ARROJADO,

@@ -1,5 +1,7 @@
 package com.mageddo.temporal.samplewallet.domain;
 
+import com.mageddo.investment_product.financial_event_candidate.CandidateStatus;
+
 import lombok.Builder;
 import lombok.NonNull;
 

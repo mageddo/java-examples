@@ -1,7 +1,7 @@
 package com.mageddo.temporal.samplewallet.domain.templates;
 
-import com.mageddo.temporal.samplewallet.domain.Investor;
-import com.mageddo.temporal.samplewallet.domain.InvestorProfile;
+import com.mageddo.investment_product.investor.Investor;
+import com.mageddo.investment_product.investor.InvestorProfile;
 
 public class InvestorTemplates {
 

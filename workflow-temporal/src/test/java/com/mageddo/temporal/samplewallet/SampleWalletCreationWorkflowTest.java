@@ -3,13 +3,14 @@ package com.mageddo.temporal.samplewallet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.mageddo.investment_product.financial_event_candidate.FinancialEventCandidate;
+import com.mageddo.investment_product.financial_event_candidate.FinancialEventCandidateService;
 import com.mageddo.investment_product.investment.Investment;
 import com.mageddo.temporal.samplewallet.activity.SampleWalletCreationActivitiesImpl;
-import com.mageddo.temporal.samplewallet.service.FinancialEventCandidateService;
 import com.mageddo.investment_product.investment.InvestmentService;
-import com.mageddo.temporal.samplewallet.service.InvestorService;
-import com.mageddo.temporal.samplewallet.service.WalletService;
-import com.mageddo.temporal.samplewallet.domain.WalletStatus;
+import com.mageddo.investment_product.investor.InvestorService;
+import com.mageddo.investment_product.wallet.WalletService;
+import com.mageddo.investment_product.wallet.WalletStatus;
 import com.mageddo.temporal.samplewallet.domain.templates.InvestorTemplates;
 import com.mageddo.temporal.samplewallet.domain.templates.SampleWalletCreationRequestTemplates;
 import com.mageddo.temporal.samplewallet.workflow.SampleWalletCreationWorkflow;
@@ -87,7 +88,7 @@ class SampleWalletCreationWorkflowTest {
 
     assertThat(wallet.getStatus()).isEqualTo(WalletStatus.READY);
     assertThat(investments).hasSize(3).allMatch(Investment::isCreated);
-    assertThat(candidates).hasSize(3).allMatch(com.mageddo.temporal.samplewallet.domain.FinancialEventCandidate::isProcessed);
+    assertThat(candidates).hasSize(3).allMatch(FinancialEventCandidate::isProcessed);
   }
 
   @Test
