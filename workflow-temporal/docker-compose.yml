@@ -1,0 +1,71 @@
+services:
+  postgres-17:
+    image: postgres:17.6
+    environment:
+      - TZ=UTC
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=db
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./infra/postgres/initdb:/docker-entrypoint-initdb.d
+    ports:
+      - "5443:5432"
+    mem_limit: 1024m
+    memswap_limit: 0
+    cpu_count: 2
+
+  temporal-db-bootstrap:
+    image: postgres:17.6
+    depends_on:
+      - postgres-17
+    environment:
+      - PGPASSWORD=root
+    volumes:
+      - ./infra/postgres/bootstrap:/bootstrap
+    command:
+      - bash
+      - -lc
+      - |
+        until pg_isready -h postgres-17 -p 5432 -U root -d db; do
+          echo 'Waiting for PostgreSQL bootstrap target...'
+          sleep 1
+        done
+        psql -h postgres-17 -p 5432 -U root -d db -f /bootstrap/001-bootstrap-temporal.sql
+
+  temporal:
+    image: temporalio/auto-setup:1.29.1
+    depends_on:
+      - temporal-db-bootstrap
+    entrypoint:
+      - /bin/bash
+      - /etc/temporal/custom-auto-setup.sh
+    volumes:
+      - ./infra/temporal/custom-auto-setup.sh:/etc/temporal/custom-auto-setup.sh
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - DBNAME=db
+      - POSTGRES_SEEDS=postgres-17
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - VISIBILITY_DBNAME=db
+      - VISIBILITY_POSTGRES_USER=temporal_visibility
+      - VISIBILITY_POSTGRES_PWD=temporal_visibility
+      - SKIP_DB_CREATE=true
+      - SKIP_SCHEMA_SETUP=true
+    ports:
+      - "7233:7233"
+
+  temporal-ui:
+    image: temporalio/ui:2.39.0
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_UI_PORT=8080
+    ports:
+      - "8233:8080"
+
+volumes:
+  postgres:
