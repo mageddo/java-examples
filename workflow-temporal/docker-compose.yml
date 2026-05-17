@@ -34,7 +34,7 @@ services:
 #      - VISIBILITY_DBNAME=db
 #      - VISIBILITY_POSTGRES_USER=temporal_visibility
 #      - VISIBILITY_POSTGRES_PWD=temporal_visibility
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+#      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
     ports:
       - "7233:7233"
 
