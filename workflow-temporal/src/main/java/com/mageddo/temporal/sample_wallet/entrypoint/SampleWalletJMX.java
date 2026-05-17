@@ -18,9 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @Path("/jmx/sample-wallets")
 @Tag(name = "sample-wallet-jmx")
-@Singleton
 @IfBuildProperty(name = "sample-wallet.temporal.enabled", stringValue = "true")
-@Produces(MediaType.APPLICATION_JSON)
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class SampleWalletJMX {
 
@@ -28,6 +26,7 @@ public class SampleWalletJMX {
 
   @POST
   @Path("/{investorId}")
+  @Produces(MediaType.APPLICATION_JSON)
   public StartSampleWalletWorkflowRes createSampleWallet(
     @PathParam("investorId") String investorId,
     @DefaultValue("120") @QueryParam("timeoutSeconds") long timeoutSeconds
