@@ -1,6 +1,6 @@
 package com.mageddo.vendor.jira.apiclient;
 
-import com.example.ResponseValidator;
+import com.mageddo.ws.rs.ResponseValidator;
 import jakarta.ws.rs.client.WebTarget;
 import lombok.RequiredArgsConstructor;
 

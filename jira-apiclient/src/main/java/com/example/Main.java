@@ -1,5 +1,7 @@
 package com.example;
 
+import com.mageddo.ws.rs.ResponseValidator;
+
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
