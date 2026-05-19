@@ -120,7 +120,7 @@ service:
     
     metrics:
       receivers: [ otlp, spanmetrics ]
-      processors: [ batch ]
+      processors: [ resource/drop-noisy-attrs, batch ]
       exporters: [ prometheus ]
   
   telemetry:
