@@ -1,5 +1,8 @@
-package com.mageddo.vendor.jira.apiclient;
+package com.mageddo.vendor.jira.apiclient.configurer;
 
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 
@@ -7,7 +10,12 @@ import java.util.Base64;
 
 public class ApiClientConfigurer {
 
-  public static WebTarget webTarget() {
+  public static final String WEB_TARGET = "JiraApiWebTarget";
+
+  @Produces
+  @Singleton
+  @Named(WEB_TARGET)
+  public WebTarget webTarget() {
     final var baseUrl = System.getenv("JIRA_BASE_URL");
     final var email = System.getenv("JIRA_EMAIL");
     final var apiToken = System.getenv("JIRA_API_TOKEN");
