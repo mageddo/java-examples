@@ -11,7 +11,6 @@ connectors:
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.120.0/connector/spanmetricsconnector/README.md#more-examples
   spanmetrics:
     dimensions:
-      - name: status.code
       - name: http.method
       - name: http.response.status_code
       - name: http.status_code
@@ -64,15 +63,15 @@ processors:
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
   batch:
 
-# Remover properties que não entregam valor
-resource/drop-noisy-attrs:
-  attributes:
-    - key: telemetry.sdk.language
-      action: delete
-    - key: telemetry.sdk.name
-      action: delete
-    - key: webengine.name
-      action: delete
+  # Remover properties que não entregam valor
+  resource/drop-noisy-attrs:
+    attributes:
+      - key: telemetry.sdk.language
+        action: delete
+      - key: telemetry.sdk.name
+        action: delete
+      - key: webengine.name
+        action: delete
 
 exporters:
 
