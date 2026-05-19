@@ -18,10 +18,11 @@ public class IssueApiClient {
     this.webTarget = webTarget;
   }
 
-  public IssueChangelogRes findChangelog(String issueKey) {
+  public IssueChangelogRes findChangelog(String issueKey, int startAt) {
     final var res = this.webTarget
         .path("/rest/api/3/issue/{issueKey}/changelog")
         .resolveTemplate("issueKey", issueKey)
+        .queryParam("startAt", startAt)
         .request()
         .get();
 
