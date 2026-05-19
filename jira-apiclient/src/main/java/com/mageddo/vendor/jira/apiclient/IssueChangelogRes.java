@@ -1,14 +1,15 @@
 package com.mageddo.vendor.jira.apiclient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record IssueChangelogRes(
 
   Boolean isLast,
@@ -28,6 +29,7 @@ public record IssueChangelogRes(
 ) {
 
   @Builder
+  @JsonIgnoreProperties(ignoreUnknown = true)
   public record Changelog(
 
     String id,
@@ -42,6 +44,7 @@ public record IssueChangelogRes(
   ) {
 
     @Builder
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public record Author(
 
       String accountId,
@@ -63,6 +66,7 @@ public record IssueChangelogRes(
     ) {}
 
     @Builder
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public record AvatarUrls(
 
       @JsonProperty("16x16")
@@ -80,6 +84,7 @@ public record IssueChangelogRes(
     ) {}
 
     @Builder
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public record ChangeItem(
 
       String field,
