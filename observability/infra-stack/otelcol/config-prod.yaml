@@ -72,7 +72,16 @@ processors:
         action: delete
       - key: webengine.name
         action: delete
-
+      - key: engine
+        action: delete
+      - key: job # otel
+        action: delete
+      - key: exported_job # nome da app, use service_name pra isso: mageddo-app
+        action: delete
+      - key: host_name # nome do host do collector: typer-laptop
+        action: delete
+      - key: instance # nome do deployment do otel collector: otel-collector:9595
+        action: delete
 exporters:
 
   debug:
@@ -100,7 +109,7 @@ service:
   
     traces/metrics:
       receivers: [ otlp ]
-      processors: [ resource/drop-noisy-attrs, batch ]
+      processors: [ batch ]
       exporters: [ spanmetrics ]
 
     # desligando o jaeger
