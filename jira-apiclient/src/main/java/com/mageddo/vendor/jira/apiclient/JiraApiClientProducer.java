@@ -2,12 +2,12 @@ package com.mageddo.vendor.jira.apiclient;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Singleton;
 
-@ApplicationScoped
 public class JiraApiClientProducer {
 
   @Produces
-  @ApplicationScoped
+  @Singleton
   public MyselfApiClient myselfApiClient() {
     return new MyselfApiClient(ApiClientConfigurer.webTarget());
   }

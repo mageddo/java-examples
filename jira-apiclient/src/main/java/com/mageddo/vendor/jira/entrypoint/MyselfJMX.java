@@ -1,4 +1,4 @@
-package com.mageddo.vendor.jira.jmx;
+package com.mageddo.vendor.jira.entrypoint;
 
 import com.mageddo.vendor.jira.apiclient.MyselfApiClient;
 import com.mageddo.vendor.jira.apiclient.MyselfRes;

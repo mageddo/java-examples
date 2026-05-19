@@ -1,6 +1,6 @@
 package com.mageddo.ws.rs;
 
-import com.example.ApiClientException;
+import com.mageddo.ws.rs.ApiClientException;
 import jakarta.ws.rs.core.Response;
 
 public class ResponseValidator {
