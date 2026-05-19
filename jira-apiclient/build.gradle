@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jboss.resteasy:resteasy-client:7.0.1.Final'
+    implementation 'org.jboss.resteasy:resteasy-jackson2-provider:7.0.1.Final'
+}
+
+application {
+    mainClass = 'com.example.Main'
+}
