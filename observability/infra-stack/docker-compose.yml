@@ -39,7 +39,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     volumes:
-      - /data/databases/stg/grafana:/var/lib/grafana
+      - grafana_stg:/var/lib/grafana
 #      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
 
   # https://opentelemetry.io/docs/collector/configuration/
@@ -50,9 +50,12 @@ services:
     command: ["--config=/etc/otelcol/config.yaml", "${OTELCOL_ARGS}"]
     hostname: otel-prometheus-collector.docker
     volumes:
-      - ./otelcol/config.yaml:/etc/otelcol/config.yaml
+      - ./otelcol/config-prod.yaml:/etc/otelcol/config.yaml
     ports:
       - "9595:9595"
       - "9596:9596"
       - "4317:4317"
       - "4318:4318"
+
+volumes:
+  grafana_stg:
