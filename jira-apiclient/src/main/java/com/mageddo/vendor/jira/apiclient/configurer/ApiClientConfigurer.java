@@ -4,27 +4,40 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.client.WebTarget;
+import lombok.RequiredArgsConstructor;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.Base64;
 
+@RequiredArgsConstructor
 public class ApiClientConfigurer {
 
   public static final String WEB_TARGET = "JiraApiWebTarget";
+
+  @ConfigProperty(name = "vendor.jira.apiclient.base-url")
+  String baseUrl;
+
+  @ConfigProperty(name = "vendor.jira.apiclient.email")
+  String email;
+
+  @ConfigProperty(name = "vendor.jira.apiclient.api-token")
+  String apiToken;
 
   @Produces
   @Singleton
   @Named(WEB_TARGET)
   public WebTarget webTarget() {
-    final var baseUrl = System.getenv("JIRA_BASE_URL");
-    final var email = System.getenv("JIRA_EMAIL");
-    final var apiToken = System.getenv("JIRA_API_TOKEN");
-    final var credentials = Base64.getEncoder().encodeToString((email + ":" + apiToken).getBytes());
+    final var credentials = Base64.getEncoder()
+        .encodeToString((this.email + ":" + this.apiToken).getBytes());
     return ClientBuilder
         .newClient()
-        .register((jakarta.ws.rs.client.ClientRequestFilter) ctx ->
-            ctx.getHeaders().add("Authorization", "Basic " + credentials)
+        .register((ClientRequestFilter) ctx ->
+            ctx.getHeaders()
+                .add("Authorization", "Basic " + credentials)
         )
-        .target(baseUrl);
+        .target(this.baseUrl);
   }
 }
