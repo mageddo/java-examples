@@ -109,7 +109,7 @@ service:
   
     traces/metrics:
       receivers: [ otlp ]
-      processors: [ batch ]
+      processors: [ resource/drop-noisy-attrs, batch ]
       exporters: [ spanmetrics ]
 
     # desligando o jaeger
