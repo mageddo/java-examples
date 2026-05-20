@@ -1,0 +1,34 @@
+plugins {
+  id 'java'
+  id 'io.quarkus' version '3.35.3'
+}
+
+group = 'com.mageddo'
+version = '1.0-SNAPSHOT'
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation enforcedPlatform("io.quarkus.platform:quarkus-bom:3.35.3")
+
+  implementation 'io.quarkus:quarkus-rest'
+  implementation 'io.quarkus:quarkus-rest-jackson'
+  implementation 'io.quarkus:quarkus-smallrye-openapi'
+  implementation 'io.quarkus:quarkus-arc'
+
+  implementation 'org.jboss.resteasy:resteasy-client:7.0.1.Final'
+  implementation 'org.jboss.resteasy:resteasy-jackson2-provider:7.0.1.Final'
+
+  implementation 'io.github.resilience4j:resilience4j-retry:2.2.0'
+
+  compileOnly 'org.projectlombok:lombok:1.18.40'
+  annotationProcessor 'org.projectlombok:lombok:1.18.40'
+}
