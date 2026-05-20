@@ -63,6 +63,13 @@ processors:
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
   batch:
 
+  filter/metrics-drop-spanmetrics-duplicates:
+    error_mode: ignore
+    metrics:
+      metric:
+        - name == "ft_timer_scheduled"
+        - name == "otel_ft_timer_scheduled"
+
   # Remover properties que não entregam valor
   resource/drop-noisy-attrs:
     attributes:
@@ -111,18 +118,23 @@ service:
       receivers: [ otlp ]
       processors: [ resource/drop-noisy-attrs, batch ]
       exporters: [ spanmetrics ]
+    
+    metrics/otlp:
+      receivers: [ otlp ]
+      processors: [ resource/drop-noisy-attrs, batch ]
+      exporters: [ prometheus ]
+
+    metrics/spanmetrics:
+      receivers: [ spanmetrics ]
+      processors: [ filter/metrics-drop-spanmetrics-duplicates, resource/drop-noisy-attrs, batch ]
+      exporters: [ prometheus ]
 
     # desligando o jaeger
     #traces/filtered:
     #  receivers: [ otlp ]
     #  processors: [ tail_sampling, batch ]
     #  exporters: [ otlp ] 
-    
-    metrics:
-      receivers: [ otlp, spanmetrics ]
-      processors: [ resource/drop-noisy-attrs, batch ]
-      exporters: [ prometheus ]
-  
+      
   telemetry:
     logs:
       level: "info"
