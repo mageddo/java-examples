@@ -11,6 +11,7 @@ connectors:
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.120.0/connector/spanmetricsconnector/README.md#more-examples
   spanmetrics:
     dimensions:
+      - name: name
       - name: http.method
       - name: http.response.status_code
       - name: http.status_code
@@ -83,8 +84,6 @@ processors:
       - key: job # otel
         action: delete
       - key: exported_job # nome da app, use service_name pra isso: mageddo-app
-        action: delete
-      - key: host_name # nome do host do collector: typer-laptop
         action: delete
       - key: instance # nome do deployment do otel collector: otel-collector:9595
         action: delete
