@@ -63,6 +63,12 @@ processors:
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
   batch:
 
+  filter/metrics-drop-duplicated:
+    error_mode: ignore
+    metrics:
+      metric:
+        - resource.attributes["service.name"] == "mageddo-app" and name == "ft.timer.scheduled"
+
   # Remover properties que não entregam valor
   resource/drop-noisy-attrs:
     attributes:
@@ -120,7 +126,7 @@ service:
     
     metrics:
       receivers: [ otlp, spanmetrics ]
-      processors: [ resource/drop-noisy-attrs, batch ]
+      processors: [ filter/metrics-drop-duplicated, resource/drop-noisy-attrs, batch ]
       exporters: [ prometheus ]
   
   telemetry:
