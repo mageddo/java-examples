@@ -27,6 +27,8 @@ dependencies {
   implementation 'org.jboss.resteasy:resteasy-client:7.0.1.Final'
   implementation 'org.jboss.resteasy:resteasy-jackson2-provider:7.0.1.Final'
 
+  implementation 'io.github.resilience4j:resilience4j-retry:2.2.0'
+
   compileOnly 'org.projectlombok:lombok:1.18.40'
   annotationProcessor 'org.projectlombok:lombok:1.18.40'
 }
