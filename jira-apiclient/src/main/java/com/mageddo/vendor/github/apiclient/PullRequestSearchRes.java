@@ -1,11 +1,10 @@
 package com.mageddo.vendor.github.apiclient;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Builder
@@ -37,17 +36,14 @@ public record PullRequestSearchRes(
     @JsonProperty("html_url")
     String htmlUrl,
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     @JsonProperty("created_at")
-    LocalDateTime createdAt,
+    Instant createdAt,
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     @JsonProperty("updated_at")
-    LocalDateTime updatedAt,
+    Instant updatedAt,
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     @JsonProperty("closed_at")
-    LocalDateTime closedAt,
+    Instant closedAt,
 
     @JsonProperty("pull_request")
     PullRequestRef pullRequest
@@ -58,9 +54,8 @@ public record PullRequestSearchRes(
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record PullRequestRef(
 
-      @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
       @JsonProperty("merged_at")
-      LocalDateTime mergedAt,
+      Instant mergedAt,
 
       String url
 
