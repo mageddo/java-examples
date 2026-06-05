@@ -24,4 +24,5 @@ ajcore*
 *.bat text eol=crlf
 *.db.*
 *.db
+.env
 .codex
