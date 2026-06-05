@@ -40,7 +40,29 @@ connectors:
       - telemetry.sdk.version
       - service.version
       - webengine.version 
-
+    histogram:
+      buckets:
+        - 2ms
+        - 4ms
+        - 6ms
+        - 8ms
+        - 10ms
+        - 50ms
+        - 100ms
+        - 200ms
+        - 400ms
+        - 800ms
+        - 1000ms
+        - 1400ms
+        - 2000ms
+        - 5000ms
+        - 10000ms
+        - 15000ms
+        - 30000ms
+        - 60000ms
+        - 90000ms
+        - 120000ms
+        - 300000ms
 processors:
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/cdd2c16a95b49e4b11e3dee8a5d92ae8ba80e6d0/processor/filterprocessor
   filter/traces: # soh lentos ou com erros (se a condicao abaixo der true, eh ignorado)

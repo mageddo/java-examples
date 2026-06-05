@@ -35,7 +35,30 @@ connectors:
       - telemetry.sdk.version
       - service.version
       - webengine.version
-
+    histogram:
+      explicit:
+        buckets:
+          - 2ms
+          - 4ms
+          - 6ms
+          - 8ms
+          - 10ms
+          - 50ms
+          - 100ms
+          - 200ms
+          - 400ms
+          - 800ms
+          - 1s
+          - 1.4s
+          - 2s
+          - 5s
+          - 10s
+          - 15s
+          - 30s
+          - 60s
+          - 90s
+          - 120s
+          - 300s
 processors:
   tail_sampling:
     decision_wait: 5s
