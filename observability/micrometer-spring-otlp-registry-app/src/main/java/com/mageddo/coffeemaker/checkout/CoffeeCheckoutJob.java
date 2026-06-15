@@ -24,7 +24,7 @@ public class CoffeeCheckoutJob {
     this.coffeeCheckoutService.checkout(coffee);
   }
 
-  private static CoffeeCheckoutReq makeACoffeeRequest() {
+  static CoffeeCheckoutReq makeACoffeeRequest() {
     return new CoffeeCheckoutReq()
         .setCoffeeName("Preto")
         .setAmount(BigDecimal.valueOf(1 + Math.random() * 10).setScale(2, RoundingMode.HALF_UP));
