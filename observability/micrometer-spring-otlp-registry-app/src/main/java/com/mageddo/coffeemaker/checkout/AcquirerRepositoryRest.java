@@ -21,7 +21,7 @@ public class AcquirerRepositoryRest implements AcquirerRepository {
   @Counted(
       value = "duration.count",
       extraTags = {
-          "span_name", "EligibilityService",
+          "span_name", "AcquirerRepositoryRest.processPayment",
           "span_kind", "INTERNAL"
       }
   )

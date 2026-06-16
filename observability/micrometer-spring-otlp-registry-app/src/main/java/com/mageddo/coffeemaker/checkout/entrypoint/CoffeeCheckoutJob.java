@@ -11,6 +11,8 @@ import com.mageddo.coffeemaker.checkout.CoffeeCheckoutService;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Metrics;
 
+import io.micrometer.core.instrument.Timer;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -34,13 +36,14 @@ public class CoffeeCheckoutJob {
     log.info("status=orderingACoffee, coffee={}", coffee);
     this.coffeeCheckoutService.checkout(coffee);
 
-    DistributionSummary
+    Timer
         .builder("duration.ms")
         .tag("span_name", "CoffeeCheckoutJob.checkout")
         .tag("span_kind", "INTERNAL")
 //            .serviceLevelObjectives(1, 10, 5) // se não quiser usar o padrão da app
         .register(Metrics.globalRegistry)
-        .record(stopWatch.getTime());
+        .record(stopWatch.getDuration())
+    ;
   }
 
   static CoffeeCheckoutReq makeACoffeeRequest() {

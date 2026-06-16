@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 import com.mageddo.observability.micrometer.DistributionStatisticFactory;
 
+import io.micrometer.core.annotation.Timed;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
