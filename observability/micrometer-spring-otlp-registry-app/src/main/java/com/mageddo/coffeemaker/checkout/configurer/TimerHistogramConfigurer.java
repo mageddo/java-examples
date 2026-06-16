@@ -36,7 +36,7 @@ public class TimerHistogramConfigurer {
         }
 
         final var buckets = config.getServiceLevelObjectiveBoundaries();
-        if(buckets == null || buckets.length == 0){
+        if(buckets != null && buckets.length > 0){
           return config;
         }
 
