@@ -24,8 +24,8 @@ public class DollarQuoteMetricsApp {
   private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @WithSpan
-  @Scheduled(every = "5s")
   @Timed("duration.ms")
+  @Scheduled(every = "5s")
   public void dollarQuoteJob() throws Exception {
     log.info("status=jobRan");
     Thread.sleep(300);
