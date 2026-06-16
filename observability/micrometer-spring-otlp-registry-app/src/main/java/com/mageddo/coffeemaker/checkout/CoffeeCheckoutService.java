@@ -27,7 +27,8 @@ public class CoffeeCheckoutService {
 
   @WithSpan
   @Timed(
-      value = "risk_duration",
+      value = "duration",
+      histogram = true,
       extraTags = {
           "span_name", "CoffeeCheckoutService.checkout",
           "span_kind", "INTERNAL" // SERVER, CONSUMER, CLIENT
