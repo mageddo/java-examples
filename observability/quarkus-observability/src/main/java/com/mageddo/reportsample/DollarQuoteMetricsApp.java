@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,15 +19,21 @@ import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Singleton;
 
+@Slf4j
 @Singleton
 public class DollarQuoteMetricsApp {
 
   private static final SecureRandom r = new SecureRandom();
-  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @WithSpan
   @Scheduled(every = "5s")
-  @Timed("dollar_quote_job_quarkus_scheduler")
+  @Timed(
+      value = "duration.ms",
+      extraTags = {
+          "span_name", "dollar_quote_job_quarkus_scheduler",
+          "span_kind", "INTERNAL" // SERVER, CONSUMER, CLIENT
+      }
+  )
   public void dollarQuoteJob() throws Exception {
     log.info("status=jobRan");
     Thread.sleep(300);

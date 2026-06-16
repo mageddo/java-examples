@@ -1,4 +1,4 @@
-package com.mageddo.config;
+package com.mageddo.observability.micrometer.archive;
 
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.registry.otlp.OtlpConfig;

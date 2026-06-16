@@ -8,13 +8,6 @@ repositories {
   mavenLocal()
 }
 
-configurations {
-  all {
-//    exclude group: 'io.quarkus', module: 'quarkus-jul' // tag:logfix
-//    exclude module: 'jboss-logmanager'
-  }
-}
-
 dependencies {
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 
@@ -29,25 +22,22 @@ dependencies {
   implementation 'io.quarkus:quarkus-micrometer-registry-prometheus'
 
   // Para fazer trace programático com a api do micrometer
-  implementation 'io.micrometer:micrometer-tracing:1.4.3'
-  implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.3'
+  implementation 'io.micrometer:micrometer-tracing:1.6.6'
+  implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.6.6'
 
   // Para as métricas serem enviadas para o OTLP collector
   implementation 'io.quarkus:quarkus-micrometer-opentelemetry'
   implementation 'io.micrometer:micrometer-registry-otlp'
-  implementation group: 'io.opentelemetry', name: 'opentelemetry-exporter-otlp', version: '1.44.1'
+  implementation group: 'io.opentelemetry', name: 'opentelemetry-exporter-otlp'
 
   // Para o report de tracing funcionar
   implementation 'io.quarkus:quarkus-opentelemetry'
 
-  implementation 'ch.qos.logback:logback-classic:1.5.17'
-  implementation 'io.quarkiverse.logging.logback:quarkus-logging-logback:1.1.2'
+  compileOnly 'org.projectlombok:lombok:1.18.46'
+  annotationProcessor 'org.projectlombok:lombok:1.18.46'
 
-  compileOnly 'org.projectlombok:lombok:1.18.36'
-  annotationProcessor 'org.projectlombok:lombok:1.18.36'
-
-  testCompileOnly 'org.projectlombok:lombok:1.18.36'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+  testCompileOnly 'org.projectlombok:lombok:1.18.46'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
 
   testImplementation 'io.quarkus:quarkus-junit5'
   testImplementation 'io.rest-assured:rest-assured'
@@ -57,13 +47,14 @@ group 'com.mageddo'
 version '1.0.0-SNAPSHOT'
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_21
-  targetCompatibility = JavaVersion.VERSION_21
+  sourceCompatibility = JavaVersion.VERSION_25
+  targetCompatibility = JavaVersion.VERSION_25
 }
 
 test {
   systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
 }
+
 compileJava {
   options.encoding = 'UTF-8'
   options.compilerArgs << '-parameters'
