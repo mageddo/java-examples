@@ -1,10 +1,13 @@
 package com.mageddo.coffeemaker.checkout;
 
+import java.time.Duration;
 import java.util.Random;
 
 import com.mageddo.commons.Threads;
 
 import io.micrometer.core.annotation.Timed;
+
+import io.micrometer.core.instrument.DistributionSummary;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
