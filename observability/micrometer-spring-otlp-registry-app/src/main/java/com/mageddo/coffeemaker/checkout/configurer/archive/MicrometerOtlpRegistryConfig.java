@@ -1,4 +1,4 @@
-package com.mageddo.archive;
+package com.mageddo.coffeemaker.checkout.configurer.archive;
 
 import org.springframework.beans.factory.annotation.Value;
 
