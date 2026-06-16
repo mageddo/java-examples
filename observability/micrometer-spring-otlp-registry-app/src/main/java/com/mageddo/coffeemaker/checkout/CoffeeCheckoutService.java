@@ -4,6 +4,8 @@ import java.util.Random;
 
 import com.mageddo.commons.Threads;
 
+import io.micrometer.core.annotation.Timed;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,13 @@ public class CoffeeCheckoutService {
   private final CoffeeCheckoutDomainEventSender domainEventSender;
 
   @WithSpan
+  @Timed(
+      value = "risk_duration",
+      extraTags = {
+          "span_name", "CoffeeCheckoutService.checkout",
+          "span_kind", "INTERNAL" // SERVER, CONSUMER, CLIENT
+      }
+  )
   public void checkout(CoffeeCheckoutReq req) {
 
     final var stopWatch = StopWatch.createStarted();
@@ -36,10 +45,16 @@ public class CoffeeCheckoutService {
     }
     final var time = stopWatch.getTime();
 
-    this.metrics.getTimesRan().increment(1);
-    this.metrics.getTimeToPrepare().record(time);
+    this.metrics
+        .getTimesRan()
+        .increment(1);
+    this.metrics
+        .getTimeToPrepare()
+        .record(time);
 
-    Span.current().setAttribute("xpto", "abc"); // << it works!
+    Span
+        .current()
+        .setAttribute("xpto", "abc"); // << it works!
 
     this.acquirerRepository.processPayment(req);
     this.domainEventSender.send(req);
