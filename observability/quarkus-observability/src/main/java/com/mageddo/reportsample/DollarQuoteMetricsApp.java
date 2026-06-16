@@ -25,7 +25,7 @@ public class DollarQuoteMetricsApp {
 
   @WithSpan
   @Scheduled(every = "5s")
-  @Timed("dollar_quote_job_quarkus_scheduler")
+  @Timed("duration.ms")
   public void dollarQuoteJob() throws Exception {
     log.info("status=jobRan");
     Thread.sleep(300);
