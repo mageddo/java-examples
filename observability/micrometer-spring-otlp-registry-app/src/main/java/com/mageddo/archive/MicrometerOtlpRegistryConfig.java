@@ -1,9 +1,8 @@
-package com.mageddo;
+package com.mageddo.archive;
 
 import org.springframework.beans.factory.annotation.Value;
 
 import io.micrometer.core.instrument.Clock;
-import io.micrometer.registry.otlp.OtlpConfig;
 import io.micrometer.registry.otlp.OtlpMeterRegistry;
 
 /**
@@ -31,14 +30,11 @@ public class MicrometerOtlpRegistryConfig {
    */
 //  @Bean
   public OtlpMeterRegistry otelRegistry(@Value("${info.version}") String version) {
-    final var registry = new OtlpMeterRegistry(new OtlpConfig() {
-      @Override
-      public String get(String key) {
-        if (key.equals("otlp.resourceAttributes")) {
-          return "telemetry.sdk.version=" + version;
-        }
-        return System.getProperty(key);
+    final var registry = new OtlpMeterRegistry(key -> {
+      if (key.equals("otlp.resourceAttributes")) {
+        return "telemetry.sdk.version=" + version;
       }
+      return System.getProperty(key);
     }, Clock.SYSTEM);
     registry
         .config()
