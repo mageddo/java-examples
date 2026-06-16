@@ -8,13 +8,6 @@ repositories {
   mavenLocal()
 }
 
-configurations {
-  all {
-//    exclude group: 'io.quarkus', module: 'quarkus-jul' // tag:logfix
-//    exclude module: 'jboss-logmanager'
-  }
-}
-
 dependencies {
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 
@@ -40,9 +33,6 @@ dependencies {
   // Para o report de tracing funcionar
   implementation 'io.quarkus:quarkus-opentelemetry'
 
-  implementation 'ch.qos.logback:logback-classic:1.5.17'
-  implementation 'io.quarkiverse.logging.logback:quarkus-logging-logback:1.1.2'
-
   compileOnly 'org.projectlombok:lombok:1.18.36'
   annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
@@ -64,6 +54,7 @@ java {
 test {
   systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
 }
+
 compileJava {
   options.encoding = 'UTF-8'
   options.compilerArgs << '-parameters'
