@@ -28,15 +28,15 @@ dependencies {
 
   // export open telemetry metrics without open telemetry deps or agent
   // https://github.com/micrometer-metrics/micrometer/pull/3129/files
-  implementation('io.micrometer:micrometer-registry-otlp:1.14.4')
+  implementation('io.micrometer:micrometer-registry-otlp')
 
   // only needled for tracing
   implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.13.3')
 
   // tag:trace-programmatic
-  implementation('io.opentelemetry:opentelemetry-exporter-otlp:1.43.0')
-  implementation('io.micrometer:micrometer-tracing:1.4.3')
-  implementation('io.micrometer:micrometer-tracing-bridge-otel:1.4.3')
+  implementation('io.opentelemetry:opentelemetry-exporter-otlp')
+  implementation('io.micrometer:micrometer-tracing')
+  implementation('io.micrometer:micrometer-tracing-bridge-otel')
   // end:trace-programmatic
 
   testCompileOnly 'org.projectlombok:lombok:1.18.46'
