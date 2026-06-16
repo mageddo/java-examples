@@ -27,8 +27,7 @@ public class CoffeeCheckoutService {
 
   @WithSpan
   @Timed(
-      value = "duration",
-      histogram = true,
+      value = "duration.ms",
       extraTags = {
           "span_name", "CoffeeCheckoutService.checkout",
           "span_kind", "INTERNAL" // SERVER, CONSUMER, CLIENT
@@ -61,8 +60,8 @@ public class CoffeeCheckoutService {
     this.domainEventSender.send(req);
 
     log.info(
-        "status=done, time={}, req={}, registries={}",
-        time, req, Metrics.globalRegistry.getRegistries()
+        "status=done, time={}, totalTime={}, req={}, registries={}",
+        time, stopWatch.getTime(), req, Metrics.globalRegistry.getRegistries()
     );
   }
 }

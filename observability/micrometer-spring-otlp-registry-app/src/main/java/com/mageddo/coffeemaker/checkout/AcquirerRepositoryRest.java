@@ -1,5 +1,7 @@
 package com.mageddo.coffeemaker.checkout;
 
+import io.micrometer.core.annotation.Counted;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,8 +16,15 @@ public class AcquirerRepositoryRest implements AcquirerRepository {
 
   private final RestTemplate restTemplate;
 
-  @Override
   @WithSpan
+  @Override
+  @Counted(
+      value = "duration.count",
+      extraTags = {
+          "span_name", "EligibilityService",
+          "span_kind", "INTERNAL"
+      }
+  )
   public void processPayment(CoffeeCheckoutReq req) {
     try {
       this.restTemplate.getForEntity(
