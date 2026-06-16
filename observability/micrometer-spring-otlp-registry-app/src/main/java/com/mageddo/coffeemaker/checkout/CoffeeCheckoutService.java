@@ -1,8 +1,13 @@
 package com.mageddo.coffeemaker.checkout;
 
+import java.time.Duration;
 import java.util.Random;
 
 import com.mageddo.commons.Threads;
+
+import io.micrometer.core.annotation.Timed;
+
+import io.micrometer.core.instrument.DistributionSummary;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
@@ -24,6 +29,13 @@ public class CoffeeCheckoutService {
   private final CoffeeCheckoutDomainEventSender domainEventSender;
 
   @WithSpan
+  @Timed(
+      value = "duration.ms",
+      extraTags = {
+          "span_name", "CoffeeCheckoutService.checkout",
+          "span_kind", "INTERNAL" // SERVER, CONSUMER, CLIENT
+      }
+  )
   public void checkout(CoffeeCheckoutReq req) {
 
     final var stopWatch = StopWatch.createStarted();
@@ -36,17 +48,23 @@ public class CoffeeCheckoutService {
     }
     final var time = stopWatch.getTime();
 
-    this.metrics.getTimesRan().increment(1);
-    this.metrics.getTimeToPrepare().record(time);
+    this.metrics
+        .getTimesRan()
+        .increment(1);
+    this.metrics
+        .getTimeToPrepare()
+        .record(time);
 
-    Span.current().setAttribute("xpto", "abc"); // << it works!
+    Span
+        .current()
+        .setAttribute("xpto", "abc"); // << it works!
 
     this.acquirerRepository.processPayment(req);
     this.domainEventSender.send(req);
 
     log.info(
-        "status=done, time={}, req={}, registries={}",
-        time, req, Metrics.globalRegistry.getRegistries()
+        "status=done, time={}, totalTime={}, req={}, registries={}",
+        time, stopWatch.getTime(), req, Metrics.globalRegistry.getRegistries()
     );
   }
 }

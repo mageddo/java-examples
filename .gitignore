@@ -15,7 +15,6 @@ ajcore*
 **/resources/lib/
 *.map
 *.class
-*.jar
 *.hex
 
 *.zip

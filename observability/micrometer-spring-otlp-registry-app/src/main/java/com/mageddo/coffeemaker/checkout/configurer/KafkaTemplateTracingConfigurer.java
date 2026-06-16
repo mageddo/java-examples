@@ -1,4 +1,4 @@
-package com.mageddo;
+package com.mageddo.coffeemaker.checkout.configurer;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class TracingConfig implements InitializingBean {
+public class KafkaTemplateTracingConfigurer implements InitializingBean {
 
   private final KafkaTemplate kafkaTemplate;
 

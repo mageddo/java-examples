@@ -7,6 +7,8 @@ App using
 * No JavaAgent
   * Traces are less detailed and some spring observation (unstable) configs necessary  
 
+## Run
+
 ## Build
 
 ```bash
