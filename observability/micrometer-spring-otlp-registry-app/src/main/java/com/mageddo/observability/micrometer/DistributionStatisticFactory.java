@@ -41,7 +41,7 @@ public class DistributionStatisticFactory {
     };
   }
 
-  private static double[] nanos(Duration... durations) {
+  static double[] nanos(Duration... durations) {
     return Arrays
         .stream(durations)
         .mapToDouble(Duration::toNanos)

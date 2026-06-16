@@ -34,6 +34,12 @@ public class TimerHistogramConfigurer {
         if (id.getType() != Meter.Type.TIMER) {
           return config;
         }
+
+        final var buckets = config.getServiceLevelObjectiveBoundaries();
+        if(buckets == null || buckets.length == 0){
+          return config;
+        }
+
         return config.merge(defaults);
       }
     };
