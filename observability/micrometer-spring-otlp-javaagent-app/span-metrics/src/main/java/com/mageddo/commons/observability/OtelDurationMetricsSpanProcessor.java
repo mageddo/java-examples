@@ -59,7 +59,6 @@ public final class OtelDurationMetricsSpanProcessor implements SpanProcessor {
   public void onEnd(ReadableSpan span) {
     try {
       this.record(span);
-      logger.fine(() -> "status=measured, span=" + span.getName());
     } catch (RuntimeException e) {
       logger.log(
           Level.WARNING,
