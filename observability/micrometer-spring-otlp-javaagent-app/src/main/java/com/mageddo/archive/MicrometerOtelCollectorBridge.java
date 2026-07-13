@@ -1,4 +1,4 @@
-package com.mageddo;
+package com.mageddo.archive;
 
 /**
  * It wasn't necessary o.O
