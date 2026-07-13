@@ -1,6 +1,6 @@
 FROM openjdk:17
 
-ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.14.0/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
+ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.29.0/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
 WORKDIR /app
 COPY ./build/libs/micrometer-spring-otlp-javaagent-app.jar /app/
 
