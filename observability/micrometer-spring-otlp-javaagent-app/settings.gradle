@@ -1,1 +1,3 @@
 rootProject.name="micrometer-spring-otlp-javaagent-app"
+
+include("span-metrics")

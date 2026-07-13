@@ -3,6 +3,9 @@ package com.mageddo.commons.observability;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.sdk.trace.data.SpanData;
 
+import lombok.Builder;
+import lombok.Value;
+
 public final class SpanExceptionExtractor {
 
   private static final AttributeKey<String> EXCEPTION_TYPE =
@@ -25,21 +28,23 @@ public final class SpanExceptionExtractor {
         .map(event -> {
 
           final var attributes = event.getAttributes();
-          return new RecordedException(
-              attributes.get(EXCEPTION_TYPE),
-              attributes.get(EXCEPTION_MESSAGE),
-              attributes.get(EXCEPTION_STACKTRACE)
-          );
+          return RecordedException
+              .builder()
+              .type(attributes.get(EXCEPTION_TYPE))
+              .message(attributes.get(EXCEPTION_MESSAGE))
+              .stacktrace(attributes.get(EXCEPTION_STACKTRACE))
+              .build();
 
         })
         .findFirst()
         .orElse(null);
   }
 
-  public record RecordedException(
-      String type,
-      String message,
-      String stacktrace
-  ) {
+  @Value
+  @Builder
+  public static class RecordedException {
+    String type;
+    String message;
+    String stacktrace;
   }
 }
