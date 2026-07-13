@@ -12,6 +12,9 @@ import io.opentelemetry.sdk.trace.ReadableSpan;
 import io.opentelemetry.sdk.trace.SpanProcessor;
 import io.opentelemetry.sdk.trace.data.SpanData;
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.ClassUtils;
 
 import java.time.Duration;
 import java.util.Locale;
@@ -19,6 +22,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+@Slf4j
 public final class OtelDurationMetricsSpanProcessor implements SpanProcessor {
 
   public static final String METRIC_NAME = "custom_duration_ms";
@@ -56,7 +60,9 @@ public final class OtelDurationMetricsSpanProcessor implements SpanProcessor {
   public void onEnd(ReadableSpan span) {
     try {
       this.record(span);
-    } catch (RuntimeException ignored) {
+      log.info("status=measured, span={}", span.getName());
+    } catch (RuntimeException e) {
+      log.warn("status=failed, msg={}, type={}", e.getMessage(), ClassUtils.getSimpleName(e));
     }
   }
 
