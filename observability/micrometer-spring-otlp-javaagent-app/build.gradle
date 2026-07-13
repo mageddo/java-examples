@@ -1,6 +1,6 @@
 plugins {
   id("java-library")
-  id("org.springframework.boot") version "3.5.15"
+  id("org.springframework.boot") version "3.5.16"
   id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -19,13 +19,13 @@ dependencies {
   compileOnly 'org.projectlombok:lombok:1.18.46'
   annotationProcessor 'org.projectlombok:lombok:1.18.46'
 
-  implementation('org.apache.commons:commons-lang3:3.13.0')
+  implementation('io.opentelemetry:opentelemetry-sdk:1.63.0')
+  implementation('org.apache.commons:commons-lang3:3.20.0')
   implementation('org.springframework.boot:spring-boot-starter-web:3.1.4')
-  implementation('org.springframework.boot:spring-boot-starter-actuator:3.1.4')
-  implementation('org.springframework.boot:spring-boot-starter-data-jpa:3.1.4')
+  implementation('org.springframework.boot:spring-boot-starter-actuator')
+  implementation('org.springframework.boot:spring-boot-starter-data-jpa')
   implementation('org.springframework.kafka:spring-kafka:3.0.11')
   implementation('com.h2database:h2:2.2.224')
-
 
   implementation('io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:1.31.0')
 
