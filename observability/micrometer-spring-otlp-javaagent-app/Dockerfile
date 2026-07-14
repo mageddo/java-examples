@@ -1,8 +1,9 @@
 FROM openjdk:17
 
-ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.31.0/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
+ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.29.0/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
 WORKDIR /app
 COPY ./build/libs/micrometer-spring-otlp-javaagent-app.jar /app/
+COPY ./span-metrics/build/libs/span-metrics.jar /app/span-metrics.jar
 
 # para fins de instrumentação e mandar metricas da jvm e libs dela automaticamente
 ENV OTEL_SERVICE_NAME="micrometer-spring-otlp-javaagent-app"
@@ -13,5 +14,6 @@ ENV OTEL_TRACES_SAMPLER="always_on"
 ENTRYPOINT [ \
   "java", \
   "-javaagent:/app/opentelemetry-javaagent.jar", \
+  "-Dotel.javaagent.extensions=/app/span-metrics.jar", \
   "-jar", "/app/micrometer-spring-otlp-javaagent-app.jar" \
 ]

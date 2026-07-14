@@ -1,0 +1,32 @@
+plugins {
+  id("java-library")
+}
+
+repositories {
+  mavenCentral()
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.release = 11
+}
+
+dependencies {
+
+  compileOnly 'org.projectlombok:lombok:1.18.46'
+  annotationProcessor 'org.projectlombok:lombok:1.18.46'
+
+  // Fornecidos em runtime pelo OpenTelemetry Java Agent, por isso compileOnly.
+  compileOnly platform('io.opentelemetry:opentelemetry-bom:1.62.0')
+  compileOnly 'io.opentelemetry:opentelemetry-sdk'
+  compileOnly 'io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi'
+}
+
+jar {
+  archiveBaseName = 'span-metrics'
+  archiveVersion = ''
+}

@@ -1,5 +1,6 @@
 package com.mageddo.coffeemaker.checkout;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,7 +24,10 @@ public class AcquirerRepositoryRest implements AcquirerRepository {
           String.class
       );
     } catch (Exception e) {
-      log.error("status=paymentProcessFailed, req={}", req, e);
+      log.warn(
+          "status=paymentProcessFailed, req={}, msg={}, type={}",
+          req, e.getMessage(), ClassUtils.getSimpleName(e)
+      );
     }
   }
 }

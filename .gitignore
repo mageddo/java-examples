@@ -25,3 +25,4 @@ ajcore*
 *.db
 .env
 .codex
+tmp
