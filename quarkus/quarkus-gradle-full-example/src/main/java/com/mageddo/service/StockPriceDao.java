@@ -10,7 +10,7 @@ public interface StockPriceDao {
 
   Stock getStock(String symbol);
 
-  void createStock(Stock stock);
+  boolean createIfAbsent(Stock stock);
 
   List<Stock> find();
 }

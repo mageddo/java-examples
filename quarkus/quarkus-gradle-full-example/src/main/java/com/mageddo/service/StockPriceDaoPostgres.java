@@ -5,11 +5,9 @@ import java.util.List;
 import jakarta.inject.Singleton;
 
 import com.mageddo.domain.Stock;
-import com.mageddo.exception.DuplicatedStockException;
 import com.mageddo.rowmapper.StockRowMapper;
 
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.statement.StatementException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,14 +19,15 @@ public class StockPriceDaoPostgres implements StockPriceDao {
 
   @Override
   public void updateStockPrice(Stock stock) {
-    final StringBuilder sql = new StringBuilder()
-        .append("INSERT INTO STOCK VALUES (:symbol, :price) \n")
-        .append("ON CONFLICT (IDT_STOCK) DO UPDATE \n")
-        .append("SET \n")
-        .append("  NUM_PRICE = :price \n");
-    jdbi.useHandle(handle -> {
+    final var sql = """
+        INSERT INTO STOCK VALUES (:symbol, :price)
+        ON CONFLICT (IDT_STOCK) DO UPDATE
+        SET
+          NUM_PRICE = :price
+        """;
+    this.jdbi.useHandle(handle -> {
       handle
-          .createUpdate(sql.toString())
+          .createUpdate(sql)
           .bind("symbol", stock.getSymbol())
           .bind("price", stock.getPrice())
           .execute()
@@ -38,9 +37,14 @@ public class StockPriceDaoPostgres implements StockPriceDao {
 
   @Override
   public Stock getStock(String symbol) {
-    return jdbi.withHandle(handle -> {
+    final var sql = """
+        SELECT *
+        FROM STOCK
+        WHERE IDT_STOCK = ?
+        """;
+    return this.jdbi.withHandle(handle -> {
       return handle
-          .createQuery("SELECT * FROM STOCK WHERE IDT_STOCK = ?")
+          .createQuery(sql)
           .bind(0, symbol)
           .map(new StockRowMapper())
           .one()
@@ -49,25 +53,24 @@ public class StockPriceDaoPostgres implements StockPriceDao {
   }
 
   @Override
-  public void createStock(Stock stock) {
-    try {
-      this.jdbi.useHandle(handle -> {
-        handle.execute("INSERT INTO STOCK VALUES (?, ?)", stock.getSymbol(), stock.getPrice());
-      });
-    } catch (StatementException e) {
-      if (e.getMessage()
-          .contains("stock_pkey")) {
-        throw new DuplicatedStockException(e);
-      }
-      throw e;
-    }
+  public boolean createIfAbsent(Stock stock) {
+    return this.jdbi.withHandle(h -> h.execute("""
+            INSERT INTO STOCK VALUES (?, ?) ON CONFLICT DO NOTHING
+            """,
+        stock.getSymbol(),
+        stock.getPrice()
+    )) == 1;
   }
 
   @Override
   public List<Stock> find() {
+    final var sql = """
+        SELECT *
+        FROM STOCK
+        """;
     return this.jdbi.withHandle(handle -> {
       return handle
-          .createQuery("SELECT * FROM STOCK")
+          .createQuery(sql)
           .map(new StockRowMapper())
           .list()
           ;

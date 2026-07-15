@@ -21,7 +21,7 @@ public class StockPriceService {
 
   @Transactional
   public void createStock(List<Stock> stocks){
-    stocks.forEach(this.stockPriceDao::createStock);
+    stocks.forEach(this.stockPriceDao::createIfAbsent);
   }
 
   @Transactional
@@ -44,9 +44,8 @@ public class StockPriceService {
     });
   }
 
-  @Transactional(Transactional.TxType.REQUIRES_NEW)
   public void createStockNested(Stock stock) {
-    this.stockPriceDao.createStock(stock);
+    this.stockPriceDao.createIfAbsent(stock);
   }
 
   StockPriceService self(){
