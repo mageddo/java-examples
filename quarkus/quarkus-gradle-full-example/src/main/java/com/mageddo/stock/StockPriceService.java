@@ -1,11 +1,9 @@
-package com.mageddo.service;
+package com.mageddo.stock;
 
 import java.util.List;
 
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
-
-import com.mageddo.domain.Stock;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

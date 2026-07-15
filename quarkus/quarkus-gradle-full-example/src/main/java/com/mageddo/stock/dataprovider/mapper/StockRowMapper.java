@@ -1,9 +1,9 @@
-package com.mageddo.rowmapper;
+package com.mageddo.stock.dataprovider.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.mageddo.domain.Stock;
+import com.mageddo.stock.Stock;
 
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;

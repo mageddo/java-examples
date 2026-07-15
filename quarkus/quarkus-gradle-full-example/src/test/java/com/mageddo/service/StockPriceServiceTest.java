@@ -3,9 +3,11 @@ package com.mageddo.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.mageddo.stock.StockPriceService;
+
 import jakarta.inject.Inject;
 
-import com.mageddo.domain.Stock;
+import com.mageddo.stock.Stock;
 import com.mageddo.exception.DuplicatedStockException;
 
 import org.junit.jupiter.api.BeforeEach;

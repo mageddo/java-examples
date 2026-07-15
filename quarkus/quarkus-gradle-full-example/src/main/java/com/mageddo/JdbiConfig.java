@@ -6,11 +6,20 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
 
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.enums.EnumStrategy;
+import org.jdbi.v3.core.enums.Enums;
 
 public class JdbiConfig {
+
   @Produces
   @Singleton
   public Jdbi jdbi(DataSource dataSource) {
-    return Jdbi.create(dataSource);
+    final var jdbi = Jdbi.create(dataSource);
+    jdbi
+        .getConfig(Enums.class)
+        .setEnumStrategy(EnumStrategy.BY_NAME)
+    ;
+    return jdbi;
   }
+
 }

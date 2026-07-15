@@ -1,4 +1,4 @@
-package com.mageddo.resource;
+package com.mageddo.stock.entrypoint.resource;
 
 import java.util.Map;
 

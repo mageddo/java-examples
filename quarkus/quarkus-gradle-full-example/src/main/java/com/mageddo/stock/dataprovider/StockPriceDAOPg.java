@@ -1,11 +1,12 @@
-package com.mageddo.service;
+package com.mageddo.stock.dataprovider;
 
 import java.util.List;
 
+import com.mageddo.stock.Stock;
+import com.mageddo.stock.StockPriceDAO;
 import jakarta.inject.Singleton;
 
-import com.mageddo.domain.Stock;
-import com.mageddo.rowmapper.StockRowMapper;
+import com.mageddo.stock.dataprovider.mapper.StockRowMapper;
 
 import org.jdbi.v3.core.Jdbi;
 

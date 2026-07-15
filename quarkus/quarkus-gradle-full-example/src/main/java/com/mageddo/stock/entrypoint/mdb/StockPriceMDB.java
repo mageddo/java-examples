@@ -1,15 +1,15 @@
-package com.mageddo.mdb;
+package com.mageddo.stock.entrypoint.mdb;
 
 import java.math.BigDecimal;
 
 import jakarta.inject.Singleton;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mageddo.domain.Stock;
+import com.mageddo.stock.Stock;
 import com.mageddo.kafka.Topics;
 import com.mageddo.kafka.client.Consumer;
 import com.mageddo.kafka.client.ConsumerConfig;
-import com.mageddo.service.StockPriceService;
+import com.mageddo.stock.StockPriceService;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.Producer;

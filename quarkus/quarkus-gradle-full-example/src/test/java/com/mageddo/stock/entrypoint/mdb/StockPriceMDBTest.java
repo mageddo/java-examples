@@ -1,12 +1,12 @@
-package com.mageddo.mdb;
+package com.mageddo.stock.entrypoint.mdb;
 
 import java.math.BigDecimal;
 
 import jakarta.inject.Inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mageddo.domain.Stock;
-import com.mageddo.service.StockPriceDAO;
+import com.mageddo.stock.Stock;
+import com.mageddo.stock.StockPriceDAO;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.junit.jupiter.api.Test;

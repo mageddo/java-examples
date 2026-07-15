@@ -1,4 +1,4 @@
-package com.mageddo.resource;
+package com.mageddo.stock.entrypoint.resource;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-import com.mageddo.domain.Stock;
-import com.mageddo.service.StockPriceService;
+import com.mageddo.stock.Stock;
+import com.mageddo.stock.StockPriceService;
 
 import org.jboss.resteasy.annotations.SseElementType;
 import org.reactivestreams.Publisher;

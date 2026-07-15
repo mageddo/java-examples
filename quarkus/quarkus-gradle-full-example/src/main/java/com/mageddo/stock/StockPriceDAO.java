@@ -1,8 +1,6 @@
-package com.mageddo.service;
+package com.mageddo.stock;
 
 import java.util.List;
-
-import com.mageddo.domain.Stock;
 
 public interface StockPriceDAO {
 
