@@ -22,7 +22,6 @@ dependencies {
   implementation("io.quarkus:quarkus-smallrye-openapi")
   implementation("io.quarkus:quarkus-scheduler")
   implementation("io.quarkus:quarkus-kafka-client")
-  implementation("com.mageddo.javaee-jdbi:javaee-jdbi:0.1.1")
 
   implementation("jakarta.servlet:jakarta.servlet-api:6.1.0") // graalvm thymeleaf fix
 

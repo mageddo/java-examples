@@ -52,7 +52,11 @@ public class PriceResource {
 
   @Scheduled(every = "PT3S")
   public void refresh(){
-    this.publisher.notify(this.stockPriceService.find().get(0).getPrice());
+    final var stocks = this.stockPriceService.find();
+    if (stocks.isEmpty()) {
+      return;
+    }
+    this.publisher.notify(stocks.get(0).getPrice());
   }
 
   private class StockPricePublisher implements Publisher<String> {

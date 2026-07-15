@@ -2,11 +2,9 @@ package com.mageddo.service;
 
 import java.util.List;
 
-import javax.transactionv2.Propagation;
-import javax.transactionv2.Transactional;
-
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 
 import com.mageddo.domain.Stock;
 import com.mageddo.exception.DuplicatedStockException;
@@ -46,7 +44,7 @@ public class StockPriceService {
     });
   }
 
-  @Transactional(propagation = Propagation.NESTED)
+  @Transactional(Transactional.TxType.REQUIRES_NEW)
   public void createStockNested(Stock stock) {
     this.stockPriceDao.createStock(stock);
   }
