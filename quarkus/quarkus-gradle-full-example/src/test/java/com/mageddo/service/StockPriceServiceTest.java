@@ -3,7 +3,7 @@ package com.mageddo.service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.mageddo.domain.Stock;
 import com.mageddo.exception.DuplicatedStockException;

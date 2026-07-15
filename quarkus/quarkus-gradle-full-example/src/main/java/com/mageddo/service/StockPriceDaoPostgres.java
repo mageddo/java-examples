@@ -2,7 +2,7 @@ package com.mageddo.service;
 
 import java.util.List;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import com.mageddo.domain.Stock;
 import com.mageddo.exception.DuplicatedStockException;

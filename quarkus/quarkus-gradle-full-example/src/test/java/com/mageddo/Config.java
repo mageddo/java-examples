@@ -1,6 +1,6 @@
 package com.mageddo;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import com.mageddo.kafka.client.ConsumerConfig;
 

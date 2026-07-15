@@ -2,10 +2,10 @@ package com.mageddo.kafka;
 
 import java.util.stream.Collectors;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import com.mageddo.kafka.client.Consumer;
 import com.mageddo.kafka.client.ConsumerConfig;

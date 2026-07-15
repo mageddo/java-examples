@@ -3,7 +3,7 @@ package com.mageddo.kafka;
 import java.time.Duration;
 import java.util.Map;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import com.mageddo.kafka.client.ConsumerConfig;
 

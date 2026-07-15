@@ -2,10 +2,11 @@ package com.mageddo.service;
 
 import java.util.List;
 
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Singleton;
 import javax.transactionv2.Propagation;
 import javax.transactionv2.Transactional;
+
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Singleton;
 
 import com.mageddo.domain.Stock;
 import com.mageddo.exception.DuplicatedStockException;

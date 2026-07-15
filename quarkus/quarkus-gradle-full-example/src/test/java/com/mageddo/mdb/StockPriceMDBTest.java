@@ -2,7 +2,7 @@ package com.mageddo.mdb;
 
 import java.math.BigDecimal;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mageddo.domain.Stock;

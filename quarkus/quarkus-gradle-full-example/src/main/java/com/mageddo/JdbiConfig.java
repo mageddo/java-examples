@@ -1,8 +1,9 @@
 package com.mageddo;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
+
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Singleton;
 
 import org.jdbi.v3.core.Jdbi;
 
