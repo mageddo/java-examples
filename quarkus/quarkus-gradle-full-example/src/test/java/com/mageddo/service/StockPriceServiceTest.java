@@ -57,7 +57,7 @@ class StockPriceServiceTest {
 
     // act
     assertThrows(DuplicatedStockException.class, () -> {
-      this.stockPriceService.createStock(stocks);
+      this.stockPriceService.createIfAbsent(stocks);
     });
 
     // assert
@@ -83,7 +83,7 @@ class StockPriceServiceTest {
     );
 
     // act
-    this.stockPriceService.createStockNested(stocks);
+    this.stockPriceService.createIfAbsent(stocks);
 
     // assert
     assertEquals(1, this.stockPriceService.find().size());

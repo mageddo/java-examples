@@ -42,7 +42,7 @@ public class PriceResource {
   @POST
   @Consumes(MediaType.TEXT_PLAIN)
   public void addPrice(BigDecimal price) {
-    this.stockPriceService.updateStockPrice(Stock
+    this.stockPriceService.update(Stock
         .builder()
         .symbol("PAGS")
         .price(price)

@@ -13,17 +13,16 @@ import lombok.RequiredArgsConstructor;
 
 @Singleton
 @RequiredArgsConstructor
-public class StockPriceDaoPostgres implements StockPriceDao {
+public class StockPriceDAOPg implements StockPriceDAO {
 
   private final Jdbi jdbi;
 
   @Override
-  public void updateStockPrice(Stock stock) {
+  public void update(Stock stock) {
     final var sql = """
         INSERT INTO STOCK VALUES (:symbol, :price)
         ON CONFLICT (IDT_STOCK) DO UPDATE
-        SET
-          NUM_PRICE = :price
+          SET NUM_PRICE = :price
         """;
     this.jdbi.useHandle(handle -> {
       handle
@@ -36,20 +35,18 @@ public class StockPriceDaoPostgres implements StockPriceDao {
   }
 
   @Override
-  public Stock getStock(String symbol) {
+  public Stock find(String symbol) {
     final var sql = """
         SELECT *
         FROM STOCK
         WHERE IDT_STOCK = ?
         """;
-    return this.jdbi.withHandle(handle -> {
-      return handle
-          .createQuery(sql)
-          .bind(0, symbol)
-          .map(new StockRowMapper())
-          .one()
-          ;
-    });
+    return this.jdbi.withHandle(h -> h
+        .createQuery(sql)
+        .bind(0, symbol)
+        .map(new StockRowMapper())
+        .one()
+    );
   }
 
   @Override
@@ -64,16 +61,10 @@ public class StockPriceDaoPostgres implements StockPriceDao {
 
   @Override
   public List<Stock> find() {
-    final var sql = """
-        SELECT *
-        FROM STOCK
-        """;
-    return this.jdbi.withHandle(handle -> {
-      return handle
-          .createQuery(sql)
-          .map(new StockRowMapper())
-          .list()
-          ;
-    });
+    return this.jdbi.withHandle(h -> h
+        .createQuery("SELECT * FROM STOCK")
+        .map(new StockRowMapper())
+        .list()
+    );
   }
 }

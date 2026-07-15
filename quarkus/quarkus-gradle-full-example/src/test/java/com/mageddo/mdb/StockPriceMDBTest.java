@@ -6,7 +6,7 @@ import jakarta.inject.Inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mageddo.domain.Stock;
-import com.mageddo.service.StockPriceDao;
+import com.mageddo.service.StockPriceDAO;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class StockPriceMDBTest {
   StockPriceMDB stockPriceMDB;
 
   @Inject
-  StockPriceDao stockPriceDao;
+  StockPriceDAO stockPriceDao;
 
   @Test
   void mustConsumeAndSave() throws Exception {
@@ -48,7 +48,7 @@ public class StockPriceMDBTest {
     this.stockPriceMDB.consume(consumerRecords);
 
     // assert
-    final var foundStock = this.stockPriceDao.getStock("PAGS");
+    final var foundStock = this.stockPriceDao.find("PAGS");
     assertNotNull(foundStock);
     assertEquals(new BigDecimal("10.00"), foundStock.getPrice());
   }

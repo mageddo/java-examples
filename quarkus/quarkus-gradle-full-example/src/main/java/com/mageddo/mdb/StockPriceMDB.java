@@ -36,7 +36,7 @@ public class StockPriceMDB implements Consumer {
   public void consume(ConsumerRecords<String, byte[]> records) {
     for (final var record : records) {
       final var stock = this.objectMapper.readValue(record.value(), Stock.class);
-      this.stockPriceService.updateStockPrice(stock);
+      this.stockPriceService.update(stock);
       log.info("key={}, value={}", record.key(), new String(record.value()));
     }
   }

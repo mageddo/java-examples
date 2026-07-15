@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.mageddo.domain.Stock;
 
-public interface StockPriceDao {
+public interface StockPriceDAO {
 
-  void updateStockPrice(Stock stock);
+  void update(Stock stock);
 
-  Stock getStock(String symbol);
+  Stock find(String symbol);
 
   boolean createIfAbsent(Stock stock);
 
