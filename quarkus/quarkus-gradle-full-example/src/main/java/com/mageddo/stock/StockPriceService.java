@@ -2,6 +2,8 @@ package com.mageddo.stock;
 
 import java.util.List;
 
+import com.mageddo.exception.DuplicatedStockException;
+
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
 
@@ -18,8 +20,17 @@ public class StockPriceService {
   @Transactional
   public long createIfAbsent(List<Stock> stocks) {
     return stocks.stream()
-        .filter(this.stockPriceDao::createIfAbsent)
+        .filter(this::createIfAbsent)
         .count();
+  }
+
+  @Transactional
+  public void create(List<Stock> stocks) {
+    stocks.forEach(stock -> {
+      if (!this.createIfAbsent(stock)) {
+        throw new DuplicatedStockException(stock.getSymbol());
+      }
+    });
   }
 
   @Transactional

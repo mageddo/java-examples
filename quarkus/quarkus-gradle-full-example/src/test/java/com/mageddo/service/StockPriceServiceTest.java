@@ -59,7 +59,7 @@ class StockPriceServiceTest {
 
     // act
     assertThrows(DuplicatedStockException.class, () -> {
-      this.stockPriceService.createIfAbsent(stocks);
+      this.stockPriceService.create(stocks);
     });
 
     // assert
