@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class StockPriceMDB implements Consumer {
 
-  public static final String EVERY_5_SECONDS = "0/1 * * * * ?";
 
   private final Producer<String, byte[]> producer;
   private final StockPriceService stockPriceService;
@@ -42,7 +41,7 @@ public class StockPriceMDB implements Consumer {
   }
 
   @SneakyThrows
-  @Scheduled(cron = EVERY_5_SECONDS)
+  @Scheduled(cron = "0/20 * * * * ?")
   void notifyStockUpdates(ScheduledExecution execution) {
     producer.send(new ProducerRecord<>(
         "stock_changed_v2",

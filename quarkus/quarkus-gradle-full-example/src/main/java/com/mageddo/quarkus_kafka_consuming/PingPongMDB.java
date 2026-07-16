@@ -33,7 +33,7 @@ public class PingPongMDB {
     log.info("status=pong, records={}", records.count());
   }
 
-  @Scheduled(every = "PT3S")
+  @Scheduled(every = "PT1S")
   public void ping() {
     this.producer.send(new ProducerRecord<>("sys.ping-pong.default", null));
   }
