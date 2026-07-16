@@ -1,4 +1,4 @@
-package com.mageddo.domain;
+package com.mageddo.stock;
 
 import java.math.BigDecimal;
 

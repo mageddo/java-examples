@@ -1,18 +1,18 @@
-package com.mageddo.resource;
+package com.mageddo.stock.entrypoint.resource;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
-import com.mageddo.domain.Stock;
-import com.mageddo.service.StockPriceService;
+import com.mageddo.stock.Stock;
+import com.mageddo.stock.StockPriceService;
 
 import org.jboss.resteasy.annotations.SseElementType;
 import org.reactivestreams.Publisher;
@@ -42,7 +42,7 @@ public class PriceResource {
   @POST
   @Consumes(MediaType.TEXT_PLAIN)
   public void addPrice(BigDecimal price) {
-    this.stockPriceService.updateStockPrice(Stock
+    this.stockPriceService.update(Stock
         .builder()
         .symbol("PAGS")
         .price(price)
@@ -52,7 +52,11 @@ public class PriceResource {
 
   @Scheduled(every = "PT3S")
   public void refresh(){
-    this.publisher.notify(this.stockPriceService.find().get(0).getPrice());
+    final var stocks = this.stockPriceService.find();
+    if (stocks.isEmpty()) {
+      return;
+    }
+    this.publisher.notify(stocks.get(0).getPrice());
   }
 
   private class StockPricePublisher implements Publisher<String> {
