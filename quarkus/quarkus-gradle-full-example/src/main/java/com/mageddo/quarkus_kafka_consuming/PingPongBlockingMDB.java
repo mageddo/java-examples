@@ -2,6 +2,8 @@ package com.mageddo.quarkus_kafka_consuming;
 
 import java.time.temporal.ChronoUnit;
 
+import com.mageddo.kafka.client.internal.Threads;
+
 import io.smallrye.reactive.messaging.annotations.Blocking;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -30,7 +32,8 @@ public class PingPongBlockingMDB {
   )
   @Blocking(ordered = true)
   @Incoming("sys.ping-pong.blocking")
-  public void consume(ConsumerRecords<String, byte[]> records) {
+  public void consume(ConsumerRecords<String, byte[]> records) throws Exception {
+    Thread.sleep(1000);
     log.info("status=pong, records={}", records.count());
   }
 
