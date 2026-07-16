@@ -1,15 +1,15 @@
-package com.mageddo.mdb;
+package com.mageddo.stock.entrypoint.mdb;
 
 import java.math.BigDecimal;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mageddo.domain.Stock;
+import com.mageddo.stock.Stock;
 import com.mageddo.kafka.Topics;
 import com.mageddo.kafka.client.Consumer;
 import com.mageddo.kafka.client.ConsumerConfig;
-import com.mageddo.service.StockPriceService;
+import com.mageddo.stock.StockPriceService;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.Producer;
@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class StockPriceMDB implements Consumer {
 
-  public static final String EVERY_5_SECONDS = "0/1 * * * * ?";
 
   private final Producer<String, byte[]> producer;
   private final StockPriceService stockPriceService;
@@ -36,13 +35,13 @@ public class StockPriceMDB implements Consumer {
   public void consume(ConsumerRecords<String, byte[]> records) {
     for (final var record : records) {
       final var stock = this.objectMapper.readValue(record.value(), Stock.class);
-      this.stockPriceService.updateStockPrice(stock);
+      this.stockPriceService.update(stock);
       log.info("key={}, value={}", record.key(), new String(record.value()));
     }
   }
 
   @SneakyThrows
-  @Scheduled(cron = EVERY_5_SECONDS)
+  @Scheduled(cron = "0/20 * * * * ?")
   void notifyStockUpdates(ScheduledExecution execution) {
     producer.send(new ProducerRecord<>(
         "stock_changed_v2",

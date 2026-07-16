@@ -3,9 +3,11 @@ package com.mageddo.service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.inject.Inject;
+import com.mageddo.stock.StockPriceService;
 
-import com.mageddo.domain.Stock;
+import jakarta.inject.Inject;
+
+import com.mageddo.stock.Stock;
 import com.mageddo.exception.DuplicatedStockException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +59,7 @@ class StockPriceServiceTest {
 
     // act
     assertThrows(DuplicatedStockException.class, () -> {
-      this.stockPriceService.createStock(stocks);
+      this.stockPriceService.create(stocks);
     });
 
     // assert
@@ -83,7 +85,7 @@ class StockPriceServiceTest {
     );
 
     // act
-    this.stockPriceService.createStockNested(stocks);
+    this.stockPriceService.createIfAbsent(stocks);
 
     // assert
     assertEquals(1, this.stockPriceService.find().size());

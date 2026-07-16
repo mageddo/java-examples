@@ -1,11 +1,13 @@
 package com.mageddo;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import com.mageddo.kafka.client.ConsumerConfig;
 
 import org.apache.kafka.clients.producer.MockProducer;
 import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 
 public class Config {
 
@@ -19,6 +21,6 @@ public class Config {
 
   @Produces
   public Producer<String, byte[]> producer() {
-    return new MockProducer<>();
+    return new MockProducer<String, byte[]>(true, null, new StringSerializer(), new ByteArraySerializer());
   }
 }

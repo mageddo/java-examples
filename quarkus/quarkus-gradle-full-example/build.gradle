@@ -10,8 +10,8 @@ repositories {
 
 dependencies {
 
-  compileOnly("org.projectlombok:lombok:1.18.24")
-  annotationProcessor("org.projectlombok:lombok:1.18.24")
+  compileOnly("org.projectlombok:lombok:1.18.46")
+  annotationProcessor("org.projectlombok:lombok:1.18.46")
 
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   implementation("io.quarkus:quarkus-jdbc-postgresql")
@@ -22,24 +22,25 @@ dependencies {
   implementation("io.quarkus:quarkus-smallrye-openapi")
   implementation("io.quarkus:quarkus-scheduler")
   implementation("io.quarkus:quarkus-kafka-client")
-  implementation("com.mageddo.javaee-jdbi:javaee-jdbi:0.1.1")
 
-  implementation ("javax.servlet:javax.servlet-api:4.0.1") // graalvm thymeleaf fix
+  implementation("jakarta.servlet:jakarta.servlet-api:6.1.0") // graalvm thymeleaf fix
 
-  implementation platform("org.jdbi:jdbi3-bom:3.36.0")
+  implementation platform("org.jdbi:jdbi3-bom:3.54.0")
   implementation("org.jdbi:jdbi3-core")
 
-  implementation("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
+  implementation("org.thymeleaf:thymeleaf:3.1.5.RELEASE")
 
-
+  implementation("io.quarkus:quarkus-messaging-kafka")
+  implementation("io.quarkus:quarkus-smallrye-fault-tolerance")
   implementation("com.mageddo.rapids-kafka-client:rapids-kafka-client:2.0.6")
-  implementation ("org.apache.commons:commons-lang3:3.12.0")
 
-  testCompileOnly("org.projectlombok:lombok:1.18.24")
-  testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
+  implementation("org.apache.commons:commons-lang3:3.18.0")
+
+  testCompileOnly("org.projectlombok:lombok:1.18.46")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.46")
   testImplementation("io.quarkus:quarkus-junit5")
   testImplementation("io.rest-assured:rest-assured")
-  testImplementation("org.mockito:mockito-junit-jupiter:5.0.0")
+  testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
 
   testImplementation("io.zonky.test:embedded-postgres:1.2.5")
   testRuntimeOnly enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:12.2.0")
@@ -59,8 +60,13 @@ compileTestJava {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(25)
+  }
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.release = 25
 }
 
 test {

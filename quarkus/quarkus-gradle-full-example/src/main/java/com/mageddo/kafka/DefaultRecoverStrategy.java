@@ -1,7 +1,7 @@
 package com.mageddo.kafka;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import com.mageddo.kafka.client.RecoverContext;
 
