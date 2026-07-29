@@ -1,15 +1,27 @@
 let MAX_SEC = 0;
 
+function formatDuration(value) {
+  if (value == null) {
+    return '';
+  }
+  if (value >= 60) {
+    const total = Math.round(value);
+    const minutes = Math.floor(total / 60);
+    const seconds = total % 60;
+    return `${minutes}m${seconds}s`;
+  }
+  if (value >= 1) {
+    return `${value.toFixed(1)}s`;
+  }
+  return `${Math.round(value * 1000)}ms`;
+}
+
 function durFmt(value) {
   let pct = 0;
   if (MAX_SEC > 0) {
     pct = (value / MAX_SEC) * 100;
   }
-  let text = '';
-  if (value != null) {
-    text = `${value.toFixed(3)}s`;
-  }
-  return `<div class="dur-cell"><span class="dur-value">${text}</span>`
+  return `<div class="dur-cell"><span class="dur-value">${formatDuration(value)}</span>`
     + `<div class="dur-bar flex-grow-1"><span style="width:${pct}%"></span></div></div>`;
 }
 
@@ -28,7 +40,6 @@ $(function () {
   const $errorAlert = $('#errorAlert');
   const $summary = $('#summary');
   const $loading = $('#loading');
-  const $tblWrap = $('#tblWrap');
   const $tbl = $('#tbl');
 
   const dir = GTR.param('dir');
@@ -79,7 +90,6 @@ $(function () {
       return row.sec || 0;
     }));
     renderSummary(data);
-    $tblWrap.removeClass('d-none');
     $tbl.bootstrapTable({data: data, iconsPrefix: 'bi'});
   }
 
@@ -96,7 +106,7 @@ $(function () {
       ${stat('passed', 'passados', totals.passed)}
       ${stat('failed', 'com erro', totals.failed)}
       ${stat('skipped', 'ignorados', totals.skipped)}
-      ${stat('total', 'duração total', formatTime(totals.sec))}
+      ${stat('total', 'duração total', formatDuration(totals.sec))}
     `);
   }
 
@@ -107,13 +117,6 @@ $(function () {
         <span class="stat-label">${label}</span>
       </span>
     `;
-  }
-
-  function formatTime(seconds) {
-    if (seconds < 60) {
-      return `${seconds.toFixed(1)}s`;
-    }
-    return `${seconds.toFixed(1)}s (${(seconds / 60).toFixed(1)} min)`;
   }
 
   function showError(message) {
