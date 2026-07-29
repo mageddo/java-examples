@@ -1,0 +1,29 @@
+.dur-bar {
+  background: #e9ecef;
+  border-radius: 3px;
+  height: 14px;
+  position: relative;
+}
+
+.dur-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--pb-action);
+  border-radius: 3px;
+}
+
+.dur-cell {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.dur-cell .dur-value {
+  width: 72px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tbl {
+  margin-top: .5rem;
+}
