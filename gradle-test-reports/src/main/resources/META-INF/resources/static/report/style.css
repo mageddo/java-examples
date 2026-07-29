@@ -22,8 +22,19 @@
   width: 72px;
   text-align: right;
   font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  font-size: .82rem;
 }
 
 #tbl {
   margin-top: .5rem;
+}
+
+#tbl td {
+  vertical-align: middle;
+}
+
+#tbl td:nth-child(1), #tbl td:nth-child(2) {
+  font-family: var(--font-mono);
+  font-size: .84rem;
 }
