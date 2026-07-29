@@ -28,6 +28,7 @@ $(function () {
   const $errorAlert = $('#errorAlert');
   const $summary = $('#summary');
   const $loading = $('#loading');
+  const $tblWrap = $('#tblWrap');
   const $tbl = $('#tbl');
 
   const dir = GTR.param('dir');
@@ -78,7 +79,8 @@ $(function () {
       return row.sec || 0;
     }));
     renderSummary(data);
-    $tbl.removeClass('d-none').bootstrapTable({data: data, iconsPrefix: 'bi'});
+    $tblWrap.removeClass('d-none');
+    $tbl.bootstrapTable({data: data, iconsPrefix: 'bi'});
   }
 
   function renderSummary(data) {
