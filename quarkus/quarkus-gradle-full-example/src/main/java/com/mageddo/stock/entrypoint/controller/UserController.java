@@ -1,4 +1,4 @@
-package com.mageddo.stock.entrypoint.resource;
+package com.mageddo.stock.entrypoint.controller;
 
 import java.util.Map;
 
@@ -13,16 +13,19 @@ import lombok.RequiredArgsConstructor;
 
 @Path("/user")
 @RequiredArgsConstructor
-public class UserResource {
+public class UserController {
 
   private final Thymeleaf thymeleaf;
 
   @GET
   @Produces(MediaType.TEXT_HTML)
-  public String index(){
-    return this.thymeleaf.from("templates/user/index.html", Map.of(
-        "loggedIn", true,
-        "username", "Elvis"
-    ));
+  public String index() {
+    return this.thymeleaf.from(
+        "templates/user/index.html",
+        Map.of(
+            "loggedIn", true,
+            "username", "Elvis"
+        )
+    );
   }
 }
