@@ -10,34 +10,19 @@ public class FruitMapper {
   private FruitMapper() {
   }
 
-  public static Fruit of(final FruitReqV1 req) {
-    return new Fruit(
-        req.id(),
-        req.name(),
-        req.color(),
-        req.season()
-    );
+  public static Fruit of(FruitReqV1 req) {
+    return new Fruit(req.id(), req.name(), req.color(), req.season());
   }
 
-  public static FruitResV1 to(final Fruit fruit) {
-    return new FruitResV1(
-        fruit.id(),
-        fruit.name(),
-        fruit.color(),
-        fruit.season()
-    );
+  public static FruitResV1 to(Fruit fruit) {
+    return new FruitResV1(fruit.id(), fruit.name(), fruit.color(), fruit.season());
   }
 
-  public static Fruit toDomain(final FruitRow row) {
-    return new Fruit(
-        row.getId(),
-        row.getName(),
-        row.getColor(),
-        row.getSeason()
-    );
+  public static Fruit toDomain(FruitRow row) {
+    return new Fruit(row.getId(), row.getName(), row.getColor(), row.getSeason());
   }
 
-  public static FruitRow toRow(final Fruit fruit) {
+  public static FruitRow toRow(Fruit fruit) {
     final var row = new FruitRow();
     row.setId(fruit.id());
     row.setName(fruit.name());

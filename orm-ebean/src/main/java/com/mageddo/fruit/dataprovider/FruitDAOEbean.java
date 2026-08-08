@@ -4,22 +4,18 @@ import com.mageddo.fruit.domain.Fruit;
 import com.mageddo.fruit.dataprovider.mapper.FruitMapper;
 import io.ebean.Database;
 import io.ebean.InsertOptions;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @Singleton
+@RequiredArgsConstructor
 public class FruitDAOEbean implements FruitDAO {
 
   private final Database database;
 
-  @Inject
-  public FruitDAOEbean(final Database database) {
-    this.database = database;
-  }
-
   @Override
-  public Fruit createIfAbsent(final Fruit fruit) {
+  public Fruit createIfAbsent(Fruit fruit) {
     final var insertOptions = InsertOptions.builder()
         .onConflictNothing()
         .build();
@@ -28,7 +24,7 @@ public class FruitDAOEbean implements FruitDAO {
   }
 
   @Override
-  public Fruit save(final Fruit fruit) {
+  public Fruit save(Fruit fruit) {
     final var insertOptions = InsertOptions.builder()
         .onConflictUpdate()
         .build();
@@ -37,7 +33,7 @@ public class FruitDAOEbean implements FruitDAO {
   }
 
   @Override
-  public Fruit find(final UUID id) {
+  public Fruit find(UUID id) {
     final var row = this.database.find(FruitRow.class, id);
     if (row == null) {
       return null;

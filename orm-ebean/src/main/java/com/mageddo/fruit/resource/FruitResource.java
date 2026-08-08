@@ -16,22 +16,20 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @Path("/fruits")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Singleton
+@RequiredArgsConstructor
 public class FruitResource {
 
   private final FruitService service;
 
-  public FruitResource(FruitService service) {
-    this.service = service;
-  }
-
   @POST
   @Path("/create-if-absent")
-  public FruitResV1 createIfAbsent(final FruitReqV1 req) {
+  public FruitResV1 createIfAbsent(FruitReqV1 req) {
     final Fruit fruit = FruitMapper.of(req);
     final Fruit persisted = this.service.createIfAbsent(fruit);
     return FruitMapper.to(persisted);
@@ -39,7 +37,7 @@ public class FruitResource {
 
   @PUT
   @Path("/upsert")
-  public FruitResV1 upsert(final FruitReqV1 req) {
+  public FruitResV1 upsert(FruitReqV1 req) {
     final Fruit fruit = FruitMapper.of(req);
     final Fruit persisted = this.service.save(fruit);
     return FruitMapper.to(persisted);
@@ -47,7 +45,7 @@ public class FruitResource {
 
   @GET
   @Path("/{id}")
-  public Response find(@PathParam("id") final UUID id) {
+  public Response find(@PathParam("id") UUID id) {
     final Fruit fruit = this.service.find(id);
 
     if (fruit == null) {

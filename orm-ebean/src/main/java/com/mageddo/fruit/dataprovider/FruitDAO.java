@@ -5,9 +5,9 @@ import java.util.UUID;
 
 public interface FruitDAO {
 
-  Fruit createIfAbsent(final Fruit fruit);
+  Fruit createIfAbsent(Fruit fruit);
 
-  Fruit save(final Fruit fruit);
+  Fruit save(Fruit fruit);
 
-  Fruit find(final UUID id);
+  Fruit find(UUID id);
 }
