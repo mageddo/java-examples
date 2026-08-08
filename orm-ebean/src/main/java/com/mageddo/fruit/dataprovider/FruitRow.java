@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "fruit")
+@Table(name = "fruit", schema = "ebean_orm")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FruitRow {
 
