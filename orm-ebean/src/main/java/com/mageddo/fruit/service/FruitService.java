@@ -3,9 +3,10 @@ package com.mageddo.fruit.service;
 import com.mageddo.fruit.dataprovider.FruitDAO;
 import com.mageddo.fruit.domain.Fruit;
 
-import io.ebean.annotation.Transactional;
 import jakarta.inject.Singleton;
 import java.util.UUID;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Singleton
