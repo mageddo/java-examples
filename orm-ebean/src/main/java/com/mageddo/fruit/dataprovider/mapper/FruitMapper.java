@@ -15,7 +15,7 @@ public class FruitMapper {
   }
 
   public static FruitResV1 to(Fruit fruit) {
-    return new FruitResV1(fruit.id(), fruit.name(), fruit.color(), fruit.season());
+    return new FruitResV1(fruit.getId(), fruit.getName(), fruit.getColor(), fruit.getSeason());
   }
 
   public static Fruit toDomain(FruitRow row) {
@@ -24,10 +24,10 @@ public class FruitMapper {
 
   public static FruitRow toRow(Fruit fruit) {
     final var row = new FruitRow();
-    row.setId(fruit.id());
-    row.setName(fruit.name());
-    row.setColor(fruit.color());
-    row.setSeason(fruit.season());
+    row.setId(fruit.getId());
+    row.setName(fruit.getName());
+    row.setColor(fruit.getColor());
+    row.setSeason(fruit.getSeason());
     return row;
   }
 }

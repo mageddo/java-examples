@@ -20,7 +20,7 @@ public class FruitDAOEbean implements FruitDAO {
         .onConflictNothing()
         .build();
     this.database.insert(FruitMapper.toRow(fruit), insertOptions);
-    return this.find(fruit.id());
+    return this.find(fruit.getId());
   }
 
   @Override
@@ -29,7 +29,7 @@ public class FruitDAOEbean implements FruitDAO {
         .onConflictUpdate()
         .build();
     this.database.insert(FruitMapper.toRow(fruit), insertOptions);
-    return this.find(fruit.id());
+    return this.find(fruit.getId());
   }
 
   @Override
