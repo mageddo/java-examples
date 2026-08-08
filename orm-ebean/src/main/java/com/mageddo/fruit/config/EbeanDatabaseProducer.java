@@ -23,6 +23,9 @@ public class EbeanDatabaseProducer {
       @ConfigProperty(name = "quarkus.datasource.jdbc.database") String databaseName
   ) {
     final var databaseConfig = new DatabaseConfig();
+    databaseConfig.ddlGenerate(false);
+    databaseConfig.ddlRun(false);
+    databaseConfig.runMigration(false);
     databaseConfig.setName(databaseName);
     databaseConfig.setUseJtaTransactionManager(false);
     databaseConfig.setDataSource(dataSource);
