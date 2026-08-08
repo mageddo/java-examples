@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 public class FruitRow {
 
   @Id
-  @Column(name = "idt_fruit", nullable = false)
+  @Column(name = "idt_fruit", nullable = false, unique = true)
   UUID id;
 
   @Column(name = "nam_name")
