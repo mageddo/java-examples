@@ -12,6 +12,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @QuarkusTest
 class FruitServiceCompTest {
@@ -69,6 +70,18 @@ class FruitServiceCompTest {
     assertThat(found)
         .usingRecursiveComparison()
         .isEqualTo(FruitTemplates.greenBananaAltSeason());
+  }
+
+  @Test
+  void createAndFailShouldRollbackTransaction() {
+    final var fruit = FruitTemplates.banana();
+
+    assertThatThrownBy(() -> this.service.createAndFail(fruit))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("failed");
+
+    assertThat(this.service.find(fruit.getId()))
+        .isNull();
   }
 
   @Test
