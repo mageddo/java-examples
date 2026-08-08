@@ -16,21 +16,27 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class FruitService {
 
-  private final FruitDAO fruitDao;
+  private final FruitDAO fruitDAO;
 
   @Transactional
   public Fruit createIfAbsent(Fruit fruit) {
-    final var created = this.fruitDao.createIfAbsent(fruit);
+    final var created = this.fruitDAO.createIfAbsent(fruit);
     log.info("created={}, fruit={}", created, fruit);
-    return this.fruitDao.find(fruit.getId());
+    return this.fruitDAO.find(fruit.getId());
+  }
+
+  @Transactional
+  public Fruit createAndFail(Fruit fruit) {
+    this.fruitDAO.createIfAbsent(fruit);
+    throw new IllegalArgumentException("failed");
   }
 
   @Transactional
   public Fruit save(Fruit fruit) {
-    return this.fruitDao.save(fruit);
+    return this.fruitDAO.save(fruit);
   }
 
   public Fruit find(UUID id) {
-    return this.fruitDao.find(id);
+    return this.fruitDAO.find(id);
   }
 }
