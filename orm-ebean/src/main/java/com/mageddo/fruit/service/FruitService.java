@@ -2,8 +2,9 @@ package com.mageddo.fruit.service;
 
 import com.mageddo.fruit.dataprovider.FruitDAO;
 import com.mageddo.fruit.domain.Fruit;
+
+import io.ebean.annotation.Transactional;
 import jakarta.inject.Singleton;
-import jakarta.transaction.Transactional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
