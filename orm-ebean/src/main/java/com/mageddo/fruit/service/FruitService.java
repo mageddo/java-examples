@@ -3,6 +3,7 @@ package com.mageddo.fruit.service;
 import com.mageddo.fruit.dataprovider.FruitDAO;
 import com.mageddo.fruit.domain.Fruit;
 import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
@@ -12,10 +13,12 @@ public class FruitService {
 
   private final FruitDAO fruitDao;
 
+  @Transactional
   public Fruit createIfAbsent(Fruit fruit) {
     return this.fruitDao.createIfAbsent(fruit);
   }
 
+  @Transactional
   public Fruit save(Fruit fruit) {
     return this.fruitDao.save(fruit);
   }

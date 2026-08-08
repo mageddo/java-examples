@@ -22,6 +22,7 @@ public class EbeanDatabaseProducer {
     final var databaseConfig = new DatabaseConfig();
     databaseConfig.setName("db");
     databaseConfig.setDbSchema("ebean_orm");
+    databaseConfig.setUseJtaTransactionManager(true);
     databaseConfig.setDataSource(this.dataSource);
     databaseConfig.addClass(FruitRow.class);
     return DatabaseFactory.create(databaseConfig);
