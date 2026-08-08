@@ -4,11 +4,14 @@ import com.mageddo.fruit.dataprovider.FruitDAO;
 import com.mageddo.fruit.domain.Fruit;
 
 import jakarta.inject.Singleton;
+
 import java.util.UUID;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Singleton
 @RequiredArgsConstructor
 public class FruitService {
@@ -17,7 +20,9 @@ public class FruitService {
 
   @Transactional
   public Fruit createIfAbsent(Fruit fruit) {
-    return this.fruitDao.createIfAbsent(fruit);
+    final var created = this.fruitDao.createIfAbsent(fruit);
+    log.info("created={}, fruit={}", created, fruit);
+    return this.fruitDao.find(fruit.getId());
   }
 
   @Transactional

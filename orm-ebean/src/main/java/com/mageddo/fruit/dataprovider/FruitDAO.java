@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public interface FruitDAO {
 
-  Fruit createIfAbsent(Fruit fruit);
+  boolean createIfAbsent(Fruit fruit);
 
   Fruit save(Fruit fruit);
 

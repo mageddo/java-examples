@@ -15,13 +15,13 @@ public class FruitDAOEbean implements FruitDAO {
   private final Database database;
 
   @Override
-  public Fruit createIfAbsent(Fruit fruit) {
+  public boolean createIfAbsent(Fruit fruit) {
     final var insertOptions = InsertOptions.builder()
         .onConflictNothing()
         .uniqueColumns("idt_fruit")
         .build();
     this.database.insert(FruitMapper.toRow(fruit), insertOptions);
-    return this.find(fruit.getId());
+    return true;
   }
 
   @Override
