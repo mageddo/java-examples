@@ -1,21 +1,19 @@
-package com.example.fruit.config;
+package com.mageddo.fruit.config;
 
-import com.example.fruit.domain.Fruit;
 import io.ebean.Database;
-import jakarta.enterprise.context.ApplicationScoped;
+import com.mageddo.fruit.dataprovider.FruitRow;
+import jakarta.inject.Singleton;
 import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Inject;
 
-@ApplicationScoped
+@Singleton
 public class EbeanDatabaseProducer {
 
   private final Database database;
 
-  @Inject
   public EbeanDatabaseProducer() {
     this.database = Database.builder()
       .name("db")
-      .addClass(Fruit.class)
+      .addClass(FruitRow.class)
       .loadFromProperties()
       .build();
   }

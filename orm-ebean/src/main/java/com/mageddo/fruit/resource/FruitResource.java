@@ -1,10 +1,11 @@
-package com.example.fruit.resource;
+package com.mageddo.fruit.resource;
 
-import com.example.fruit.dataformat.FruitReqV1;
-import com.example.fruit.dataformat.FruitResV1;
-import com.example.fruit.domain.Fruit;
-import com.example.fruit.mapper.FruitMapper;
-import com.example.fruit.service.FruitService;
+import com.mageddo.fruit.dataformat.FruitReqV1;
+import com.mageddo.fruit.dataformat.FruitResV1;
+import com.mageddo.fruit.domain.Fruit;
+import com.mageddo.fruit.dataprovider.mapper.FruitMapper;
+import com.mageddo.fruit.service.FruitService;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -14,10 +15,12 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.UUID;
 
 @Path("/fruits")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Singleton
 public class FruitResource {
 
   private final FruitService service;
@@ -38,13 +41,13 @@ public class FruitResource {
   @Path("/upsert")
   public FruitResV1 upsert(final FruitReqV1 req) {
     final Fruit fruit = FruitMapper.of(req);
-    final Fruit persisted = this.service.upsert(fruit);
+    final Fruit persisted = this.service.save(fruit);
     return FruitMapper.to(persisted);
   }
 
   @GET
   @Path("/{id}")
-  public Response find(@PathParam("id") final Long id) {
+  public Response find(@PathParam("id") final UUID id) {
     final Fruit fruit = this.service.find(id);
 
     if (fruit == null) {

@@ -4,7 +4,7 @@ plugins {
     id 'io.ebean' version '17.3.0'
 }
 
-group = 'com.example'
+group = 'com.mageddo'
 version = '1.0.0-SNAPSHOT'
 
 java {
@@ -29,10 +29,11 @@ dependencies {
     implementation "io.quarkus:quarkus-rest-jackson"
     implementation "io.quarkus:quarkus-smallrye-openapi"
     implementation "io.quarkus:quarkus-swagger-ui"
-    implementation "io.quarkus:quarkus-jdbc-h2"
+    implementation "io.quarkus:quarkus-flyway"
+    implementation "io.quarkus:quarkus-jdbc-postgresql"
 
     implementation "io.ebean:ebean:$ebeanVersion"
-    implementation "io.ebean:ebean-h2:$ebeanVersion"
+    implementation "io.ebean:ebean-postgres:$ebeanVersion"
 
     compileOnly "org.projectlombok:lombok:1.18.34"
     annotationProcessor "org.projectlombok:lombok:1.18.34"
