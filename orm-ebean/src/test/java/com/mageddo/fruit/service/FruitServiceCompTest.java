@@ -1,16 +1,16 @@
 package com.mageddo.fruit.service;
 
+import java.util.UUID;
+
 import com.mageddo.fruit.domain.Fruit;
 import com.mageddo.fruit.domain.templates.FruitTemplates;
 import com.mageddo.testing.DatabaseConfigurator;
-import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
