@@ -21,7 +21,7 @@ public class DatabaseConfigurator {
 
   public void execute(String sqlFile) {
     final var sql = this.readAsString(sqlFile);
-    this.database.createSqlUpdate(sql).execute();
+    this.database.sqlUpdate(sql).execute();
   }
 
   public void truncate() {
@@ -36,11 +36,11 @@ public class DatabaseConfigurator {
   }
 
   void truncateTables(List<String> tables) {
-    this.database.createSqlUpdate("SET CONSTRAINTS ALL DEFERRED").execute();
+    this.database.sqlUpdate("SET CONSTRAINTS ALL DEFERRED").execute();
     for (final String table : tables) {
-      this.database.createSqlUpdate("TRUNCATE " + table + " CASCADE").execute();
+      this.database.sqlUpdate("TRUNCATE " + table + " CASCADE").execute();
     }
-    this.database.createSqlUpdate("SET CONSTRAINTS ALL IMMEDIATE").execute();
+    this.database.sqlUpdate("SET CONSTRAINTS ALL IMMEDIATE").execute();
   }
 
   void executeBaseData() {
@@ -60,7 +60,7 @@ public class DatabaseConfigurator {
       if (sql.isBlank()) {
         return;
       }
-      this.database.createSqlUpdate(sql).execute();
+      this.database.sqlUpdate(sql).execute();
     } catch (Exception e) {
       log.warn("status=failedExecuteBaseData, file={}", sqlFile, e);
     }

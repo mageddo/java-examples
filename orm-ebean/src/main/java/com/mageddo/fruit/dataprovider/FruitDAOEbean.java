@@ -18,6 +18,7 @@ public class FruitDAOEbean implements FruitDAO {
   public Fruit createIfAbsent(Fruit fruit) {
     final var insertOptions = InsertOptions.builder()
         .onConflictNothing()
+        .uniqueColumns("idt_fruit")
         .build();
     this.database.insert(FruitMapper.toRow(fruit), insertOptions);
     return this.find(fruit.getId());
@@ -27,6 +28,7 @@ public class FruitDAOEbean implements FruitDAO {
   public Fruit save(Fruit fruit) {
     final var insertOptions = InsertOptions.builder()
         .onConflictUpdate()
+        .uniqueColumns("idt_fruit")
         .build();
     this.database.insert(FruitMapper.toRow(fruit), insertOptions);
     return this.find(fruit.getId());

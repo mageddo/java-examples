@@ -19,15 +19,10 @@ public class DatabaseConfiguratorExtension implements QuarkusTestResourceLifecyc
   private static final String ROOT_USER = "root";
   private static final String ROOT_PASSWORD = "root";
   private static final String SCHEMA = "ebean_orm";
-  private static final int PORT = 5434;
 
   private static volatile EmbeddedPostgres embeddedPostgres;
 
   private final List<Consumer<EmbeddedPostgres.Builder>> builderCustomizers = new CopyOnWriteArrayList<>();
-
-  public DatabaseConfiguratorExtension() {
-    this.customize(builder -> builder.setPort(PORT));
-  }
 
   @Override
   public Map<String, String> start() {
@@ -90,7 +85,7 @@ public class DatabaseConfiguratorExtension implements QuarkusTestResourceLifecyc
     }
 
     final EmbeddedPostgres.Builder builder = EmbeddedPostgres.builder();
-    this.builderCustomizers.forEach(builder::accept);
+    this.builderCustomizers.forEach(customizer -> customizer.accept(builder));
     try {
       embeddedPostgres = builder.start();
     } catch (Exception e) {
@@ -110,15 +105,19 @@ public class DatabaseConfiguratorExtension implements QuarkusTestResourceLifecyc
   }
 
   private void prepareDatabase() {
-    try (var postgresConnection = this.adminDataSource().getConnection();
-        var postgresStatement = postgresConnection.createStatement()) {
-      this.createRoleIfNotExists(postgresStatement);
-      this.createDatabaseIfNotExists(postgresStatement);
-    }
+    try {
+      try (var postgresConnection = this.adminDataSource().getConnection();
+          var postgresStatement = postgresConnection.createStatement()) {
+        this.createRoleIfNotExists(postgresStatement);
+        this.createDatabaseIfNotExists(postgresStatement);
+      }
 
-    try (var dbConnection = this.rootDataSource().getConnection();
-        var dbStatement = dbConnection.createStatement()) {
-      dbStatement.execute("CREATE SCHEMA IF NOT EXISTS " + SCHEMA + " AUTHORIZATION root");
+      try (var dbConnection = this.rootDataSource().getConnection();
+          var dbStatement = dbConnection.createStatement()) {
+        dbStatement.execute("CREATE SCHEMA IF NOT EXISTS " + SCHEMA + " AUTHORIZATION root");
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 

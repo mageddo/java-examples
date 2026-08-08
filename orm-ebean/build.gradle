@@ -32,6 +32,7 @@ dependencies {
     implementation "io.quarkus:quarkus-narayana-jta"
     implementation "io.quarkus:quarkus-flyway"
     implementation "io.quarkus:quarkus-jdbc-postgresql"
+    testImplementation "io.quarkus:quarkus-junit5"
 
     implementation "io.ebean:ebean:$ebeanVersion"
     implementation "io.ebean:ebean-postgres:$ebeanVersion"
