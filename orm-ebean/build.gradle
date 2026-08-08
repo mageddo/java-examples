@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'io.quarkus' version '3.37.4'
+    id 'io.ebean' version '17.3.0'
+}
+
+group = 'com.example'
+version = '1.0.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+defaultTasks 'quarkusDev'
+
+ext {
+    ebeanVersion = '17.3.0'
+}
+
+dependencies {
+    implementation enforcedPlatform("io.quarkus:quarkus-bom:3.37.4")
+    implementation "io.quarkus:quarkus-rest"
+    implementation "io.quarkus:quarkus-rest-jackson"
+    implementation "io.quarkus:quarkus-smallrye-openapi"
+    implementation "io.quarkus:quarkus-swagger-ui"
+    implementation "io.quarkus:quarkus-jdbc-h2"
+
+    implementation "io.ebean:ebean:$ebeanVersion"
+    implementation "io.ebean:ebean-h2:$ebeanVersion"
+
+    compileOnly "org.projectlombok:lombok:1.18.34"
+    annotationProcessor "org.projectlombok:lombok:1.18.34"
+    testCompileOnly "org.projectlombok:lombok:1.18.34"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
+}
+
+ebean {
+    debugLevel = 0
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
