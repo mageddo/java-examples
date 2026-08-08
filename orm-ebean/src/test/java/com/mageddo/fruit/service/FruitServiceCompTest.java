@@ -2,7 +2,6 @@ package com.mageddo.fruit.service;
 
 import com.mageddo.fruit.domain.Fruit;
 import com.mageddo.fruit.domain.templates.FruitTemplates;
-import com.mageddo.micronaut.DatabaseConfiguratorExtension;
 import com.mageddo.testing.DatabaseConfigurator;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,6 @@ import jakarta.inject.Inject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(DatabaseConfiguratorExtension.class)
 @QuarkusTest
 class FruitServiceCompTest {
 
