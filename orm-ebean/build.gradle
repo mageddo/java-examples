@@ -43,7 +43,7 @@ dependencies {
     testAnnotationProcessor "org.projectlombok:lombok:1.18.46"
     testImplementation "org.junit.jupiter:junit-jupiter:5.13.4"
     testImplementation "org.assertj:assertj-core:3.27.3"
-//    testImplementation "io.zonky.test:embedded-postgres:2.1.0"
+    testImplementation "io.zonky.test:embedded-postgres:2.1.0"
 }
 
 ebean {

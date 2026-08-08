@@ -4,16 +4,22 @@ import java.util.UUID;
 
 import com.mageddo.fruit.domain.Fruit;
 import com.mageddo.fruit.domain.templates.FruitTemplates;
+import com.mageddo.micronaut.DatabaseConfiguratorExtension;
 import com.mageddo.testing.DatabaseConfigurator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(DatabaseConfiguratorExtension.class)
 @QuarkusTest
 class FruitServiceCompTest {
 
