@@ -1,60 +1,40 @@
 package com.mageddo.fruit.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.mageddo.fruit.dataprovider.FruitDAOEbean;
-import com.mageddo.fruit.dataprovider.FruitRow;
+import com.mageddo.fruit.domain.Fruit;
 import com.mageddo.fruit.domain.templates.FruitTemplates;
-import com.mageddo.fruit.test.DatabaseConfiguratorExtension;
-import io.ebean.Database;
-import io.ebean.DatabaseConfig;
-import io.ebean.DatabaseFactory;
-import javax.sql.DataSource;
+import com.mageddo.micronaut.DatabaseConfiguratorExtension;
+import com.mageddo.testing.DatabaseConfigurator;
 import java.util.UUID;
-import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(DatabaseConfiguratorExtension.class)
-public class FruitServiceCompTest {
+@QuarkusTestResource(DatabaseConfiguratorExtension.class)
+@QuarkusTest
+class FruitServiceCompTest {
 
-  private FruitService service;
+  @Inject
+  DatabaseConfigurator databaseConfigurator;
 
-  private Database database;
-
-  @BeforeAll
-  void setUp() {
-    final var ebeanDataSource = this.postgresDataSource();
-    Flyway.configure()
-        .dataSource(ebeanDataSource)
-        .schemas(DatabaseConfiguratorExtension.schema())
-        .defaultSchema(DatabaseConfiguratorExtension.schema())
-        .locations("classpath:db/migration")
-        .load()
-        .migrate();
-
-    final var databaseConfig = new DatabaseConfig();
-    databaseConfig.setName("db");
-    databaseConfig.setDbSchema(DatabaseConfiguratorExtension.schema());
-    databaseConfig.setUseJtaTransactionManager(false);
-    databaseConfig.setDataSource(ebeanDataSource);
-    databaseConfig.addClass(FruitRow.class);
-    this.database = DatabaseFactory.create(databaseConfig);
-    this.service = new FruitService(new FruitDAOEbean(this.database));
-  }
+  @Inject
+  FruitService service;
 
   @BeforeEach
   void beforeEach() {
-    this.database.createUpdate("delete from " + DatabaseConfiguratorExtension.schema() + ".fruit").execute();
+    this.databaseConfigurator.truncate();
   }
 
   @Test
   void createIfAbsentShouldPersistWhenMissing() {
     final var expected = FruitTemplates.banana();
+
     final var out = this.service.createIfAbsent(expected);
 
     assertThat(out)
@@ -66,7 +46,9 @@ public class FruitServiceCompTest {
   void createIfAbsentShouldKeepStoredDataWhenExists() {
     final var expected = FruitTemplates.banana();
     final var overwriteAttempt = FruitTemplates.updatedBanana();
+
     this.service.createIfAbsent(expected);
+
     final var out = this.service.createIfAbsent(overwriteAttempt);
 
     assertThat(out)
@@ -77,15 +59,20 @@ public class FruitServiceCompTest {
   @Test
   void saveShouldUpsertAndFindShouldReturnSaved() {
     final var created = FruitTemplates.greenBanana();
-    this.service.save(created);
-    final var upserted = this.service.save(FruitTemplates.greenBananaAltSeason());
-    final var out = this.service.find(upserted.getId());
+
+    this.create(created);
+
+    final var out = this.service.save(FruitTemplates.greenBananaAltSeason());
 
     assertThat(out)
         .usingRecursiveComparison()
-        .isEqualTo(upserted);
-    assertThat(created.getId())
-        .isEqualTo(upserted.getId());
+        .isEqualTo(FruitTemplates.greenBananaAltSeason());
+
+    final var found = this.service.find(created.getId());
+
+    assertThat(found)
+        .usingRecursiveComparison()
+        .isEqualTo(FruitTemplates.greenBananaAltSeason());
   }
 
   @Test
@@ -96,11 +83,7 @@ public class FruitServiceCompTest {
         .isNull();
   }
 
-  private DataSource postgresDataSource() {
-    return DatabaseConfiguratorExtension.postgres().getDatabase(
-        DatabaseConfiguratorExtension.rootUser(),
-        DatabaseConfiguratorExtension.dbName(),
-        DatabaseConfiguratorExtension.credentials()
-    );
+  void create(Fruit fruit) {
+    this.service.save(fruit);
   }
 }
