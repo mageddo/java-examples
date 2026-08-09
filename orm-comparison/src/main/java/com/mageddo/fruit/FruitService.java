@@ -34,12 +34,16 @@ public class FruitService {
     throw new IllegalArgumentException("failed");
   }
 
+  /**
+   * Insere quando ausente, atualiza quando presente.
+   *
+   * @return true se a fruta foi criada, false se foi atualizada
+   */
   @Transactional
-  public Fruit save(Fruit fruit) {
+  public boolean save(Fruit fruit) {
     final var created = this.fruitDAO.save(fruit);
-    final var found = this.fruitDAO.find(fruit.getId());
     log.debug("status=done, created={}", created);
-    return found;
+    return created;
   }
 
   public Fruit find(UUID id) {

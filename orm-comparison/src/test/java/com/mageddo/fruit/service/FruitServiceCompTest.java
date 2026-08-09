@@ -1,13 +1,21 @@
 package com.mageddo.fruit.service;
 
-import java.util.UUID;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-import com.mageddo.fruit.FruitService;
+import com.mageddo.basket.BasketService;
+import com.mageddo.basket.templates.BasketTemplates;
 import com.mageddo.fruit.Fruit;
+import com.mageddo.fruit.FruitService;
 import com.mageddo.fruit.templates.FruitTemplates;
 import com.mageddo.persistence.OrmProvider;
 import com.mageddo.testing.DatabaseConfigurator;
+import com.mageddo.testing.TransactionScenarios;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,11 +33,19 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 abstract class FruitServiceCompTest {
 
+  static final int CONCURRENT_THREADS = 16;
+
   @Inject
   DatabaseConfigurator databaseConfigurator;
 
   @Inject
   FruitService service;
+
+  @Inject
+  BasketService basketService;
+
+  @Inject
+  TransactionScenarios scenarios;
 
   @Inject
   OrmProvider orm;
@@ -66,6 +82,23 @@ abstract class FruitServiceCompTest {
     assertFruitEqualsIgnoringMetadata(this.service.find(expected.getId()), expected);
   }
 
+  /**
+   * "Não altera absolutamente nada" inclui os timestamps, que os demais asserts ignoram.
+   * A comparação é entre duas leituras do banco para não esbarrar na precisão do
+   * {@code TIMESTAMPTZ}.
+   */
+  @Test
+  void createIfAbsentShouldNotTouchTimestampsWhenExists() {
+    this.service.createIfAbsent(FruitTemplates.banana());
+    final var stored = this.service.find(FruitTemplates.BANANA_ID);
+
+    this.service.createIfAbsent(FruitTemplates.updatedBanana());
+
+    assertThat(this.service.find(FruitTemplates.BANANA_ID))
+        .usingRecursiveComparison()
+        .isEqualTo(stored);
+  }
+
   @Test
   void createIfAbsentShouldReportCreationWhenMissing() {
     final var fruit = FruitTemplates.banana();
@@ -86,18 +119,118 @@ abstract class FruitServiceCompTest {
   }
 
   @Test
+  void saveShouldReportCreationWhenMissing() {
+    final var created = this.service.save(FruitTemplates.banana());
+
+    assertThat(created).isTrue();
+  }
+
+  @Test
+  void saveShouldReportUpdateWhenExists() {
+    this.service.save(FruitTemplates.greenBananaWithReferrer());
+
+    final var created = this.service.save(FruitTemplates.greenBananaWithReferrerUpdated());
+
+    assertThat(created).isFalse();
+  }
+
+  @Test
   void saveShouldUpsertAndFindShouldReturnSaved() {
     final var created = FruitTemplates.greenBananaWithReferrer();
 
     this.create(created);
 
-    final var out = this.service.save(FruitTemplates.greenBananaWithReferrerUpdated());
-
-    assertFruitEqualsIgnoringMetadata(out, FruitTemplates.greenBananaWithReferrerUpdated());
+    this.service.save(FruitTemplates.greenBananaWithReferrerUpdated());
 
     final var found = this.service.find(created.getId());
 
     assertFruitEqualsIgnoringMetadata(found, FruitTemplates.greenBananaWithReferrerUpdated());
+  }
+
+  /**
+   * O conflito é absorvido pelo banco, então a transação continua utilizável para o que vem
+   * depois — aqui, um insert em outra tabela — e o commit acontece normalmente.
+   */
+  @Test
+  void createIfAbsentConflictShouldKeepTransactionUsable() {
+    final var basket = BasketTemplates.fruitBasket();
+    this.service.createIfAbsent(FruitTemplates.banana());
+
+    final var fruitCreated = this.scenarios.createIfAbsentThenCreateBasket(
+        FruitTemplates.updatedBanana(), basket
+    );
+
+    assertThat(fruitCreated).isFalse();
+    assertThat(this.basketService.find(basket.getId())).isNotNull();
+    assertFruitEqualsIgnoringMetadata(
+        this.service.find(FruitTemplates.BANANA_ID), FruitTemplates.banana()
+    );
+  }
+
+  /**
+   * A contraprova: absorver o conflito não pode custar o rollback do resto da unidade
+   * transacional.
+   */
+  @Test
+  void createIfAbsentConflictShouldNotPreventRollback() {
+    final var basket = BasketTemplates.fruitBasket();
+    this.service.createIfAbsent(FruitTemplates.banana());
+
+    assertThatThrownBy(() -> this.scenarios.createIfAbsentThenCreateBasketAndFail(
+        FruitTemplates.updatedBanana(), basket
+    ))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("failed");
+
+    assertThat(this.basketService.find(basket.getId())).isNull();
+    assertFruitEqualsIgnoringMetadata(
+        this.service.find(FruitTemplates.BANANA_ID), FruitTemplates.banana()
+    );
+  }
+
+  /**
+   * A resolução do conflito é do banco, em um único statement: sob concorrência exatamente uma
+   * chamada cria a linha e nenhuma estoura exceção.
+   */
+  @Test
+  void createIfAbsentShouldCreateOnceUnderConcurrency() throws Exception {
+    final var results = this.runConcurrently(
+        () -> this.service.createIfAbsent(FruitTemplates.banana())
+    );
+
+    assertThat(results).hasSize(CONCURRENT_THREADS);
+    assertThat(results.stream().filter(Boolean::booleanValue)).hasSize(1);
+    assertThat(this.service.find(FruitTemplates.BANANA_ID)).isNotNull();
+  }
+
+  @Test
+  void saveShouldNotFailUnderConcurrency() throws Exception {
+    final var results = this.runConcurrently(
+        () -> this.service.save(FruitTemplates.banana())
+    );
+
+    assertThat(results).hasSize(CONCURRENT_THREADS);
+    assertThat(results.stream().filter(Boolean::booleanValue)).hasSize(1);
+    assertFruitEqualsIgnoringMetadata(
+        this.service.find(FruitTemplates.BANANA_ID), FruitTemplates.banana()
+    );
+  }
+
+  /**
+   * O {@code GenericDAO} não sabe nada sobre Fruit: uma tabela nova entra no sistema sem SQL,
+   * HQL ou query builder próprio.
+   */
+  @Test
+  void genericDaoShouldWorkForAnotherEntity() {
+    final var basket = BasketTemplates.fruitBasket();
+
+    assertThat(this.basketService.createIfAbsent(basket)).isTrue();
+    assertThat(this.basketService.createIfAbsent(BasketTemplates.fruitBasketUpdated())).isFalse();
+    assertThat(this.basketService.find(basket.getId()).getName()).isEqualTo(basket.getName());
+
+    assertThat(this.basketService.save(BasketTemplates.fruitBasketUpdated())).isFalse();
+    assertThat(this.basketService.find(basket.getId()).getName())
+        .isEqualTo(BasketTemplates.fruitBasketUpdated().getName());
   }
 
   @Test
@@ -144,5 +277,32 @@ abstract class FruitServiceCompTest {
 
   void create(Fruit fruit) {
     this.service.save(fruit);
+  }
+
+  /**
+   * Dispara a mesma operação em {@value #CONCURRENT_THREADS} threads que largam juntas, cada
+   * uma na sua transação. Qualquer exceção em qualquer thread reprova o teste.
+   */
+  List<Boolean> runConcurrently(Callable<Boolean> operation) throws Exception {
+    final var start = new CountDownLatch(1);
+
+    try (final var executor = Executors.newFixedThreadPool(CONCURRENT_THREADS)) {
+
+      final var futures = new ArrayList<Future<Boolean>>(CONCURRENT_THREADS);
+      for (var i = 0; i < CONCURRENT_THREADS; i++) {
+        futures.add(executor.submit(() -> {
+          start.await();
+          return operation.call();
+        }));
+      }
+
+      start.countDown();
+
+      final var results = new ArrayList<Boolean>(CONCURRENT_THREADS);
+      for (final var future : futures) {
+        results.add(future.get());
+      }
+      return results;
+    }
   }
 }

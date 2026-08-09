@@ -1,5 +1,8 @@
 package com.mageddo.persistence.config;
 
+import com.mageddo.basket.BasketDAO;
+import com.mageddo.basket.dataprovider.doma.BasketDAODoma;
+import com.mageddo.basket.dataprovider.ebean.BasketDAOEbean;
 import com.mageddo.fruit.FruitDAO;
 import com.mageddo.fruit.config.ebean.EbeanInsertIfAbsent;
 import com.mageddo.fruit.dataprovider.doma.FruitDAODoma;
@@ -48,6 +51,24 @@ public class DAOProducer {
     return switch (orm) {
       case EBEAN -> new FruitDAOEbean(database, new GenericDAOEbean<>(database, insertIfAbsent));
       case DOMA -> new FruitDAODoma(queryDsl, new GenericDAODoma<>(queryDsl));
+    };
+  }
+
+  /**
+   * Nenhuma implementação nova de persistência: o {@code BasketDAO} só mapeia domínio para
+   * bean e delega ao mesmo {@link com.mageddo.persistence.GenericDAO} usado pelo Fruit.
+   */
+  @Produces
+  @Singleton
+  public BasketDAO basketDAO(
+      OrmProvider orm,
+      Database database,
+      EbeanInsertIfAbsent insertIfAbsent,
+      QueryDsl queryDsl
+  ) {
+    return switch (orm) {
+      case EBEAN -> new BasketDAOEbean(new GenericDAOEbean<>(database, insertIfAbsent));
+      case DOMA -> new BasketDAODoma(new GenericDAODoma<>(queryDsl));
     };
   }
 }
