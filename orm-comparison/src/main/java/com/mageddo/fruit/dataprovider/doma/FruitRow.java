@@ -1,26 +1,30 @@
-package com.mageddo.fruit.dataprovider;
+package com.mageddo.fruit.dataprovider.doma;
 
-import jakarta.persistence.Column;
 import java.time.Instant;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Table;
-import com.mageddo.referrer.dataprovider.jpa.ReferrerRow;
 import java.util.UUID;
+
+import com.mageddo.referrer.dataprovider.doma.ReferrerRow;
 
 import lombok.AccessLevel;
 import lombok.Data;
+
 import lombok.experimental.FieldDefaults;
 
+import org.seasar.doma.Column;
+import org.seasar.doma.Embedded;
+import org.seasar.doma.Entity;
+import org.seasar.doma.Id;
+import org.seasar.doma.Metamodel;
+import org.seasar.doma.Table;
+
 @Data
-@Entity
+@Entity(metamodel = @Metamodel)
 @Table(name = "FRUIT", schema = "orm")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FruitRow {
 
   @Id
-  @Column(name = "IDT_FRUIT", nullable = false)
+  @Column(name = "IDT_FRUIT")
   UUID id;
 
   @Column(name = "NAM_FRUIT")
@@ -32,12 +36,13 @@ public class FruitRow {
   @Column(name = "NAM_SEASON")
   String season;
 
-  @Column(name = "DAT_CREATED", nullable = false)
+  @Column(name = "DAT_CREATED")
   Instant createdAt;
 
-  @Column(name = "DAT_UPDATED", nullable = false)
+  @Column(name = "DAT_UPDATED")
   Instant updatedAt;
 
   @Embedded
   ReferrerRow referrer;
+
 }

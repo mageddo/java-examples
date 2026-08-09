@@ -1,8 +1,10 @@
-package com.mageddo.fruit.dataprovider.mapper;
+package com.mageddo.fruit.dataprovider.doma;
 
-import com.mageddo.fruit.dataprovider.FruitRow;
 import com.mageddo.fruit.Fruit;
-import com.mageddo.referrer.dataprovider.jpa.ReferrerRowMapper;
+
+import com.mageddo.referrer.dataprovider.doma.ReferrerRowMapper;
+
+import java.util.List;
 
 public class FruitRowMapper {
 
@@ -10,7 +12,11 @@ public class FruitRowMapper {
   }
 
   public static Fruit toDomain(FruitRow row) {
-    return Fruit.builder()
+    if (row == null) {
+      return null;
+    }
+    return Fruit
+        .builder()
         .id(row.getId())
         .name(row.getName())
         .color(row.getColor())
@@ -21,7 +27,7 @@ public class FruitRowMapper {
         .build();
   }
 
-  public static FruitRow of(Fruit fruit) {
+  public static FruitRow toRow(Fruit fruit) {
     final var row = new FruitRow();
     row.setId(fruit.getId());
     row.setName(fruit.getName());
@@ -31,5 +37,12 @@ public class FruitRowMapper {
     row.setUpdatedAt(fruit.getUpdatedAt());
     row.setReferrer(ReferrerRowMapper.of(fruit.getReferrer()));
     return row;
+  }
+
+  public static List<Fruit> toDomain(List<FruitRow> rows) {
+    return rows
+        .stream()
+        .map(FruitRowMapper::toDomain)
+        .toList();
   }
 }

@@ -15,9 +15,11 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,15 @@ public class FruitResource {
     final var fruit = FruitMapper.of(req);
     final var persisted = this.service.save(fruit);
     return FruitMapper.toDf(persisted);
+  }
+
+  @GET
+  public List<FruitResV1> findByName(@QueryParam("name") String name) {
+    return this.service
+        .findByName(name)
+        .stream()
+        .map(FruitMapper::toDf)
+        .toList();
   }
 
   @GET

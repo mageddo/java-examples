@@ -2,84 +2,78 @@ package com.mageddo.fruit.dataprovider.doma;
 
 import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.FruitDAO;
-import jakarta.inject.Named;
+
+import com.mageddo.fruit.config.doma.MetaModels;
+
 import jakarta.inject.Singleton;
+
+import java.util.List;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.lang3.Validate;
+import org.seasar.doma.jdbc.Config;
+import org.seasar.doma.jdbc.criteria.QueryDsl;
+
 @Singleton
-@Named("doma")
 @RequiredArgsConstructor
 public class FruitDAODoma implements FruitDAO {
 
-  private final FruitDomaDao dao;
+  private final Config config;
+  private final QueryDsl queryDsl;
 
   @Override
   public boolean createIfAbsent(Fruit fruit) {
-    final var existing = this.find(fruit.getId());
-    if (existing != null) {
-      return false;
-    }
-    final var row = FruitDomaMapper.toRow(fruit);
-    this.dao.insert(
-        this.toDbId(row),
-        row.getName(),
-        row.getColor(),
-        row.getSeason(),
-        this.toReferrerId(row),
-        this.toReferrerType(row),
-        row.getCreatedAt(),
-        row.getUpdatedAt()
-    );
-    return true;
+    final var dm = getDm();
+    final var row = FruitRowMapper.toRow(fruit);
+    final var result = this.queryDsl
+        .insert(dm)
+        .single(row)
+        .onDuplicateKeyIgnore()
+        .execute();
+    return result.getCount() == 1;
   }
 
   @Override
-  public Fruit save(Fruit fruit) {
-    final var row = FruitDomaMapper.toRow(fruit);
-    final var updated = this.dao.update(
-        this.toDbId(row),
-        row.getName(),
-        row.getColor(),
-        row.getSeason(),
-        this.toReferrerId(row),
-        this.toReferrerType(row),
-        row.getCreatedAt(),
-        row.getUpdatedAt()
-    );
+  public boolean save(Fruit fruit) {
 
-    if (updated == 0) {
-      this.dao.insert(
-          this.toDbId(row),
-          row.getName(),
-          row.getColor(),
-          row.getSeason(),
-          this.toReferrerId(row),
-          this.toReferrerType(row),
-          row.getCreatedAt(),
-          row.getUpdatedAt()
-      );
+    if (this.createIfAbsent(fruit)) {
+      return true;
     }
 
-    return this.find(fruit.getId());
+    final var dm = getDm();
+    final var row = FruitRowMapper.toRow(fruit);
+    final var affected = this.queryDsl
+        .update(dm)
+        .single(row)
+        .execute()
+        .getCount();
+    Validate.isTrue(affected == 1, "Must update: %s", fruit.getId());
+    return false;
   }
 
   @Override
   public Fruit find(UUID id) {
-    return FruitDomaMapper.toDomain(this.dao.findById(id.toString()));
+    final var dm = getDm();
+    final var row = this.queryDsl
+        .from(dm)
+        .where(c -> c.eq(MetaModels.getIdProperty(dm), id))
+        .fetchOne();
+    return FruitRowMapper.toDomain(row);
   }
 
-  private String toDbId(FruitDomaRow row) {
-    return row.getId().toString();
+  @Override
+  public List<Fruit> findByName(String name) {
+    final var dm = getDm();
+    final var rows = this.queryDsl
+        .from(dm)
+        .where(c -> c.eq(dm.name, name))
+        .fetch();
+    return FruitRowMapper.toDomain(rows);
+  }
+  static FruitRow_ getDm() {
+    return new FruitRow_();
   }
 
-  private String toReferrerId(FruitDomaRow row) {
-    final var referrer = row.getReferrer();
-    return referrer == null ? null : referrer.id();
-  }
-
-  private String toReferrerType(FruitDomaRow row) {
-    final var referrer = row.getReferrer();
-    return referrer == null ? null : referrer.type();
-  }
 }

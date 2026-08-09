@@ -1,6 +1,5 @@
-package com.mageddo.referrer;
+package com.mageddo.referrer.dataprovider.jpa;
 
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;

@@ -1,7 +1,7 @@
 package com.mageddo.fruit.config.ebean;
 
 import com.mageddo.fruit.dataprovider.FruitRow;
-import com.mageddo.referrer.ReferrerRow;
+import com.mageddo.referrer.dataprovider.jpa.ReferrerRow;
 
 import jakarta.transaction.TransactionSynchronizationRegistry;
 
@@ -11,8 +11,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.agroal.api.AgroalDataSource;
 import io.ebean.Database;
-import io.ebean.DatabaseFactory;
-import io.ebean.config.DatabaseConfig;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
