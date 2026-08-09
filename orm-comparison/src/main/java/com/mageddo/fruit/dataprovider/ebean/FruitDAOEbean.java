@@ -5,10 +5,9 @@ import com.mageddo.fruit.dataprovider.FruitRow;
 import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.dataprovider.mapper.FruitRowMapper;
 
-import com.mageddo.fruit.config.ebean.EbeanInsertIfAbsent;
+import com.mageddo.persistence.GenericDAO;
 
 import io.ebean.Database;
-import io.ebean.InsertOptions;
 
 import jakarta.inject.Singleton;
 
@@ -22,26 +21,21 @@ import lombok.RequiredArgsConstructor;
 public class FruitDAOEbean implements FruitDAO {
 
   private final Database database;
-  private final EbeanInsertIfAbsent insertIfAbsent;
+  private final GenericDAO<FruitRow> genericDAO;
 
   @Override
   public boolean createIfAbsent(Fruit fruit) {
-    return this.insertIfAbsent.execute(this.database, FruitRowMapper.of(fruit));
+    return this.genericDAO.createIfAbsent(FruitRowMapper.of(fruit));
   }
 
   @Override
-  public boolean save(Fruit fruit) {
-    final var insertOptions = InsertOptions
-        .builder()
-        .onConflictUpdate()
-        .build();
-    this.database.insert(FruitRowMapper.of(fruit), insertOptions);
-    return false;
+  public void save(Fruit fruit) {
+    this.genericDAO.save(FruitRowMapper.of(fruit));
   }
 
   @Override
   public Fruit find(UUID id) {
-    final var row = this.database.find(FruitRow.class, id);
+    final var row = this.genericDAO.mustFind(id, FruitRow.class);
     if (row == null) {
       return null;
     }

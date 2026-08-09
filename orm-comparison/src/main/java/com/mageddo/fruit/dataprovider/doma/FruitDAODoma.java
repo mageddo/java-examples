@@ -5,8 +5,6 @@ import com.mageddo.fruit.FruitDAO;
 
 import com.mageddo.fruit.config.doma.MetaModels;
 
-import jakarta.inject.Singleton;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +34,7 @@ public class FruitDAODoma implements FruitDAO {
   }
 
   @Override
-  public boolean save(Fruit fruit) {
+  public void save(Fruit fruit) {
 
     if (this.createIfAbsent(fruit)) {
       return true;
