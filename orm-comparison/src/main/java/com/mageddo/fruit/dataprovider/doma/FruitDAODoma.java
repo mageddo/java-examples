@@ -13,6 +13,9 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.lang3.Validate;
+import org.seasar.doma.jdbc.Config;
+import org.seasar.doma.jdbc.builder.SelectBuilder;
+import org.seasar.doma.jdbc.builder.UpdateBuilder;
 import org.seasar.doma.jdbc.criteria.QueryDsl;
 import org.seasar.doma.jdbc.criteria.metamodel.EntityMetamodel;
 
@@ -20,6 +23,7 @@ import org.seasar.doma.jdbc.criteria.metamodel.EntityMetamodel;
 @RequiredArgsConstructor
 public class FruitDAODoma implements FruitDAO {
 
+  private final Config config;
   private final QueryDsl queryDsl;
 
   @Override
@@ -62,8 +66,16 @@ public class FruitDAODoma implements FruitDAO {
     return FruitRowMapper.toDomain(row);
   }
 
-  static EntityMetamodel<FruitRow> getDm() {
-    return EntityModels.get(FruitRow.class);
+  public Fruit findByName(String name) {
+    final var dm = getDm();
+    final var row = this.queryDsl
+        .from(dm)
+        .where(c -> c.eq(dm.name, name))
+        .fetchOne();
+    return FruitRowMapper.toDomain(row);
+  }
+  static FruitRow_ getDm() {
+    return new FruitRow_();
   }
 
 }
