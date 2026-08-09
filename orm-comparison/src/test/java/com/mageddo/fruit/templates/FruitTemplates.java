@@ -1,4 +1,4 @@
-package com.mageddo.fruit.domain.templates;
+package com.mageddo.fruit.templates;
 
 import java.time.Instant;
 import java.util.UUID;

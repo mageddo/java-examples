@@ -16,7 +16,6 @@ import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
-@Singleton
 @RequiredArgsConstructor
 public class FruitDAOEbean implements FruitDAO {
 
