@@ -3,6 +3,7 @@ package com.mageddo.fruit.dataprovider.doma;
 import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.FruitDAO;
 
+import com.mageddo.fruit.config.doma.EntityModels;
 import com.mageddo.fruit.config.doma.MetaModels;
 
 import jakarta.inject.Singleton;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.lang3.Validate;
 import org.seasar.doma.jdbc.criteria.QueryDsl;
+import org.seasar.doma.jdbc.criteria.metamodel.EntityMetamodel;
 
 @Singleton
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class FruitDAODoma implements FruitDAO {
 
   @Override
   public boolean createIfAbsent(Fruit fruit) {
-    final var dm = new FruitDomaRow_();
+    final var dm = getDm();
     final var row = FruitRowMapper.toRow(fruit);
     final var result = this.queryDsl
         .insert(dm)
@@ -39,7 +41,7 @@ public class FruitDAODoma implements FruitDAO {
       return true;
     }
 
-    final var dm = new FruitDomaRow_();
+    final var dm = getDm();
     final var row = FruitRowMapper.toRow(fruit);
     final var affected = this.queryDsl
         .update(dm)
@@ -52,12 +54,16 @@ public class FruitDAODoma implements FruitDAO {
 
   @Override
   public Fruit find(UUID id) {
-    final var dm = new FruitDomaRow_();
+    final var dm = getDm();
     final var row = this.queryDsl
         .from(dm)
         .where(c -> c.eq(MetaModels.getIdProperty(dm), id))
         .fetchOne();
     return FruitRowMapper.toDomain(row);
+  }
+
+  static EntityMetamodel<FruitRow> getDm() {
+    return EntityModels.get(FruitRow.class);
   }
 
 }
