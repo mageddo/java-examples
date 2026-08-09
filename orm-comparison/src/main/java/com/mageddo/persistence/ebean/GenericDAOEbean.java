@@ -6,8 +6,6 @@ import com.mageddo.persistence.GenericDAO;
 import io.ebean.Database;
 import io.ebean.InsertOptions;
 
-import jakarta.enterprise.context.Dependent;
-
 import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.lang3.Validate;
@@ -19,7 +17,6 @@ import org.apache.commons.lang3.Validate;
  * conflito no próprio banco, em um único statement, mantendo a transação utilizável
  * para as operações seguintes.
  */
-@Dependent
 @RequiredArgsConstructor
 public class GenericDAOEbean<Bean> implements GenericDAO<Bean> {
 

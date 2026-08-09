@@ -15,6 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DatabaseConfiguratorExtension implements BeforeAllCallback {
 
+  /**
+   * A instância guardada é sempre lida como {@link Object}: cada perfil de teste do Quarkus
+   * reinicia a aplicação com um classloader novo, então o {@code EmbeddedPostgres} da primeira
+   * classe não é do mesmo tipo visto pelas seguintes — só interessa saber se já foi iniciado.
+   */
+  private static final String POSTGRES_KEY = EmbeddedPostgres.class.getName();
+
   private final List<Consumer<EmbeddedPostgres.Builder>> builderCustomizers =
       new CopyOnWriteArrayList<>();
 
@@ -22,7 +29,7 @@ public class DatabaseConfiguratorExtension implements BeforeAllCallback {
   public void beforeAll(ExtensionContext context) throws Exception {
     log.debug("status=configuring embedded database");
     final var store = this.getStore(context);
-    if (store.get(EmbeddedPostgres.class.getName(), EmbeddedPostgres.class) == null) {
+    if (store.get(POSTGRES_KEY) == null) {
       setNewInstanceOnContext(store);
     }
   }
@@ -38,7 +45,7 @@ public class DatabaseConfiguratorExtension implements BeforeAllCallback {
       customizer.setPort(5430);
     });
     final EmbeddedPostgres instance = this.pg();
-    store.put(EmbeddedPostgres.class.getName(), instance);
+    store.put(POSTGRES_KEY, instance);
     Runtime
         .getRuntime()
         .addShutdownHook(new Thread(() -> {

@@ -6,23 +6,24 @@ import java.util.List;
 import com.mageddo.fruit.FruitService;
 import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.domain.templates.FruitTemplates;
-import com.mageddo.testing.DatabaseConfiguratorExtension;
+import com.mageddo.persistence.OrmProvider;
 import com.mageddo.testing.DatabaseConfigurator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ExtendWith(DatabaseConfiguratorExtension.class)
-@QuarkusTest
-class FruitServiceCompTest {
+/**
+ * Cenários que todo ORM precisa satisfazer.
+ * <p>
+ * Cada subclasse liga um {@code orm.provider} diferente, então a suíte inteira roda uma vez
+ * por ORM, um de cada vez.
+ */
+abstract class FruitServiceCompTest {
 
   @Inject
   DatabaseConfigurator databaseConfigurator;
@@ -30,9 +31,19 @@ class FruitServiceCompTest {
   @Inject
   FruitService service;
 
+  @Inject
+  OrmProvider orm;
+
+  abstract OrmProvider expectedOrm();
+
   @BeforeEach
   void beforeEach() {
     this.databaseConfigurator.truncate();
+  }
+
+  @Test
+  void shouldRunAgainstTheSelectedOrm() {
+    assertThat(this.orm).isEqualTo(this.expectedOrm());
   }
 
   @Test

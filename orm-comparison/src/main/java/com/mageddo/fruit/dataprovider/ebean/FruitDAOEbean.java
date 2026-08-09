@@ -9,14 +9,11 @@ import com.mageddo.persistence.GenericDAO;
 
 import io.ebean.Database;
 
-import jakarta.inject.Singleton;
-
 import java.util.List;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
-@Singleton
 @RequiredArgsConstructor
 public class FruitDAOEbean implements FruitDAO {
 
