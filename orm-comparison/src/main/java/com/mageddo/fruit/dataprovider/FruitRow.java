@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Table;
-import com.mageddo.referrer.ReferrerRow;
+import com.mageddo.referrer.dataprovider.jpa.ReferrerRow;
 import java.util.UUID;
 
 import lombok.AccessLevel;

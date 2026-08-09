@@ -1,7 +1,9 @@
 package com.mageddo.fruit.dataprovider.doma;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
+
+import com.mageddo.referrer.dataprovider.doma.ReferrerRow;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -35,10 +37,10 @@ public class FruitDomaRow {
   String season;
 
   @Column(name = "DAT_CREATED")
-  Timestamp createdAt;
+  Instant createdAt;
 
   @Column(name = "DAT_UPDATED")
-  Timestamp updatedAt;
+  Instant updatedAt;
 
   @Embedded
   ReferrerRow referrer;

@@ -12,9 +12,7 @@ public final class MetaModels {
       new ConcurrentHashMap<>();
 
   @SuppressWarnings("unchecked")
-  public static <T> PropertyMetamodel<T> getIdProperty(
-      EntityMetamodel<?> entity
-  ) {
+  public static <T> PropertyMetamodel<T> getIdProperty(EntityMetamodel<?> entity) {
     final var entityClass = entity
         .asType()
         .getEntityClass();

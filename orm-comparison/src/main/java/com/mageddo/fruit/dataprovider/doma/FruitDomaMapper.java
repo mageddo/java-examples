@@ -2,6 +2,8 @@ package com.mageddo.fruit.dataprovider.doma;
 
 import com.mageddo.fruit.Fruit;
 import com.mageddo.referrer.Referrer;
+import com.mageddo.referrer.dataprovider.doma.ReferrerRow;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Timestamp;

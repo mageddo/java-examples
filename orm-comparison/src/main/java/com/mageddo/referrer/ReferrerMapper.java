@@ -1,5 +1,6 @@
 package com.mageddo.referrer;
 
+import com.mageddo.referrer.dataprovider.jpa.ReferrerRow;
 import org.apache.commons.lang3.StringUtils;
 
 public class ReferrerMapper {
