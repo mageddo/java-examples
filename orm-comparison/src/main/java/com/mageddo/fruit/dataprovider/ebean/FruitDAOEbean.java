@@ -29,7 +29,7 @@ public class FruitDAOEbean implements FruitDAO {
   }
 
   @Override
-  public void save(Fruit fruit) {
+  public boolean save(Fruit fruit) {
     this.genericDAO.save(FruitRowMapper.of(fruit));
   }
 

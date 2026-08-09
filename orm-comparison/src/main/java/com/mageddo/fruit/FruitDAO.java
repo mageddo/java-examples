@@ -7,7 +7,7 @@ public interface FruitDAO {
 
   boolean createIfAbsent(Fruit fruit);
 
-  void save(Fruit fruit);
+  boolean save(Fruit fruit);
 
   Fruit find(UUID id);
 

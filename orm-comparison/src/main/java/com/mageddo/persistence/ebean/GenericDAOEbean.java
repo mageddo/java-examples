@@ -14,7 +14,7 @@ import org.apache.commons.lang3.Validate;
 
 /**
  * Operações de persistência derivadas do mapeamento da entidade, sem SQL por tabela.
- *
+ * <p>
  * Tanto o {@link #createIfAbsent(Object)} quanto o {@link #save(Object)} resolvem o
  * conflito no próprio banco, em um único statement, mantendo a transação utilizável
  * para as operações seguintes.
@@ -35,8 +35,12 @@ public class GenericDAOEbean<Bean> implements GenericDAO<Bean> {
   }
 
   @Override
-  public void save(Bean bean) {
-    this.database.insert(bean, InsertOptions.ON_CONFLICT_UPDATE);
+  public boolean save(Bean bean) {
+    if (this.createIfAbsent(bean)) {
+      return true;
+    }
+    this.database.update(bean);
+    return false;
   }
 
   @Override

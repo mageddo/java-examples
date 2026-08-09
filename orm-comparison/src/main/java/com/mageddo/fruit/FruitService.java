@@ -36,9 +36,9 @@ public class FruitService {
 
   @Transactional
   public Fruit save(Fruit fruit) {
-    final var created = this.fruitDAO.save(fruit);
+    this.fruitDAO.save(fruit);
     final var found = this.fruitDAO.find(fruit.getId());
-    log.debug("status=done, created={}", created);
+    log.debug("status=done");
     return found;
   }
 

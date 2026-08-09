@@ -34,7 +34,7 @@ public class FruitDAODoma implements FruitDAO {
   }
 
   @Override
-  public void save(Fruit fruit) {
+  public boolean save(Fruit fruit) {
 
     if (this.createIfAbsent(fruit)) {
       return true;
