@@ -5,8 +5,6 @@ import com.mageddo.fruit.FruitDAO;
 
 import com.mageddo.fruit.config.doma.MetaModels;
 
-import jakarta.inject.Singleton;
-
 import java.util.List;
 import java.util.UUID;
 
