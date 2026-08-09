@@ -1,7 +1,7 @@
 package com.mageddo.fruit.dataprovider.doma;
 
 import com.mageddo.fruit.config.doma.DomaFruitConfig;
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.UUID;
 import org.seasar.doma.Column;
 import org.seasar.doma.Embedded;
@@ -15,7 +15,7 @@ public class FruitDomaRow {
 
   @Id
   @Column(name = "IDT_FRUIT")
-  private UUID id;
+  private String id;
 
   @Column(name = "NAM_FRUIT")
   private String name;
@@ -27,19 +27,19 @@ public class FruitDomaRow {
   private String season;
 
   @Column(name = "DAT_CREATED")
-  private Instant createdAt;
+  private Timestamp createdAt;
 
   @Column(name = "DAT_UPDATED")
-  private Instant updatedAt;
+  private Timestamp updatedAt;
 
   @Embedded
   private FruitDomaReferrerRow referrer;
 
   public UUID getId() {
-    return this.id;
+    return this.id == null ? null : UUID.fromString(this.id);
   }
 
-  public void setId(UUID id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -67,19 +67,19 @@ public class FruitDomaRow {
     this.season = season;
   }
 
-  public Instant getCreatedAt() {
+  public Timestamp getCreatedAt() {
     return this.createdAt;
   }
 
-  public void setCreatedAt(Instant createdAt) {
+  public void setCreatedAt(Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 
-  public Instant getUpdatedAt() {
+  public Timestamp getUpdatedAt() {
     return this.updatedAt;
   }
 
-  public void setUpdatedAt(Instant updatedAt) {
+  public void setUpdatedAt(Timestamp updatedAt) {
     this.updatedAt = updatedAt;
   }
 
@@ -91,4 +91,3 @@ public class FruitDomaRow {
     this.referrer = referrer;
   }
 }
-

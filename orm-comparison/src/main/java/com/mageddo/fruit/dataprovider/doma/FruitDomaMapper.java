@@ -4,6 +4,8 @@ import com.mageddo.fruit.Fruit;
 import com.mageddo.referrer.Referrer;
 import org.apache.commons.lang3.StringUtils;
 
+import java.sql.Timestamp;
+
 public class FruitDomaMapper {
 
   private FruitDomaMapper() {
@@ -18,31 +20,45 @@ public class FruitDomaMapper {
         .name(row.getName())
         .color(row.getColor())
         .season(row.getSeason())
-        .createdAt(row.getCreatedAt())
-        .updatedAt(row.getUpdatedAt())
+        .createdAt(toInstant(row.getCreatedAt()))
+        .updatedAt(toInstant(row.getUpdatedAt()))
         .referrer(toDomain(row.getReferrer()))
         .build();
   }
 
   public static FruitDomaRow toRow(Fruit fruit) {
     final var row = new FruitDomaRow();
-    row.setId(fruit.getId());
+    row.setId(fruit.getId().toString());
     row.setName(fruit.getName());
     row.setColor(fruit.getColor());
     row.setSeason(fruit.getSeason());
-    row.setCreatedAt(fruit.getCreatedAt());
-    row.setUpdatedAt(fruit.getUpdatedAt());
+    row.setCreatedAt(toTimestamp(fruit.getCreatedAt()));
+    row.setUpdatedAt(toTimestamp(fruit.getUpdatedAt()));
     row.setReferrer(toRow(fruit.getReferrer()));
     return row;
   }
 
+  static Timestamp toTimestamp(java.time.Instant instant) {
+    if (instant == null) {
+      return null;
+    }
+    return Timestamp.from(instant);
+  }
+
+  static java.time.Instant toInstant(Timestamp timestamp) {
+    if (timestamp == null) {
+      return null;
+    }
+    return timestamp.toInstant();
+  }
+
   static Referrer toDomain(FruitDomaReferrerRow row) {
-    if (row == null || StringUtils.isAllBlank(row.getId(), row.getType())) {
+    if (row == null || StringUtils.isAllBlank(row.id(), row.type())) {
       return null;
     }
     return Referrer.builder()
-        .id(row.getId())
-        .type(row.getType())
+        .id(row.id())
+        .type(row.type())
         .build();
   }
 
@@ -50,9 +66,6 @@ public class FruitDomaMapper {
     if (referrer == null || StringUtils.isAllBlank(referrer.getId(), referrer.getType())) {
       return null;
     }
-    final var row = new FruitDomaReferrerRow();
-    row.setId(referrer.getId());
-    row.setType(referrer.getType());
-    return row;
+    return new FruitDomaReferrerRow(referrer.getId(), referrer.getType());
   }
 }
