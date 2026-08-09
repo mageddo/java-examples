@@ -28,7 +28,7 @@ public class FruitDomaMapper {
 
   public static FruitDomaRow toRow(Fruit fruit) {
     final var row = new FruitDomaRow();
-    row.setId(fruit.getId().toString());
+    row.setId(fruit.getId());
     row.setName(fruit.getName());
     row.setColor(fruit.getColor());
     row.setSeason(fruit.getSeason());
