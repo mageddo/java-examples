@@ -13,57 +13,77 @@ public class FruitTemplates {
   public static final String REFERRER_ID = "USER";
 
   public static Fruit banana() {
-    return new Fruit(BANANA_ID, "Banana", "Yellow", "Summer", null);
+    return Fruit.builder()
+        .id(BANANA_ID)
+        .name("Banana")
+        .color("Yellow")
+        .season("Summer")
+        .build();
   }
 
   public static Fruit updatedBanana() {
-    return new Fruit(BANANA_ID, "Banana", "Green", "Summer", null);
+    return Fruit.builder()
+        .id(BANANA_ID)
+        .name("Banana")
+        .color("Green")
+        .season("Summer")
+        .build();
   }
 
   public static Fruit greenBanana() {
-    return new Fruit(GREEN_BANANA_ID, "Banana", "Green", "Summer", null);
+    return Fruit.builder()
+        .id(GREEN_BANANA_ID)
+        .name("Banana")
+        .color("Green")
+        .season("Summer")
+        .build();
   }
 
   public static Fruit greenBananaAltSeason() {
-    return new Fruit(GREEN_BANANA_ID, "Green Banana", "Green", "Autumn", null);
+    return Fruit.builder()
+        .id(GREEN_BANANA_ID)
+        .name("Green Banana")
+        .color("Green")
+        .season("Autumn")
+        .build();
   }
 
   public static Fruit bananaWithReferrer() {
-    return new Fruit(
-        BANANA_ID,
-        "Banana",
-        "Yellow",
-        "Summer",
-        Referrer.builder()
+    return Fruit.builder()
+        .id(BANANA_ID)
+        .name("Banana")
+        .color("Yellow")
+        .season("Summer")
+        .referrer(Referrer.builder()
             .id(BANANA_REFERRER_ID)
             .type(REFERRER_ID)
-            .build()
-    );
+            .build())
+        .build();
   }
 
   public static Fruit greenBananaWithReferrer() {
-    return new Fruit(
-        GREEN_BANANA_ID,
-        "Banana",
-        "Green",
-        "Summer",
-        Referrer.builder()
+    return Fruit.builder()
+        .id(GREEN_BANANA_ID)
+        .name("Banana")
+        .color("Green")
+        .season("Summer")
+        .referrer(Referrer.builder()
             .id(GREEN_BANANA_REFERRER_ID)
             .type(REFERRER_ID)
-            .build()
-    );
+            .build())
+        .build();
   }
 
   public static Fruit greenBananaWithReferrerUpdated() {
-    return new Fruit(
-        GREEN_BANANA_ID,
-        "Green Banana",
-        "Green",
-        "Autumn",
-        Referrer.builder()
+    return Fruit.builder()
+        .id(GREEN_BANANA_ID)
+        .name("Green Banana")
+        .color("Green")
+        .season("Autumn")
+        .referrer(Referrer.builder()
             .id(GREEN_BANANA_REFERRER_ID)
             .type("SOCIAL")
-            .build()
-    );
+            .build())
+        .build();
   }
 }

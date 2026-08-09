@@ -18,10 +18,11 @@ public class FruitDAOEbean implements FruitDAO {
 
   @Override
   public boolean createIfAbsent(Fruit fruit) {
-    final var insertOptions = InsertOptions.builder()
-        .onConflictNothing()
-        .build();
-    this.database.insert(FruitRowMapper.of(fruit), insertOptions);
+    final var exists = this.find(fruit.getId());
+    if (exists != null) {
+      return false;
+    }
+    this.database.insert(FruitRowMapper.of(fruit));
     return true;
   }
 

@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Table;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import com.mageddo.referrer.ReferrerRow;
 import java.util.UUID;
 
@@ -36,6 +38,10 @@ public class FruitRow {
   @Column(name = "txt_season")
   String season;
 
+  @AttributeOverrides({
+      @AttributeOverride(name = "id", column = @Column(name = "IDT_REFERRER", length = 36)),
+      @AttributeOverride(name = "type", column = @Column(name = "IND_REFERRER", length = 36))
+  })
   @Embedded
   ReferrerRow referrer;
 }

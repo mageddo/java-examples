@@ -12,13 +12,13 @@ public class FruitRowMapper {
   }
 
   public static Fruit toDomain(FruitRow row) {
-    return new Fruit(
-        row.getId(),
-        row.getName(),
-        row.getColor(),
-        row.getSeason(),
-        toDomainReferrer(row.getReferrer())
-    );
+    return Fruit.builder()
+        .id(row.getId())
+        .name(row.getName())
+        .color(row.getColor())
+        .season(row.getSeason())
+        .referrer(toDomainReferrer(row.getReferrer()))
+        .build();
   }
 
   static Referrer toDomainReferrer(ReferrerRow row) {
@@ -28,7 +28,10 @@ public class FruitRowMapper {
     if (StringUtils.isAllBlank(row.getId(), row.getType())) {
       return null;
     }
-    return new Referrer(row.getId(), row.getType());
+    return Referrer.builder()
+        .id(row.getId())
+        .type(row.getType())
+        .build();
   }
 
   public static FruitRow of(Fruit fruit) {

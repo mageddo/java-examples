@@ -1,6 +1,7 @@
 package com.mageddo.fruit.config.ebean;
 
 import com.mageddo.fruit.dataprovider.FruitRow;
+import com.mageddo.referrer.ReferrerRow;
 
 import jakarta.transaction.TransactionSynchronizationRegistry;
 
@@ -40,6 +41,7 @@ public class EbeanDatabaseProducer {
     ));
     databaseConfig.setDataSource(dataSource);
     databaseConfig.addClass(FruitRow.class);
+    databaseConfig.addClass(ReferrerRow.class);
     return DatabaseFactory.create(databaseConfig);
   }
 
