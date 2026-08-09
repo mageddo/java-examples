@@ -6,7 +6,7 @@ import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.dataprovider.mapper.FruitRowMapper;
 import io.ebean.Database;
 import io.ebean.InsertOptions;
-import jakarta.inject.Singleton;
+
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +27,7 @@ public class FruitDAOEbean implements FruitDAO {
   }
 
   @Override
-  public Fruit save(Fruit fruit) {
+  public boolean save(Fruit fruit) {
     final var insertOptions = InsertOptions.builder()
         .onConflictUpdate()
         .build();
