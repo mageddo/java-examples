@@ -10,12 +10,12 @@ import org.seasar.doma.Update;
 public interface FruitDomaDao {
 
   @Select
-  @Sql("SELECT * FROM ebean_orm.FRUIT WHERE IDT_FRUIT = CAST(/* id */'00000000-0000-0000-0000-000000000000' AS UUID)")
+  @Sql("SELECT * FROM orm.FRUIT WHERE IDT_FRUIT = CAST(/* id */'00000000-0000-0000-0000-000000000000' AS UUID)")
   FruitDomaRow findById(String id);
 
   @Insert
   @Sql("""
-      INSERT INTO ebean_orm.FRUIT (
+      INSERT INTO orm.FRUIT (
         IDT_FRUIT,
         NAM_FRUIT,
         NAM_COLOR,
@@ -48,7 +48,7 @@ public interface FruitDomaDao {
 
   @Update
   @Sql("""
-      UPDATE ebean_orm.FRUIT SET
+      UPDATE orm.FRUIT SET
         NAM_FRUIT = /* name */'',
         NAM_COLOR = /* color */'',
         NAM_SEASON = /* season */'',

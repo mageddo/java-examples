@@ -6,32 +6,26 @@ import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.seasar.doma.jdbc.ConfigProvider;
+import org.seasar.doma.jdbc.criteria.QueryDsl;
 
 @Singleton
 @Named("doma")
 @RequiredArgsConstructor
 public class FruitDAODoma implements FruitDAO {
 
+  private final QueryDsl queryDsl;
   private final FruitDomaDao dao;
 
   @Override
   public boolean createIfAbsent(Fruit fruit) {
-    final var existing = this.find(fruit.getId());
-    if (existing != null) {
-      return false;
-    }
-    final var row = FruitDomaMapper.toRow(fruit);
-    this.dao.insert(
-        this.toDbId(row),
-        row.getName(),
-        row.getColor(),
-        row.getSeason(),
-        this.toReferrerId(row),
-        this.toReferrerType(row),
-        row.getCreatedAt(),
-        row.getUpdatedAt()
-    );
-    return true;
+    final var _fruit = new FruitDomaRow_();
+    final var result = this.queryDsl
+        .insert(_fruit)
+        .single(FruitDomaMapper.toRow(fruit))
+        .onDuplicateKeyIgnore()
+        .execute();
+    return result.getCount() == 1;
   }
 
   @Override

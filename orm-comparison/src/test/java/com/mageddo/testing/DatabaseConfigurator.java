@@ -76,7 +76,7 @@ public class DatabaseConfigurator {
         SELECT
           format('%%I.%%I', TABLE_SCHEMA, TABLE_NAME)
         FROM INFORMATION_SCHEMA.TABLES
-        WHERE TABLE_SCHEMA IN (CURRENT_SCHEMA(), 'ebean_orm')
+        WHERE TABLE_SCHEMA IN (CURRENT_SCHEMA(), 'orm')
         AND lower(TABLE_NAME) NOT IN (%s)
         AND TABLE_TYPE = 'BASE TABLE'
         ORDER BY TABLE_NAME

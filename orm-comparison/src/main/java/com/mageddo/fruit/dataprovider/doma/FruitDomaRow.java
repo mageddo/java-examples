@@ -1,16 +1,17 @@
 package com.mageddo.fruit.dataprovider.doma;
 
-import com.mageddo.fruit.config.doma.DomaFruitConfig;
+import com.mageddo.fruit.config.doma.DomaConfig;
 import java.sql.Timestamp;
 import java.util.UUID;
 import org.seasar.doma.Column;
 import org.seasar.doma.Embedded;
 import org.seasar.doma.Entity;
 import org.seasar.doma.Id;
+import org.seasar.doma.Metamodel;
 import org.seasar.doma.Table;
 
-@Entity
-@Table(name = "FRUIT", schema = DomaFruitConfig.FRUIT_SCHEMA)
+@Entity(metamodel = @Metamodel)
+@Table(name = "FRUIT", schema = "orm")
 public class FruitDomaRow {
 
   @Id
