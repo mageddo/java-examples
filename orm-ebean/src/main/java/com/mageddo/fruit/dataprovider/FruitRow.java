@@ -3,7 +3,9 @@ package com.mageddo.fruit.dataprovider;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Table;
+import com.mageddo.referrer.ReferrerRow;
 import java.util.UUID;
 
 import lombok.AccessLevel;
@@ -33,4 +35,7 @@ public class FruitRow {
 
   @Column(name = "txt_season")
   String season;
+
+  @Embedded
+  ReferrerRow referrer;
 }

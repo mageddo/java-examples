@@ -1,6 +1,6 @@
 package com.mageddo.fruit.dataprovider.ebean;
 
-import com.mageddo.fruit.dataprovider.FruitDAO;
+import com.mageddo.fruit.FruitDAO;
 import com.mageddo.fruit.dataprovider.FruitRow;
 import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.dataprovider.mapper.FruitRowMapper;

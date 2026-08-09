@@ -36,7 +36,7 @@ class FruitServiceCompTest {
 
   @Test
   void createIfAbsentShouldPersistWhenMissing() {
-    final var expected = FruitTemplates.banana();
+    final var expected = FruitTemplates.bananaWithReferrer();
 
     final var out = this.service.createIfAbsent(expected);
 
@@ -61,21 +61,21 @@ class FruitServiceCompTest {
 
   @Test
   void saveShouldUpsertAndFindShouldReturnSaved() {
-    final var created = FruitTemplates.greenBanana();
+    final var created = FruitTemplates.greenBananaWithReferrer();
 
     this.create(created);
 
-    final var out = this.service.save(FruitTemplates.greenBananaAltSeason());
+    final var out = this.service.save(FruitTemplates.greenBananaWithReferrerUpdated());
 
     assertThat(out)
         .usingRecursiveComparison()
-        .isEqualTo(FruitTemplates.greenBananaAltSeason());
+        .isEqualTo(FruitTemplates.greenBananaWithReferrerUpdated());
 
     final var found = this.service.find(created.getId());
 
     assertThat(found)
         .usingRecursiveComparison()
-        .isEqualTo(FruitTemplates.greenBananaAltSeason());
+        .isEqualTo(FruitTemplates.greenBananaWithReferrerUpdated());
   }
 
   @Test

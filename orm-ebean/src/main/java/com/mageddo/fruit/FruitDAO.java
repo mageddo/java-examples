@@ -1,6 +1,5 @@
-package com.mageddo.fruit.dataprovider;
+package com.mageddo.fruit;
 
-import com.mageddo.fruit.Fruit;
 import java.util.UUID;
 
 public interface FruitDAO {

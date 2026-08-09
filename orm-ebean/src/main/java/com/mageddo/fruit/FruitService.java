@@ -1,7 +1,5 @@
 package com.mageddo.fruit;
 
-import com.mageddo.fruit.dataprovider.FruitDAO;
-
 import jakarta.inject.Singleton;
 
 import java.util.UUID;

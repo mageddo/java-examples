@@ -10,7 +10,7 @@ public class FruitMapper {
   }
 
   public static Fruit of(FruitReqV1 req) {
-    return new Fruit(req.id(), req.name(), req.color(), req.season());
+    return new Fruit(req.id(), req.name(), req.color(), req.season(), null);
   }
 
   public static FruitResV1 toDf(Fruit fruit) {

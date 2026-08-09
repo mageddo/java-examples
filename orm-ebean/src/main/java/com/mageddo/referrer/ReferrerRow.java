@@ -14,6 +14,6 @@ public class ReferrerRow {
   @Column(name = "IDT_REFERRER", length = 36)
   String id;
 
-  @Column(name = "IND_REFERRER", length = 36, nullable = false)
+  @Column(name = "IND_REFERRER", length = 36)
   String type;
 }
