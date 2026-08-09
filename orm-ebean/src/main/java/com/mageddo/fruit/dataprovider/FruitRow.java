@@ -19,8 +19,6 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "fruit", schema = "ebean_orm")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FruitRow {
@@ -38,10 +36,6 @@ public class FruitRow {
   @Column(name = "txt_season")
   String season;
 
-  @AttributeOverrides({
-      @AttributeOverride(name = "id", column = @Column(name = "IDT_REFERRER", length = 36)),
-      @AttributeOverride(name = "type", column = @Column(name = "IND_REFERRER", length = 36))
-  })
   @Embedded
   ReferrerRow referrer;
 }
