@@ -9,6 +9,8 @@ import com.mageddo.persistence.GenericDAO;
 
 import io.ebean.Database;
 
+import jakarta.inject.Singleton;
+
 import java.util.List;
 import java.util.UUID;
 

@@ -3,12 +3,11 @@ package com.mageddo.persistence.ebean;
 import com.mageddo.fruit.config.ebean.EbeanInsertIfAbsent;
 import com.mageddo.persistence.GenericDAO;
 
-import io.ebean.Database;
-import io.ebean.InsertOptions;
-
-import lombok.RequiredArgsConstructor;
-
 import org.apache.commons.lang3.Validate;
+
+import io.ebean.Database;
+import jakarta.enterprise.context.Dependent;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Operações de persistência derivadas do mapeamento da entidade, sem SQL por tabela.
@@ -17,6 +16,7 @@ import org.apache.commons.lang3.Validate;
  * conflito no próprio banco, em um único statement, mantendo a transação utilizável
  * para as operações seguintes.
  */
+@Dependent
 @RequiredArgsConstructor
 public class GenericDAOEbean<Bean> implements GenericDAO<Bean> {
 
