@@ -4,11 +4,13 @@ import com.mageddo.fruit.FruitDAO;
 import com.mageddo.fruit.dataprovider.FruitRow;
 import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.dataprovider.mapper.FruitRowMapper;
+
 import io.ebean.Database;
 import io.ebean.InsertOptions;
 
 import java.util.List;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 
 //@Singleton
@@ -29,7 +31,8 @@ public class FruitDAOEbean implements FruitDAO {
 
   @Override
   public boolean save(Fruit fruit) {
-    final var insertOptions = InsertOptions.builder()
+    final var insertOptions = InsertOptions
+        .builder()
         .onConflictUpdate()
         .build();
     this.database.insert(FruitRowMapper.of(fruit), insertOptions);
@@ -48,12 +51,19 @@ public class FruitDAOEbean implements FruitDAO {
   @Override
   public List<Fruit> findByName(String name) {
     return this.database
-        .find(FruitRow.class)
-        .where()
-        .eq("name", name)
+        .findNative(
+            FruitRow.class,
+            """
+                SELECT *
+                FROM orm.FRUIT
+                WHERE NAM_FRUIT = :name
+                """
+        )
+        .setParameter("name", name)
         .findList()
         .stream()
         .map(FruitRowMapper::toDomain)
-        .toList();
+        .toList()
+        ;
   }
 }
