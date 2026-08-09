@@ -4,6 +4,8 @@ import com.mageddo.fruit.Fruit;
 
 import com.mageddo.referrer.dataprovider.doma.ReferrerRowMapper;
 
+import java.util.List;
+
 public class FruitRowMapper {
 
   private FruitRowMapper() {
@@ -37,4 +39,10 @@ public class FruitRowMapper {
     return row;
   }
 
+  public static List<Fruit> toDomain(List<FruitRow> rows) {
+    return rows
+        .stream()
+        .map(FruitRowMapper::toDomain)
+        .toList();
+  }
 }

@@ -1,5 +1,6 @@
 package com.mageddo.fruit;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface FruitDAO {
@@ -9,4 +10,6 @@ public interface FruitDAO {
   boolean save(Fruit fruit);
 
   Fruit find(UUID id);
+
+  List<Fruit> findByName(String name);
 }

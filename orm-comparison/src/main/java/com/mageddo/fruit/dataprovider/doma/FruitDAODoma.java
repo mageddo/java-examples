@@ -3,21 +3,18 @@ package com.mageddo.fruit.dataprovider.doma;
 import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.FruitDAO;
 
-import com.mageddo.fruit.config.doma.EntityModels;
 import com.mageddo.fruit.config.doma.MetaModels;
 
 import jakarta.inject.Singleton;
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.lang3.Validate;
 import org.seasar.doma.jdbc.Config;
-import org.seasar.doma.jdbc.builder.SelectBuilder;
-import org.seasar.doma.jdbc.builder.UpdateBuilder;
 import org.seasar.doma.jdbc.criteria.QueryDsl;
-import org.seasar.doma.jdbc.criteria.metamodel.EntityMetamodel;
 
 @Singleton
 @RequiredArgsConstructor
@@ -66,13 +63,14 @@ public class FruitDAODoma implements FruitDAO {
     return FruitRowMapper.toDomain(row);
   }
 
-  public Fruit findByName(String name) {
+  @Override
+  public List<Fruit> findByName(String name) {
     final var dm = getDm();
-    final var row = this.queryDsl
+    final var rows = this.queryDsl
         .from(dm)
         .where(c -> c.eq(dm.name, name))
-        .fetchOne();
-    return FruitRowMapper.toDomain(row);
+        .fetch();
+    return FruitRowMapper.toDomain(rows);
   }
   static FruitRow_ getDm() {
     return new FruitRow_();

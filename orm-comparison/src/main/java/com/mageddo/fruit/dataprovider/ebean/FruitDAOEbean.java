@@ -7,6 +7,7 @@ import com.mageddo.fruit.dataprovider.mapper.FruitRowMapper;
 import io.ebean.Database;
 import io.ebean.InsertOptions;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
@@ -42,5 +43,10 @@ public class FruitDAOEbean implements FruitDAO {
       return null;
     }
     return FruitRowMapper.toDomain(row);
+  }
+
+  @Override
+  public List<Fruit> findByName(String name) {
+    throw  new UnsupportedOperationException();
   }
 }
