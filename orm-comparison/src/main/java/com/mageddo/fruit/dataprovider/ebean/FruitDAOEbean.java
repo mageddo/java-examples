@@ -51,9 +51,14 @@ public class FruitDAOEbean implements FruitDAO {
   @Override
   public List<Fruit> findByName(String name) {
     return this.database
-        .find(FruitRow.class)
-        .where()
-        .eq("name", name)
+        .findNative(
+            FruitRow.class,
+            """
+                SELECT * FROM orm.FRUIT
+                WHERE NAM_FRUIT = :name
+                """
+        )
+        .setParameter("name", name)
         .findList()
         .stream()
         .map(FruitRowMapper::toDomain)
