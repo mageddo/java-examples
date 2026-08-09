@@ -25,7 +25,8 @@ public class EbeanDatabaseProducer {
       AgroalDataSource dataSource,
       @ConfigProperty(name = "quarkus.datasource.jdbc.database") String databaseName,
       TransactionSynchronizationRegistry registry,
-      UserTransaction userTransaction
+      UserTransaction userTransaction,
+      EbeanInsertIfAbsent insertIfAbsent
   ) {
     return Database
         .builder()
@@ -37,6 +38,7 @@ public class EbeanDatabaseProducer {
             registry, userTransaction
         ))
         .dataSource(dataSource)
+        .add(insertIfAbsent)
         .addClass(FruitRow.class)
         .addClass(ReferrerRow.class)
         .build();

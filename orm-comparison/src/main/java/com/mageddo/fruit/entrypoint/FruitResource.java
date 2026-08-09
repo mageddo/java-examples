@@ -36,10 +36,19 @@ public class FruitResource {
 
   @POST
   @Path("/create-if-absent")
-  public FruitResV1 createIfAbsent(FruitReqV1 req) {
+  public Response createIfAbsent(FruitReqV1 req) {
     final var fruit = FruitMapper.of(req);
-    final var persisted = this.service.createIfAbsent(fruit);
-    return FruitMapper.toDf(persisted);
+    final var created = this.service.createIfAbsent(fruit);
+
+    if (created) {
+      return Response
+          .status(Response.Status.CREATED)
+          .build();
+    }
+
+    return Response
+        .noContent()
+        .build();
   }
 
   @PUT

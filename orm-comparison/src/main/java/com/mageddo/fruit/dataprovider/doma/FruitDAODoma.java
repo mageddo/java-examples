@@ -16,7 +16,7 @@ import org.apache.commons.lang3.Validate;
 import org.seasar.doma.jdbc.Config;
 import org.seasar.doma.jdbc.criteria.QueryDsl;
 
-@Singleton
+//@Singleton
 @RequiredArgsConstructor
 public class FruitDAODoma implements FruitDAO {
 

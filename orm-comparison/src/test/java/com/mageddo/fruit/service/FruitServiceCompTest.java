@@ -39,21 +39,39 @@ class FruitServiceCompTest {
   void createIfAbsentShouldPersistWhenMissing() {
     final var expected = FruitTemplates.bananaWithReferrer();
 
-    final var out = this.service.createIfAbsent(expected);
+    this.service.createIfAbsent(expected);
 
-    assertFruitEqualsIgnoringMetadata(out, expected);
+    assertFruitEqualsIgnoringMetadata(this.service.find(expected.getId()), expected);
   }
 
   @Test
   void createIfAbsentShouldKeepStoredDataWhenExists() {
     final var expected = FruitTemplates.banana();
     final var overwriteAttempt = FruitTemplates.updatedBanana();
-
     this.service.createIfAbsent(expected);
 
-    final var out = this.service.createIfAbsent(overwriteAttempt);
+    this.service.createIfAbsent(overwriteAttempt);
 
-    assertFruitEqualsIgnoringMetadata(out, expected);
+    assertFruitEqualsIgnoringMetadata(this.service.find(expected.getId()), expected);
+  }
+
+  @Test
+  void createIfAbsentShouldReportCreationWhenMissing() {
+    final var fruit = FruitTemplates.banana();
+
+    final var created = this.service.createIfAbsent(fruit);
+
+    assertThat(created).isTrue();
+  }
+
+  @Test
+  void createIfAbsentShouldReportNoCreationWhenExists() {
+    final var fruit = FruitTemplates.banana();
+    this.service.createIfAbsent(fruit);
+
+    final var created = this.service.createIfAbsent(fruit);
+
+    assertThat(created).isFalse();
   }
 
   @Test

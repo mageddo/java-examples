@@ -5,28 +5,28 @@ import com.mageddo.fruit.dataprovider.FruitRow;
 import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.dataprovider.mapper.FruitRowMapper;
 
+import com.mageddo.fruit.config.ebean.EbeanInsertIfAbsent;
+
 import io.ebean.Database;
 import io.ebean.InsertOptions;
+
+import jakarta.inject.Singleton;
 
 import java.util.List;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
-//@Singleton
+@Singleton
 @RequiredArgsConstructor
 public class FruitDAOEbean implements FruitDAO {
 
   private final Database database;
+  private final EbeanInsertIfAbsent insertIfAbsent;
 
   @Override
   public boolean createIfAbsent(Fruit fruit) {
-    final var exists = this.find(fruit.getId());
-    if (exists != null) {
-      return false;
-    }
-    this.database.insert(FruitRowMapper.of(fruit));
-    return true;
+    return this.insertIfAbsent.execute(this.database, FruitRowMapper.of(fruit));
   }
 
   @Override
@@ -51,15 +51,9 @@ public class FruitDAOEbean implements FruitDAO {
   @Override
   public List<Fruit> findByName(String name) {
     return this.database
-        .findNative(
-            FruitRow.class,
-            """
-                SELECT *
-                FROM orm.FRUIT
-                WHERE NAM_FRUIT = :name
-                """
-        )
-        .setParameter("name", name)
+        .find(FruitRow.class)
+        .where()
+        .eq("name", name)
         .findList()
         .stream()
         .map(FruitRowMapper::toDomain)

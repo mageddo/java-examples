@@ -18,11 +18,14 @@ public class FruitService {
 
   private final FruitDAO fruitDAO;
 
+  /**
+   * @return true se a fruta foi criada, false se já existia
+   */
   @Transactional
-  public Fruit createIfAbsent(Fruit fruit) {
+  public boolean createIfAbsent(Fruit fruit) {
     final var created = this.fruitDAO.createIfAbsent(fruit);
     log.info("created={}, fruit={}", created, fruit);
-    return this.fruitDAO.find(fruit.getId());
+    return created;
   }
 
   @Transactional
