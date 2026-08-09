@@ -10,7 +10,7 @@ import jakarta.inject.Singleton;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
-@Singleton
+//@Singleton
 @RequiredArgsConstructor
 public class FruitDAOEbean implements FruitDAO {
 

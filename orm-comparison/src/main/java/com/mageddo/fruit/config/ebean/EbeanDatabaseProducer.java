@@ -29,20 +29,19 @@ public class EbeanDatabaseProducer {
       TransactionSynchronizationRegistry registry,
       UserTransaction userTransaction
   ) {
-    final var databaseConfig = new DatabaseConfig();
-    databaseConfig.ddlGenerate(false);
-    databaseConfig.ddlRun(false);
-    databaseConfig.runMigration(false);
-    databaseConfig.setName(databaseName);
-//    databaseConfig.setUseJtaTransactionManager(false);
-    databaseConfig.setExternalTransactionManager(new QuarkusEbeanTransactionManager(
-        registry,userTransaction
-
-    ));
-    databaseConfig.setDataSource(dataSource);
-    databaseConfig.addClass(FruitRow.class);
-    databaseConfig.addClass(ReferrerRow.class);
-    return DatabaseFactory.create(databaseConfig);
+    return Database
+        .builder()
+        .ddlGenerate(false)
+        .ddlRun(false)
+        .runMigration(false)
+        .name(databaseName)
+        .externalTransactionManager(new QuarkusEbeanTransactionManager(
+            registry, userTransaction
+        ))
+        .dataSource(dataSource)
+        .addClass(FruitRow.class)
+        .addClass(ReferrerRow.class)
+        .build();
   }
 
 }

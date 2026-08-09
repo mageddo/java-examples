@@ -1,6 +1,8 @@
 package com.mageddo.fruit;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import jakarta.inject.Named;
 
 import java.util.UUID;
 
