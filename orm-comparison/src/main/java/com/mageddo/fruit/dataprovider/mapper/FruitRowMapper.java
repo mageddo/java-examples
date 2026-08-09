@@ -2,7 +2,7 @@ package com.mageddo.fruit.dataprovider.mapper;
 
 import com.mageddo.fruit.dataprovider.FruitRow;
 import com.mageddo.fruit.Fruit;
-import com.mageddo.referrer.ReferrerMapper;
+import com.mageddo.referrer.dataprovider.jpa.ReferrerRowMapper;
 
 public class FruitRowMapper {
 
@@ -17,7 +17,7 @@ public class FruitRowMapper {
         .season(row.getSeason())
         .createdAt(row.getCreatedAt())
         .updatedAt(row.getUpdatedAt())
-        .referrer(ReferrerMapper.toDomain(row.getReferrer()))
+        .referrer(ReferrerRowMapper.toDomain(row.getReferrer()))
         .build();
   }
 
@@ -29,7 +29,7 @@ public class FruitRowMapper {
     row.setSeason(fruit.getSeason());
     row.setCreatedAt(fruit.getCreatedAt());
     row.setUpdatedAt(fruit.getUpdatedAt());
-    row.setReferrer(ReferrerMapper.toRow(fruit.getReferrer()));
+    row.setReferrer(ReferrerRowMapper.of(fruit.getReferrer()));
     return row;
   }
 }

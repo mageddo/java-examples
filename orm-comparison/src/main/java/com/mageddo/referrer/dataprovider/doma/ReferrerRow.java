@@ -1,8 +1,11 @@
 package com.mageddo.referrer.dataprovider.doma;
 
+import lombok.Builder;
+
 import org.seasar.doma.Column;
 import org.seasar.doma.Embeddable;
 
+@Builder
 @Embeddable
 public record ReferrerRow(
 
