@@ -35,7 +35,7 @@ public class FruitDAOEbean implements FruitDAO {
 
   @Override
   public Fruit find(UUID id) {
-    final var row = this.genericDAO.mustFind(id, FruitRow.class);
+    final var row = this.genericDAO.find(id, FruitRow.class);
     if (row == null) {
       return null;
     }

@@ -44,8 +44,13 @@ public class GenericDAOEbean<Bean> implements GenericDAO<Bean> {
   }
 
   @Override
+  public Bean find(Object id, Class<Bean> beanClass) {
+    return this.database.find(beanClass, id);
+  }
+
+  @Override
   public Bean mustFind(Object id, Class<Bean> beanClass) {
-    final var bean = this.database.find(beanClass, id);
+    final var bean = this.find(id, beanClass);
     Validate.notNull(bean, "%s not found: %s", beanClass.getSimpleName(), id);
     return bean;
   }

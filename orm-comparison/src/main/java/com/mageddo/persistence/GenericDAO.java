@@ -6,6 +6,8 @@ public interface GenericDAO<Bean> {
 
   boolean save(Bean bean);
 
+  Bean find(Object id, Class<Bean> beanClass);
+
   Bean mustFind(Object id, Class<Bean> beanClass);
 
 }
