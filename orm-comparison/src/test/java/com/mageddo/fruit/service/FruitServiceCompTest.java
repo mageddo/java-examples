@@ -1,6 +1,7 @@
 package com.mageddo.fruit.service;
 
 import java.util.UUID;
+import java.util.List;
 
 import com.mageddo.fruit.FruitService;
 import com.mageddo.fruit.Fruit;
@@ -88,6 +89,21 @@ class FruitServiceCompTest {
 
     assertThat(this.service.find(missing))
         .isNull();
+  }
+
+  @Test
+  void findByNameShouldReturnMatches() {
+    this.create(FruitTemplates.banana());
+    this.create(FruitTemplates.greenBanana());
+
+    final var out = this.service.findByName("Banana");
+
+    assertThat(out)
+        .usingRecursiveFieldByFieldElementComparator()
+        .containsExactlyInAnyOrderElementsOf(List.of(
+            FruitTemplates.banana(),
+            FruitTemplates.greenBanana()
+        ));
   }
 
   void assertFruitEqualsIgnoringMetadata(Fruit out, Fruit expected) {

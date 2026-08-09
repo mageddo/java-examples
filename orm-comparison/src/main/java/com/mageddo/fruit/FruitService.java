@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.inject.Named;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.transaction.Transactional;
@@ -40,5 +41,12 @@ public class FruitService {
 
   public Fruit find(UUID id) {
     return this.fruitDAO.find(id);
+  }
+
+  public List<Fruit> findByName(String name) {
+    if (name == null || name.isBlank()) {
+      return List.of();
+    }
+    return this.fruitDAO.findByName(name);
   }
 }

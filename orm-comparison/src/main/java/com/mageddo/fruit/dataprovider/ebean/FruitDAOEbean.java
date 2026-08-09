@@ -47,6 +47,13 @@ public class FruitDAOEbean implements FruitDAO {
 
   @Override
   public List<Fruit> findByName(String name) {
-    throw  new UnsupportedOperationException();
+    return this.database
+        .find(FruitRow.class)
+        .where()
+        .eq("name", name)
+        .findList()
+        .stream()
+        .map(FruitRowMapper::toDomain)
+        .toList();
   }
 }
