@@ -32,7 +32,7 @@ public class FruitDAOEbean implements FruitDAO {
         .onConflictUpdate()
         .build();
     this.database.insert(FruitRowMapper.of(fruit), insertOptions);
-    return this.find(fruit.getId());
+    return false;
   }
 
   @Override
