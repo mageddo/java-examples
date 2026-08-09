@@ -53,10 +53,14 @@ public class FruitResource {
 
   @PUT
   @Path("/upsert")
-  public FruitResV1 upsert(FruitReqV1 req) {
+  public Response upsert(FruitReqV1 req) {
     final var fruit = FruitMapper.of(req);
-    final var persisted = this.service.save(fruit);
-    return FruitMapper.toDf(persisted);
+    final var created = this.service.save(fruit);
+
+    return Response
+        .status(created ? Response.Status.CREATED : Response.Status.OK)
+        .entity(FruitMapper.toDf(fruit))
+        .build();
   }
 
   @GET

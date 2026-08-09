@@ -1,5 +1,6 @@
 package com.mageddo.fruit.config.ebean;
 
+import com.mageddo.basket.dataprovider.BasketRow;
 import com.mageddo.fruit.dataprovider.FruitRow;
 import com.mageddo.referrer.dataprovider.jpa.ReferrerRow;
 
@@ -40,6 +41,7 @@ public class EbeanDatabaseProducer {
         .dataSource(dataSource)
         .add(insertIfAbsent)
         .addClass(FruitRow.class)
+        .addClass(BasketRow.class)
         .addClass(ReferrerRow.class)
         .build();
   }

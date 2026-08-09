@@ -35,12 +35,16 @@ public class DatabaseConfigurator {
     log.info("status=schemaTruncated, tables={}", tables);
   }
 
+  /**
+   * Um único {@code TRUNCATE} para todas as tabelas: um statement por tabela pega os
+   * {@code ACCESS EXCLUSIVE} um a um e, com mais de uma tabela em jogo, abre espaço para
+   * deadlock contra qualquer outra conexão que ainda esteja segurando lock.
+   */
   void truncateTables(List<String> tables) {
-    this.database.sqlUpdate("SET CONSTRAINTS ALL DEFERRED").execute();
-    for (final String table : tables) {
-      this.database.sqlUpdate("TRUNCATE " + table + " CASCADE").execute();
+    if (tables.isEmpty()) {
+      return;
     }
-    this.database.sqlUpdate("SET CONSTRAINTS ALL IMMEDIATE").execute();
+    this.database.sqlUpdate("TRUNCATE " + String.join(", ", tables) + " CASCADE").execute();
   }
 
   void executeBaseData() {
