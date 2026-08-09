@@ -1,5 +1,6 @@
 package com.mageddo.fruit;
 
+import java.time.Instant;
 import java.util.UUID;
 import com.mageddo.referrer.Referrer;
 
@@ -22,5 +23,11 @@ public class Fruit {
   String season;
 
   Referrer referrer;
+
+  @NonNull
+  Instant createdAt;
+
+  @NonNull
+  Instant updatedAt;
 
 }

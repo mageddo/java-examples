@@ -40,9 +40,7 @@ class FruitServiceCompTest {
 
     final var out = this.service.createIfAbsent(expected);
 
-    assertThat(out)
-        .usingRecursiveComparison()
-        .isEqualTo(expected);
+    assertFruitEqualsIgnoringMetadata(out, expected);
   }
 
   @Test
@@ -54,9 +52,7 @@ class FruitServiceCompTest {
 
     final var out = this.service.createIfAbsent(overwriteAttempt);
 
-    assertThat(out)
-        .usingRecursiveComparison()
-        .isEqualTo(expected);
+    assertFruitEqualsIgnoringMetadata(out, expected);
   }
 
   @Test
@@ -67,15 +63,11 @@ class FruitServiceCompTest {
 
     final var out = this.service.save(FruitTemplates.greenBananaWithReferrerUpdated());
 
-    assertThat(out)
-        .usingRecursiveComparison()
-        .isEqualTo(FruitTemplates.greenBananaWithReferrerUpdated());
+    assertFruitEqualsIgnoringMetadata(out, FruitTemplates.greenBananaWithReferrerUpdated());
 
     final var found = this.service.find(created.getId());
 
-    assertThat(found)
-        .usingRecursiveComparison()
-        .isEqualTo(FruitTemplates.greenBananaWithReferrerUpdated());
+    assertFruitEqualsIgnoringMetadata(found, FruitTemplates.greenBananaWithReferrerUpdated());
   }
 
   @Test
@@ -96,6 +88,13 @@ class FruitServiceCompTest {
 
     assertThat(this.service.find(missing))
         .isNull();
+  }
+
+  void assertFruitEqualsIgnoringMetadata(Fruit out, Fruit expected) {
+    assertThat(out)
+        .usingRecursiveComparison()
+        .ignoringFields("createdAt", "updatedAt")
+        .isEqualTo(expected);
   }
 
   void create(Fruit fruit) {

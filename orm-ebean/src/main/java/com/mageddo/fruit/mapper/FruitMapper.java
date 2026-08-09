@@ -4,6 +4,7 @@ import com.mageddo.fruit.df.FruitReqV1;
 import com.mageddo.fruit.df.FruitResV1;
 import com.mageddo.fruit.Fruit;
 import com.mageddo.referrer.ReferrerMapper;
+import java.time.Instant;
 
 public class FruitMapper {
 
@@ -11,11 +12,14 @@ public class FruitMapper {
   }
 
   public static Fruit of(FruitReqV1 req) {
+    final var now = Instant.now();
     return Fruit.builder()
         .id(req.id())
         .name(req.name())
         .color(req.color())
         .season(req.season())
+        .createdAt(now)
+        .updatedAt(now)
         .referrer(ReferrerMapper.toDomain(req.referrer()))
         .build();
   }
