@@ -1,4 +1,4 @@
-package com.mageddo.fruit.dataformat;
+package com.mageddo.fruit.df;
 
 import java.util.UUID;
 

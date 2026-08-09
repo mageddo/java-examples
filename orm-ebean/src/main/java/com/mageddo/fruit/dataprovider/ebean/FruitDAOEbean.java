@@ -1,7 +1,9 @@
-package com.mageddo.fruit.dataprovider;
+package com.mageddo.fruit.dataprovider.ebean;
 
-import com.mageddo.fruit.domain.Fruit;
-import com.mageddo.fruit.dataprovider.mapper.FruitMapper;
+import com.mageddo.fruit.dataprovider.FruitDAO;
+import com.mageddo.fruit.dataprovider.FruitRow;
+import com.mageddo.fruit.Fruit;
+import com.mageddo.fruit.dataprovider.mapper.FruitRowMapper;
 import io.ebean.Database;
 import io.ebean.InsertOptions;
 import jakarta.inject.Singleton;
@@ -19,7 +21,7 @@ public class FruitDAOEbean implements FruitDAO {
     final var insertOptions = InsertOptions.builder()
         .onConflictNothing()
         .build();
-    this.database.insert(FruitMapper.toRow(fruit), insertOptions);
+    this.database.insert(FruitRowMapper.of(fruit), insertOptions);
     return true;
   }
 
@@ -28,7 +30,7 @@ public class FruitDAOEbean implements FruitDAO {
     final var insertOptions = InsertOptions.builder()
         .onConflictUpdate()
         .build();
-    this.database.insert(FruitMapper.toRow(fruit), insertOptions);
+    this.database.insert(FruitRowMapper.of(fruit), insertOptions);
     return this.find(fruit.getId());
   }
 
@@ -38,6 +40,6 @@ public class FruitDAOEbean implements FruitDAO {
     if (row == null) {
       return null;
     }
-    return FruitMapper.toDomain(row);
+    return FruitRowMapper.toDomain(row);
   }
 }

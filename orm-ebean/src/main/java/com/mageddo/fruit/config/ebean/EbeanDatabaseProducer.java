@@ -1,4 +1,4 @@
-package com.mageddo.fruit.config;
+package com.mageddo.fruit.config.ebean;
 
 import com.mageddo.fruit.dataprovider.FruitRow;
 

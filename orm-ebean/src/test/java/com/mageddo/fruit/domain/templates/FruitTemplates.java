@@ -1,7 +1,7 @@
 package com.mageddo.fruit.domain.templates;
 
 import java.util.UUID;
-import com.mageddo.fruit.domain.Fruit;
+import com.mageddo.fruit.Fruit;
 
 public class FruitTemplates {
 

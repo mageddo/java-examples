@@ -2,7 +2,8 @@ package com.mageddo.fruit.service;
 
 import java.util.UUID;
 
-import com.mageddo.fruit.domain.Fruit;
+import com.mageddo.fruit.FruitService;
+import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.domain.templates.FruitTemplates;
 import com.mageddo.testing.DatabaseConfiguratorExtension;
 import com.mageddo.testing.DatabaseConfigurator;

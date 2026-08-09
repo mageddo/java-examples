@@ -1,7 +1,6 @@
-package com.mageddo.fruit.service;
+package com.mageddo.fruit;
 
 import com.mageddo.fruit.dataprovider.FruitDAO;
-import com.mageddo.fruit.domain.Fruit;
 
 import jakarta.inject.Singleton;
 

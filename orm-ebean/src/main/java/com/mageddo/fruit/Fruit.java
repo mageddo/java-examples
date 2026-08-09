@@ -1,4 +1,4 @@
-package com.mageddo.fruit.domain;
+package com.mageddo.fruit;
 
 import java.util.UUID;
 import lombok.Value;

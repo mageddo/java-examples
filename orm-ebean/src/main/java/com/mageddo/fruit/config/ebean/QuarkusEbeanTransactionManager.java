@@ -1,4 +1,4 @@
-package com.mageddo.fruit.config;
+package com.mageddo.fruit.config.ebean;
 
 import io.ebean.config.ExternalTransactionManager;
 import io.ebean.util.JdbcClose;
