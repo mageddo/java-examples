@@ -97,10 +97,10 @@ class FruitServiceCompTest {
     this.create(FruitTemplates.greenBanana());
 
     final var out = this.service.findByName("Banana");
-
     assertThat(out)
-        .usingRecursiveFieldByFieldElementComparator()
-        .containsExactlyInAnyOrderElementsOf(List.of(
+        .usingRecursiveComparison()
+        .ignoringFields("createdAt", "updatedAt")
+        .isEqualTo(List.of(
             FruitTemplates.banana(),
             FruitTemplates.greenBanana()
         ));
