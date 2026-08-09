@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'io.quarkus' version '3.37.4'
-    id 'io.ebean' version '17.3.0'
+    id 'io.ebean' version '18.3.0'
 }
 
 group = 'com.mageddo'
@@ -20,7 +20,7 @@ repositories {
 defaultTasks 'quarkusDev'
 
 ext {
-    ebeanVersion = '17.3.0'
+    ebeanVersion = '18.3.0'
 }
 
 dependencies {
