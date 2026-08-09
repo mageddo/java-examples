@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mageddo.fruit.FruitService;
 import com.mageddo.fruit.Fruit;
-import com.mageddo.fruit.domain.templates.FruitTemplates;
+import com.mageddo.fruit.templates.FruitTemplates;
 import com.mageddo.persistence.OrmProvider;
 import com.mageddo.testing.DatabaseConfigurator;
 
