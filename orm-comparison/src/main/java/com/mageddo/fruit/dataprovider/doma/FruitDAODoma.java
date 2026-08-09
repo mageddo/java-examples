@@ -3,6 +3,8 @@ package com.mageddo.fruit.dataprovider.doma;
 import com.mageddo.fruit.Fruit;
 import com.mageddo.fruit.FruitDAO;
 
+import com.mageddo.fruit.config.doma.MetaModels;
+
 import jakarta.inject.Singleton;
 
 import java.util.UUID;
@@ -12,13 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.criteria.QueryDsl;
+import org.seasar.doma.jdbc.entity.EntityPropertyType;
 
 @Singleton
 @RequiredArgsConstructor
 public class FruitDAODoma implements FruitDAO {
 
   private final QueryDsl queryDsl;
-  private final FruitDomaDao dao;
 
   @Override
   public boolean createIfAbsent(Fruit fruit) {
@@ -52,22 +54,12 @@ public class FruitDAODoma implements FruitDAO {
 
   @Override
   public Fruit find(UUID id) {
-    return FruitDomaMapper.toDomain(this.dao.findById(id.toString()));
+    final var dm = new FruitDomaRow_();
+    final var row = this.queryDsl
+        .from(dm)
+        .where(c -> c.eq(MetaModels.getIdProperty(dm), id))
+        .fetchOne();
+    return FruitDomaMapper.toDomain(row);
   }
 
-  private String toDbId(FruitDomaRow row) {
-    return row
-        .getId()
-        .toString();
-  }
-
-  private String toReferrerId(FruitDomaRow row) {
-    final var referrer = row.getReferrer();
-    return referrer == null ? null : referrer.id();
-  }
-
-  private String toReferrerType(FruitDomaRow row) {
-    final var referrer = row.getReferrer();
-    return referrer == null ? null : referrer.type();
-  }
 }

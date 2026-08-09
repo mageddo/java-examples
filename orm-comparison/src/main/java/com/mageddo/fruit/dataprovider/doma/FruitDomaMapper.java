@@ -52,7 +52,7 @@ public class FruitDomaMapper {
     return timestamp.toInstant();
   }
 
-  static Referrer toDomain(FruitDomaReferrerRow row) {
+  static Referrer toDomain(ReferrerRow row) {
     if (row == null || StringUtils.isAllBlank(row.id(), row.type())) {
       return null;
     }
@@ -62,10 +62,10 @@ public class FruitDomaMapper {
         .build();
   }
 
-  static FruitDomaReferrerRow toRow(Referrer referrer) {
+  static ReferrerRow toRow(Referrer referrer) {
     if (referrer == null || StringUtils.isAllBlank(referrer.getId(), referrer.getType())) {
       return null;
     }
-    return new FruitDomaReferrerRow(referrer.getId(), referrer.getType());
+    return new ReferrerRow(referrer.getId(), referrer.getType());
   }
 }
