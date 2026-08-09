@@ -1,21 +1,15 @@
 package com.mageddo.fruit.dataprovider.doma;
 
 import com.mageddo.fruit.Fruit;
-import com.mageddo.referrer.Referrer;
-import com.mageddo.referrer.dataprovider.doma.ReferrerRow;
 
 import com.mageddo.referrer.dataprovider.doma.ReferrerRowMapper;
 
-import org.apache.commons.lang3.StringUtils;
+public class FruitRowMapper {
 
-import java.sql.Timestamp;
-
-public class FruitDomaMapper {
-
-  private FruitDomaMapper() {
+  private FruitRowMapper() {
   }
 
-  public static Fruit toDomain(FruitDomaRow row) {
+  public static Fruit toDomain(FruitRow row) {
     if (row == null) {
       return null;
     }
@@ -31,8 +25,8 @@ public class FruitDomaMapper {
         .build();
   }
 
-  public static FruitDomaRow toRow(Fruit fruit) {
-    final var row = new FruitDomaRow();
+  public static FruitRow toRow(Fruit fruit) {
+    final var row = new FruitRow();
     row.setId(fruit.getId());
     row.setName(fruit.getName());
     row.setColor(fruit.getColor());

@@ -12,9 +12,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.lang3.Validate;
-import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.criteria.QueryDsl;
-import org.seasar.doma.jdbc.entity.EntityPropertyType;
 
 @Singleton
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class FruitDAODoma implements FruitDAO {
   @Override
   public boolean createIfAbsent(Fruit fruit) {
     final var dm = new FruitDomaRow_();
-    final var row = FruitDomaMapper.toRow(fruit);
+    final var row = FruitRowMapper.toRow(fruit);
     final var result = this.queryDsl
         .insert(dm)
         .single(row)
@@ -42,7 +40,7 @@ public class FruitDAODoma implements FruitDAO {
     }
 
     final var dm = new FruitDomaRow_();
-    final var row = FruitDomaMapper.toRow(fruit);
+    final var row = FruitRowMapper.toRow(fruit);
     final var affected = this.queryDsl
         .update(dm)
         .single(row)
@@ -59,7 +57,7 @@ public class FruitDAODoma implements FruitDAO {
         .from(dm)
         .where(c -> c.eq(MetaModels.getIdProperty(dm), id))
         .fetchOne();
-    return FruitDomaMapper.toDomain(row);
+    return FruitRowMapper.toDomain(row);
   }
 
 }

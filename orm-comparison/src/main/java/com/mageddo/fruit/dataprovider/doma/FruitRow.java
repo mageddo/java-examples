@@ -21,7 +21,7 @@ import org.seasar.doma.Table;
 @Entity(metamodel = @Metamodel)
 @Table(name = "FRUIT", schema = "orm")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FruitDomaRow {
+public class FruitRow {
 
   @Id
   @Column(name = "IDT_FRUIT")
