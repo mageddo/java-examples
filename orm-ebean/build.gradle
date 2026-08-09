@@ -1,59 +1,62 @@
 plugins {
-    id 'java'
-    id 'io.quarkus' version '3.37.4'
-    id 'io.ebean' version '17.3.0'
+  id 'java'
+  id 'io.quarkus' version '3.37.4'
+  id 'io.ebean' version '19.3.0'
 }
 
 group = 'com.mageddo'
 version = '1.0.0-SNAPSHOT'
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
-    }
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(25)
+  }
 }
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 defaultTasks 'quarkusDev'
 
 ext {
-    ebeanVersion = '17.3.0'
+  ebeanVersion = '19.3.0'
 }
 
 dependencies {
-    implementation enforcedPlatform("io.quarkus:quarkus-bom:3.37.4")
-    implementation "io.quarkus:quarkus-rest"
-    implementation "io.quarkus:quarkus-rest-jackson"
-    implementation "io.quarkus:quarkus-smallrye-openapi"
-    implementation "io.quarkus:quarkus-swagger-ui"
-    implementation "io.quarkus:quarkus-narayana-jta"
-    implementation "io.quarkus:quarkus-flyway"
-    implementation "io.quarkus:quarkus-jdbc-postgresql"
-    testImplementation "io.quarkus:quarkus-junit5"
+  implementation enforcedPlatform("io.quarkus:quarkus-bom:3.37.4")
+  implementation "io.quarkus:quarkus-rest"
+  implementation "io.quarkus:quarkus-rest-jackson"
+  implementation "io.quarkus:quarkus-smallrye-openapi"
+  implementation "io.quarkus:quarkus-swagger-ui"
+  implementation "io.quarkus:quarkus-narayana-jta"
+  implementation "io.quarkus:quarkus-flyway"
+  implementation "io.quarkus:quarkus-jdbc-postgresql"
+  testImplementation "io.quarkus:quarkus-junit5"
 
-    implementation "io.ebean:ebean:$ebeanVersion"
-    implementation "io.ebean:ebean-postgres:$ebeanVersion"
+  implementation "io.ebean:ebean:$ebeanVersion"
+  implementation "io.ebean:ebean-postgres:$ebeanVersion"
 
-    compileOnly "org.projectlombok:lombok:1.18.46"
-    annotationProcessor "org.projectlombok:lombok:1.18.46"
-    testCompileOnly "org.projectlombok:lombok:1.18.46"
-    testAnnotationProcessor "org.projectlombok:lombok:1.18.46"
-    testImplementation "org.junit.jupiter:junit-jupiter:5.13.4"
-    testImplementation "org.assertj:assertj-core:3.27.3"
-    testImplementation "io.zonky.test:embedded-postgres:2.1.0"
+  implementation("org.apache.commons:commons-lang3:3.20.0")
+
+  compileOnly "org.projectlombok:lombok:1.18.46"
+  annotationProcessor "org.projectlombok:lombok:1.18.46"
+
+  testCompileOnly "org.projectlombok:lombok:1.18.46"
+  testAnnotationProcessor "org.projectlombok:lombok:1.18.46"
+  testImplementation "org.junit.jupiter:junit-jupiter:5.13.4"
+  testImplementation "org.assertj:assertj-core:3.27.3"
+  testImplementation "io.zonky.test:embedded-postgres:2.1.0"
 }
 
 ebean {
-    debugLevel = 0
+  debugLevel = 0
 }
 
 compileJava {
-    options.encoding = 'UTF-8'
+  options.encoding = 'UTF-8'
 }
 
 test {
-    useJUnitPlatform()
+  useJUnitPlatform()
 }

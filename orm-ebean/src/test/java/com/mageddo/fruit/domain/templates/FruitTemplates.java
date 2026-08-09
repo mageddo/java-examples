@@ -1,26 +1,98 @@
 package com.mageddo.fruit.domain.templates;
 
+import java.time.Instant;
 import java.util.UUID;
-import com.mageddo.fruit.domain.Fruit;
+import com.mageddo.fruit.Fruit;
+import com.mageddo.referrer.tempaltes.ReferrerTemplates;
 
 public class FruitTemplates {
 
   public static final UUID BANANA_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
   public static final UUID GREEN_BANANA_ID = UUID.fromString("22222222-2222-2222-2222-222222222222");
-
   public static Fruit banana() {
-    return new Fruit(BANANA_ID, "Banana", "Yellow", "Summer");
+    final var now = Instant.now();
+    return Fruit.builder()
+        .id(BANANA_ID)
+        .name("Banana")
+        .color("Yellow")
+        .season("Summer")
+        .createdAt(now)
+        .updatedAt(now)
+        .build();
   }
 
   public static Fruit updatedBanana() {
-    return new Fruit(BANANA_ID, "Banana", "Green", "Summer");
+    final var now = Instant.now();
+    return Fruit.builder()
+        .id(BANANA_ID)
+        .name("Banana")
+        .color("Green")
+        .season("Summer")
+        .createdAt(now)
+        .updatedAt(now)
+        .build();
   }
 
   public static Fruit greenBanana() {
-    return new Fruit(GREEN_BANANA_ID, "Banana", "Green", "Summer");
+    final var now = Instant.now();
+    return Fruit.builder()
+        .id(GREEN_BANANA_ID)
+        .name("Banana")
+        .color("Green")
+        .season("Summer")
+        .createdAt(now)
+        .updatedAt(now)
+        .build();
   }
 
   public static Fruit greenBananaAltSeason() {
-    return new Fruit(GREEN_BANANA_ID, "Green Banana", "Green", "Autumn");
+    final var now = Instant.now();
+    return Fruit.builder()
+        .id(GREEN_BANANA_ID)
+        .name("Green Banana")
+        .color("Green")
+        .season("Autumn")
+        .createdAt(now)
+        .updatedAt(now)
+        .build();
+  }
+
+  public static Fruit bananaWithReferrer() {
+    final var now = Instant.now();
+    return Fruit.builder()
+        .id(BANANA_ID)
+        .name("Banana")
+        .color("Yellow")
+        .season("Summer")
+        .referrer(ReferrerTemplates.bananaReferrer())
+        .createdAt(now)
+        .updatedAt(now)
+        .build();
+  }
+
+  public static Fruit greenBananaWithReferrer() {
+    final var now = Instant.now();
+    return Fruit.builder()
+        .id(GREEN_BANANA_ID)
+        .name("Banana")
+        .color("Green")
+        .season("Summer")
+        .referrer(ReferrerTemplates.greenBananaReferrer())
+        .createdAt(now)
+        .updatedAt(now)
+        .build();
+  }
+
+  public static Fruit greenBananaWithReferrerUpdated() {
+    final var now = Instant.now();
+    return Fruit.builder()
+        .id(GREEN_BANANA_ID)
+        .name("Green Banana")
+        .color("Green")
+        .season("Autumn")
+        .referrer(ReferrerTemplates.greenBananaReferrerUpdated())
+        .createdAt(now)
+        .updatedAt(now)
+        .build();
   }
 }

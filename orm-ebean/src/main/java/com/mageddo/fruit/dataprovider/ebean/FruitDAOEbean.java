@@ -1,7 +1,9 @@
-package com.mageddo.fruit.dataprovider;
+package com.mageddo.fruit.dataprovider.ebean;
 
-import com.mageddo.fruit.domain.Fruit;
-import com.mageddo.fruit.dataprovider.mapper.FruitMapper;
+import com.mageddo.fruit.FruitDAO;
+import com.mageddo.fruit.dataprovider.FruitRow;
+import com.mageddo.fruit.Fruit;
+import com.mageddo.fruit.dataprovider.mapper.FruitRowMapper;
 import io.ebean.Database;
 import io.ebean.InsertOptions;
 import jakarta.inject.Singleton;
@@ -15,22 +17,21 @@ public class FruitDAOEbean implements FruitDAO {
   private final Database database;
 
   @Override
-  public Fruit createIfAbsent(Fruit fruit) {
-    final var insertOptions = InsertOptions.builder()
-        .onConflictNothing()
-        .uniqueColumns("idt_fruit")
-        .build();
-    this.database.insert(FruitMapper.toRow(fruit), insertOptions);
-    return this.find(fruit.getId());
+  public boolean createIfAbsent(Fruit fruit) {
+    final var exists = this.find(fruit.getId());
+    if (exists != null) {
+      return false;
+    }
+    this.database.insert(FruitRowMapper.of(fruit));
+    return true;
   }
 
   @Override
   public Fruit save(Fruit fruit) {
     final var insertOptions = InsertOptions.builder()
         .onConflictUpdate()
-        .uniqueColumns("idt_fruit")
         .build();
-    this.database.insert(FruitMapper.toRow(fruit), insertOptions);
+    this.database.insert(FruitRowMapper.of(fruit), insertOptions);
     return this.find(fruit.getId());
   }
 
@@ -40,6 +41,6 @@ public class FruitDAOEbean implements FruitDAO {
     if (row == null) {
       return null;
     }
-    return FruitMapper.toDomain(row);
+    return FruitRowMapper.toDomain(row);
   }
 }

@@ -1,18 +1,23 @@
 package com.mageddo.fruit.service;
 
-import com.mageddo.fruit.domain.Fruit;
-import com.mageddo.fruit.domain.templates.FruitTemplates;
-import com.mageddo.micronaut.DatabaseConfiguratorExtension;
-import com.mageddo.testing.DatabaseConfigurator;
 import java.util.UUID;
+
+import com.mageddo.fruit.FruitService;
+import com.mageddo.fruit.Fruit;
+import com.mageddo.fruit.domain.templates.FruitTemplates;
+import com.mageddo.testing.DatabaseConfiguratorExtension;
+import com.mageddo.testing.DatabaseConfigurator;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(DatabaseConfiguratorExtension.class)
 @QuarkusTest
@@ -31,13 +36,11 @@ class FruitServiceCompTest {
 
   @Test
   void createIfAbsentShouldPersistWhenMissing() {
-    final var expected = FruitTemplates.banana();
+    final var expected = FruitTemplates.bananaWithReferrer();
 
     final var out = this.service.createIfAbsent(expected);
 
-    assertThat(out)
-        .usingRecursiveComparison()
-        .isEqualTo(expected);
+    assertFruitEqualsIgnoringMetadata(out, expected);
   }
 
   @Test
@@ -49,28 +52,34 @@ class FruitServiceCompTest {
 
     final var out = this.service.createIfAbsent(overwriteAttempt);
 
-    assertThat(out)
-        .usingRecursiveComparison()
-        .isEqualTo(expected);
+    assertFruitEqualsIgnoringMetadata(out, expected);
   }
 
   @Test
   void saveShouldUpsertAndFindShouldReturnSaved() {
-    final var created = FruitTemplates.greenBanana();
+    final var created = FruitTemplates.greenBananaWithReferrer();
 
     this.create(created);
 
-    final var out = this.service.save(FruitTemplates.greenBananaAltSeason());
+    final var out = this.service.save(FruitTemplates.greenBananaWithReferrerUpdated());
 
-    assertThat(out)
-        .usingRecursiveComparison()
-        .isEqualTo(FruitTemplates.greenBananaAltSeason());
+    assertFruitEqualsIgnoringMetadata(out, FruitTemplates.greenBananaWithReferrerUpdated());
 
     final var found = this.service.find(created.getId());
 
-    assertThat(found)
-        .usingRecursiveComparison()
-        .isEqualTo(FruitTemplates.greenBananaAltSeason());
+    assertFruitEqualsIgnoringMetadata(found, FruitTemplates.greenBananaWithReferrerUpdated());
+  }
+
+  @Test
+  void createAndFailShouldRollbackTransaction() {
+    final var fruit = FruitTemplates.banana();
+
+    assertThatThrownBy(() -> this.service.createAndFail(fruit))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("failed");
+
+    assertThat(this.service.find(fruit.getId()))
+        .isNull();
   }
 
   @Test
@@ -79,6 +88,13 @@ class FruitServiceCompTest {
 
     assertThat(this.service.find(missing))
         .isNull();
+  }
+
+  void assertFruitEqualsIgnoringMetadata(Fruit out, Fruit expected) {
+    assertThat(out)
+        .usingRecursiveComparison()
+        .ignoringFields("createdAt", "updatedAt")
+        .isEqualTo(expected);
   }
 
   void create(Fruit fruit) {
