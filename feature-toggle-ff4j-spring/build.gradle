@@ -1,0 +1,30 @@
+plugins {
+	id 'org.springframework.boot' version '4.0.8'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'java'
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.ff4j:ff4j-core:2.0.0'
+	implementation 'org.ff4j:ff4j-web:2.0.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1'
+	runtimeOnly 'com.h2database:h2'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
