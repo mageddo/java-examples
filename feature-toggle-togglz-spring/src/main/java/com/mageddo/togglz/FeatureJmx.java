@@ -1,31 +1,35 @@
 package com.mageddo.togglz;
 
-import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@ManagedResource
-@Component
+@Tag(name = "feature")
+@RestController
+@RequestMapping("/jmx/features")
 public class FeatureJmx {
 
-	@ManagedOperation
-	public boolean isActive(String name){
-		return getFeature(name).isActive();
+	@GetMapping("/{name}/active")
+	public Object isActive(@PathVariable String name) {
+		return this.getFeature(name).isActive();
 	}
 
-	@ManagedOperation
-	public void updateFeature(String name, String value){
+	@PostMapping("/{name}/value")
+	public void updateFeature(@PathVariable String name, @RequestParam String value) {
 		FeatureSwitch.valueOf(name).setValue(value);
 	}
 
-	@ManagedOperation
-	public String getFeatureValue(String name){
-		return getFeature(name).getValue();
+	@GetMapping("/{name}/value")
+	public Object getFeatureValue(@PathVariable String name) {
+		return this.getFeature(name).getValue();
 	}
 
 	private FeatureSwitch getFeature(String name) {
-		return Objects.requireNonNull(FeatureSwitch.valueOf(name));
+		return FeatureSwitch.valueOf(name);
 	}
 }
