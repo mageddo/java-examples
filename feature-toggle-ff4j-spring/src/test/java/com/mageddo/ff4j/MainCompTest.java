@@ -38,22 +38,25 @@ class MainCompTest {
 
 	@Test
 	void togglingFeatureStateReflectsOnFeatureSwitch() {
-		this.ff4j.enable(FeatureSwitch.FEATURE_TWO.name());
-		FeatureSwitch.FEATURE_TWO.setValue("blue");
+		FeatureSwitch.FEATURE_TWO.setValue("true");
 
 		assertThat(FeatureSwitch.FEATURE_TWO.isActive()).isTrue();
-		assertThat(FeatureSwitch.FEATURE_TWO.getValue()).isEqualTo("blue");
+		assertThat(FeatureSwitch.FEATURE_TWO.getValue()).isEqualTo("true");
+
+		FeatureSwitch.FEATURE_TWO.setValue("false");
+
+		assertThat(FeatureSwitch.FEATURE_TWO.isActive()).isFalse();
+		assertThat(FeatureSwitch.FEATURE_TWO.getValue()).isEqualTo("false");
 	}
 
 	@Test
 	void togglingFeatureStateIsPersistedOnJdbcRepository() {
-		this.ff4j.enable(FeatureSwitch.FEATURE_TWO.name());
-		FeatureSwitch.FEATURE_TWO.setValue("green");
+		FeatureSwitch.FEATURE_TWO.setValue("true");
 
 		final var freshStore = new JdbcFeatureStore(this.dataSource);
 		final Feature persisted = freshStore.read(FeatureSwitch.FEATURE_TWO.name());
 
 		assertThat(persisted.isEnable()).isTrue();
-		assertThat(persisted.getProperty(FeatureSwitch.VALUE_PARAMETER).asString()).isEqualTo("green");
+		assertThat(persisted.getProperty(FeatureSwitch.VALUE_PARAMETER).asString()).isEqualTo("true");
 	}
 }
