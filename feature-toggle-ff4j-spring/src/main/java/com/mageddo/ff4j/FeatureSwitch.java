@@ -1,6 +1,5 @@
 package com.mageddo.ff4j;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ff4j.FF4j;
 import org.ff4j.core.Feature;
 import org.ff4j.property.Property;

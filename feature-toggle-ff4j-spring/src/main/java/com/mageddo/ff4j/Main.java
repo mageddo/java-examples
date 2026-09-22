@@ -2,6 +2,7 @@ package com.mageddo.ff4j;
 
 import org.ff4j.FF4j;
 import org.ff4j.audit.repository.InMemoryEventRepository;
+import org.ff4j.cache.InMemoryCacheManager;
 import org.ff4j.core.Feature;
 import org.ff4j.store.JdbcFeatureStore;
 import org.ff4j.web.FF4jDispatcherServlet;
@@ -40,6 +41,7 @@ public class Main {
 		}
 
 		FeatureSwitch.setFf4j(ff4j);
+		ff4j.cache(new InMemoryCacheManager(60));
 		return ff4j;
 	}
 
