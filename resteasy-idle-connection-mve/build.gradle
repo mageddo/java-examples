@@ -1,0 +1,59 @@
+plugins {
+  id 'java'
+}
+
+repositories {
+  mavenCentral()
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+dependencies {
+  implementation 'org.jboss.resteasy:resteasy-client:6.2.12.Final'
+  implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+  implementation 'org.apache.httpcomponents:httpcore:4.4.16'
+  implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
+  implementation 'org.jboss.logging:jboss-logging:3.6.1.Final'
+  implementation 'commons-logging:commons-logging:1.2'
+  implementation 'commons-codec:commons-codec:1.19.0'
+  implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
+  implementation 'jakarta.activation:jakarta.activation-api:2.1.4'
+  implementation 'org.reactivestreams:reactive-streams:1.0.4'
+}
+
+def runtimeFile = layout.buildDirectory.file('runtime-classpath.txt')
+
+tasks.register('writeRuntimeClasspath') {
+  dependsOn tasks.named('classes')
+  outputs.file(runtimeFile)
+  inputs.files(sourceSets.main.runtimeClasspath)
+  doLast {
+    runtimeFile.get().asFile.text = sourceSets.main.runtimeClasspath.asPath
+  }
+}
+
+tasks.register('runMve', Exec) {
+  group = 'verification'
+  description = 'Executa os cenarios HTTPS locais e verifica seus resultados.'
+  dependsOn tasks.named('writeRuntimeClasspath')
+  def launcher = javaToolchains.launcherFor(java.toolchain)
+  doFirst {
+    commandLine 'python3', file('scripts/run.py'),
+        layout.buildDirectory.dir('results').get().asFile,
+        runtimeFile.get().asFile,
+        launcher.get().executablePath.asFile,
+        providers.gradleProperty('idleMillis').getOrElse('3000'),
+        providers.gradleProperty('readMillis').getOrElse('1000'),
+        providers.gradleProperty('scenario').getOrElse('matrix')
+  }
+}
+
+tasks.register('compTest') {
+  group = 'verification'
+  description = 'Compila e executa a matriz diagnostica com verificacao automatizada.'
+  dependsOn tasks.named('runMve')
+}
