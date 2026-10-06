@@ -10,7 +10,7 @@ Requisitos: Java 21, Python 3 e OpenSSL disponíveis. O wrapper usa Gradle 9.5.1
 ./gradlew build compTest
 ```
 
-O comando compila o client, executa 40 chamadas HTTPS e verifica os resultados. Duração padrão: aproximadamente 80 s. Para repetir somente o experimento:
+O comando compila o client e verifica a matriz anterior (40 chamadas) e a comparação de keep-alive (60 chamadas). Duração padrão total: aproximadamente 4 min. Para repetir somente a matriz anterior:
 
 ```sh
 ./gradlew runMve
@@ -59,7 +59,7 @@ O engine e a API de gerência de conexões usados para reproduzir o transporte o
 
 ## Evidências e interpretação
 
-Resultados em `build/results/matrix/`, ou `build/results/blackhole/` para o cenário isolado:
+Resultados em `build/results/matrix/`, `build/results/keepalive/`, ou `build/results/blackhole/` para o cenário isolado:
 
 - `TLSv1.3.log` e `TLSv1.2.log`: tempos de chamada, status, IDs e exceções.
 - `server.jsonl`: cada conexão, requisição, resposta, fechamento e descarte de dados pelo proxy.
@@ -78,3 +78,31 @@ O timer de requisição exclui a troca explícita do client e o descarte explíc
 Este experimento constrói a falha intencionalmente para comprovar um mecanismo possível. Não demonstra que Google, OpenAI, Nexoos ou algum equipamento da rede real causou os episódios investigados. O proxy mantém duas conexões TCP abertas e descarta ciphertext; não reproduz perda de pacotes no kernel nem mede o timeout real de um NAT.
 
 Não testa OAuth, processamento do fornecedor, suspensão, DNS ou políticas de retry. TTL limita idade total; descarte de ociosas limita inatividade: são políticas diferentes. O build e a matriz local validam este projeto diagnóstico, sem alterar ou executar a aplicação original.
+
+## Comparação: keep-alive de 5 s e descarte de ociosas
+
+```sh
+./gradlew runMve -Pscenario=keepalive
+```
+
+Este modo usa espera de 6 s por padrão e executa 60 chamadas, divididas entre TLS 1.3 e TLS 1.2. Duração aproximada: 2 min e 40 s. Também pode ser executado por `./gradlew keepaliveMve`; essa task usa sempre 6 s para a comparação longa.
+
+```sh
+./gradlew runMve -Pscenario=keepalive -PidleMillis=10000
+```
+
+No modo keepalive, `idleMillis` precisa ser maior que 5000 ms. Os controles curtos usam sempre 3 s.
+
+| Estratégia | Configuração |
+|---|---|
+| `reuse` | Baseline anterior, sem limite próprio de keep-alive nem limpeza periódica. |
+| `keepaliveOnly5` | Limita o prazo de reutilização a 5 s, respeitando um prazo positivo menor anunciado pelo servidor; usa 5 s quando não há prazo positivo. Sem thread de limpeza. |
+| `keepalive5` | Mesmo limite, com `evictIdleConnections(5, SECONDS)` e `evictExpiredConnections()`. |
+
+Cada estratégia faz duas chamadas aos cenários saudável, servidor silencioso e proxy silencioso, separadas por 6 s. O esperado é a baseline continuar reutilizando: funciona no servidor saudável, mas falha nos dois cenários silenciosos. As duas políticas de keep-alive devem usar conexão nova e funcionar.
+
+Os controles de 3 s confirmam que ambas as políticas ainda reutilizam conexões saudáveis antes de 5 s. O servidor que anuncia `Keep-Alive: timeout=2` deve provocar uma conexão nova mesmo no controle de 3 s, comprovando respeito ao prazo menor. O proxy silencioso já perde validade após 1 s: ambas as políticas ainda podem reutilizá-lo aos 3 s e receber timeout. Isso demonstra que um limite de 5 s não protege contra uma conexão inutilizada antes desse prazo.
+
+A política de keep-alive controla a elegibilidade para reutilização ao obter uma conexão do pool. O descarte periódico libera recursos ociosos/expirados mesmo sem uma nova requisição, mas seu agendamento não garante fechamento físico precisamente aos 5 s. A verificação compara IDs e resultados das chamadas; não depende do instante em que a thread de limpeza fecha o socket.
+
+Esse limite é contado para reutilização após a resposta, diferentemente do TTL de 1 s da matriz anterior, que limita a idade total da conexão. Nenhuma política envia uma consulta ao servidor para provar que a conexão está saudável; o cenário silencioso antes de 5 s evidencia esse limite. A configuração só é aplicada ao client do experimento.

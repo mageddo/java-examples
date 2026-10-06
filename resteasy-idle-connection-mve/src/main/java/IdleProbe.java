@@ -9,6 +9,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.ssl.SSLContexts;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
 import org.jboss.resteasy.client.jaxrs.internal.ClientInvocation;
@@ -31,6 +32,10 @@ public class IdleProbe {
     ssl = trustLocalCertificate();
     System.out.printf("java=%s TLS=%s idle_ms=%d read_ms=%d pool=5 validateAfterInactivity=2000ms%n",
         System.getProperty("java.version"), protocol, idleMillis, readMillis);
+    if (args.length > 3 && args[3].equals("keepalive")) {
+      runKeepAliveMatrix();
+      return;
+    }
     if (args.length > 3) {
       compare(args[3], "reuse", 0);
       return;
@@ -51,6 +56,19 @@ public class IdleProbe {
     compare("blackhole", "evict", 0);
   }
 
+  static void runKeepAliveMatrix() throws Exception {
+    for (final var strategy : new String[]{"reuse", "keepaliveOnly5", "keepalive5"}) {
+      for (final var path : new String[]{"healthy", "silent", "blackhole"}) {
+        compare(path, strategy, 0);
+      }
+    }
+    for (final var strategy : new String[]{"keepaliveOnly5Short", "keepalive5Short"}) {
+      compare("healthy", strategy, 0);
+      compare("blackhole", strategy, 0);
+      compare("healthy-server-short", strategy, 0);
+    }
+  }
+
   static SSLContext trustLocalCertificate() throws Exception {
     final var store = KeyStore.getInstance(KeyStore.getDefaultType());
     store.load(null);
@@ -60,7 +78,7 @@ public class IdleProbe {
     return SSLContexts.custom().loadTrustMaterial(store, null).build();
   }
 
-  static Client create(long ttl) {
+  static HttpClientBuilder configureBuilder(long ttl, String strategy) {
     final var config = RequestConfig.custom().setConnectionRequestTimeout(3000)
         .setConnectTimeout(500).setSocketTimeout(readMillis).setRedirectsEnabled(true).build();
     final var builder = HttpClientBuilder.create().setDefaultRequestConfig(config)
@@ -70,7 +88,27 @@ public class IdleProbe {
     if (ttl > 0) {
       builder.setConnectionTimeToLive(ttl, TimeUnit.MILLISECONDS);
     }
-    final var engine = new ApacheHttpClient43Engine(builder.build(), true) {
+    configureKeepAlive(builder, strategy);
+    return builder;
+  }
+
+  static void configureKeepAlive(HttpClientBuilder builder, String strategy) {
+    if (strategy.startsWith("keepalive")) {
+      builder.setKeepAliveStrategy((response, context) -> {
+        final var advertised = DefaultConnectionKeepAliveStrategy.INSTANCE.getKeepAliveDuration(response, context);
+        if (advertised > 0) {
+          return Math.min(advertised, 5000);
+        }
+        return 5000;
+      });
+    }
+    if (strategy.equals("keepalive5") || strategy.equals("keepalive5Short")) {
+      builder.evictIdleConnections(5, TimeUnit.SECONDS).evictExpiredConnections();
+    }
+  }
+
+  static Client create(long ttl, String strategy) {
+    final var engine = new ApacheHttpClient43Engine(configureBuilder(ttl, strategy).build(), true) {
       @Override
       protected void loadHttpMethod(ClientInvocation request, HttpRequestBase method) throws Exception {
         super.loadHttpMethod(request, method);
@@ -88,14 +126,14 @@ public class IdleProbe {
   }
 
   static void compare(String path, String strategy, long ttl) throws Exception {
-    var client = create(ttl);
+    var client = create(ttl, strategy);
     final var label = "scenario=" + path + " strategy=" + strategy;
     try {
       request(client, path, label + " stage=first");
-      Thread.sleep(idleMillis);
+      waitIdle(strategy);
       if (strategy.equals("new")) {
         client.close();
-        client = create(ttl);
+        client = create(ttl, strategy);
       }
       if (strategy.equals("evict")) {
         final var engine = (ApacheHttpClient43Engine) ((org.jboss.resteasy.client.jaxrs.ResteasyClient) client).httpEngine();
@@ -105,6 +143,14 @@ public class IdleProbe {
     } finally {
       client.close();
     }
+  }
+
+  static void waitIdle(String strategy) throws InterruptedException {
+    if (strategy.endsWith("Short")) {
+      Thread.sleep(3000);
+      return;
+    }
+    Thread.sleep(idleMillis);
   }
 
   static void request(Client client, String path, String label) {

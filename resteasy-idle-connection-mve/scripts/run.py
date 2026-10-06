@@ -13,8 +13,10 @@ read = int(sys.argv[5])
 scenario = sys.argv[6]
 if idle <= 2000 or read <= 0:
     raise ValueError('idleMillis precisa ser >2000ms; readMillis precisa ser >0ms')
-if scenario not in ['matrix', 'blackhole']:
-    raise ValueError('scenario precisa ser matrix ou blackhole')
+if scenario not in ['matrix', 'blackhole', 'keepalive']:
+    raise ValueError('scenario precisa ser matrix, blackhole ou keepalive')
+if scenario == 'keepalive' and idle <= 5000:
+    raise ValueError('keepalive precisa de idleMillis >5000ms para comparar expiracao')
 output = output / scenario
 output.mkdir(parents=True, exist_ok=True)
 os.chdir(output)

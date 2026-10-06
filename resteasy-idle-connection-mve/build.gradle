@@ -42,18 +42,37 @@ tasks.register('runMve', Exec) {
   dependsOn tasks.named('writeRuntimeClasspath')
   def launcher = javaToolchains.launcherFor(java.toolchain)
   doFirst {
+    def defaultIdleMillis = '3000'
+    if (providers.gradleProperty('scenario').getOrElse('matrix') == 'keepalive') {
+      defaultIdleMillis = '6000'
+    }
     commandLine 'python3', file('scripts/run.py'),
         layout.buildDirectory.dir('results').get().asFile,
         runtimeFile.get().asFile,
         launcher.get().executablePath.asFile,
-        providers.gradleProperty('idleMillis').getOrElse('3000'),
+        providers.gradleProperty('idleMillis').getOrElse(defaultIdleMillis),
         providers.gradleProperty('readMillis').getOrElse('1000'),
         providers.gradleProperty('scenario').getOrElse('matrix')
+  }
+}
+
+tasks.register('keepaliveMve', Exec) {
+  group = 'verification'
+  description = 'Compara reutilizacao, keep-alive de5s e descarte periodico.'
+  dependsOn tasks.named('writeRuntimeClasspath')
+  mustRunAfter tasks.named('runMve')
+  def launcher = javaToolchains.launcherFor(java.toolchain)
+  doFirst {
+    commandLine 'python3', file('scripts/run.py'),
+        layout.buildDirectory.dir('results').get().asFile,
+        runtimeFile.get().asFile,
+        launcher.get().executablePath.asFile,
+        '6000', providers.gradleProperty('readMillis').getOrElse('1000'), 'keepalive'
   }
 }
 
 tasks.register('compTest') {
   group = 'verification'
   description = 'Compila e executa a matriz diagnostica com verificacao automatizada.'
-  dependsOn tasks.named('runMve')
+  dependsOn tasks.named('runMve'), tasks.named('keepaliveMve')
 }

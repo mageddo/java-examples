@@ -42,7 +42,10 @@ def handle(raw):
                     threading.Event().wait()
                     return
                 body = f'connection={connection} request={requests}\n'.encode()
-                stream.sendall(b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ' + str(len(body)).encode() + b'\r\nConnection: keep-alive\r\n\r\n' + body)
+                advertised = b''
+                if path == '/healthy-server-short':
+                    advertised = b'Keep-Alive: timeout=2\r\n'
+                stream.sendall(b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ' + str(len(body)).encode() + b'\r\nConnection: keep-alive\r\n' + advertised + b'\r\n' + body)
                 log('response', connection=connection, number=requests)
                 if path.startswith('/close'):
                     time.sleep(1)
