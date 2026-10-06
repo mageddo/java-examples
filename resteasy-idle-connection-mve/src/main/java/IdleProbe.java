@@ -35,6 +35,10 @@ public class IdleProbe {
       compare(args[3], "reuse", 0);
       return;
     }
+    runMatrix();
+  }
+
+  static void runMatrix() throws Exception {
     compare("healthy", "reuse", 0);
     compare("close", "reuse", 0);
     compare("silent", "reuse", 0);
@@ -85,8 +89,9 @@ public class IdleProbe {
 
   static void compare(String path, String strategy, long ttl) throws Exception {
     var client = create(ttl);
+    final var label = "scenario=" + path + " strategy=" + strategy;
     try {
-      request(client, path, strategy, "first");
+      request(client, path, label + " stage=first");
       Thread.sleep(idleMillis);
       if (strategy.equals("new")) {
         client.close();
@@ -96,13 +101,13 @@ public class IdleProbe {
         final var engine = (ApacheHttpClient43Engine) ((org.jboss.resteasy.client.jaxrs.ResteasyClient) client).httpEngine();
         engine.getHttpClient().getConnectionManager().closeIdleConnections(1, TimeUnit.SECONDS);
       }
-      request(client, path, strategy, "after_idle");
+      request(client, path, label + " stage=after_idle");
     } finally {
       client.close();
     }
   }
 
-  static void request(Client client, String path, String strategy, String stage) {
+  static void request(Client client, String path, String label) {
     final var start = System.nanoTime();
     var endpoint = base;
     if (path.equals("blackhole")) {
@@ -110,15 +115,15 @@ public class IdleProbe {
     }
     try (final var response = client.target(endpoint + "/" + path).request().get()) {
       final var body = response.readEntity(String.class).strip();
-      System.out.printf("scenario=%s strategy=%s stage=%s elapsed_ms=%.1f status=%d %s%n",
-          path, strategy, stage, (System.nanoTime() - start) / 1e6, response.getStatus(), body);
+      System.out.printf("%s elapsed_ms=%.1f status=%d %s%n",
+          label, (System.nanoTime() - start) / 1e6, response.getStatus(), body);
     } catch (Exception error) {
       var cause = (Throwable) error;
       while (cause.getCause() != null) {
         cause = cause.getCause();
       }
-      System.out.printf("scenario=%s strategy=%s stage=%s elapsed_ms=%.1f error=%s message=%s%n",
-          path, strategy, stage, (System.nanoTime() - start) / 1e6, cause.getClass().getSimpleName(), cause.getMessage());
+      System.out.printf("%s elapsed_ms=%.1f error=%s message=%s%n",
+          label, (System.nanoTime() - start) / 1e6, cause.getClass().getSimpleName(), cause.getMessage());
     }
   }
 }
